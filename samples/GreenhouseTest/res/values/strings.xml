@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+	<string name='app_name'>Greenhouse</string>
+	<string name="login">Sign In</string>
+	<string name="logout">Sign Out</string>
+	<string name='member_profile'>Member Profile</string>
+	<string name='refresh'>Refresh</string>
+	<string name='profile_first_name'>First Name:</string>
+	<string name='profile_last_name'>Last Name:</string>
+	<string name="auth_progress_title">Authenticating...</string>
+	<string name="auth_progress_text">Fetching your profile information.</string>
+	<string name="preferences">Preferences</string>
+	<string name="bad_value"></string>
+</resources>
