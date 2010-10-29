@@ -42,7 +42,7 @@ import android.util.Log;
  * @author Roy Clarkson
  */
 public class AndroidLog implements org.apache.commons.logging.Log, Serializable {
-
+	
 	private static final long serialVersionUID = -6608881763908916154L;
 	
 	protected String name;
