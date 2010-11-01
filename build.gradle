@@ -1,0 +1,182 @@
+/*
+ * Copyright 2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// -----------------------------------------------------------------------------
+// Main gradle build file for Spring Mobile Android
+//
+// - run `./gradlew(.bat) build` to kick off a complete compile-test-package
+//
+// @author Roy Clarkson
+// -----------------------------------------------------------------------------
+
+
+// -----------------------------------------------------------------------------
+// Configuration for the root project
+// -----------------------------------------------------------------------------
+apply from: "$rootDir/gradle/version.gradle"
+apply plugin: 'idea'
+
+// used for artifact names, building doc upload urls, etc.
+description = 'Spring Android'
+abbreviation = 'SPRING-ANDROID'
+
+// -----------------------------------------------------------------------------
+// Configuration for all projects including this one (the root project)
+//
+// @see settings.gradle for list of all subprojects
+// -----------------------------------------------------------------------------
+allprojects {
+    // group will translate to groupId during pom generation and deployment
+    group = 'org.springframework.android'
+
+    // version will be used in maven pom generation as well as determining
+    // where artifacts should be deployed, based on release type of snapshot,
+    // milestone or release.
+    // @see org.springframework.build.Version under buildSrc/ for more info
+    // @see gradle.properties for the declaration of this property.
+    version = createVersion(springAndroidVersion)
+
+    // default set of maven repositories to be used when resolving dependencies
+    repositories {
+        mavenRepo urls: 'http://maven.springframework.org/snapshot'
+        mavenCentral()
+        mavenRepo urls: 'http://maven.springframework.org/release'
+        mavenRepo urls: 'http://maven.springframework.org/milestone'
+        mavenRepo urls: 'http://repository.springsource.com/maven/bundles/external'
+        mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
+        mavenRepo urls: 'http://repository.springsource.com/maven/bundles/milestone'
+    }
+}
+
+
+// -----------------------------------------------------------------------------
+// Create collections of subprojects - each will receive their own configuration
+// - all subprojects that start with spring-android-* are 'java projects'
+// - documentation-related subprojects are not collected here
+//
+// @see configure(*) sections below
+// -----------------------------------------------------------------------------
+
+javaprojects = subprojects.findAll { project ->
+    project.path.startsWith(':spring-android-')
+}
+
+// -----------------------------------------------------------------------------
+// Configuration for all java subprojects
+// -----------------------------------------------------------------------------
+configure(javaprojects) {
+
+    apply plugin: 'java' // tasks for conventional java lifecycle
+    apply plugin: 'maven' // `gradle install` to push jars to local .m2 cache
+    apply plugin: 'eclipse' // `gradle eclipse` to generate .classpath/.project
+    apply plugin: 'idea' // `gradle idea` to generate .ipr/.iml
+
+    // set up dedicated directories for jars and source jars.
+    // this makes it easier when putting together the distribution
+    libsBinDir = new File(libsDir, 'bin')
+    libsSrcDir = new File(libsDir, 'src')
+
+    // all core projects should be OSGi-compliant bundles
+    // add the bundlor task to ensure proper manifests
+    // apply from: "$rootDir/gradle/bundlor.gradle"
+    apply from: "$rootDir/gradle/maven-deployment.gradle"
+
+    commonsHttpClientVersion = '3.1'
+    jacksonVersion = '1.5.3'
+    jodaVersion = '1.6'
+    junitVersion = '4.7'
+    mockitoVersion = '1.8.5'
+    s2OAuthVersion = '1.0.0.BUILD-SNAPSHOT'
+    scribeVersion = '1.0.6'
+    servletApiVersion = '2.5'
+    springVersion = '3.0.5.RELEASE'
+	androidVersion = '2.2.1'
+	slf4jVersion = '1.6.1'
+	slf4jAndroidVersion = '1.6.1-RC1'
+
+    sourceSets {
+        test {
+            resources {
+                srcDirs = ['src/test/resources', 'src/test/java']
+            }
+        }
+    }
+
+    // 'provided' dependencies should be transitive (e.g. servlet-api)
+    configurations {
+        provided { transitive = false }
+    }
+
+    sourceSets.main.compileClasspath += configurations.provided
+    sourceSets.test.compileClasspath += configurations.provided
+    sourceSets.test.runtimeClasspath += configurations.provided
+
+    // dependencies that are common across all java projects
+    dependencies {
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.mockito:mockito-all:$mockitoVersion"
+        testCompile "org.springframework:spring-test:$springVersion"
+    }
+
+    // enable all compiler warnings (GRADLE-1077)
+    [compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:all']
+
+    // generate .classpath files without GRADLE_CACHE variable (GRADLE-1079)
+    eclipseClasspath.variables = [:]
+}
+
+
+// -----------------------------------------------------------------------------
+// Configuration for each individual core java subproject
+//
+// @see configure(javaprojects) above for general config
+// -----------------------------------------------------------------------------
+project('spring-android-commons-logging') {
+    description = 'Spring Android Commons Logging'
+    dependencies {
+        compile ("com.google.android:android:$androidVersion") { provided = true }
+    }
+}
+
+project('spring-android-rest-template') {
+    description = 'Spring Android Rest Template'
+    dependencies {
+	    compile ("com.google.android:android:$androidVersion") { provided = true }
+        compile "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion"
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        compile "org.slf4j:slf4j-android:$slf4jAndroidVersion"
+	}
+}
+
+// add basic tasks like 'clean' and 'assemble' to the root project. e.g.: allows
+// running `gradle clean` from the root project and deleting the build directory
+apply plugin: 'base'
+
+// add tasks like 'distArchive'
+apply from: "$rootDir/gradle/dist.gradle"
+
+// add tasks like 'snapshotDependencyCheck'
+apply from: "${rootDir}/gradle/checks.gradle"
+
+
+// -----------------------------------------------------------------------------
+// Import tasks related to releasing and managing the project
+// depending on the role played by the current user.
+//
+// @see gradle.properties for more information on roles
+// -----------------------------------------------------------------------------
+// add management tasks like `wrapper` for generating the gradlew* scripts
+apply from: "$rootDir/gradle/wrapper.gradle"
