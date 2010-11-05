@@ -7,3 +7,4 @@ spring-android-commons-logging/src/test/java/exploration
 spring-android-rest-template/src/test/java/exploration
 **/.classpath
 **/.project
+**/lib

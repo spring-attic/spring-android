@@ -103,7 +103,7 @@ configure(javaprojects) {
     scribeVersion = '1.0.6'
     servletApiVersion = '2.5'
     springVersion = '3.0.5.RELEASE'
-	androidVersion = '2.2.1'
+	androidVersion = '1.5_r3'
 	slf4jVersion = '1.6.1'
 	slf4jAndroidVersion = '1.6.1-RC1'
 
@@ -126,9 +126,9 @@ configure(javaprojects) {
 
     // dependencies that are common across all java projects
     dependencies {
-        testCompile "junit:junit:$junitVersion"
-        testCompile "org.mockito:mockito-all:$mockitoVersion"
-        testCompile "org.springframework:spring-test:$springVersion"
+		testCompile "junit:junit:$junitVersion"
+		testCompile "org.mockito:mockito-all:$mockitoVersion"
+		testCompile "org.springframework:spring-test:$springVersion"
     }
 
     // enable all compiler warnings (GRADLE-1077)
@@ -153,11 +153,101 @@ project('spring-android-commons-logging') {
 
 project('spring-android-rest-template') {
     description = 'Spring Android Rest Template'
+    
+	libDir = "$projectDir/lib/"
+	    
     dependencies {
 	    compile ("com.google.android:android:$androidVersion") { provided = true }
         compile "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion"
         compile "org.slf4j:slf4j-api:$slf4jVersion"
         compile "org.slf4j:slf4j-android:$slf4jAndroidVersion"
+        compile files(libDir)
+	}
+		
+//	println "classpath = ${configurations.compile.collect {File file -> file.name}}"	
+	
+    // configuration for extracting required class files
+    configurations { dependencyconf }
+    dependencies {
+        dependencyconf "org.springframework:spring-web:$springVersion"
+    }
+    
+    // Required classes for RestTemplate support
+    classFilter = [
+		'org/springframework/core/NestedExceptionUtils.class',
+		'org/springframework/core/NestedIOException.class',
+		'org/springframework/core/NestedRuntimeException.class',
+//    	'org/springframework/core/io/AbstractFileResolvingResource.class',
+		'org/springframework/core/io/AbstractResource.class',
+		'org/springframework/core/io/ByteArrayResource.class',
+		'org/springframework/core/io/ClassPathResource.class',
+		'org/springframework/core/io/InputStreamSource.class',
+		'org/springframework/core/io/Resource.class',
+		'org/springframework/http/HttpEntity.class',
+		'org/springframework/http/HttpHeaders.class',
+		'org/springframework/http/HttpInputMessage.class',
+		'org/springframework/http/HttpMessage.class',
+		'org/springframework/http/HttpMethod.class',
+		'org/springframework/http/HttpOutputMessage.class',
+		'org/springframework/http/HttpStatus.class',
+		'org/springframework/http/MediaType.class',
+		'org/springframework/http/ResponseEntity.class',
+		'org/springframework/http/client/AbstractClientHttpRequest.class',
+		'org/springframework/http/client/ClientHttpRequest.class',
+		'org/springframework/http/client/ClientHttpRequestFactory.class',
+		'org/springframework/http/client/ClientHttpResponse.class',
+		'org/springframework/http/client/SimpleClientHttpRequest.class',
+		'org/springframework/http/client/SimpleClientHttpRequestFactory.class',
+		'org/springframework/http/client/SimpleClientHttpResponse.class',
+		'org/springframework/http/client/support/HttpAccessor.class',
+		'org/springframework/http/converter/AbstractHttpMessageConverter.class',
+		'org/springframework/http/converter/ByteArrayHttpMessageConverter.class',
+//		'org/springframework/http/converter/FormHttpMessageConverter.class',
+		'org/springframework/http/converter/HttpMessageConversionException.class',
+		'org/springframework/http/converter/HttpMessageConverter.class',
+		'org/springframework/http/converter/HttpMessageNotReadableException.class',
+		'org/springframework/http/converter/HttpMessageNotWritableException.class',
+//		'org/springframework/http/converter/ResourceHttpMessageConverter.class',
+		'org/springframework/http/converter/StringHttpMessageConverter.class',
+		'org/springframework/http/converter/json/MappingJacksonHttpMessageConverter.class',
+		'org/springframework/http/converter/json/package-info.class',
+		'org/springframework/util/Assert.class',
+//		'org/springframework/util/ClassUtils.class',
+		'org/springframework/util/CollectionUtils.class',
+		'org/springframework/util/FileCopyUtils.class',
+		'org/springframework/util/LinkedCaseInsensitiveMap.class',
+		'org/springframework/util/LinkedMultiValueMap.class',
+		'org/springframework/util/MultiValueMap.class',
+		'org/springframework/util/ObjectUtils.class',
+		'org/springframework/util/ResourceUtils.class',
+		'org/springframework/util/StringUtils.class',
+		'org/springframework/web/client/DefaultResponseErrorHandler.class',
+		'org/springframework/web/client/HttpClientErrorException.class',
+		'org/springframework/web/client/HttpMessageConverterExtractor.class',
+		'org/springframework/web/client/HttpServerErrorException.class',
+		'org/springframework/web/client/HttpStatuscodeException.class',
+		'org/springframework/web/client/RequestCallback.class',
+		'org/springframework/web/client/ResourceAccessException.class',
+		'org/springframework/web/client/ResponseErrorHandler.class',
+		'org/springframework/web/client/ResponseExtractor.class',
+		'org/springframework/web/client/RestClientException.class',
+		'org/springframework/web/client/RestOperations.class',
+//		'org/springframework/web/client/RestTemplate.class',
+		'org/springframework/web/util/UriTemplate.class',
+		'org/springframework/web/util/UriUtils.class'
+		]
+		
+	// loops through spring framework jars, extracting and copying class files to the lib folder
+	FileCollection jars = configurations.dependencyconf
+	jars.each { jar ->
+		zipTree(jar).visit { classFile ->
+			if (classFile.relativePath.toString() in classFilter) {
+				copy {
+					from classFile.file
+					into libDir + classFile.relativePath.getPathString().minus(classFile.name)
+				}
+			}
+		}
 	}
 }
 
