@@ -94,14 +94,9 @@ configure(javaprojects) {
     // apply from: "$rootDir/gradle/bundlor.gradle"
     apply from: "$rootDir/gradle/maven-deployment.gradle"
 
-    commonsHttpClientVersion = '3.1'
     jacksonVersion = '1.5.3'
-    jodaVersion = '1.6'
     junitVersion = '4.7'
     mockitoVersion = '1.8.5'
-    s2OAuthVersion = '1.0.0.BUILD-SNAPSHOT'
-    scribeVersion = '1.0.6'
-    servletApiVersion = '2.5'
     springVersion = '3.0.5.RELEASE'
 	androidVersion = '1.5_r3'
 	slf4jVersion = '1.6.1'
@@ -149,12 +144,14 @@ project('spring-android-commons-logging') {
     dependencies {
         compile ("com.google.android:android:$androidVersion") { provided = true }
     }
+    
+//	println "classpath = ${configurations.compile.collect {File file -> file.name}}"	
 }
 
 project('spring-android-rest-template') {
     description = 'Spring Android Rest Template'
     
-	libDir = "$projectDir/lib/"
+	libDir = "$buildDir/classes/main/"
 	    
     dependencies {
 	    compile ("com.google.android:android:$androidVersion") { provided = true }
@@ -190,7 +187,10 @@ project('spring-android-rest-template') {
 		'org/springframework/http/HttpMethod.class',
 		'org/springframework/http/HttpOutputMessage.class',
 		'org/springframework/http/HttpStatus.class',
+		'org/springframework/http/HttpStatus$Series.class',
 		'org/springframework/http/MediaType.class',
+		'org/springframework/http/MediaType$1.class',
+		'org/springframework/http/MediaType$2.class',
 		'org/springframework/http/ResponseEntity.class',
 		'org/springframework/http/client/AbstractClientHttpRequest.class',
 		'org/springframework/http/client/ClientHttpRequest.class',
@@ -214,6 +214,7 @@ project('spring-android-rest-template') {
 		'org/springframework/util/Assert.class',
 //		'org/springframework/util/ClassUtils.class',
 		'org/springframework/util/CollectionUtils.class',
+		'org/springframework/util/CollectionUtils$EnumerationIterator.class',
 		'org/springframework/util/FileCopyUtils.class',
 		'org/springframework/util/LinkedCaseInsensitiveMap.class',
 		'org/springframework/util/LinkedMultiValueMap.class',
@@ -225,7 +226,7 @@ project('spring-android-rest-template') {
 		'org/springframework/web/client/HttpClientErrorException.class',
 		'org/springframework/web/client/HttpMessageConverterExtractor.class',
 		'org/springframework/web/client/HttpServerErrorException.class',
-		'org/springframework/web/client/HttpStatuscodeException.class',
+		'org/springframework/web/client/HttpStatusCodeException.class',
 		'org/springframework/web/client/RequestCallback.class',
 		'org/springframework/web/client/ResourceAccessException.class',
 		'org/springframework/web/client/ResponseErrorHandler.class',
