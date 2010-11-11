@@ -40,7 +40,7 @@ abbreviation = 'SPRING-ANDROID'
 // -----------------------------------------------------------------------------
 allprojects {
     // group will translate to groupId during pom generation and deployment
-    group = 'org.springframework.android'
+    group = 'org.springframework.spring-android'
 
     // version will be used in maven pom generation as well as determining
     // where artifacts should be deployed, based on release type of snapshot,
