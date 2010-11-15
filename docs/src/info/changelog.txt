@@ -1,21 +1,2 @@
-Spring Social 1.0.0 Milestone 1 (Oct 29, 2010)
-==============================================
-
-New Features
-   * OAuthSigningClientHttpRequest and OAuthSigningClientHttpRequestFactory for signing
-     requests sent through RestTemplate
-   * TwitterOperations/TwitterTemplate for interaction with Twitter's REST API
-      * Supports tweeting, retweeting, retrieval of friends, retrieval of screen name,
-        and searching
-   * FacebookOperations/FacebookTemplate for interaction with Facebook's Graph API
-      * Supports posting messages (and links) to a user's wall, retrieval of friends,
-        retrieval of profile ID, profile picture, profile URL.
-   * LinkedInOperations/LinkedInTemplate for interaction with LinkedIn's REST API
-      * Supports retrieval of a user's connections and profile details
-   * TripItOperations/TripItTemplate for interaction with TripItTemplate
-      * Supports retrieval of a user's profile details, and upcoming trips
-   * GreenhouseOperations/GreenhouseTemplate for interaction with Greenhouse's REST API
-      * Supports retrieval of a user's profile details, upcoming events, events after a
-        given day, and sessions taking place on a given day
-   * FacebookWebArgumentResolver to extract a Facebook user's user ID and access token out
-     of the cookie written at authentication
+Spring Android Changelog
+============================

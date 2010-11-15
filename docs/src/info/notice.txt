@@ -1,6 +1,6 @@
    ========================================================================
    == NOTICE file corresponding to section 4 d of the Apache License,    ==
-   == Version 2.0, in this case for the Spring Social distribution. ==
+   == Version 2.0, in this case for the Spring Android distribution. ==
    ========================================================================
 
    This product includes software developed by

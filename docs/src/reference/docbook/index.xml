@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="spring-mobile-reference"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+  <bookinfo>
+    <title>Spring Android Reference Manual</title>
+    <titleabbrev>Spring Android ${version}</titleabbrev>
+    <productname>Spring Android</productname>
+    <releaseinfo>${version}</releaseinfo>
+
+    <!-- TODO: this isn't showing up. -->
+    <mediaobject>
+      <imageobject role="fo">
+        <imagedata fileref="images/logo.png"
+          format="PNG" align="center"/>
+      </imageobject>
+      <imageobject role="html">
+        <imagedata fileref="images/logo.png" format="PNG" align="center"/>
+      </imageobject>
+    </mediaobject>
+    <!-- END TODO -->
+
+    <authorgroup>
+      <author>
+        <firstname>Roy</firstname>
+        <surname>Clarkson</surname>
+      </author>
+    </authorgroup>
+
+    <legalnotice><para>© SpringSource Inc., 2010</para></legalnotice>
+  </bookinfo>
+
+  <toc></toc>
+  
+  <part id="spring-android-introduction">
+    <title>Introducing the Spring Android project</title>
+    <partintro id="spring-android-intro">
+    	 <para>The Spring Android project simplifies the development of Android applications.</para>
+    </partintro>
+    <xi:include href="./overview.xml"/>
+  </part>
+  
+</book>

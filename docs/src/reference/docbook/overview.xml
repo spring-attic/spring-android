@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="overview"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Spring Android Overview</title>
+
+  <section id="overview-introduction">
+    <title>Introduction</title>
+    <para>
+    </para>
+  </section>
+
+</chapter>

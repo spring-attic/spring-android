@@ -13,117 +13,102 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.springframework.build.Version
 
 // -----------------------------------------------------------------------------
-// Main gradle build file for Spring Mobile Android
-//
-// - run `./gradlew(.bat) build` to kick off a complete compile-test-package
-//
+// Main gradle build file for Spring Mobile
+// @author Chris Beams
 // @author Roy Clarkson
 // -----------------------------------------------------------------------------
-
 
 // -----------------------------------------------------------------------------
 // Configuration for the root project
 // -----------------------------------------------------------------------------
-apply from: "$rootDir/gradle/version.gradle"
+description = 'Spring Android'
+abbreviation = 'ANDROID'
+
+apply plugin: 'base'
 apply plugin: 'idea'
 
-// used for artifact names, building doc upload urls, etc.
-description = 'Spring Android'
-abbreviation = 'SPRING-ANDROID'
+def buildSrcDir = "$rootDir/buildSrc"
+apply from: "$buildSrcDir/wrapper.gradle"
+apply from: "$buildSrcDir/maven-root-pom.gradle"
 
 // -----------------------------------------------------------------------------
 // Configuration for all projects including this one (the root project)
-//
-// @see settings.gradle for list of all subprojects
+// @see settings.gradle for list of all projects
 // -----------------------------------------------------------------------------
 allprojects {
     // group will translate to groupId during pom generation and deployment
-    group = 'org.springframework.spring-android'
+    group = 'org.springframework.android'
 
     // version will be used in maven pom generation as well as determining
     // where artifacts should be deployed, based on release type of snapshot,
     // milestone or release.
     // @see org.springframework.build.Version under buildSrc/ for more info
     // @see gradle.properties for the declaration of this property.
-    version = createVersion(springAndroidVersion)
+    version = new Version(springAndroidVersion)
 
     // default set of maven repositories to be used when resolving dependencies
     repositories {
-        mavenRepo urls: 'http://maven.springframework.org/snapshot'
-        mavenCentral()
         mavenRepo urls: 'http://maven.springframework.org/release'
         mavenRepo urls: 'http://maven.springframework.org/milestone'
-        mavenRepo urls: 'http://repository.springsource.com/maven/bundles/external'
-        mavenRepo urls: 'http://repository.springsource.com/maven/bundles/release'
-        mavenRepo urls: 'http://repository.springsource.com/maven/bundles/milestone'
+        mavenRepo urls: 'http://maven.springframework.org/snapshot'
+        mavenCentral()
     }
 }
 
 
 // -----------------------------------------------------------------------------
-// Create collections of subprojects - each will receive their own configuration
-// - all subprojects that start with spring-android-* are 'java projects'
-// - documentation-related subprojects are not collected here
+// Create collection of subprojects - each will receive their own configuration
+// - all subprojects that start with spring-mobile-* are 'java projects'
+// - documentation-related projects are not collected here
 //
 // @see configure(*) sections below
 // -----------------------------------------------------------------------------
-
 javaprojects = subprojects.findAll { project ->
     project.path.startsWith(':spring-android-')
 }
 
+
 // -----------------------------------------------------------------------------
-// Configuration for all java subprojects
+// Configuration for all java projects
 // -----------------------------------------------------------------------------
 configure(javaprojects) {
 
-    apply plugin: 'java' // tasks for conventional java lifecycle
-    apply plugin: 'maven' // `gradle install` to push jars to local .m2 cache
-    apply plugin: 'eclipse' // `gradle eclipse` to generate .classpath/.project
-    apply plugin: 'idea' // `gradle idea` to generate .ipr/.iml
+    apply plugin: 'java'     // tasks for conventional java lifecycle
+    apply plugin: 'maven'    // `gradle install` to push jars to local .m2 cache
+    apply plugin: 'eclipse'  // `gradle eclipse` to generate .classpath/.project
+    apply plugin: 'idea'     // `gradle idea` to generate .ipr/.iml
+
+    // ensure JDK 5 compatibility
+    sourceCompatibility=1.5
+    targetCompatibility=1.5
 
     // set up dedicated directories for jars and source jars.
     // this makes it easier when putting together the distribution
     libsBinDir = new File(libsDir, 'bin')
     libsSrcDir = new File(libsDir, 'src')
 
-    // all core projects should be OSGi-compliant bundles
-    // add the bundlor task to ensure proper manifests
-    // apply from: "$rootDir/gradle/bundlor.gradle"
-    apply from: "$rootDir/gradle/maven-deployment.gradle"
+    // add tasks for creating source jars and generating poms etc
+    apply from: "$buildSrcDir/maven-deployment.gradle"
 
-    jacksonVersion = '1.5.3'
+    // add tasks for finding and publishing .xsd files
+    apply from: "$buildSrcDir/schema-publication.gradle"
+
     junitVersion = '4.7'
-    mockitoVersion = '1.8.5'
+    log4jVersion = '1.2.16'
     springVersion = '3.0.5.RELEASE'
-	androidVersion = '1.5_r3'
+   	androidVersion = '1.5_r3'
+    jacksonVersion = '1.5.3'
 	slf4jVersion = '1.6.1'
 	slf4jAndroidVersion = '1.6.1-RC1'
 
-    sourceSets {
-        test {
-            resources {
-                srcDirs = ['src/test/resources', 'src/test/java']
-            }
-        }
-    }
-
-    // 'provided' dependencies should be transitive (e.g. servlet-api)
-    configurations {
-        provided { transitive = false }
-    }
-
-    sourceSets.main.compileClasspath += configurations.provided
-    sourceSets.test.compileClasspath += configurations.provided
-    sourceSets.test.runtimeClasspath += configurations.provided
-
     // dependencies that are common across all java projects
     dependencies {
-		testCompile "junit:junit:$junitVersion"
-		testCompile "org.mockito:mockito-all:$mockitoVersion"
-		testCompile "org.springframework:spring-test:$springVersion"
+        testCompile "junit:junit:$junitVersion"
+        testCompile "log4j:log4j:$log4jVersion"
+        testCompile "org.springframework:spring-test:$springVersion"
     }
 
     // enable all compiler warnings (GRADLE-1077)
@@ -144,8 +129,6 @@ project('spring-android-commons-logging') {
     dependencies {
         compile ("com.google.android:android:$androidVersion") { provided = true }
     }
-    
-//	println "classpath = ${configurations.compile.collect {File file -> file.name}}"	
 }
 
 project('spring-android-rest-template') {
@@ -161,8 +144,6 @@ project('spring-android-rest-template') {
         compile "org.slf4j:slf4j-android:$slf4jAndroidVersion"
         compile files(projLibDir)
 	}
-		
-//	println "classpath = ${configurations.compile.collect {File file -> file.name}}"	
 	
     // configuration for extracting required class files
     configurations { dependencyconf }
@@ -269,22 +250,13 @@ project('spring-android-rest-template') {
 	}
 }
 
-// add basic tasks like 'clean' and 'assemble' to the root project. e.g.: allows
-// running `gradle clean` from the root project and deleting the build directory
-apply plugin: 'base'
-
-// add tasks like 'distArchive'
-apply from: "$rootDir/gradle/dist.gradle"
-
-// add tasks like 'snapshotDependencyCheck'
-apply from: "${rootDir}/gradle/checks.gradle"
-
 
 // -----------------------------------------------------------------------------
-// Import tasks related to releasing and managing the project
-// depending on the role played by the current user.
-//
-// @see gradle.properties for more information on roles
+// Configuration for the docs subproject
 // -----------------------------------------------------------------------------
-// add management tasks like `wrapper` for generating the gradlew* scripts
-apply from: "$rootDir/gradle/wrapper.gradle"
+project('docs') {
+    apply from: "$buildSrcDir/docs.gradle"
+}
+
+apply from: "$buildSrcDir/dist.gradle"
+apply from: "$buildSrcDir/checks.gradle"
