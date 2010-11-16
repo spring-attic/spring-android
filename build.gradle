@@ -134,8 +134,8 @@ project('spring-android-commons-logging') {
 project('spring-android-rest-template') {
     description = 'Spring Android Rest Template'
     
-	projBuildDir = "$buildDir/classes/main/"
 	projLibDir = "$buildDir/exploded-jars/"
+	sourceSets.main.resources.srcDir projLibDir
 	    
     dependencies {
 	    compile ("com.google.android:android:$androidVersion") { provided = true }
@@ -227,10 +227,6 @@ project('spring-android-rest-template') {
 					copy {
 						from classFile.file
 						into projLibDir + filePath
-					}
-					copy {
-						from classFile.file
-						into projBuildDir + filePath
 					}
 				}
 			}
