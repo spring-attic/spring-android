@@ -149,11 +149,13 @@ project('spring-android-rest-template') {
     configurations { dependencyconf }
     dependencies {
         dependencyconf "org.springframework:spring-web:$springVersion"
+        dependencyconf "org.springframework:spring-beans:$springVersion"
     }
 
 	compileJava.doFirst {
     	// Required classes for RestTemplate support
 	    classFilter = [
+	    	'org/springframework/beans/factory/DisposableBean.class',
 			'org/springframework/core/NestedExceptionUtils.class',
 			'org/springframework/core/NestedIOException.class',
 			'org/springframework/core/NestedRuntimeException.class',
@@ -173,6 +175,9 @@ project('spring-android-rest-template') {
 			'org/springframework/http/HttpStatus$Series.class',
 			'org/springframework/http/ResponseEntity.class',
 			'org/springframework/http/client/AbstractClientHttpRequest.class',
+			'org/springframework/http/client/CommonsClientHttpRequest.class',
+			'org/springframework/http/client/CommonsClientHttpRequestFactory.class',
+			'org/springframework/http/client/CommonsClientHttpResponse.class',
 			'org/springframework/http/client/ClientHttpRequest.class',
 			'org/springframework/http/client/ClientHttpRequestFactory.class',
 			'org/springframework/http/client/ClientHttpResponse.class',
