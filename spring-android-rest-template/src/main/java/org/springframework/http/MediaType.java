@@ -215,6 +215,10 @@ public class MediaType implements Comparable<MediaType> {
 	 * @throws IllegalArgumentException if any of the parameters contain illegal characters
 	 */
 	public MediaType(String type, String subtype, Charset charSet) {
+		/*This method is a modified version of the one in SpringFramework.  
+		 * It addresses an incompatibility with Android with charSet.toString().  
+		 * It was changed to charSet.name().		  
+		 */
 		this(type, subtype, Collections.singletonMap(PARAM_CHARSET, charSet.name()));
 	}
 

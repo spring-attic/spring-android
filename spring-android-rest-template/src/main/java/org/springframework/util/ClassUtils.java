@@ -16,7 +16,8 @@
 
 package org.springframework.util;
 
-//NO_ANDROID import java.beans.Introspector;
+//Removed because it is either unnecessary or unavailable on Android
+//import java.beans.Introspector;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -440,7 +441,7 @@ public abstract class ClassUtils {
 	 * @return the short name rendered in a standard JavaBeans property format
 	 * @see java.beans.Introspector#decapitalize(String)
 	 */
-	/* NO_ANDRIOD
+	/* Removed because it is either unnecessary or unavailable on Android
 	public static String getShortNameAsProperty(Class<?> clazz) {
 		String shortName = ClassUtils.getShortName(clazz);
 		int dotIndex = shortName.lastIndexOf('.');
@@ -697,7 +698,7 @@ public abstract class ClassUtils {
 	 * @return the specific target method, or the original method if the
 	 * <code>targetClass</code> doesn't implement it or is <code>null</code>
 	 */
-	/* NO_ANDRIOD
+	/* Removed because it is either unnecessary or unavailable on Android
 	public static Method getMostSpecificMethod(Method method, Class<?> targetClass) {
 		Method specificMethod = null;
 		if (method != null && isOverridable(method, targetClass) &&

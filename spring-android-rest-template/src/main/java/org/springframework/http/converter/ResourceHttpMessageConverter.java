@@ -87,7 +87,7 @@ public class ResourceHttpMessageConverter implements HttpMessageConverter<Resour
 	}
 
 	private MediaType getContentType(Resource resource) {
-		/* NO_ANDROID
+		/* Removed because it is either unnecessary or unavailable on Android
 		if (jafPresent) {
 			return ActivationMediaTypeFactory.getMediaType(resource);
 		}
@@ -105,7 +105,7 @@ public class ResourceHttpMessageConverter implements HttpMessageConverter<Resour
 	/**
 	 * Inner class to avoid hard-coded JAF dependency.
 	 */
-	/* NO_ANDROID
+	/* Removed because it is either unnecessary or unavailable on Android
 	private static class ActivationMediaTypeFactory {
 
 		private static final FileTypeMap fileTypeMap;

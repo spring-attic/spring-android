@@ -43,7 +43,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
-//NO_ANDROID import org.springframework.web.util.WebUtils;
+//Removed because it is either unnecessary or unavailable on Android
+//import org.springframework.web.util.WebUtils;
 
 /**
  * Implementation of {@link HttpMessageConverter} that can handle form data, including multipart form data
@@ -92,7 +93,8 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 
 	private final Random rnd = new Random();
 
-	//NO_ANDROID private Charset charset = Charset.forName(WebUtils.DEFAULT_CHARACTER_ENCODING);
+	//Removed because it is either unnecessary or unavailable on Android
+	//private Charset charset = Charset.forName(WebUtils.DEFAULT_CHARACTER_ENCODING);
 	
 	private Charset charset = Charset.forName("ISO-8859-1");
 

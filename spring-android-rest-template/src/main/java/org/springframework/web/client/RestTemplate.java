@@ -138,16 +138,18 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 		this.messageConverters.add(new ByteArrayHttpMessageConverter());
 		this.messageConverters.add(new StringHttpMessageConverter());
 		this.messageConverters.add(new ResourceHttpMessageConverter());
-		//NO ANDROID YET this.messageConverters.add(new SourceHttpMessageConverter());
-		//NO ANDROID yet this.messageConverters.add(new XmlAwareFormHttpMessageConverter());
-		/*NO_ANDROID YET
+		//Removed because it is either unnecessary or unavailable on Android
+		//this.messageConverters.add(new SourceHttpMessageConverter());
+		//Removed because it is either unnecessary or unavailable on Android
+		//this.messageConverters.add(new XmlAwareFormHttpMessageConverter());
+		/*Removed because it is either unnecessary or unavailable on Android
 		if (jaxb2Present) {
 			this.messageConverters.add(new Jaxb2RootElementHttpMessageConverter());
 		}*/
 		if (jacksonPresent) {
 			this.messageConverters.add(new MappingJacksonHttpMessageConverter());
 		}
-		/* NO_ANDROID YET
+		/* Removed because it is either unnecessary or unavailable on Android
 		if (romePresent) {
 			this.messageConverters.add(new AtomFeedHttpMessageConverter());
 			this.messageConverters.add(new RssChannelHttpMessageConverter());

@@ -45,7 +45,7 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	@Override
 	public File getFile() throws IOException {
 		URL url = getURL();
-		/* NO_ANDRIOD
+		/* Removed because it is either unnecessary or unavailable on Android 
 		if (url.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {
 			return VfsResourceDelegate.getResource(url).getFile();
 		}*/
@@ -61,7 +61,7 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 		URL url = getURL();
 		if (ResourceUtils.isJarURL(url)) {
 			URL actualUrl = ResourceUtils.extractJarFileURL(url);
-			/* NO_ANDROID
+			/* Removed because it is either unnecessary or unavailable on Android
 			if (actualUrl.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {
 				return VfsResourceDelegate.getResource(actualUrl).getFile();
 			}*/
@@ -78,7 +78,7 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	 * @see org.springframework.util.ResourceUtils#getFile(java.net.URI, String)
 	 */
 	protected File getFile(URI uri) throws IOException {
-		/* NO_ANDROID
+		/* Removed because it is either unnecessary or unavailable on Android
 		if (uri.getScheme().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {
 			return VfsResourceDelegate.getResource(uri).getFile();
 		}*/
@@ -171,7 +171,7 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	/**
 	 * Inner delegate class, avoiding a hard JBoss VFS API dependency at runtime.
 	 */
-	/* NO_ANDRIOD
+	/* Removed because it is either unnecessary or unavailable on Android
 	private static class VfsResourceDelegate {
 
 		public static Resource getResource(URL url) throws IOException {

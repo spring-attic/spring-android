@@ -1,2 +1,22 @@
-Spring Android Changelog
-============================
+Spring Android 1.0.0 Milestone 1
+================================
+
+New Features
+	* Commons-Logging facade for Android allows libraries using commons-logging
+	  to log to Android's native log. The logging levels specified for Commons 
+	  Logging can be almost directly mapped to the levels that exist in the 
+	  Google Android platform. The following list shows the mapping 
+	  implemented by this logger.
+	  
+		* JCL TRACE to Android VERBOSE
+		* JCL DEBUG to Android DEBUG
+		* JCL INFO to Android INFO
+		* JCL WARN to Android WARN
+		* JCL ERROR to Android ERROR
+		* JCL FATAL to Android ERROR	  
+
+	* RestTemplate support in Android. You can now utilize RestTemplate calls in
+	  Android projects using the CommonsClientHttpRequestFactory.  Due to 
+	  known issues with Android's java.net.HttpURLConnection implementation, we
+	  recommend avoiding using SimpleClientHttpRequestFactory at this time.
+	  

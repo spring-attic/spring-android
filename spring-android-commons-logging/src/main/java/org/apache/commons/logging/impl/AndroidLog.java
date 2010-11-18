@@ -59,7 +59,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * Delegates to the <code>isLoggable<code> method of the  
 	 * <code>android.util.Log</code>.
 	 */
-	@Override
 	public boolean isTraceEnabled() {
 		return Log.isLoggable(name, Log.VERBOSE);
 	}
@@ -71,7 +70,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param message
 	 *          the message to log. Converted to {@link String}
 	 */
-	@Override
 	public void trace(Object message) {
 		Log.v(name, String.valueOf(message));
 	}
@@ -85,7 +83,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param t
 	 *          the exception to log
 	 */
-	@Override
 	public void trace(Object message, Throwable t) {
 		Log.v(name, String.valueOf(message), t);
 	}
@@ -94,7 +91,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * Delegates to the <code>isLoggable<code> method of   
 	 * <code>android.util.Log</code>.
 	 */
-	@Override
 	public boolean isDebugEnabled() {
 		return Log.isLoggable(name, Log.DEBUG);
 	}
@@ -106,7 +102,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param message
 	 *          the message to log. Converted to {@link String}
 	 */
-	@Override
 	public void debug(Object message) {
 		Log.d(name, String.valueOf(message));
 	}
@@ -120,7 +115,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param t
 	 *          the exception to log
 	 */
-	@Override
 	public void debug(Object message, Throwable t) {
 		Log.d(name, String.valueOf(message), t);
 	}
@@ -129,7 +123,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * Delegates to the <code>isLoggable<code> method of the  
 	 * <code>android.util.Log</code>.
 	 */
-	@Override
 	public boolean isInfoEnabled() {
 		return Log.isLoggable(name, Log.INFO);
 	}
@@ -141,7 +134,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param message
 	 *          the message to log. Converted to {@link String}
 	 */
-	@Override
 	public void info(Object message) {
 		Log.i(name, String.valueOf(message));
 	}
@@ -155,7 +147,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param t
 	 *          the exception to log
 	 */
-	@Override
 	public void info(Object message, Throwable t) {
 		Log.i(name, String.valueOf(message), t);
 	}
@@ -164,7 +155,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * Delegates to the <code>isLoggable<code> method of the  
 	 * <code>android.util.Log</code>.
 	 */
-	@Override
 	public boolean isWarnEnabled() {
 		return Log.isLoggable(name, Log.WARN);
 	}
@@ -176,7 +166,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param message
 	 *          the message to log. Converted to {@link String}
 	 */
-	@Override
 	public void warn(Object message) {
 		Log.w(name, String.valueOf(message));
 	}
@@ -190,7 +179,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param t
 	 *          the exception to log
 	 */
-	@Override
 	public void warn(Object message, Throwable t) {
 		Log.w(name, String.valueOf(message), t);
 	}
@@ -199,7 +187,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * Delegates to the <code>isLoggable<code> method of   
 	 * <code>android.util.Log</code>.
 	 */
-	@Override
 	public boolean isErrorEnabled() {
 		return Log.isLoggable(name, Log.ERROR);
 	}
@@ -211,7 +198,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param message
 	 *          the message to log. Converted to {@link String}
 	 */
-	@Override
 	public void error(Object message) {
 		Log.e(name, String.valueOf(message));
 	}
@@ -225,7 +211,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param t
 	 *          the exception to log
 	 */
-	@Override
 	public void error(Object message, Throwable t) {
 		Log.e(name, String.valueOf(message), t);
 	}
@@ -234,7 +219,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * Delegates to the <code>isLoggable<code> method of   
 	 * <code>android.util.Log</code>.
 	 */
-	@Override
 	public boolean isFatalEnabled() {
 		return Log.isLoggable(name, Log.ERROR);
 	}
@@ -246,7 +230,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param message
 	 *          the message to log. Converted to {@link String}
 	 */
-	@Override
 	public void fatal(Object message) {
 		Log.e(name, String.valueOf(message));
 	}
@@ -260,7 +243,6 @@ public class AndroidLog implements org.apache.commons.logging.Log, Serializable 
 	 * @param t
 	 *          the exception to log
 	 */
-	@Override
 	public void fatal(Object message, Throwable t) {
 		Log.e(name, String.valueOf(message), t);
 	}
