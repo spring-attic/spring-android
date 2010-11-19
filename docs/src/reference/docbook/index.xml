@@ -32,14 +32,8 @@
 
   <toc></toc>
   
-  <part id="spring-android-introduction">
-    <title>Introducing the Spring Android project</title>
-    <partintro id="spring-android-intro">
-    	 <para>The Spring Android project simplifies the development of Android applications.</para>
-    </partintro>
-    <xi:include href="./overview.xml"/>
-    <xi:include href="./commons-logging.xml"/>
-    <xi:include href="./rest-template.xml"/>
-  </part>
+  <xi:include href="./overview.xml"/>
+  <xi:include href="./commons-logging.xml"/>
+  <xi:include href="./rest-template.xml"/>
   
 </book>
