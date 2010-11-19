@@ -6,26 +6,8 @@
   <section id="spring-android-rest-template-introduction">
     <title>Introduction</title>
     <para>
-		Spring Framework's RestTemplate is a powerful and robust set of 
-		functionality.  However, the current implementation of RestTemplate
-		in Spring Framework is not quite compatible with Android, and  
-		includes functionality that is either unnecessary or unavailable on
-		Android.  The goal of Spring Android is to provide a light weight
-		implementation of Rest Template that is compatible with Android.
-	</para>
-	<para>
-		To accomplish this, the core set of classes required to use Rest
-		Template were identified and isolated into their own library.  A subset
-		of these classes had to be modified to support Android, with most
-		of the modifications being to remove parts that were not needed.
-		These modified source files are included in this module.
-	</para>
-	<para>
-		The remaining classes required to support Rest Template remain in the
-		Spring Framework packages, but are being dynamically pulled into this 
-		module through the Gradle build process.  So the resulting jar file 
-		contains them, but the source files are not being maintained in 
-		multiple places.  The result is a lightweight, functional library.
+		Spring's RestTemplate is a robust, popular Java-based REST client.
+		The Spring Android Rest Template Module provides a version of RestTemplate that works in an Android environment.
 	</para>
   </section>
   
@@ -37,20 +19,35 @@
 <dependency>
     <groupId>org.springframework.spring-android</groupId>
     <artifactId>spring-android-rest-template</artifactId>
-    <version>${org.springframework.spring-android-version}</version>
+    <version>${org.springframework.android-version}</version>
 </dependency>]]>
 		</programlisting>
+	</para>
+	<para>
+		Doing so will transitively include the spring-android-commons-logging module.
+	</para>
+	<para>
+		At the moment, commons-httpclient 3.x is also required for RestTemplate to work on Android without further customization:
+	</para>
+	<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>commons-httpclient</groupId>
+    <artifactId>commons-httpclient</artifactId>
+    <version>3.1</version>
+</dependency>]]>
+	</programlisting>
+	<para>
+		In a future release, Spring Android will provide support for Http Client 4, which is used on Android by default.
 	</para>
   </section>
   
   <section id="spring-android-rest-template-example1">
-  <title>Example 1</title>
+  <title>Basic usage example</title>
   <para>
-		Using Rest Template, you can make requests to RESTful APIs. 
+		Using Rest Template, it's easy to invoke RESTful APIs.  Below are several usage examples.
   </para>
   <para>
-		The following example shows a query to google for the search term 
-		"Thanksgiving". 
+		The following example shows a query to google for the search term "Thanksgiving". 
 		<programlisting language="java"><![CDATA[
 RestTemplate restTemplate = new RestTemplate();
 restTemplate.setRequestFactory(new CommonsClientHttpRequestFactory());
@@ -61,39 +58,39 @@ String result = restTemplate.getForObject(url, String.class, "Thanksgiving");]]>
   </section>
   
   <section id="spring-android-rest-template-example2">
-  <title>Example 2</title>
+  <title>Usage example: reading JSON data</title>
 	<para>
-		Alternatively, say you have defined an object you wish to populate from
-		a RESTful web request.
+		Alternatively, suppose you have defined a Java object you wish to populate from a RESTful web request that returns JSON content.
 	</para>
 	<para>
-		Define your object based on the JSON data being returned from the 
-		RESTful request.
+		Define your object based on the JSON data being returned from the RESTful request:
 		<programlisting language="java"><![CDATA[
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-		
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Event {
 
-	@JsonProperty
-	private long id;
+    private Long id;
 
-	@JsonProperty
-	private String title;
+    private String title;
 	
-	public long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setId(Long id) {
+        this.id = id
+    }
+
+    public String getTitle() {
+        return title;
+    }
+	
+    public String setTitle(String title) {
+        this.title = title;
+    }
 }]]>
 		</programlisting>
 	</para>
 	<para>
-		Make the RestTemplate request 
+		Make the RestTemplate request: 
 		<programlisting language="java"><![CDATA[
 RestTemplate restTemplate = new RestTemplate();
 restTemplate.setRequestFactory(new CommonsClientHttpRequestFactory());

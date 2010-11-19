@@ -3,11 +3,11 @@
     xmlns:xlink="http://www.w3.org/1999/xlink">
   <title>Spring Android Overview</title>
 
-  <section id="overview-introduction">
+  <section id="spring-android-overview-introduction">
     <title>Introduction</title>
     <para>
-    		Spring Android contains functionality to help make use of existing code and 
-    		knowledge of SpringSource technologies
+ 		The Spring Android project supports the usage of the Spring Framework in an Android environment.
+ 		This includes the ability to use RestTemplate as the REST client for your Android applications.
     </para>
   </section>
 
