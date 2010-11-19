@@ -101,8 +101,6 @@ configure(javaprojects) {
     springVersion = '3.0.5.RELEASE'
     androidVersion = '1.5_r3'
     jacksonVersion = '1.5.3'
-    slf4jVersion = '1.6.1'
-    slf4jAndroidVersion = '1.6.1-RC1'
 
     // dependencies that are common across all java projects
     dependencies {
@@ -139,7 +137,7 @@ project('spring-android-rest-template') {
 	
 	dependencies {
         compile ("com.google.android:android:$androidVersion") { provided = true }
-        compile "org.slf4j:slf4j-android:$slf4jAndroidVersion"
+        compile project(":spring-android-commons-logging")
         compile files(projLibDir)
     }
 	
