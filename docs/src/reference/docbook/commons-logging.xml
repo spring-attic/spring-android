@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="commons-logging" 
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Spring Android Commons Logging Module</title>
+
+  <section id="spring-android-commons-logging-introduction">
+    <title>Introduction</title>
+    <para>
+		Android provides it's own logging library, which you can use when building new applications.  
+		However, sometimes existing libraries utilize the Commons Logging framework.  In these cases
+		it is useful to have those log requests redirected to the Android log.
+    </para>
+  </section>
+
+  <section id="spring-android-commons-logging-howtoget">
+    <title>How to get</title>
+	<para>
+		Add the spring-android-commons-logging artifact to your classpath:
+		<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.spring-android</groupId>
+    <artifactId>spring-android-commons-logging</artifactId>
+    <version>${org.springframework.spring-android-version}</version>
+</dependency>]]>
+		</programlisting>
+	</para>
+  </section>
+
+  <section id="spring-android-commons-logging-logfactory">
+    <title>LogFactory</title>
+    <para>
+    	LogFactory is the entry point for commons logging. You can get the 
+    	LogFactory instance to create new Log instances, or get an existing Log 
+    	instance.
+    </para>
+	<para>
+		To use, call the static method to obtain the LogFactory instance
+		<programlisting language="java"><![CDATA[
+LogFactory logFactory = LogFactory.getFactory();]]>
+		</programlisting>
+	</para>
+	<para>
+		You can also call a static method to obtain a new Log instance
+		<programlisting language="java"><![CDATA[
+Log logA = LogFactory.getLog(myClass.class);
+Log logB = LogFactory.getLog("my log");]]>
+		</programlisting>
+	</para>
+	<para>
+		AndroidLogFactory is the concrete implementation of abstract LogFactory. 
+		The LogFactory maintains a single instance of the AndroidLogFactory and 
+		delegates all requests to that instance.
+	</para>
+	<para>
+		
+	</para>
+  </section>
+
+  <section id="spring-android-commons-logging-log">
+    <title>Log</title>
+    <para>
+		The Log interface is used to make all logging requests. AndroidLog 
+		implements the Log interface.  AndroidLogFactory returns instances 
+		of AndroidLog when the getLog() factory method is called. AndroidLog
+		delegates all Log interface methods to the Android log.
+	</para>
+	<para>
+		Commons Logging almost directly maps to Android Logging, as illustrated
+		in the following samples.
+	</para>
+	<para>
+		Perform Trace logging. Trace logging maps to Android Verbose log.
+		<programlisting language="java"><![CDATA[
+Log log = LogFactory.getLog(myClass.class);
+if (log.isTraceEnabled()) {
+	log.trace("trace message");
+	
+	Exception e = new Exception("trace log test");
+	log.trace("trace message with exception", e)
+}]]>
+		</programlisting>
+	</para>
+	<para>
+		Perform Debug logging. Debug logging maps to Android Debug log.
+		<programlisting language="java"><![CDATA[
+Log log = LogFactory.getLog(myClass.class);
+if (log.isDebugEnabled()) {
+	log.trace("debug message");
+	
+	Exception e = new Exception("debug log test");
+	log.trace("debug message with exception", e)
+}]]>
+		</programlisting>
+	</para>
+	<para>
+		Perform Info logging. Info logging maps to Android Info log.
+		<programlisting language="java"><![CDATA[
+Log log = LogFactory.getLog(myClass.class);
+if (log.isInfoEnabled()) {
+	log.trace("info message");
+	
+	Exception e = new Exception("info log test");
+	log.trace("info message with exception", e)
+}]]>
+		</programlisting>
+	</para>
+	<para>
+		Perform Warn logging. Warn logging maps to Android Warn log.
+		<programlisting language="java"><![CDATA[
+Log log = LogFactory.getLog(myClass.class);
+if (log.isWarnEnabled()) {
+	log.trace("warn message");
+	
+	Exception e = new Exception("warn log test");
+	log.trace("warn message with exception", e)
+}]]>
+		</programlisting>
+	</para>
+	<para>
+		Perform Error logging. Error logging maps to Android Error Log.
+		<programlisting language="java"><![CDATA[
+Log log = LogFactory.getLog(myClass.class);
+if (log.isErrorEnabled()) {
+	log.trace("error message");
+	
+	Exception e = new Exception("error log test");
+	log.trace("error message with exception", e)
+}]]>
+		</programlisting>
+	</para>
+	<para>
+		Perform Fatal logging. Android logging does not have a level higher
+		than Error, so Fatal logging is also mapped to Android Error log.
+		<programlisting language="java"><![CDATA[
+Log log = LogFactory.getLog(myClass.class);
+if (log.isFatalEnabled()) {
+	log.trace("fatal message");
+	
+	Exception e = new Exception("fatal log test");
+	log.trace("fatal message with exception", e)
+}]]>
+		</programlisting>
+    </para>
+  </section>
+	
+</chapter>

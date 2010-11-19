@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="spring-mobile-reference"
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="spring-android-reference"
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xlink="http://www.w3.org/1999/xlink">
   <bookinfo>
@@ -38,6 +38,8 @@
     	 <para>The Spring Android project simplifies the development of Android applications.</para>
     </partintro>
     <xi:include href="./overview.xml"/>
+    <xi:include href="./commons-logging.xml"/>
+    <xi:include href="./rest-template.xml"/>
   </part>
   
 </book>

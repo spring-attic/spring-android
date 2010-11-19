@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="rest-template" 
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Spring Android Rest Template Module</title>
+
+  <section id="spring-android-rest-template-introduction">
+    <title>Introduction</title>
+    <para>
+		Spring Framework's RestTemplate is a powerful and robust set of 
+		functionality.  However, the current implementation of RestTemplate
+		in Spring Framework is not quite compatible with Android, and  
+		includes functionality that is either unnecessary or unavailable on
+		Android.  The goal of Spring Android is to provide a light weight
+		implementation of Rest Template that is compatible with Android.
+	</para>
+	<para>
+		To accomplish this, the core set of classes required to use Rest
+		Template were identified and isolated into their own library.  A subset
+		of these classes had to be modified to support Android, with most
+		of the modifications being to remove parts that were not needed.
+		These modified source files are included in this module.
+	</para>
+	<para>
+		The remaining classes required to support Rest Template remain in the
+		Spring Framework packages, but are being dynamically pulled into this 
+		module through the Gradle build process.  So the resulting jar file 
+		contains them, but the source files are not being maintained in 
+		multiple places.  The result is a lightweight, functional library.
+	</para>
+  </section>
+  
+    <section id="spring-android-rest-template-howtoget">
+    <title>How to get</title>
+	<para>
+		Add the spring-android-rest-template artifact to your classpath:
+		<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.spring-android</groupId>
+    <artifactId>spring-android-rest-template</artifactId>
+    <version>${org.springframework.spring-android-version}</version>
+</dependency>]]>
+		</programlisting>
+	</para>
+  </section>
+  
+  <section id="spring-android-rest-template-example1">
+  <title>Example 1</title>
+  <para>
+		Using Rest Template, you can make requests to RESTful APIs. 
+  </para>
+  <para>
+		The following example shows a query to google for the search term 
+		"Thanksgiving". 
+		<programlisting language="java"><![CDATA[
+RestTemplate restTemplate = new RestTemplate();
+restTemplate.setRequestFactory(new CommonsClientHttpRequestFactory());
+String url = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q={query}";
+String result = restTemplate.getForObject(url, String.class, "Thanksgiving");]]>
+		</programlisting>
+	</para>
+  </section>
+  
+  <section id="spring-android-rest-template-example2">
+  <title>Example 2</title>
+	<para>
+		Alternatively, say you have defined an object you wish to populate from
+		a RESTful web request.
+	</para>
+	<para>
+		Define your object based on the JSON data being returned from the 
+		RESTful request.
+		<programlisting language="java"><![CDATA[
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
+		
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Event {
+
+	@JsonProperty
+	private long id;
+
+	@JsonProperty
+	private String title;
+	
+	public long getId() {
+		return id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+}]]>
+		</programlisting>
+	</para>
+	<para>
+		Make the RestTemplate request 
+		<programlisting language="java"><![CDATA[
+RestTemplate restTemplate = new RestTemplate();
+restTemplate.setRequestFactory(new CommonsClientHttpRequestFactory());
+String url = "https://mypretendservice.com/events";
+Event[] events = restTemplate.getForObject(url, Event[].class);]]>
+		</programlisting>
+	</para>
+  </section>
+</chapter>
