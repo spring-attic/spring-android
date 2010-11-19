@@ -17,7 +17,7 @@
 		Add the spring-android-rest-template artifact to your classpath:
 		<programlisting language="xml"><![CDATA[
 <dependency>
-    <groupId>org.springframework.spring-android</groupId>
+    <groupId>org.springframework.android</groupId>
     <artifactId>spring-android-rest-template</artifactId>
     <version>${org.springframework.android-version}</version>
 </dependency>]]>
