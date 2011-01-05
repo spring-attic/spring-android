@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,37 +17,27 @@
 package org.springframework.http.converter;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
-//NO_ANDROID import javax.activation.FileTypeMap;
-//NO_ANDROID import javax.activation.MimetypesFileTypeMap;
 
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.util.ClassUtils;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Implementation of {@link HttpMessageConverter} that can read and write {@link Resource Resources}.
  *
- * <p>By default, this converter can read all media types. The Java Activation Framework (JAF) - if available - is used
- * to determine the {@code Content-Type} of written resources. If JAF is not available, {@code application/octet-stream}
- * is used.
+ * <p>By default, this converter can read all media types. {@code application/octet-stream} is used
+ * to determine the {@code Content-Type} of written resources.
  *
  * @author Arjen Poutsma
  * @since 3.0.2
  */
 public class ResourceHttpMessageConverter implements HttpMessageConverter<Resource> {
-
-	private static final boolean jafPresent =
-			ClassUtils.isPresent("javax.activation.FileTypeMap", ResourceHttpMessageConverter.class.getClassLoader());
 
 	public boolean canRead(Class<?> clazz, MediaType mediaType) {
 		return Resource.class.isAssignableFrom(clazz);
@@ -87,63 +77,11 @@ public class ResourceHttpMessageConverter implements HttpMessageConverter<Resour
 	}
 
 	private MediaType getContentType(Resource resource) {
-		/* Removed because it is either unnecessary or unavailable on Android
-		if (jafPresent) {
-			return ActivationMediaTypeFactory.getMediaType(resource);
-		}
-		else {
-			return MediaType.APPLICATION_OCTET_STREAM;
-		}*/
 		return MediaType.APPLICATION_OCTET_STREAM;
 	}
 
 	protected Long getContentLength(Resource resource, MediaType contentType) throws IOException {
 		return resource.contentLength();
 	}
-
-
-	/**
-	 * Inner class to avoid hard-coded JAF dependency.
-	 */
-	/* Removed because it is either unnecessary or unavailable on Android
-	private static class ActivationMediaTypeFactory {
-
-		private static final FileTypeMap fileTypeMap;
-
-		static {
-			fileTypeMap = loadFileTypeMapFromContextSupportModule();
-		}
-
-		private static FileTypeMap loadFileTypeMapFromContextSupportModule() {
-			// see if we can find the extended mime.types from the context-support module
-			Resource mappingLocation = new ClassPathResource("org/springframework/mail/javamail/mime.types");
-			if (mappingLocation.exists()) {
-				InputStream inputStream = null;
-				try {
-					inputStream = mappingLocation.getInputStream();
-					return new MimetypesFileTypeMap(inputStream);
-				}
-				catch (IOException ex) {
-					// ignore
-				}
-				finally {
-					if (inputStream != null) {
-						try {
-							inputStream.close();
-						}
-						catch (IOException ex) {
-							// ignore
-						}
-					}
-				}
-			}
-			return FileTypeMap.getDefaultFileTypeMap();
-		}
-
-		public static MediaType getMediaType(Resource resource) {
-			String mediaType = fileTypeMap.getContentType(resource.getFilename());
-			return (StringUtils.hasText(mediaType) ? MediaType.parseMediaType(mediaType) : null);
-		}
-	}*/
 
 }

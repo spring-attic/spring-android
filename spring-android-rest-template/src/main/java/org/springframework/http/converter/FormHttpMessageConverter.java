@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,8 +43,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
-//Removed because it is either unnecessary or unavailable on Android
-//import org.springframework.web.util.WebUtils;
 
 /**
  * Implementation of {@link HttpMessageConverter} that can handle form data, including multipart form data
@@ -92,9 +90,6 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 				 	'V', 'W', 'X', 'Y', 'Z'};
 
 	private final Random rnd = new Random();
-
-	//Removed because it is either unnecessary or unavailable on Android
-	//private Charset charset = Charset.forName(WebUtils.DEFAULT_CHARACTER_ENCODING);
 	
 	private Charset charset = Charset.forName("ISO-8859-1");
 

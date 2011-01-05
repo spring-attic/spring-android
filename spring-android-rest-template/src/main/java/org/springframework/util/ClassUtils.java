@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.springframework.util;
 
-//Removed because it is either unnecessary or unavailable on Android
-//import java.beans.Introspector;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -435,21 +433,6 @@ public abstract class ClassUtils {
 	}
 
 	/**
-	 * Return the short string name of a Java class in uncapitalized JavaBeans
-	 * property format. Strips the outer class name in case of an inner class.
-	 * @param clazz the class
-	 * @return the short name rendered in a standard JavaBeans property format
-	 * @see java.beans.Introspector#decapitalize(String)
-	 */
-	/* Removed because it is either unnecessary or unavailable on Android
-	public static String getShortNameAsProperty(Class<?> clazz) {
-		String shortName = ClassUtils.getShortName(clazz);
-		int dotIndex = shortName.lastIndexOf('.');
-		shortName = (dotIndex != -1 ? shortName.substring(dotIndex + 1) : shortName);
-		return Introspector.decapitalize(shortName);
-	}*/
-
-	/**
 	 * Determine the name of the class file, relative to the containing
 	 * package: e.g. "String.class"
 	 * @param clazz the class
@@ -682,33 +665,6 @@ public abstract class ClassUtils {
 	}
 
 	/**
-	 * Given a method, which may come from an interface, and a target class used
-	 * in the current reflective invocation, find the corresponding target method
-	 * if there is one. E.g. the method may be <code>IFoo.bar()</code> and the
-	 * target class may be <code>DefaultFoo</code>. In this case, the method may be
-	 * <code>DefaultFoo.bar()</code>. This enables attributes on that method to be found.
-	 * <p><b>NOTE:</b> In contrast to {@link org.springframework.aop.support.AopUtils#getMostSpecificMethod},
-	 * this method does <i>not</i> resolve Java 5 bridge methods automatically.
-	 * Call {@link org.springframework.core.BridgeMethodResolver#findBridgedMethod}
-	 * if bridge method resolution is desirable (e.g. for obtaining metadata from
-	 * the original method definition).
-	 * @param method the method to be invoked, which may come from an interface
-	 * @param targetClass the target class for the current invocation.
-	 * May be <code>null</code> or may not even implement the method.
-	 * @return the specific target method, or the original method if the
-	 * <code>targetClass</code> doesn't implement it or is <code>null</code>
-	 */
-	/* Removed because it is either unnecessary or unavailable on Android
-	public static Method getMostSpecificMethod(Method method, Class<?> targetClass) {
-		Method specificMethod = null;
-		if (method != null && isOverridable(method, targetClass) &&
-				targetClass != null && !targetClass.equals(method.getDeclaringClass())) {
-			specificMethod = ReflectionUtils.findMethod(targetClass, method.getName(), method.getParameterTypes());
-		}
-		return (specificMethod != null ? specificMethod : method);
-	}*/
-
-	/**
 	 * Determine whether the given method is overridable in the given target class.
 	 * @param method the method to check
 	 * @param targetClass the target class to check against
@@ -742,7 +698,6 @@ public abstract class ClassUtils {
 			return null;
 		}
 	}
-
 
 	/**
 	 * Check if the given class represents a primitive wrapper,

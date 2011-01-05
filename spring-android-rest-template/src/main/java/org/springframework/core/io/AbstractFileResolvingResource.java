@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,10 +45,6 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	@Override
 	public File getFile() throws IOException {
 		URL url = getURL();
-		/* Removed because it is either unnecessary or unavailable on Android 
-		if (url.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {
-			return VfsResourceDelegate.getResource(url).getFile();
-		}*/
 		return ResourceUtils.getFile(url, getDescription());
 	}
 
@@ -61,10 +57,6 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 		URL url = getURL();
 		if (ResourceUtils.isJarURL(url)) {
 			URL actualUrl = ResourceUtils.extractJarFileURL(url);
-			/* Removed because it is either unnecessary or unavailable on Android
-			if (actualUrl.getProtocol().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {
-				return VfsResourceDelegate.getResource(actualUrl).getFile();
-			}*/
 			return ResourceUtils.getFile(actualUrl, "Jar URL");
 		}
 		else {
@@ -78,10 +70,6 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 	 * @see org.springframework.util.ResourceUtils#getFile(java.net.URI, String)
 	 */
 	protected File getFile(URI uri) throws IOException {
-		/* Removed because it is either unnecessary or unavailable on Android
-		if (uri.getScheme().startsWith(ResourceUtils.URL_PROTOCOL_VFS)) {
-			return VfsResourceDelegate.getResource(uri).getFile();
-		}*/
 		return ResourceUtils.getFile(uri, getDescription());
 	}
 
@@ -167,19 +155,4 @@ public abstract class AbstractFileResolvingResource extends AbstractResource {
 		}
 	}
 
-
-	/**
-	 * Inner delegate class, avoiding a hard JBoss VFS API dependency at runtime.
-	 */
-	/* Removed because it is either unnecessary or unavailable on Android
-	private static class VfsResourceDelegate {
-
-		public static Resource getResource(URL url) throws IOException {
-			return new VfsResource(VfsUtils.getRoot(url));
-		}
-
-		public static Resource getResource(URI uri) throws IOException {
-			return new VfsResource(VfsUtils.getRoot(uri));
-		}
-	}*/
 }
