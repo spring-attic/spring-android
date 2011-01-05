@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2010-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,6 +100,7 @@ configure(javaprojects) {
     log4jVersion = '1.2.16'
     springVersion = '3.0.5.RELEASE'
     androidVersion = '1.5_r3'
+    httpComponentsClientVersion = '4.0.1'
     javaxServletApiVersion = '2.5'
     commonsFileuploadVersion = '1.2'
     jettyVersion = '6.1.9'
@@ -128,31 +129,30 @@ configure(javaprojects) {
 project('spring-android-commons-logging') {
     description = 'Spring Android Commons Logging'
     dependencies {
-        compile ("com.google.android:android:$androidVersion") { 
-            provided = true
-			transitive = false
-        }
+        compile ("com.google.android:android:$androidVersion") { provided = true }
     }
 }
 
 project('spring-android-rest-template') {
     description = 'Spring Android Rest Template'
     
+    // creates a temporary location for storing class files extracted from the 
+    // springframework jars
     projLibDir = "$buildDir/exploded-jars/"
+    
+    // build against the extracted class files
     sourceSets.main.resources.srcDir projLibDir
 	
 	dependencies {
-//      compile project(":spring-android-commons-logging")
-        compile ("com.google.android:android:$androidVersion") { provided = true }
+        compile ("org.apache.httpcomponents:httpclient:$httpComponentsClientVersion") { provided = true }
         compile files(projLibDir)
-        testCompile ("javax.servlet:servlet-api:$javaxServletApiVersion")
-        testCompile ("commons-fileupload:commons-fileupload:$commonsFileuploadVersion")
+        testCompile "javax.servlet:servlet-api:$javaxServletApiVersion"
+        testCompile "commons-fileupload:commons-fileupload:$commonsFileuploadVersion"
         testCompile "org.mortbay.jetty:jetty:$jettyVersion"
-        testCompile "org.springframework:spring-web:$springVersion"
         testCompile "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion"
     }
 	
-    // configuration for extracting required class files
+    // configuration for extracting required class files from springframework
     configurations { dependencyconf }
     dependencies {
         dependencyconf "org.springframework:spring-web:$springVersion"
@@ -160,7 +160,7 @@ project('spring-android-rest-template') {
     }
 
     compileJava.doFirst {
-        // Required classes for RestTemplate support
+        // Required springframework classes for RestTemplate support
         classFilter = [
             'org/springframework/beans/factory/DisposableBean.class',
             'org/springframework/beans/factory/package-info.class',
@@ -236,7 +236,7 @@ project('spring-android-rest-template') {
             'org/springframework/web/util/UriUtils.class'
             ]
 
-        // loops through spring framework jars, extracting and copying class files to the lib folder
+        // loops through springframework jars, extracting and copying class files to the lib folder
         FileCollection jars = configurations.dependencyconf
         jars.each { jar ->
             zipTree(jar).visit { classFile ->
