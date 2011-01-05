@@ -9,3 +9,4 @@
 .gradle
 build
 target
+bin
