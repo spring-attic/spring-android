@@ -101,6 +101,8 @@ configure(javaprojects) {
     springVersion = '3.0.5.RELEASE'
     androidVersion = '1.5_r3'
     httpComponentsClientVersion = '4.0.1'
+	commonsHttpClientVersion = '3.1'
+	androidRomeVersion = '1.0.0-r2'
     javaxServletApiVersion = '2.5'
     commonsFileuploadVersion = '1.2'
     jettyVersion = '6.1.9'
@@ -142,15 +144,22 @@ project('spring-android-rest-template') {
     
     // build against the extracted class files
     sourceSets.main.resources.srcDir projLibDir
+
+	repositories {
+        mavenRepo urls: 'https://android-rome-feed-reader.googlecode.com/svn/maven2/releases'
+    }
 	
 	dependencies {
         compile ("org.apache.httpcomponents:httpclient:$httpComponentsClientVersion") { provided = true }
-        compile ("commons-httpclient:commons-httpclient:3.1") { optional = true }
+        compile ("commons-httpclient:commons-httpclient:$commonsHttpClientVersion") { optional = true }
+		compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion") { optional = true }
         compile files(projLibDir)
+		testCompile "org.springframework:spring-core:$springVersion"
         testCompile "javax.servlet:servlet-api:$javaxServletApiVersion"
         testCompile "commons-fileupload:commons-fileupload:$commonsFileuploadVersion"
         testCompile "org.mortbay.jetty:jetty:$jettyVersion"
         testCompile "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion"
+		testCompile "xmlunit:xmlunit:1.2"
     }
 	
     // configuration for extracting required class files from springframework
@@ -203,6 +212,7 @@ project('spring-android-rest-template') {
             'org/springframework/http/converter/HttpMessageNotWritableException.class',
             'org/springframework/http/converter/package-info.class',
             'org/springframework/http/converter/StringHttpMessageConverter.class',
+			'org/springframework/http/converter/feed/package-info.class',
             'org/springframework/http/converter/json/MappingJacksonHttpMessageConverter.class',
             'org/springframework/http/converter/json/package-info.class',
             'org/springframework/util/Assert.class',

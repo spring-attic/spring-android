@@ -38,8 +38,8 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-//NO_ANDROID YET import org.springframework.http.converter.feed.AtomFeedHttpMessageConverter;
-//NO_ANDROID YET import org.springframework.http.converter.feed.RssChannelHttpMessageConverter;
+import org.springframework.http.converter.feed.AtomFeedHttpMessageConverter;
+import org.springframework.http.converter.feed.RssChannelHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 //NO_ANDRIOD YET import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
 //NO_ANDRIOD YET import org.springframework.http.converter.xml.SourceHttpMessageConverter;
@@ -123,7 +123,7 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 					ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", RestTemplate.class.getClassLoader());
 
 	private static boolean romePresent =
-			ClassUtils.isPresent("com.sun.syndication.feed.WireFeed", RestTemplate.class.getClassLoader());
+			ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.WireFeed", RestTemplate.class.getClassLoader());
 
 
 	private final ResponseExtractor<HttpHeaders> headersExtractor = new HeadersExtractor();
@@ -149,11 +149,11 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 		if (jacksonPresent) {
 			this.messageConverters.add(new MappingJacksonHttpMessageConverter());
 		}
-		/* Removed because it is either unnecessary or unavailable on Android
+		
 		if (romePresent) {
 			this.messageConverters.add(new AtomFeedHttpMessageConverter());
 			this.messageConverters.add(new RssChannelHttpMessageConverter());
-		}*/
+		}
 	}
 
 	/**
