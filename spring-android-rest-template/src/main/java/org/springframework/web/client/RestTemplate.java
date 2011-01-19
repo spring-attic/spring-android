@@ -33,17 +33,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.support.HttpAccessor;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.feed.AtomFeedHttpMessageConverter;
-import org.springframework.http.converter.feed.RssChannelHttpMessageConverter;
+import org.springframework.http.converter.feed.SyndFeedHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-//NO_ANDRIOD YET import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter;
-//NO_ANDRIOD YET import org.springframework.http.converter.xml.SourceHttpMessageConverter;
-//NO_ANDRIOD YET import org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.util.UriTemplate;
@@ -115,15 +112,16 @@ import org.springframework.web.util.UriUtils;
  */
 public class RestTemplate extends HttpAccessor implements RestOperations {
 
+	/*Removed because it is either unnecessary or unavailable on Android
 	private static final boolean jaxb2Present =
-			ClassUtils.isPresent("javax.xml.bind.Binder", RestTemplate.class.getClassLoader());
+			ClassUtils.isPresent("javax.xml.bind.Binder", RestTemplate.class.getClassLoader());*/
 
 	private static final boolean jacksonPresent =
 			ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", RestTemplate.class.getClassLoader()) &&
 					ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", RestTemplate.class.getClassLoader());
 
 	private static boolean romePresent =
-			ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.WireFeed", RestTemplate.class.getClassLoader());
+			ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed", RestTemplate.class.getClassLoader());
 
 
 	private final ResponseExtractor<HttpHeaders> headersExtractor = new HeadersExtractor();
@@ -135,6 +133,10 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 
 	/** Create a new instance of the {@link RestTemplate} using default settings. */
 	public RestTemplate() {
+		
+		// Default to HttpComponents 4.x Http Client
+		this.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+		
 		this.messageConverters.add(new ByteArrayHttpMessageConverter());
 		this.messageConverters.add(new StringHttpMessageConverter());
 		this.messageConverters.add(new ResourceHttpMessageConverter());
@@ -146,13 +148,13 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 		if (jaxb2Present) {
 			this.messageConverters.add(new Jaxb2RootElementHttpMessageConverter());
 		}*/
+		
 		if (jacksonPresent) {
 			this.messageConverters.add(new MappingJacksonHttpMessageConverter());
 		}
 		
 		if (romePresent) {
-			this.messageConverters.add(new AtomFeedHttpMessageConverter());
-			this.messageConverters.add(new RssChannelHttpMessageConverter());
+			this.messageConverters.add(new SyndFeedHttpMessageConverter());
 		}
 	}
 
