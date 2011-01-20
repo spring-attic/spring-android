@@ -31,6 +31,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.StringUtils;
 
+import android.os.Build;
+
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
@@ -46,8 +48,8 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedOu
  * {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
  *
  * @author Roy Clarkson
+ * @since 1.0.0
  * @see SyndFeed
- * @since 1.0.0.M2
  */
 public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<SyndFeed> {
 
@@ -56,6 +58,11 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 	public SyndFeedHttpMessageConverter() {
 		super(new MediaType("application", "rss+xml"), 
 				new MediaType("application", "atom+xml"));
+		
+		// Workaround to get ROME working with Android 2.1 and earlier
+        if (Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) < 8) {
+        	Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+        }
 	}
 	
 	@Override

@@ -150,7 +150,7 @@ project('spring-android-rest-template') {
     }
 	
 	dependencies {
-        compile ("org.apache.httpcomponents:httpclient:$httpComponentsClientVersion") { provided = true }
+		compile ("com.google.android:android:$androidVersion") { provided = true }
         compile ("commons-httpclient:commons-httpclient:$commonsHttpClientVersion") { optional = true }
 		compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion") { optional = true }
         compile files(projLibDir)

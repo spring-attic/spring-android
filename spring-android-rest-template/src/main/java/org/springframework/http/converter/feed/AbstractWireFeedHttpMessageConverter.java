@@ -23,11 +23,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
 
-import com.google.code.rome.android.repackaged.com.sun.syndication.feed.WireFeed;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.WireFeedInput;
-import com.google.code.rome.android.repackaged.com.sun.syndication.io.WireFeedOutput;
-
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -36,12 +31,20 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.StringUtils;
 
+import android.os.Build;
+
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.WireFeed;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.WireFeedInput;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.WireFeedOutput;
+
 /**
  * Abstract base class for Atom and RSS Feed message converters, using java.net's
  * <a href="https://rome.dev.java.net/">ROME</a> package.
  *
  * @author Arjen Poutsma
- * @since 3.0.2
+ * @author Roy Clarkson
+ * @since 1.0.0
  * @see AtomFeedHttpMessageConverter
  * @see RssChannelHttpMessageConverter
  */
@@ -51,6 +54,11 @@ public abstract class AbstractWireFeedHttpMessageConverter<T extends WireFeed> e
 
 	protected AbstractWireFeedHttpMessageConverter(MediaType supportedMediaType) {
 		super(supportedMediaType);
+		
+		// Workaround to get ROME working with Android 2.1 and earlier
+        if (Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) < 8) {
+        	Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+        }
 	}
 
 	@Override
