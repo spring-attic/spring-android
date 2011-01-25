@@ -41,6 +41,7 @@ import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.feed.SyndFeedHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.util.UriTemplate;
@@ -104,17 +105,17 @@ import org.springframework.web.util.UriUtils;
  * requestFactory} and {@link #setErrorHandler(ResponseErrorHandler) errorHandler} bean properties.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @see HttpMessageConverter
  * @see RequestCallback
  * @see ResponseExtractor
  * @see ResponseErrorHandler
- * @since 3.0
+ * @since 1.0.0
  */
 public class RestTemplate extends HttpAccessor implements RestOperations {
 
-	/*Removed because it is either unnecessary or unavailable on Android
-	private static final boolean jaxb2Present =
-			ClassUtils.isPresent("javax.xml.bind.Binder", RestTemplate.class.getClassLoader());*/
+	private static final boolean simpleXmlPresent =
+			ClassUtils.isPresent("org.simpleframework.xml.Serializer", RestTemplate.class.getClassLoader());
 
 	private static final boolean jacksonPresent =
 			ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", RestTemplate.class.getClassLoader()) &&
@@ -140,14 +141,10 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 		this.messageConverters.add(new ByteArrayHttpMessageConverter());
 		this.messageConverters.add(new StringHttpMessageConverter());
 		this.messageConverters.add(new ResourceHttpMessageConverter());
-		//Removed because it is either unnecessary or unavailable on Android
-		//this.messageConverters.add(new SourceHttpMessageConverter());
-		//Removed because it is either unnecessary or unavailable on Android
-		//this.messageConverters.add(new XmlAwareFormHttpMessageConverter());
-		/*Removed because it is either unnecessary or unavailable on Android
-		if (jaxb2Present) {
-			this.messageConverters.add(new Jaxb2RootElementHttpMessageConverter());
-		}*/
+
+		if (simpleXmlPresent) {
+			this.messageConverters.add(new SimpleXmlHttpMessageConverter());
+		}
 		
 		if (jacksonPresent) {
 			this.messageConverters.add(new MappingJacksonHttpMessageConverter());

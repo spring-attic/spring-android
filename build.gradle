@@ -153,6 +153,7 @@ project('spring-android-rest-template') {
 		compile ("com.google.android:android:$androidVersion") { provided = true }
         compile ("commons-httpclient:commons-httpclient:$commonsHttpClientVersion") { optional = true }
 		compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion") { optional = true }
+		compile ("org.simpleframework:simple-xml:2.4.1") { optional = true }
         compile files(projLibDir)
 		testCompile "org.springframework:spring-core:$springVersion"
         testCompile "javax.servlet:servlet-api:$javaxServletApiVersion"
@@ -172,6 +173,9 @@ project('spring-android-rest-template') {
     compileJava.doFirst {
         // Required springframework classes for RestTemplate support
         classFilter = [
+			'org/springframework/beans/BeansException.class',
+			'org/springframework/beans/PropertyAccessException.class',
+			'org/springframework/beans/TypeMismatchException.class',			
             'org/springframework/beans/factory/DisposableBean.class',
             'org/springframework/beans/factory/package-info.class',
             'org/springframework/core/NestedExceptionUtils.class',
@@ -215,6 +219,7 @@ project('spring-android-rest-template') {
 			'org/springframework/http/converter/feed/package-info.class',
             'org/springframework/http/converter/json/MappingJacksonHttpMessageConverter.class',
             'org/springframework/http/converter/json/package-info.class',
+            'org/springframework/http/converter/xml/package-info.class',
             'org/springframework/util/Assert.class',
             'org/springframework/util/CollectionUtils.class',
             'org/springframework/util/CollectionUtils$EnumerationIterator.class',
