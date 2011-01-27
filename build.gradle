@@ -107,6 +107,7 @@ configure(javaprojects) {
     commonsFileuploadVersion = '1.2'
     jettyVersion = '6.1.9'
     jacksonVersion = '1.4.2'
+    xmlUnitVersion = '1.3'
     
     // dependencies that are common across all java projects
     dependencies {
@@ -160,7 +161,7 @@ project('spring-android-rest-template') {
         testCompile "commons-fileupload:commons-fileupload:$commonsFileuploadVersion"
         testCompile "org.mortbay.jetty:jetty:$jettyVersion"
         testCompile "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion"
-		testCompile "xmlunit:xmlunit:1.2"
+		testCompile "xmlunit:xmlunit:$xmlUnitVersion"
     }
 	
     // configuration for extracting required class files from springframework
