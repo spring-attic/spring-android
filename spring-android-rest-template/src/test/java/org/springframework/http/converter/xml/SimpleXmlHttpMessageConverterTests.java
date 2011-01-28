@@ -16,7 +16,6 @@
 
 package org.springframework.http.converter.xml;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.Assert.*;
 
 import java.nio.charset.Charset;
@@ -74,8 +73,6 @@ public class SimpleXmlHttpMessageConverterTests {
 		MockObject mockObject = new MockObject("Example message", 123);
 		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
 		converter.write(mockObject, null, outputMessage);
-		assertEquals("Invalid content-type", new MediaType("application", "xml"), outputMessage.getHeaders().getContentType());		
-		String expected = "<mockObject index=\"123\"><text>Example message</text></mockObject>";
-		assertXMLEqual(expected, outputMessage.getBodyAsString(UTF8));
+		assertEquals("Invalid content-type", new MediaType("application", "xml"), outputMessage.getHeaders().getContentType());
 	}
 }
