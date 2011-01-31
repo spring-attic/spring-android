@@ -46,15 +46,17 @@ import org.springframework.util.Assert;
 public class SimpleXmlHttpMessageConverter extends AbstractHttpMessageConverter<Object> {
 	
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
-
+	
 	private Serializer serializer;
+	
 
 	/**
 	 * Protected constructor that sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}
 	 * to {@code text/xml} and {@code application/xml}, and {@code application/*-xml}.
 	 */
 	public SimpleXmlHttpMessageConverter() {
-		super(MediaType.APPLICATION_XML, MediaType.TEXT_XML, new MediaType("application", "*+xml"));
+		super(MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_WILDCARD_XML);
+		
 		this.serializer = new Persister();
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,14 @@ import org.springframework.http.MediaType;
  * be overridden by setting the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @see Channel
- * @since 3.0.2
+ * @since 1.0.0
  */
 public class RssChannelHttpMessageConverter extends AbstractWireFeedHttpMessageConverter<Channel> {
 
 	public RssChannelHttpMessageConverter() {
-		super(new MediaType("application", "rss+xml"));
+		super(MediaType.APPLICATION_RSS_XML);
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,9 +55,12 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
+	/**
+	 * Protected constructor that sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}
+	 * to {@code text/xml} and {@code application/xml}, and {@code application/*-xml}.
+	 */
 	public SyndFeedHttpMessageConverter() {
-		super(new MediaType("application", "rss+xml"), 
-				new MediaType("application", "atom+xml"));
+		super(MediaType.APPLICATION_RSS_XML, MediaType.APPLICATION_ATOM_XML);
 		
 		// Workaround to get ROME working with Android 2.1 and earlier
         if (Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) < 8) {

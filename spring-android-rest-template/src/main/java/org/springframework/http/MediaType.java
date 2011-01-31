@@ -43,7 +43,8 @@ import org.springframework.util.StringUtils;
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
- * @since 3.0
+ * @author Roy Clarkson
+ * @since 1.0.0
  * @see <a href="http://tools.ietf.org/html/rfc2616#section-3.7">HTTP 1.1, section 3.7</a>
  */
 public class MediaType implements Comparable<MediaType> {
@@ -57,6 +58,11 @@ public class MediaType implements Comparable<MediaType> {
 	 *  Public constant media type for {@code application/atom+xml}.
 	 */
 	public final static MediaType APPLICATION_ATOM_XML;
+	
+	/**
+	 *  Public constant media type for {@code application/rss+xml}.
+	 */
+	public final static MediaType APPLICATION_RSS_XML;
 
 	/**
 	 * Public constant media type for {@code application/x-www-form-urlencoded}.
@@ -94,9 +100,14 @@ public class MediaType implements Comparable<MediaType> {
 	public final static MediaType IMAGE_PNG;
 
 	/**
-	 * Public constant media type for {@code image/xml}.
+	 * Public constant media type for {@code application/xml}.
 	 */
 	public final static MediaType APPLICATION_XML;
+	
+	/**
+	 * Public constant media type for {@code application/*+xml}.
+	 */
+	public final static MediaType APPLICATION_WILDCARD_XML;
 
 	/**
 	 * Public constant media type for {@code multipart/form-data}.
@@ -171,11 +182,13 @@ public class MediaType implements Comparable<MediaType> {
 
 		ALL = new MediaType("*", "*");
 		APPLICATION_ATOM_XML = new MediaType("application","atom+xml");
+		APPLICATION_RSS_XML = new MediaType("application","rss+xml");
 		APPLICATION_FORM_URLENCODED = new MediaType("application","x-www-form-urlencoded");
 		APPLICATION_JSON = new MediaType("application","json");
 		APPLICATION_OCTET_STREAM = new MediaType("application","octet-stream");
 		APPLICATION_XHTML_XML = new MediaType("application","xhtml+xml");
 		APPLICATION_XML = new MediaType("application","xml");
+		APPLICATION_WILDCARD_XML = new MediaType("application","*+xml");
 		IMAGE_GIF = new MediaType("image", "gif");
 		IMAGE_JPEG = new MediaType("image", "jpeg");
 		IMAGE_PNG = new MediaType("image", "png");
