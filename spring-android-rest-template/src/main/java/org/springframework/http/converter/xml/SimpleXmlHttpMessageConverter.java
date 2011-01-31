@@ -21,9 +21,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 
+import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -61,8 +61,20 @@ public class SimpleXmlHttpMessageConverter extends AbstractHttpMessageConverter<
 	}
 	
 	@Override
+	public boolean canRead(Class<?> clazz, MediaType mediaType) {
+//		return true;
+		return clazz.isAnnotationPresent(Root.class) && canRead(mediaType);
+	}
+
+	@Override
+	public boolean canWrite(Class<?> clazz, MediaType mediaType) {
+		return clazz.isAnnotationPresent(Root.class) && canWrite(mediaType);
+	}
+	
+	@Override
 	protected boolean supports(Class<?> clazz) {
-		return true;
+		// should not be called, since we override canRead/Write
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

@@ -22,11 +22,10 @@ import java.nio.charset.Charset;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.simpleframework.xml.Root;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
 import org.springframework.http.MockHttpOutputMessage;
-
-import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel;
 
 /** @author Roy Clarkson */
 public class SimpleXmlHttpMessageConverterTests {
@@ -38,25 +37,25 @@ public class SimpleXmlHttpMessageConverterTests {
 	public void setUp() {
 		this.converter = new SimpleXmlHttpMessageConverter();
 	}
+		
+	@Test
+	public void canRead() throws Exception {
+		assertTrue("Converter does not support reading @Root", converter.canRead(MockObject.class, new MediaType("application", "xml")));
+		assertTrue("Converter does not support reading @Root", converter.canRead(MockObject.class, new MediaType("application", "xml", UTF8)));
+		assertTrue("Converter does not support reading @Root", converter.canRead(MockObject.class, new MediaType("text", "xml")));
+		assertTrue("Converter does not support reading @Root", converter.canRead(MockObject.class, new MediaType("text", "xml", UTF8)));
+		assertTrue("Converter does not support reading @Root", converter.canRead(MockObject.class, new MediaType("application", "*+xml")));
+		assertTrue("Converter does not support reading @Root", converter.canRead(MockObject.class, new MediaType("application", "*+xml", UTF8)));
+	}
 	
 	@Test
-	public void canRead() {
-		assertTrue(converter.canRead(Channel.class, new MediaType("application", "xml")));
-		assertTrue(converter.canRead(Channel.class, new MediaType("application", "xml", UTF8)));
-		assertTrue(converter.canRead(Channel.class, new MediaType("text", "xml")));
-		assertTrue(converter.canRead(Channel.class, new MediaType("text", "xml", UTF8)));
-		assertTrue(converter.canRead(Channel.class, new MediaType("application", "*+xml")));
-		assertTrue(converter.canRead(Channel.class, new MediaType("application", "*+xml", UTF8)));
-	}
-
-	@Test
-	public void canWrite() {
-		assertTrue(converter.canWrite(Channel.class, new MediaType("application", "xml")));
-		assertTrue(converter.canWrite(Channel.class, new MediaType("application", "xml", UTF8)));
-		assertTrue(converter.canWrite(Channel.class, new MediaType("text", "xml")));
-		assertTrue(converter.canWrite(Channel.class, new MediaType("text", "xml", UTF8)));
-		assertTrue(converter.canWrite(Channel.class, new MediaType("application", "*+xml")));
-		assertTrue(converter.canWrite(Channel.class, new MediaType("application", "*+xml", UTF8)));
+	public void canWrite() throws Exception {
+		assertTrue("Converter does not support writing @Root", converter.canWrite(MockObject.class, new MediaType("application", "xml")));
+		assertTrue("Converter does not support writing @Root", converter.canWrite(MockObject.class, new MediaType("application", "xml", UTF8)));
+		assertTrue("Converter does not support writing @Root", converter.canWrite(MockObject.class, new MediaType("text", "xml")));
+		assertTrue("Converter does not support writing @Root", converter.canWrite(MockObject.class, new MediaType("text", "xml", UTF8)));
+		assertTrue("Converter does not support writing @Root", converter.canWrite(MockObject.class, new MediaType("application", "*+xml")));
+		assertTrue("Converter does not support writing @Root", converter.canWrite(MockObject.class, new MediaType("application", "*+xml", UTF8)));
 	}
 
 	@Test
