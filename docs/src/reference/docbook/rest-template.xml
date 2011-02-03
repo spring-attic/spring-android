@@ -1,46 +1,271 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="rest-template" 
-	xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>Spring Android Rest Template Module</title>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="rest-template" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <title>Spring Android Rest Template Module</title>
 
   <section id="spring-android-rest-template-introduction">
-    <title>Introduction</title>
-    <para>
+	<title>Introduction</title>
+	<para>
 		Spring's RestTemplate is a robust, popular Java-based REST client.
 		The Spring Android Rest Template Module provides a version of RestTemplate that works in an Android environment.
 	</para>
   </section>
   
-    <section id="spring-android-rest-template-howtoget">
-    <title>How to get</title>
+  <section id="spring-android-rest-template-howtoget">
+	<title>How to get</title>
 	<para>
 		Add the spring-android-rest-template artifact to your classpath:
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.android</groupId>
     <artifactId>spring-android-rest-template</artifactId>
-    <version>${org.springframework.android-version}</version>
+    <version>1.0.0.BUILD-SNAPSHOT</version>
 </dependency>]]>
 		</programlisting>
 	</para>
 	<para>
-		Doing so will transitively include the spring-android-commons-logging module.
-	</para>
-	<para>
-		At the moment, commons-httpclient 3.x is also required for RestTemplate to work on Android without further customization:
-	</para>
-	<programlisting language="xml"><![CDATA[
+		Spring Android Rest Template supports several optional libraries.  These optional libraries are used by 
+		different Http Message Converters within Rest Template.  If you would like to make use of these Message 
+		Converters, then you need to include the corresponding libraries in your classpath.
+	</para>	
+	<section id="spring-android-rest-template-howtoget-jackson">
+		<title>MappingJacksonHttpMessageConverter</title>
+		<para>
+			The MappingJacksonHttpMessageConverter is used to marshal Objects to JSON. The Jackson library 
+			provides this functionality.
+		</para>
+		<para>
+			<link xlink:href='http://jackson.codehaus.org'>http://jackson.codehaus.org</link>
+		</para>
+		<para>
+			Add the following Jackson dependencies to your classpath to enable this Message Converter. 
+		</para>
+		<programlisting language="xml"><![CDATA[
 <dependency>
-    <groupId>commons-httpclient</groupId>
-    <artifactId>commons-httpclient</artifactId>
-    <version>3.1</version>
+	<groupId>org.codehaus.jackson</groupId>
+	<artifactId>jackson-mapper-asl</artifactId>
+	<version>1.7.1</version>
 </dependency>]]>
-	</programlisting>
-	<para>
-		In a future release, Spring Android will provide support for Http Client 4, which is used on Android by default.
-	</para>
+		</programlisting>
+		<programlisting language="xml"><![CDATA[
+<dependency>
+	<groupId>org.codehaus.jackson</groupId>
+	<artifactId>jackson-core-asl</artifactId>
+	<version>1.7.1</version>
+</dependency>]]>
+		</programlisting>
+	</section>
+	<section id="spring-android-rest-template-howtoget-simple">
+		<title>SimpleXmlHttpMessageConverter</title>
+		<para>
+			The SimpleXmlHttpMessageConverter is used to marshal Objects to XML. Simple is an XML serialization 
+			and configuration framework for Java that is compatible with Android.
+		</para>
+		<para>
+			<link xlink:href='http://simple.sourceforge.net'>http://simple.sourceforge.net</link>
+		</para>
+		<para>
+			 Add the following Simple dependency to your classpath to enable this Message Converter.
+		</para>
+		<programlisting language="xml"><![CDATA[
+<dependency>
+	<groupId>org.simpleframework</groupId>
+	<artifactId>simple-xml</artifactId>
+	<version>2.4.1</version>
+</dependency>]]>
+		</programlisting>
+	</section>
+	<section id="spring-android-rest-template-howtoget-rome">
+		<title>RssChannelHttpMessageConverter, AtomFeedHttpMessageConverter, and SyndFeedHttpMessageConverter</title>
+		<para>
+			The RssChannelHttpMessageConverter, AtomFeedHttpMessageConverter, and SyndFeedHttpMessageConverter are
+			used to process RSS and Atom feeds. Android ROME Feed Reader is a port of the popular ROME library that 
+			is compatible with Android.
+		</para>
+		<para>
+			<link xlink:href='http://code.google.com/p/android-rome-feed-reader'>http://code.google.com/p/android-rome-feed-reader</link>
+		</para>
+		<para>
+			Add the following Android ROME dependencies to your classpath to enable these Message Converters. 
+			This library depends on a forked version of JDOM to work on Android 2.1 and earlier. The JDOM library 
+			addresses a bug in the Android XML parser.
+		</para>
+		<programlisting language="xml"><![CDATA[
+<dependency>
+	<groupId>com.google.code.android-rome-feed-reader</groupId>
+	<artifactId>android-rome-feed-reader</artifactId>
+	<version>1.0.0-r2</version>
+</dependency>]]>
+		</programlisting>
+		<programlisting language="xml"><![CDATA[
+<dependency>
+	<groupId>org.jdom</groupId>
+	<artifactId>jdom</artifactId>
+	<version>1.1.1-android-fork</version>
+</dependency>]]>
+		</programlisting>
+	</section>
   </section>
-  
+
+  <section id="spring-android-rest-template-maven">
+	<title>Maven</title>
+	<para>
+		An alternative to downloading the individual library JARs yourself is to use Maven for dependency management.
+		The Maven Android Plugin allows developers to utilize Maven's dependency management capabilities within an 
+		Android application.
+	</para>
+	<para>
+		<link xlink:href='http://code.google.com/p/maven-android-plugin'>http://code.google.com/p/maven-android-plugin</link>
+	</para>
+	<section>
+		<title>Example POM</title>
+		<para>
+			The following Maven POM file illustrates how to configure the Maven Android Plugin and associated dependencies
+			for use with Spring Android Rest Template.
+		</para>
+		<programlisting language="xml">
+<![CDATA[
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.springframework.android</groupId>
+	<artifactId>showcase</artifactId>
+	<version>1.0.0.BUILD-SNAPSHOT</version>
+	<packaging>apk</packaging>
+	<name>spring-android-showcase-client</name>
+	<url>http://www.springsource.org</url> 
+	<organization>
+		<name>SpringSource</name>
+		<url>http://www.springsource.org</url>
+	</organization>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>maven-android-plugin</artifactId>
+				<version>2.8.4</version>
+				<configuration>
+					<sdk>
+						<platform>3</platform>
+					</sdk>
+					<emulator>
+						<avd>3</avd>
+					</emulator>
+					<deleteConflictingFiles>true</deleteConflictingFiles>
+					<undeployBeforeDeploy>true</undeployBeforeDeploy>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>1.5_r4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.android</groupId>
+			<artifactId>spring-android-rest-template</artifactId>
+			<version>1.0.0.BUILD-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<!-- Using Jackson for JSON marshaling -->
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		<dependency>
+			<!-- Using Simple for XML marshaling -->
+			<groupId>org.simpleframework</groupId>
+			<artifactId>simple-xml</artifactId>
+			<version>2.4.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>stax</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>stax-api</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<!-- Using Android ROME for RSS and ATOM feeds -->
+			<groupId>com.google.code.android-rome-feed-reader</groupId>
+			<artifactId>android-rome-feed-reader</artifactId>
+			<version>1.0.0-r2</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<!-- For developing with Android ROME Feed Reader -->
+		<repository>
+			<id>android-rome-feed-reader-repository</id>
+			<name>Android ROME Feed Reader Repository</name>
+			<url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
+		</repository>
+		<!-- For testing against latest Spring snapshots -->
+		<repository>
+			<id>org.springframework.maven.snapshot</id>
+			<name>Spring Maven Snapshot Repository</name>
+			<url>http://maven.springframework.org/snapshot</url>
+			<releases><enabled>false</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+		<!-- For developing against latest Spring milestones -->
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+	</repositories>
+
+</project>
+]]>
+		</programlisting>
+	</section>
+	<section>
+		<title>Maven Commands</title>
+		<para>
+			Once you have configured a Maven POM in your Android project you can use the following Maven command 
+			to clean and assemble your Android APK file.
+		</para>
+		<programlisting>
+<![CDATA[
+$ mvn clean install
+]]>
+		</programlisting>
+		<para>
+			The following command starts the emulator specified in the Maven Android Plugin section of the POM file
+		</para>
+		<programlisting>
+<![CDATA[
+$ mvn android:emulator-start
+]]>
+		</programlisting>
+		<para>
+			Deploys the application package to the emulator
+		</para>
+		<programlisting>
+<![CDATA[
+$ mvn android:deploy
+]]>
+		</programlisting>
+	</section>
+  </section>
+
   <section id="spring-android-rest-template-example1">
   <title>Basic usage example</title>
   <para>
