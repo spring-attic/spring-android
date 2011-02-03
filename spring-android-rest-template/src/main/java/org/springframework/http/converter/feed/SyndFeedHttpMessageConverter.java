@@ -86,7 +86,7 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 		}
 		try {
 			Reader reader = new InputStreamReader(inputMessage.getBody(), charset);
-			return (SyndFeed) feedInput.build(reader);
+			return feedInput.build(reader);
 		}
 		catch (FeedException ex) {
 			throw new HttpMessageNotReadableException("Could not read SyndFeed: " + ex.getMessage(), ex);

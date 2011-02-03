@@ -51,7 +51,7 @@ import org.springframework.http.HttpMethod;
  * <p>Allows to use a pre-configured {@link HttpClient} instance -
  * potentially with authentication, HTTP connection pooling, etc.
  *
- * @since 3.0
+ * @since 1.0.0
  * @see org.springframework.http.client.SimpleClientHttpRequestFactory
  */
 public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequestFactory, DisposableBean {

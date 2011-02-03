@@ -193,6 +193,8 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	/** Servlet that sets a given status code. */
 	private static class StatusServlet extends GenericServlet {
 
+		private static final long serialVersionUID = 1L;
+		
 		private final int sc;
 
 		private StatusServlet(int sc) {
@@ -206,6 +208,8 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	}
 
 	private static class MethodServlet extends GenericServlet {
+		
+		private static final long serialVersionUID = 1L;
 
 		private final String method;
 
@@ -221,6 +225,8 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	}
 
 	private static class EchoServlet extends HttpServlet {
+		
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		protected void doPut(HttpServletRequest request, HttpServletResponse response)
@@ -236,9 +242,9 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 		private void echo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 			response.setStatus(HttpServletResponse.SC_OK);
-			for (Enumeration e1 = request.getHeaderNames(); e1.hasMoreElements();) {
+			for (Enumeration<?> e1 = request.getHeaderNames(); e1.hasMoreElements();) {
 				String headerName = (String) e1.nextElement();
-				for (Enumeration e2 = request.getHeaders(headerName); e2.hasMoreElements();) {
+				for (Enumeration<?> e2 = request.getHeaders(headerName); e2.hasMoreElements();) {
 					String headerValue = (String) e2.nextElement();
 					response.addHeader(headerName, headerValue);
 				}
@@ -248,6 +254,8 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	}
 
 	private static class RedirectServlet extends GenericServlet {
+		
+		private static final long serialVersionUID = 1L;
 
 		private final String location;
 

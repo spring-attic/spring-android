@@ -33,7 +33,8 @@ import org.springframework.util.ResourceUtils;
  * resolving file system references accordingly.
  *
  * @author Juergen Hoeller
- * @since 3.0
+ * @author Roy Clarkson
+ * @since 1.0.0
  */
 public abstract class AbstractFileResolvingResource extends AbstractResource {
 

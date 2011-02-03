@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,7 +57,10 @@ import org.springframework.util.FileCopyUtils;
 
 import static org.junit.Assert.*;
 
-/** @author Arjen Poutsma */
+/** 
+ * @author Arjen Poutsma
+ * @author Roy Clarkson 
+ * */
 public class RestTemplateIntegrationTests {
 
 	private RestTemplate template;
@@ -205,7 +208,7 @@ public class RestTemplateIntegrationTests {
 	public void exchangeGet() throws Exception {
 		HttpHeaders requestHeaders = new HttpHeaders();
 		requestHeaders.set("MyHeader", "MyValue");
-		HttpEntity<?> requestEntity = new HttpEntity(requestHeaders);
+		HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
 		ResponseEntity<String> response =
 				template.exchange(baseUrl + "/{method}", HttpMethod.GET, requestEntity, String.class, "get");
 		assertEquals("Invalid content", helloWorld, response.getBody());
@@ -225,6 +228,8 @@ public class RestTemplateIntegrationTests {
 	/** Servlet that returns and error message for a given status code. */
 	private static class ErrorServlet extends GenericServlet {
 
+		private static final long serialVersionUID = 1L;
+		
 		private final int sc;
 
 		private ErrorServlet(int sc) {
@@ -238,6 +243,8 @@ public class RestTemplateIntegrationTests {
 	}
 
 	private static class GetServlet extends HttpServlet {
+
+		private static final long serialVersionUID = 1L;
 
 		private final byte[] buf;
 
@@ -258,6 +265,8 @@ public class RestTemplateIntegrationTests {
 	}
 
 	private static class PostServlet extends HttpServlet {
+
+		private static final long serialVersionUID = 1L;
 
 		private final String s;
 
@@ -291,6 +300,8 @@ public class RestTemplateIntegrationTests {
 
 	private static class UriServlet extends HttpServlet {
 
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 			resp.setContentType("text/plain");
@@ -301,13 +312,15 @@ public class RestTemplateIntegrationTests {
 
 	private static class MultipartServlet extends HttpServlet {
 
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 			assertTrue(ServletFileUpload.isMultipartContent(req));
 			FileItemFactory factory = new DiskFileItemFactory();
 			ServletFileUpload upload = new ServletFileUpload(factory);
 			try {
-				List items = upload.parseRequest(req);
+				List<?> items = upload.parseRequest(req);
 				assertEquals(4, items.size());
 				FileItem item = (FileItem) items.get(0);
 				assertTrue(item.isFormField());

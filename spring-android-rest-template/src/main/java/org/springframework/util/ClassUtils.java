@@ -41,7 +41,8 @@ import java.util.Set;
  * @author Keith Donald
  * @author Rob Harrop
  * @author Sam Brannen
- * @since 1.1
+ * @author Roy Clarkson
+ * @since 1.0.0
  * @see TypeUtils
  * @see ReflectionUtils
  */
@@ -665,21 +666,6 @@ public abstract class ClassUtils {
 	}
 
 	/**
-	 * Determine whether the given method is overridable in the given target class.
-	 * @param method the method to check
-	 * @param targetClass the target class to check against
-	 */
-	private static boolean isOverridable(Method method, Class targetClass) {
-		if (Modifier.isPrivate(method.getModifiers())) {
-			return false;
-		}
-		if (Modifier.isPublic(method.getModifiers()) || Modifier.isProtected(method.getModifiers())) {
-			return true;
-		}
-		return getPackageName(method.getDeclaringClass()).equals(getPackageName(targetClass));
-	}
-
-	/**
 	 * Return a public static method of a class.
 	 * @param methodName the static method name
 	 * @param clazz	the class which defines the method
@@ -865,6 +851,7 @@ public abstract class ClassUtils {
 	 * @return a String of form "[com.foo.Bar, com.foo.Baz]"
 	 * @see java.util.AbstractCollection#toString()
 	 */
+	@SuppressWarnings("rawtypes")
 	public static String classNamesToString(Class... classes) {
 		return classNamesToString(Arrays.asList(classes));
 	}
@@ -878,6 +865,7 @@ public abstract class ClassUtils {
 	 * @return a String of form "[com.foo.Bar, com.foo.Baz]"
 	 * @see java.util.AbstractCollection#toString()
 	 */
+	@SuppressWarnings("rawtypes")
 	public static String classNamesToString(Collection<Class> classes) {
 		if (CollectionUtils.isEmpty(classes)) {
 			return "[]";
@@ -901,6 +889,7 @@ public abstract class ClassUtils {
 	 * @param instance the instance to analyze for interfaces
 	 * @return all interfaces that the given instance implements as array
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Class[] getAllInterfaces(Object instance) {
 		Assert.notNull(instance, "Instance must not be null");
 		return getAllInterfacesForClass(instance.getClass());
@@ -926,6 +915,7 @@ public abstract class ClassUtils {
 	 * (may be <code>null</code> when accepting all declared interfaces)
 	 * @return all interfaces that the given object implements as array
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Class<?>[] getAllInterfacesForClass(Class<?> clazz, ClassLoader classLoader) {
 		Set<Class> ifcs = getAllInterfacesForClassAsSet(clazz, classLoader);
 		return ifcs.toArray(new Class[ifcs.size()]);
@@ -937,6 +927,7 @@ public abstract class ClassUtils {
 	 * @param instance the instance to analyze for interfaces
 	 * @return all interfaces that the given instance implements as Set
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Set<Class> getAllInterfacesAsSet(Object instance) {
 		Assert.notNull(instance, "Instance must not be null");
 		return getAllInterfacesForClassAsSet(instance.getClass());
@@ -949,6 +940,7 @@ public abstract class ClassUtils {
 	 * @param clazz the class to analyze for interfaces
 	 * @return all interfaces that the given object implements as Set
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Set<Class> getAllInterfacesForClassAsSet(Class clazz) {
 		return getAllInterfacesForClassAsSet(clazz, null);
 	}
@@ -962,6 +954,7 @@ public abstract class ClassUtils {
 	 * (may be <code>null</code> when accepting all declared interfaces)
 	 * @return all interfaces that the given object implements as Set
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Set<Class> getAllInterfacesForClassAsSet(Class clazz, ClassLoader classLoader) {
 		Assert.notNull(clazz, "Class must not be null");
 		if (clazz.isInterface() && isVisible(clazz, classLoader)) {

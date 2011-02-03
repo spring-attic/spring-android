@@ -35,7 +35,8 @@ import org.springframework.util.FileCopyUtils;
  * to determine the {@code Content-Type} of written resources.
  *
  * @author Arjen Poutsma
- * @since 3.0.2
+ * @author Roy Clarkson
+ * @since 1.0.0
  */
 public class ResourceHttpMessageConverter implements HttpMessageConverter<Resource> {
 

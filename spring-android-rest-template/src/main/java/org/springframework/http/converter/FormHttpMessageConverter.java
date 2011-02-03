@@ -78,8 +78,9 @@ import org.springframework.util.StringUtils;
  * <p>Some methods in this class were inspired by {@link org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity}.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @see MultiValueMap
- * @since 3.0
+ * @since 1.0.0
  */
 public class FormHttpMessageConverter implements HttpMessageConverter<MultiValueMap<String, ?>> {
 
@@ -247,7 +248,7 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 			String name = entry.getKey();
 			for (Object part : entry.getValue()) {
 				writeBoundary(boundary, os);
-				HttpEntity entity = getEntity(part);
+				HttpEntity<?> entity = getEntity(part);
 				writePart(name, entity, os);
 				writeNewLine(os);
 			}
@@ -261,7 +262,7 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 		writeNewLine(os);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private HttpEntity getEntity(Object part) {
 		if (part instanceof HttpEntity) {
 			return (HttpEntity) part;
@@ -271,7 +272,7 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void writePart(String name, HttpEntity partEntity, OutputStream os) throws IOException {
 		Object partBody = partEntity.getBody();
 		Class<?> partType = partBody.getClass();

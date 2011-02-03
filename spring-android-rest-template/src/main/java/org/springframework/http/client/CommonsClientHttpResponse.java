@@ -32,7 +32,8 @@ import org.springframework.http.HttpStatus;
  * <p>Created via the {@link CommonsClientHttpRequest}.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @author Roy Clarkson
+ * @since 1.0.0
  * @see CommonsClientHttpRequest#execute()
  * @deprecated As of release 1.0.0.M2, replaced by 
  *     {@link org.springframework.http.client.HttpComponentsClientHttpResponse}. 

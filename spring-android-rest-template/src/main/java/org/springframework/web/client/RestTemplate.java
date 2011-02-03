@@ -501,7 +501,6 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 			this.responseType = responseType;
 		}
 
-		@SuppressWarnings("unchecked")
 		public void doWithRequest(ClientHttpRequest request) throws IOException {
 			if (responseType != null) {
 				List<MediaType> allSupportedMediaTypes = new ArrayList<MediaType>();
@@ -534,13 +533,14 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 	 */
 	private class HttpEntityRequestCallback extends AcceptHeaderRequestCallback {
 
+		@SuppressWarnings("rawtypes")
 		private final HttpEntity requestEntity;
 
 		private HttpEntityRequestCallback(Object requestBody) {
 			this(requestBody, null);
 		}
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		private HttpEntityRequestCallback(Object requestBody, Class<?> responseType) {
 			super(responseType);
 			if (requestBody instanceof HttpEntity) {
@@ -555,7 +555,7 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 		}
 
 		@Override
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public void doWithRequest(ClientHttpRequest httpRequest) throws IOException {
 			super.doWithRequest(httpRequest);
 			if (!requestEntity.hasBody()) {
@@ -643,6 +643,8 @@ public class RestTemplate extends HttpAccessor implements RestOperations {
 	 * HTTP-specific subclass of UriTemplate, overriding the encode method.
 	 */
 	private static class HttpUrlTemplate extends UriTemplate {
+		
+		private static final long serialVersionUID = 1L;
 
 		public HttpUrlTemplate(String uriTemplate) {
 			super(uriTemplate);
