@@ -190,8 +190,7 @@
 			The following Maven POM file illustrates how to configure the Maven Android Plugin and associated dependencies
 			for use with Spring Android Rest Template.
 		</para>
-		<programlisting language="xml">
-<![CDATA[
+		<programlisting language="xml"><![CDATA[
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -300,8 +299,7 @@
 		</repository>
 	</repositories>
 
-</project>
-]]>
+</project>]]>
 		</programlisting>
 	</section>
 	<section>
@@ -310,26 +308,20 @@
 			Once you have configured a Maven POM in your Android project you can use the following Maven command 
 			to clean and assemble your Android APK file.
 		</para>
-		<programlisting>
-<![CDATA[
-$ mvn clean install
-]]>
+		<programlisting><![CDATA[
+$ mvn clean install]]>
 		</programlisting>
 		<para>
 			The following command starts the emulator specified in the Maven Android Plugin section of the POM file
 		</para>
-		<programlisting>
-<![CDATA[
-$ mvn android:emulator-start
-]]>
+		<programlisting><![CDATA[
+$ mvn android:emulator-start]]>
 		</programlisting>
 		<para>
 			Deploys the application package to the emulator
 		</para>
-		<programlisting>
-<![CDATA[
-$ mvn android:deploy
-]]>
+		<programlisting><![CDATA[
+$ mvn android:deploy]]>
 		</programlisting>
 	</section>
   </section>
@@ -345,25 +337,22 @@ $ mvn android:deploy
 		<para>
 			The following example shows a query to google for the search term "SpringSource". 
 		</para>
-		<programlisting language="java">
-<![CDATA[
+		<programlisting language="java"><![CDATA[
 RestTemplate restTemplate = new RestTemplate();
 String url = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q={query}";
-String result = restTemplate.getForObject(url, String.class, "SpringSource");
-]]>
+String result = restTemplate.getForObject(url, String.class, "SpringSource");]]>
 		</programlisting>
 	</section>
   
 	<section>
-		<title>Retrieving JSON Data via HTTP GET</title>
+		<title>Retrieving JSON data via HTTP GET</title>
 		<para>
-			Alternatively, suppose you have defined a Java object you wish to populate from a RESTful web request that returns JSON content.
+			Suppose you have defined a Java object you wish to populate from a RESTful web request that returns JSON content.
 		</para>
 		<para>
-			Define your object based on the JSON data being returned from the RESTful request.
+			Define your object based on the JSON data being returned from the RESTful request:
 		</para>
-		<programlisting language="java">
-<![CDATA[
+		<programlisting language="java"><![CDATA[
 public class Event {
 
     private Long id;
@@ -388,14 +377,223 @@ public class Event {
 }]]>
 		</programlisting>
 		<para>
-			Make the RestTemplate request. 
+			Make the RestTemplate request: 
 		</para>
-		<programlisting language="java">
-<![CDATA[
-RestTemplate restTemplate = new RestTemplate();
+		<programlisting language="java"><![CDATA[
 String url = "http://mypretendservice.com/events";
-Event[] events = restTemplate.getForObject(url, Event[].class);
-]]>
+RestTemplate restTemplate = new RestTemplate();
+Event[] events = restTemplate.getForObject(url, Event[].class);]]>
+		</programlisting>
+		<para>
+			You can also set the Accept header for the request:
+		</para>
+		<programlisting language="java"><![CDATA[
+List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
+acceptableMediaTypes.add(new MediaType("application","json"));
+
+HttpHeaders requestHeaders = new HttpHeaders();
+requestHeaders.setAccept(acceptableMediaTypes);
+
+HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+
+String url = "http://mypretendservice.com/events";
+
+RestTemplate restTemplate = new RestTemplate();
+ResponseEntity<Event[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Event[].class);
+Event[] events = responseEntity.getBody();]]>
+		</programlisting>
+	</section>
+	
+	<section>
+		<title>Retrieving XML data via HTTP GET</title>
+		<para>
+			Using the same Java object we defined earlier, we can modify the requests to retrieve XML
+		</para>
+		<para>
+			Define your object based on the XML data being returned from the RESTful request. Note the
+			annotations used by Simple to marshal the object:
+		</para>
+		<programlisting language="java"><![CDATA[
+@Root
+public class Event {
+
+	@Element
+    private Long id;
+
+	@Element
+    private String title;
+	
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+	
+    public String setTitle(String title) {
+        this.title = title;
+    }
+}]]>
+		</programlisting>
+		<para>
+			To marshal an array of events from xml, we need to define a wrapper class for the list:
+		</para>
+		<programlisting language="java"><![CDATA[
+@Root(name="events")
+public class EventList {
+
+   @ElementList(inline=true)
+   private List<Event> events;
+
+   public List<Event> getEvents() {
+      return events;
+   }
+
+   public void setEvents(List<Event> events) {
+	   this.events = events;
+   }
+}]]>
+		</programlisting>
+		<para>
+			Make the RestTemplate request: 
+		</para>
+		<programlisting language="java"><![CDATA[
+String url = "http://mypretendservice.com/events";
+RestTemplate restTemplate = new RestTemplate();
+EventList eventList = restTemplate.getForObject(url, EventList.class);]]>
+		</programlisting>
+		<para>
+			You can also specify the Accept header for the request:
+		</para>
+		<programlisting language="java"><![CDATA[
+List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
+acceptableMediaTypes.add(new MediaType("application","xml"));
+
+HttpHeaders requestHeaders = new HttpHeaders();
+requestHeaders.setAccept(acceptableMediaTypes);
+
+HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+
+String url = "http://mypretendservice.com/events";
+
+RestTemplate restTemplate = new RestTemplate();
+ResponseEntity<EventList> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, EventList.class);
+EventList eventList = responseEntity.getBody();]]>
+		</programlisting>
+	</section>
+	
+	<section>
+		<title>Send JSON data via HTTP POST</title>
+		<para>
+			Now you would like to POST a Java object you have defined to a RESTful service that accepts JSON data. 
+		</para>
+		<para>
+			Define your object based on the JSON data expected by the RESTful request:
+		</para>
+		<programlisting language="java"><![CDATA[
+public class Message 
+{
+	private long id;
+
+	private String subject;
+
+	private String text;
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getText() {
+		return text;
+	}
+}]]>
+		</programlisting>
+		<para>
+			Make the RestTemplate request. In this example, the request responds with a string value: 
+		</para>
+		<programlisting language="java"><![CDATA[
+Message message = new Message();
+message.setId(555);
+message.setSubject("test subject");
+message.setText("test text");
+			
+String url = "http://mypretendservice.com/sendmessage";
+RestTemplate restTemplate = new RestTemplate();
+String response = restTemplate.postForObject(url, message, String.class);]]>
+		</programlisting>
+		<para>
+			You can also specify the Content-Type header in your request:
+		</para>
+		<programlisting language="java"><![CDATA[
+Message message = new Message();
+message.setId(555);
+message.setSubject("test subject");
+message.setText("test text");
+
+HttpHeaders requestHeaders = new HttpHeaders();
+requestHeaders.setContentType(new MediaType("application","json"));
+
+HttpEntity<Message> requestEntity = new HttpEntity<Message>(message, requestHeaders);
+
+String url = "http://mypretendservice.com/sendmessage";
+
+RestTemplate restTemplate = new RestTemplate();
+ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+String result = responseEntity.getBody();]]>
+		</programlisting>
+	</section>
+	
+	<section>
+		<title>Retrieve RSS or Atom feed</title>
+		<para>
+			The following is a basic example of loading an RSS feed:
+		</para>
+		<programlisting language="java"><![CDATA[
+String url = "http://mypretendservice.com/rssfeed";
+RestTemplate restTemplate = new RestTemplate();
+SyndFeed = restTemplate.getForObject(url, SyndFeed.class);]]>
+		</programlisting>
+		<para>
+			It is possible that you need to adjust the Media Type associated with the SyndFeedHttpMessageConverter. 
+			By default, the converter is associated with "application/rss+xml" and "application/atom+xml".  An RSS
+			feed might instead have a media type of "text/xml", for example. This example shows how to set the media
+			type.
+		</para>
+		<programlisting language="java"><![CDATA[
+String url = "http://mypretendservice.com/rssfeed";
+
+SyndFeedHttpMessageConverter converter = new SyndFeedHttpMessageConverter();
+List<MediaType> mediaTypes = new ArrayList<MediaType>();
+mediaTypes.add(new MediaType("text","xml"));
+converter.setSupportedMediaTypes(mediaTypes);
+
+List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+messageConverters.add(converter);
+
+RestTemplate restTemplate = new RestTemplate();
+restTemplate.setMessageConverters(messageConverters);
+SyndFeed feed = restTemplate.getForObject(url, SyndFeed.class);]]>
 		</programlisting>
 	</section>
   </section>
