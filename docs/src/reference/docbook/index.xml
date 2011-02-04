@@ -27,13 +27,13 @@
       </author>
     </authorgroup>
 
-    <legalnotice><para>© SpringSource Inc., 2010</para></legalnotice>
+    <legalnotice><para>© SpringSource Inc., 2011</para></legalnotice>
   </bookinfo>
 
   <toc></toc>
   
   <xi:include href="./overview.xml"/>
-  <xi:include href="./commons-logging.xml"/>
   <xi:include href="./rest-template.xml"/>
+  <xi:include href="./commons-logging.xml"/>
   
 </book>
