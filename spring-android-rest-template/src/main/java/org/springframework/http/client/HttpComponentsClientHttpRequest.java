@@ -38,6 +38,8 @@ import org.springframework.http.HttpMethod;
  *
  * <p>Created via the {@link HttpComponentsClientHttpRequestFactory}.
  *
+ * @author Oleg Kalnichevski
+ * @author Roy Clarkson
  * @since 1.0.0
  * @see HttpComponentsClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  */

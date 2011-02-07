@@ -33,6 +33,8 @@ import org.springframework.http.client.ClientHttpResponse;
  *
  * <p>Created via the {@link HttpComponentsClientHttpRequest}.
  *
+ * @author Oleg Kalnichevski
+ * @author Roy Clarkson
  * @since 1.0.0
  * @see HttpComponentsClientHttpRequest#execute()
  */
