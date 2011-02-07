@@ -17,5 +17,4 @@
 rootProject.name = 'spring-android'
 
 include 'docs'
-include 'spring-android-commons-logging'
 include 'spring-android-rest-template'

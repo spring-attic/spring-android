@@ -130,13 +130,6 @@ configure(javaprojects) {
 //
 // @see configure(javaprojects) above for general config
 // -----------------------------------------------------------------------------
-project('spring-android-commons-logging') {
-    description = 'Spring Android Commons Logging'
-    dependencies {
-        compile ("com.google.android:android:$androidVersion") { provided = true }
-    }
-}
-
 project('spring-android-rest-template') {
     description = 'Spring Android Rest Template'
     
