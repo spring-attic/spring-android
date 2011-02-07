@@ -122,16 +122,16 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
-	<groupId>org.codehaus.jackson</groupId>
-	<artifactId>jackson-mapper-asl</artifactId>
-	<version>1.7.1</version>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-mapper-asl</artifactId>
+    <version>1.7.1</version>
 </dependency>]]>
 		</programlisting>
 		<programlisting language="xml"><![CDATA[
 <dependency>
-	<groupId>org.codehaus.jackson</groupId>
-	<artifactId>jackson-core-asl</artifactId>
-	<version>1.7.1</version>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-core-asl</artifactId>
+    <version>1.7.1</version>
 </dependency>]]>
 		</programlisting>
 	</section>
@@ -148,9 +148,9 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
-	<groupId>org.simpleframework</groupId>
-	<artifactId>simple-xml</artifactId>
-	<version>2.4.1</version>
+    <groupId>org.simpleframework</groupId>
+    <artifactId>simple-xml</artifactId>
+    <version>2.4.1</version>
 </dependency>]]>
 		</programlisting>
 	</section>
@@ -171,16 +171,16 @@
 		</para>
 		<programlisting language="xml"><![CDATA[
 <dependency>
-	<groupId>com.google.code.android-rome-feed-reader</groupId>
-	<artifactId>android-rome-feed-reader</artifactId>
-	<version>1.0.0-r2</version>
+    <groupId>com.google.code.android-rome-feed-reader</groupId>
+    <artifactId>android-rome-feed-reader</artifactId>
+    <version>1.0.0-r2</version>
 </dependency>]]>
 		</programlisting>
 		<programlisting language="xml"><![CDATA[
 <dependency>
-	<groupId>org.jdom</groupId>
-	<artifactId>jdom</artifactId>
-	<version>1.1.1-android-fork</version>
+    <groupId>org.jdom</groupId>
+    <artifactId>jdom</artifactId>
+    <version>1.1.1-android-fork</version>
 </dependency>]]>
 		</programlisting>
 	</section>
@@ -285,12 +285,12 @@ Event[] events = responseEntity.getBody();]]>
 @Root
 public class Event {
 
-	@Element
+    @Element
     private Long id;
 
-	@Element
+    @Element
     private String title;
-	
+
     public Long getId() {
         return id;
     }
@@ -302,7 +302,7 @@ public class Event {
     public String getTitle() {
         return title;
     }
-	
+
     public String setTitle(String title) {
         this.title = title;
     }
@@ -323,7 +323,7 @@ public class EventList {
    }
 
    public void setEvents(List<Event> events) {
-	   this.events = events;
+       this.events = events;
    }
 }]]>
 		</programlisting>
@@ -366,35 +366,35 @@ EventList eventList = responseEntity.getBody();]]>
 		<programlisting language="java"><![CDATA[
 public class Message 
 {
-	private long id;
+    private long id;
 
-	private String subject;
+    private String subject;
 
-	private String text;
+    private String text;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
-	public String getSubject() {
-		return subject;
-	}
+    public String getSubject() {
+        return subject;
+    }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public String getText() {
+        return text;
+    }
 }]]>
 		</programlisting>
 		<para>
