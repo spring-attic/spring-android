@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="spring-android-maven" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Spring Android and Maven</title>
+
+  <section id="maven-example-introduction">
+	<title>Introduction</title>
+	<para>
+		An alternative to downloading the individual library JARs yourself is to use Maven for dependency management.
+		The <link xlink:href="http://code.google.com/p/maven-android-plugin">Maven Android Plugin</link> allows 
+		developers to utilize Maven's dependency management capabilities within an Android application. Additionally, 
+		the <link xlink:href="http://code.google.com/a/eclipselabs.org/p/m2eclipse-android-integration/">Maven Integration
+		for Android Development Tools</link> bridges the Maven Android Plugin and the 
+		<link xlink:href="http://developer.android.com/sdk/eclipse-adt.html">Android Development Tools (ADT)</link> to
+		allow the use of dependency management within Eclipse.
+	</para>
+  </section>
+  <section id="maven-example-pom">
+	<title>Example POM</title>
+	<para>
+		The following 
+		<link xlink:href="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html">Maven POM file</link> 
+		illustrates how to configure the 
+		<link xlink:href="http://code.google.com/p/maven-android-plugin">Maven Android Plugin</link> and associated 
+		dependencies for use with Spring Android Rest Template.
+	</para>
+	<programlisting language="xml"><![CDATA[
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.springframework.android</groupId>
+	<artifactId>showcase</artifactId>
+	<version>1.0.0.BUILD-SNAPSHOT</version>
+	<packaging>apk</packaging>
+	<name>spring-android-showcase-client</name>
+	<url>http://www.springsource.org</url> 
+	<organization>
+		<name>SpringSource</name>
+		<url>http://www.springsource.org</url>
+	</organization>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>maven-android-plugin</artifactId>
+				<version>2.8.4</version>
+				<configuration>
+					<sdk>
+						<platform>3</platform>
+					</sdk>
+					<emulator>
+						<avd>3</avd>
+					</emulator>
+					<deleteConflictingFiles>true</deleteConflictingFiles>
+					<undeployBeforeDeploy>true</undeployBeforeDeploy>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>1.5_r4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.android</groupId>
+			<artifactId>spring-android-rest-template</artifactId>
+			<version>1.0.0.BUILD-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<!-- Using Jackson for JSON marshaling -->
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		<dependency>
+			<!-- Using Simple for XML marshaling -->
+			<groupId>org.simpleframework</groupId>
+			<artifactId>simple-xml</artifactId>
+			<version>2.4.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>stax</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>stax-api</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<!-- Using Android ROME for RSS and ATOM feeds -->
+			<groupId>com.google.code.android-rome-feed-reader</groupId>
+			<artifactId>android-rome-feed-reader</artifactId>
+			<version>1.0.0-r2</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<!-- For developing with Android ROME Feed Reader -->
+		<repository>
+			<id>android-rome-feed-reader-repository</id>
+			<name>Android ROME Feed Reader Repository</name>
+			<url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
+		</repository>
+		<!-- For testing against latest Spring snapshots -->
+		<repository>
+			<id>org.springframework.maven.snapshot</id>
+			<name>Spring Maven Snapshot Repository</name>
+			<url>http://maven.springframework.org/snapshot</url>
+			<releases><enabled>false</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+		<!-- For developing against latest Spring milestones -->
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+	</repositories>
+
+</project>]]>
+	</programlisting>
+  </section>
+
+  <section id="maven-commands">
+	<title>Maven Commands</title>
+	<para>
+		Once you have configured a Maven POM in your Android project you can use the following Maven command 
+		to clean and assemble your Android APK file.  
+		Additional <link xlink:href="http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html">goals</link>
+		are available for use with the Maven Android Plugin.
+	</para>
+	<programlisting><![CDATA[
+$ mvn clean install]]>
+	</programlisting>
+	<para>
+		The following command starts the emulator specified in the Maven Android Plugin section of the POM file
+	</para>
+	<programlisting><![CDATA[
+$ mvn android:emulator-start]]>
+	</programlisting>
+	<para>
+		Deploys the application package to the emulator
+	</para>
+	<programlisting><![CDATA[
+$ mvn android:deploy]]>
+	</programlisting>
+  </section>
+
+</chapter>
