@@ -1,12 +1,35 @@
 Spring Android
 ================================
 
+1.0.0.M2 (2011.02.07)
+
+New Features
+* Updated RestTemplate to include HttpComponents HttpClient 4.x support using 
+  the HttpComponentsClientHttpRequestFactory.
+* New RestTemplate instances now use the HttpComponentsClientHttpRequestFactory 
+  by default.
+* Added support for Object to XML serialization through the 
+  SimpleXmlHttpMessageConverter, which utilizes the Simple XML serializer.
+* Added support for RSS and Atom feeds through the SyndFeedHttpMessageConverter, 
+  RssChannelHttpMessageConverter, and AtomFeedHttpMessageConverter.
+
+Deprecated:
+* Deprecated CommonsClientHttpRequestFactory and supporting classes, since the 
+  Commons HttpClient 3.x is not native to the Android platform. These classes 
+  will be removed in the next release.
+
+Removed:
+* Commons-Logging has been removed due to conflicts with private Android 
+  classes. This future of this library will be reevaluated for the next 
+  release.
+
 1.0.0.M1 (2010.11.18)
 
 New Features
-* Commons-Logging facade for Android allows libraries using commons-logging to log to Android's native log.
-  The logging levels specified for Commons Logging can be almost directly mapped to the levels that exist in the Google Android platform.
-  The following list shows the mapping implemented by this logger:
+* Commons-Logging facade for Android allows libraries using commons-logging to 
+  log to Android's native log. The logging levels specified for Commons Logging 
+  can be almost directly mapped to the levels that exist in the Google Android 
+  platform. The following list shows the mapping implemented by this logger:
 
   - JCL TRACE to Android VERBOSE
   - JCL DEBUG to Android DEBUG
@@ -15,6 +38,8 @@ New Features
   - JCL ERROR to Android ERROR
   - JCL FATAL to Android ERROR	  
 
-* RestTemplate support in Android. You can now utilize RestTemplate calls in Android projects using the CommonsClientHttpRequestFactory.
-  Due to known issues with Android's java.net.HttpURLConnection implementation, we recommend avoiding using SimpleClientHttpRequestFactory at this time.
+* RestTemplate support in Android. You can now utilize RestTemplate calls in 
+  Android projects using the CommonsClientHttpRequestFactory. Due to known 
+  issues with Android's java.net.HttpURLConnection implementation, we 
+  recommend avoiding using SimpleClientHttpRequestFactory at this time.
 	  
