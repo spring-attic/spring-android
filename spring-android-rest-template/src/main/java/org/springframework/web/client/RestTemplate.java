@@ -34,7 +34,7 @@ import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.support.HttpAccessor;
+import org.springframework.http.client.support.InterceptingHttpAccessor;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
@@ -112,7 +112,7 @@ import org.springframework.web.util.UriUtils;
  * @see ResponseErrorHandler
  * @since 1.0.0
  */
-public class RestTemplate extends HttpAccessor implements RestOperations {
+public class RestTemplate extends InterceptingHttpAccessor implements RestOperations {
 
 	private static final boolean simpleXmlPresent =
 			ClassUtils.isPresent("org.simpleframework.xml.Serializer", RestTemplate.class.getClassLoader());

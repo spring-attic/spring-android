@@ -43,7 +43,7 @@ import org.springframework.http.HttpMethod;
  * @since 1.0.0
  * @see HttpComponentsClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  */
-final class HttpComponentsClientHttpRequest extends AbstractClientHttpRequest {
+final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpRequest {
 
     private final HttpClient httpClient;
 

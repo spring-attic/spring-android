@@ -28,6 +28,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -39,10 +40,9 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
-
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.util.Assert;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.Assert;
 
 /**
  * {@link org.springframework.http.client.ClientHttpRequestFactory} implementation that uses
@@ -64,7 +64,7 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
 
     /**
      * Create a new instance of the <code>HttpComponentsClientHttpRequestFactory</code> with a default
-     * {@link HttpClient} that uses a default {@link MultiThreadedHttpConnectionManager}.
+     * {@link HttpClient} that uses a default {@link ThreadSafeClientConnManager}.
      */
     public HttpComponentsClientHttpRequestFactory() {
         // Set total max connections to 100
@@ -157,10 +157,10 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
     }
 
     /**
-     * Template method that allows for manipulating the {@link org.apache.http.client.methods.HttpUriRequest}
+     * Template method that allows for manipulating the {@link HttpUriRequest}
      * before it is returned as part of a {@link HttpComponentsClientHttpRequest}.
      * <p>The default implementation is empty.
-     * @param httpMethod the Commons HTTP method object to process
+     * @param httpRequest the HTTP request object to process
      */
     protected void postProcessHttpRequest(HttpUriRequest httpRequest) {
     }

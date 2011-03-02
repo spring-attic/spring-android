@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -750,18 +750,33 @@ public abstract class ClassUtils {
 	 * @return if the target type is assignable from the value type
 	 * @see TypeUtils#isAssignable
 	 */
+	@SuppressWarnings("rawtypes")
 	public static boolean isAssignable(Class<?> lhsType, Class<?> rhsType) {
 		Assert.notNull(lhsType, "Left-hand side type must not be null");
 		Assert.notNull(rhsType, "Right-hand side type must not be null");
-		return (lhsType.isAssignableFrom(rhsType) ||
-				lhsType.equals(primitiveWrapperTypeMap.get(rhsType)));
+		if (lhsType.isAssignableFrom(rhsType)) {
+			return true;
+		}
+		if (lhsType.isPrimitive()) {
+			Class resolvedPrimitive = primitiveWrapperTypeMap.get(rhsType);
+			if (resolvedPrimitive != null && lhsType.equals(resolvedPrimitive)) {
+				return true;
+			}
+		}
+		else {
+			Class resolvedWrapper = primitiveTypeToWrapperMap.get(rhsType);
+			if (resolvedWrapper != null && lhsType.isAssignableFrom(resolvedWrapper)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
 	 * Determine if the given type is assignable from the given value,
 	 * assuming setting by reflection. Considers primitive wrapper classes
 	 * as assignable to the corresponding primitive types.
-	 * @param type	the target type
+	 * @param type the target type
 	 * @param value the value that should be assigned to the type
 	 * @return if the type is assignable from the value
 	 */

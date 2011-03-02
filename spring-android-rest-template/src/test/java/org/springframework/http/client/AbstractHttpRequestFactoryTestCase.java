@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.springframework.http.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -30,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.AfterClass;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,17 +42,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
 
+import static org.junit.Assert.*;
+
 public abstract class AbstractHttpRequestFactoryTestCase {
 
-	private ClientHttpRequestFactory factory;
+	protected ClientHttpRequestFactory factory;
+
+	protected static String baseUrl;
 
 	private static Server jettyServer;
 
-	private static final String BASE_URL = "http://localhost:8889";
-
 	@BeforeClass
 	public static void startJettyServer() throws Exception {
-		jettyServer = new Server(8889);
+		int port = FreePortScanner.getFreePort();
+		jettyServer = new Server(port);
+		baseUrl = "http://localhost:" + port;
 		Context jettyContext = new Context(jettyServer, "/");
 		jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/echo");
 		jettyContext.addServlet(new ServletHolder(new StatusServlet(200)), "/status/ok");
@@ -61,7 +65,7 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 		jettyContext.addServlet(new ServletHolder(new MethodServlet("GET")), "/methods/get");
 		jettyContext.addServlet(new ServletHolder(new MethodServlet("HEAD")), "/methods/head");
 		jettyContext.addServlet(new ServletHolder(new MethodServlet("OPTIONS")), "/methods/options");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("POST")), "/methods/post");
+		jettyContext.addServlet(new ServletHolder(new PostServlet()), "/methods/post");
 		jettyContext.addServlet(new ServletHolder(new MethodServlet("PUT")), "/methods/put");
 		jettyContext.addServlet(new ServletHolder(new RedirectServlet("/status/ok")), "/redirect");
 		jettyServer.start();
@@ -83,9 +87,8 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	@Test
 	public void status() throws Exception {
-		URI uri = new URI(BASE_URL + "/status/notfound");
-		ClientHttpRequest request =
-				factory.createRequest(uri, HttpMethod.GET);
+		URI uri = new URI(baseUrl + "/status/notfound");
+		ClientHttpRequest request = factory.createRequest(uri, HttpMethod.GET);
 		assertEquals("Invalid HTTP method", HttpMethod.GET, request.getMethod());
 		assertEquals("Invalid HTTP URI", uri, request.getURI());
 		ClientHttpResponse response = request.execute();
@@ -94,7 +97,7 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	@Test
 	public void echo() throws Exception {
-		ClientHttpRequest request = factory.createRequest(new URI(BASE_URL + "/echo"), HttpMethod.PUT);
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.PUT);
 		assertEquals("Invalid HTTP method", HttpMethod.PUT, request.getMethod());
 		String headerName = "MyHeader";
 		String headerValue1 = "value1";
@@ -102,6 +105,7 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 		String headerValue2 = "value2";
 		request.getHeaders().add(headerName, headerValue2);
 		byte[] body = "Hello World".getBytes("UTF-8");
+		request.getHeaders().setContentLength(body.length);
 		FileCopyUtils.copy(body, request.getBody());
 		ClientHttpResponse response = request.execute();
 		assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
@@ -114,29 +118,27 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	@Test(expected = IllegalStateException.class)
 	public void multipleWrites() throws Exception {
-		ClientHttpRequest request = factory.createRequest(new URI(BASE_URL + "/echo"), HttpMethod.POST);
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
 		byte[] body = "Hello World".getBytes("UTF-8");
 		FileCopyUtils.copy(body, request.getBody());
 		ClientHttpResponse response = request.execute();
 		try {
 			FileCopyUtils.copy(body, request.getBody());
-		}
-		finally {
+		} finally {
 			response.close();
 		}
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void headersAfterExecute() throws Exception {
-		ClientHttpRequest request = factory.createRequest(new URI(BASE_URL + "/echo"), HttpMethod.POST);
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
 		request.getHeaders().add("MyHeader", "value");
 		byte[] body = "Hello World".getBytes("UTF-8");
 		FileCopyUtils.copy(body, request.getBody());
 		ClientHttpResponse response = request.execute();
 		try {
 			request.getHeaders().add("MyHeader", "value");
-		}
-		finally {
+		} finally {
 			response.close();
 		}
 	}
@@ -154,23 +156,25 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	private void assertHttpMethod(String path, HttpMethod method) throws Exception {
 		ClientHttpResponse response = null;
 		try {
-			ClientHttpRequest request = factory.createRequest(new URI(BASE_URL + "/methods/" + path), method);
+			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/methods/" + path), method);
 			response = request.execute();
+			assertEquals("Invalid response status", HttpStatus.OK, response.getStatusCode());
 			assertEquals("Invalid method", path.toUpperCase(Locale.ENGLISH), request.getMethod().name());
-		}
-		finally {
+		} finally {
 			if (response != null) {
 				response.close();
 			}
 		}
 	}
-	
+
 	@Test
 	public void redirect() throws Exception {
 		ClientHttpResponse response = null;
 		try {
-			ClientHttpRequest request = factory.createRequest(new URI(BASE_URL + "/redirect"), HttpMethod.PUT);
+			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/redirect"), HttpMethod.PUT);
 			response = request.execute();
+			// assertEquals("Invalid Location value", new URI(baseUrl + "/status/ok"),
+			// 		response.getHeaders().getLocation());
 
 		} finally {
 			if (response != null) {
@@ -179,7 +183,7 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 			}
 		}
 		try {
-			ClientHttpRequest request = factory.createRequest(new URI(BASE_URL + "/redirect"), HttpMethod.GET);
+			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/redirect"), HttpMethod.GET);
 			response = request.execute();
 			assertNull("Invalid Location value", response.getHeaders().getLocation());
 
@@ -189,7 +193,7 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 			}
 		}
 	}
-	
+
 	/** Servlet that sets a given status code. */
 	private static class StatusServlet extends GenericServlet {
 
@@ -221,6 +225,33 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 		public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
 			HttpServletRequest httpReq = (HttpServletRequest) req;
 			assertEquals("Invalid HTTP method", method, httpReq.getMethod());
+			res.setContentLength(0);
+			((HttpServletResponse) res).setStatus(200);
+		}
+	}
+
+	private static class PostServlet extends MethodServlet {
+
+		private static final long serialVersionUID = 1L;
+
+		private PostServlet() {
+			super("POST");
+		}
+
+		@Override
+		public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+			super.service(req, res);
+			long contentLength = req.getContentLength();
+			if (contentLength != -1) {
+				InputStream in = req.getInputStream();
+				long byteCount = 0;
+				byte[] buffer = new byte[4096];
+				int bytesRead;
+				while ((bytesRead = in.read(buffer)) != -1) {
+					byteCount += bytesRead;
+				}
+				assertEquals("Invalid content-length", contentLength, byteCount);
+			}
 		}
 	}
 

@@ -98,10 +98,9 @@ configure(javaprojects) {
 
     junitVersion = '4.7'
     log4jVersion = '1.2.16'
-    springVersion = '3.0.5.RELEASE'
+    springVersion = '3.1.0.M1'
     androidVersion = '1.5_r3'
     httpComponentsClientVersion = '4.0.1'
-    commonsHttpClientVersion = '3.1'
     androidRomeVersion = '1.0.0-r2'
     simpleXmlVersion = '2.4.1'
     javaxServletApiVersion = '2.5'
@@ -133,130 +132,160 @@ configure(javaprojects) {
 project('spring-android-rest-template') {
     description = 'Spring Android Rest Template'
     
-    // creates a temporary location for storing class files extracted from the 
-    // springframework jars
-    projLibDir = "$buildDir/exploded-jars/"
+    mainSrcDir = "$projectDir/src/main/java"
+    mainResourcesDir = "$projectDir/src/main/resources"
+    sharedSrcDir = "$projectDir/src/shared/java"
+    sharedResourcesDir = "$projectDir/src/shared/resources"
     
     // build against the extracted class files
-    sourceSets.main.resources.srcDir projLibDir
+/*    sourceSets {
+		shared {
+			java { 
+				srcDir sharedSrcDir
+			}
+			resources {
+				srcDir sharedResourcesDir
+			}
+		}
+	}
+*/	
+	sourceSets.main.java.srcDirs = [mainSrcDir, sharedSrcDir]
+	sourceSets.main.resources.srcDirs = [mainResourcesDir, sharedResourcesDir]
 
     repositories {
         mavenRepo urls: 'https://android-rome-feed-reader.googlecode.com/svn/maven2/releases'
     }
     
     dependencies {
-        compile ("com.google.android:android:$androidVersion") { provided = true }
-        compile ("commons-httpclient:commons-httpclient:$commonsHttpClientVersion") { optional = true }
-        compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion") { optional = true }
+        compile ("com.google.android:android:$androidVersion") { 
+            provided = true 
+        }
+        compile ("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion") {
+            optional = true
+        }
+        compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion") { 
+            optional = true 
+        }
         compile ("org.simpleframework:simple-xml:$simpleXmlVersion") { 
             optional = true 
             transitive = false 
         }
-        compile files(projLibDir)
+
         testCompile "org.springframework:spring-core:$springVersion"
         testCompile "javax.servlet:servlet-api:$javaxServletApiVersion"
         testCompile "commons-fileupload:commons-fileupload:$commonsFileuploadVersion"
         testCompile "org.mortbay.jetty:jetty:$jettyVersion"
-        testCompile "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion"
         testCompile "xmlunit:xmlunit:$xmlUnitVersion"
     }
-    
-    // configuration for extracting required class files from springframework
-    configurations { dependencyconf }
+
+    // delete the shared source files when cleaning the project
+    clean.doFirst {
+        delete files(sharedSrcDir)
+    }
+
+    // configuration for extracting required source files from springframework
+    configurations { explodedSourceFiles }
     dependencies {
-        dependencyconf "org.springframework:spring-web:$springVersion"
-        dependencyconf "org.springframework:spring-beans:$springVersion"
+        explodedSourceFiles "org.springframework:spring-web:$springVersion:sources"
+        explodedSourceFiles "org.springframework:spring-core:$springVersion:sources"
+        explodedSourceFiles "org.springframework:spring-beans:$springVersion:sources"
     }
 
     compileJava.doFirst {
-        // Required springframework classes for RestTemplate support
-        classFilter = [
-            'org/springframework/beans/BeansException.class',
-            'org/springframework/beans/PropertyAccessException.class',
-            'org/springframework/beans/TypeMismatchException.class',
-            'org/springframework/beans/factory/DisposableBean.class',
-            'org/springframework/beans/factory/package-info.class',
-            'org/springframework/core/ErrorCoded.class',
-            'org/springframework/core/NestedExceptionUtils.class',
-            'org/springframework/core/NestedIOException.class',
-            'org/springframework/core/NestedRuntimeException.class',
-            'org/springframework/core/package-info.class',
-            'org/springframework/core/io/AbstractResource.class',
-            'org/springframework/core/io/ByteArrayResource.class',
-            'org/springframework/core/io/ClassPathResource.class',
-            'org/springframework/core/io/InputStreamSource.class',
-            'org/springframework/core/io/package-info.class',
-            'org/springframework/core/io/Resource.class',
-            'org/springframework/http/HttpEntity.class',
-            'org/springframework/http/HttpHeaders.class',
-            'org/springframework/http/HttpInputMessage.class',
-            'org/springframework/http/HttpMessage.class',
-            'org/springframework/http/HttpMethod.class',
-            'org/springframework/http/HttpOutputMessage.class',
-            'org/springframework/http/HttpStatus.class',
-            'org/springframework/http/HttpStatus$Series.class',
-            'org/springframework/http/package-info.class',
-            'org/springframework/http/ResponseEntity.class',
-            'org/springframework/http/client/AbstractClientHttpRequest.class',
-            'org/springframework/http/client/ClientHttpRequest.class',
-            'org/springframework/http/client/ClientHttpRequestFactory.class',
-            'org/springframework/http/client/ClientHttpResponse.class',
-            'org/springframework/http/client/package-info.class',
-            'org/springframework/http/client/SimpleClientHttpRequest.class',
-            'org/springframework/http/client/SimpleClientHttpRequestFactory.class',
-            'org/springframework/http/client/SimpleClientHttpResponse.class',
-            'org/springframework/http/client/support/HttpAccessor.class',
-            'org/springframework/http/client/support/package-info.class',
-            'org/springframework/http/converter/AbstractHttpMessageConverter.class',
-            'org/springframework/http/converter/ByteArrayHttpMessageConverter.class',
-            'org/springframework/http/converter/HttpMessageConversionException.class',
-            'org/springframework/http/converter/HttpMessageConverter.class',
-            'org/springframework/http/converter/HttpMessageNotReadableException.class',
-            'org/springframework/http/converter/HttpMessageNotWritableException.class',
-            'org/springframework/http/converter/package-info.class',
-            'org/springframework/http/converter/StringHttpMessageConverter.class',
-            'org/springframework/http/converter/feed/package-info.class',
-            'org/springframework/http/converter/json/MappingJacksonHttpMessageConverter.class',
-            'org/springframework/http/converter/json/package-info.class',
-            'org/springframework/http/converter/xml/package-info.class',
-            'org/springframework/util/Assert.class',
-            'org/springframework/util/CollectionUtils.class',
-            'org/springframework/util/CollectionUtils$EnumerationIterator.class',
-            'org/springframework/util/FileCopyUtils.class',
-            'org/springframework/util/LinkedCaseInsensitiveMap.class',
-            'org/springframework/util/LinkedMultiValueMap.class',
-            'org/springframework/util/MultiValueMap.class',
-            'org/springframework/util/ObjectUtils.class',
-            'org/springframework/util/package-info.class',
-            'org/springframework/util/ResourceUtils.class',
-            'org/springframework/util/StringUtils.class',
-            'org/springframework/web/client/DefaultResponseErrorHandler.class',
-            'org/springframework/web/client/HttpClientErrorException.class',
-            'org/springframework/web/client/HttpMessageConverterExtractor.class',
-            'org/springframework/web/client/HttpServerErrorException.class',
-            'org/springframework/web/client/HttpStatusCodeException.class',
-            'org/springframework/web/client/package-info.class',
-            'org/springframework/web/client/RequestCallback.class',
-            'org/springframework/web/client/ResourceAccessException.class',
-            'org/springframework/web/client/ResponseErrorHandler.class',
-            'org/springframework/web/client/ResponseExtractor.class',
-            'org/springframework/web/client/RestClientException.class',
-            'org/springframework/web/client/RestOperations.class',
-            'org/springframework/web/util/package-info.class',
-            'org/springframework/web/util/UriTemplate.class',
-            'org/springframework/web/util/UriTemplate$Parser.class',
-            'org/springframework/web/util/UriUtils.class'
+        // Required springframework source files for RestTemplate support
+        sourceFilter = [
+            // spring-beans
+            'org/springframework/beans/BeansException.java',
+            'org/springframework/beans/PropertyAccessException.java',
+            'org/springframework/beans/TypeMismatchException.java',
+            'org/springframework/beans/factory/DisposableBean.java',
+
+            // spring-core
+            'org/springframework/core/ErrorCoded.java',
+            'org/springframework/core/NestedExceptionUtils.java',
+            'org/springframework/core/NestedCheckedException.java',
+            'org/springframework/core/NestedIOException.java',
+            'org/springframework/core/NestedRuntimeException.java',
+            'org/springframework/core/io/AbstractResource.java',
+            'org/springframework/core/io/ByteArrayResource.java',
+            'org/springframework/core/io/ClassPathResource.java',
+            'org/springframework/core/io/FileSystemResource.java',
+            'org/springframework/core/io/InputStreamResource.java',
+            'org/springframework/core/io/InputStreamSource.java',
+            'org/springframework/core/io/Resource.java',
+            'org/springframework/core/io/UrlResource.java',
+            'org/springframework/util/Assert.java',
+            'org/springframework/util/CollectionUtils.java',
+            'org/springframework/util/FileCopyUtils.java',
+            'org/springframework/util/LinkedCaseInsensitiveMap.java',
+            'org/springframework/util/LinkedMultiValueMap.java',
+            'org/springframework/util/MultiValueMap.java',
+            'org/springframework/util/ObjectUtils.java',
+            'org/springframework/util/ReflectionUtils.java',
+            'org/springframework/util/ResourceUtils.java',
+            'org/springframework/util/StringUtils.java',
+            'org/springframework/util/TypeUtils.java',
+
+            // spring-web
+            'org/springframework/http/HttpEntity.java',
+            'org/springframework/http/HttpHeaders.java',
+            'org/springframework/http/HttpInputMessage.java',
+            'org/springframework/http/HttpMessage.java',
+            'org/springframework/http/HttpMethod.java',
+            'org/springframework/http/HttpOutputMessage.java',
+            'org/springframework/http/HttpRequest.java',
+            'org/springframework/http/HttpStatus.java',
+            'org/springframework/http/ResponseEntity.java',
+            'org/springframework/http/client/AbstractClientHttpRequest.java',
+            'org/springframework/http/client/AbstractBufferingClientHttpRequest.java',
+            'org/springframework/http/client/ClientHttpRequest.java',
+            'org/springframework/http/client/ClientHttpRequestExecution.java',
+            'org/springframework/http/client/ClientHttpRequestFactory.java',
+            'org/springframework/http/client/ClientHttpResponse.java',
+            'org/springframework/http/client/BufferingSimpleClientHttpRequest.java',
+            'org/springframework/http/client/ClientHttpRequestInterceptor.java',
+            'org/springframework/http/client/InterceptingClientHttpRequest.java',
+            'org/springframework/http/client/InterceptingClientHttpRequestFactory.java',
+            'org/springframework/http/client/SimpleClientHttpRequest.java',
+            'org/springframework/http/client/SimpleClientHttpRequestFactory.java',
+            'org/springframework/http/client/SimpleClientHttpResponse.java',
+            'org/springframework/http/client/StreamingSimpleClientHttpRequest.java',
+            'org/springframework/http/client/support/HttpAccessor.java',
+            'org/springframework/http/client/support/HttpRequestWrapper.java',
+            'org/springframework/http/client/support/InterceptingHttpAccessor.java',
+            'org/springframework/http/converter/AbstractHttpMessageConverter.java',
+            'org/springframework/http/converter/ByteArrayHttpMessageConverter.java',
+            'org/springframework/http/converter/FormHttpMessageConverter.java',
+            'org/springframework/http/converter/HttpMessageConversionException.java',
+            'org/springframework/http/converter/HttpMessageConverter.java',
+            'org/springframework/http/converter/HttpMessageNotReadableException.java',
+            'org/springframework/http/converter/HttpMessageNotWritableException.java',
+            'org/springframework/http/converter/StringHttpMessageConverter.java',
+            'org/springframework/http/converter/json/MappingJacksonHttpMessageConverter.java',
+            'org/springframework/web/client/DefaultResponseErrorHandler.java',
+            'org/springframework/web/client/HttpClientErrorException.java',
+            'org/springframework/web/client/HttpMessageConverterExtractor.java',
+            'org/springframework/web/client/HttpServerErrorException.java',
+            'org/springframework/web/client/HttpStatusCodeException.java',
+            'org/springframework/web/client/RequestCallback.java',
+            'org/springframework/web/client/ResourceAccessException.java',
+            'org/springframework/web/client/ResponseErrorHandler.java',
+            'org/springframework/web/client/ResponseExtractor.java',
+            'org/springframework/web/client/RestClientException.java',
+            'org/springframework/web/client/RestOperations.java',
+            'org/springframework/web/util/UriTemplate.java',
+            'org/springframework/web/util/UriUtils.java'
             ]
 
         // loops through springframework jars, extracting and copying class files to the lib folder
-        FileCollection jars = configurations.dependencyconf
-        jars.each { jar ->
-            zipTree(jar).visit { classFile ->
-                if (classFile.relativePath.toString() in classFilter) {
-                    filePath = classFile.relativePath.getPathString().minus(classFile.name)
+        FileCollection sourceJars = configurations.explodedSourceFiles
+        sourceJars.each { sourceJar ->
+            zipTree(sourceJar).visit { sourceFile ->
+                if (sourceFile.relativePath.toString() in sourceFilter) {
+                    filePath = sourceFile.relativePath.getPathString().minus(sourceFile.name)
                     copy {
-                        from classFile.file
-                        into projLibDir + filePath
+                        from sourceFile.file
+                        into sharedSrcDir + '/' + filePath
                     }
                 }
             }
