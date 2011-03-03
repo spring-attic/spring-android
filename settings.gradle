@@ -17,4 +17,5 @@
 rootProject.name = 'spring-android'
 
 include 'docs'
+include 'spring-android-auth'
 include 'spring-android-rest-template'

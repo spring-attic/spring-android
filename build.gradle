@@ -99,6 +99,7 @@ configure(javaprojects) {
     junitVersion = '4.7'
     log4jVersion = '1.2.16'
     springVersion = '3.1.0.M1'
+    springSocialVersion = '1.0.0.M2'
     androidVersion = '1.5_r3'
     httpComponentsClientVersion = '4.0.1'
     androidRomeVersion = '1.0.0-r2'
@@ -129,6 +130,19 @@ configure(javaprojects) {
 //
 // @see configure(javaprojects) above for general config
 // -----------------------------------------------------------------------------
+project('spring-android-auth') {
+    description = 'Spring Android Auth'
+    
+    dependencies {
+        compile ("com.google.android:android:$androidVersion") { 
+            provided = true 
+        }
+        compile ("org.springframework.social:spring-social-core:$springSocialVersion") {
+            exclude group: "org.springframework", module: "spring-web"
+        }
+    }
+}
+
 project('spring-android-rest-template') {
     description = 'Spring Android Rest Template'
     
@@ -136,19 +150,8 @@ project('spring-android-rest-template') {
     mainResourcesDir = "$projectDir/src/main/resources"
     sharedSrcDir = "$projectDir/src/shared/java"
     sharedResourcesDir = "$projectDir/src/shared/resources"
-    
-    // build against the extracted class files
-/*    sourceSets {
-		shared {
-			java { 
-				srcDir sharedSrcDir
-			}
-			resources {
-				srcDir sharedResourcesDir
-			}
-		}
-	}
-*/	
+
+    // include the shared source directories in the main SourceSet
 	sourceSets.main.java.srcDirs = [mainSrcDir, sharedSrcDir]
 	sourceSets.main.resources.srcDirs = [mainResourcesDir, sharedResourcesDir]
 
