@@ -100,6 +100,7 @@ configure(javaprojects) {
     log4jVersion = '1.2.16'
     springVersion = '3.1.0.M1'
     springSocialVersion = '1.0.0.M2'
+    springSecurityVersion = '3.1.0.RC1'
     androidVersion = '1.5_r3'
     httpComponentsClientVersion = '4.0.1'
     androidRomeVersion = '1.0.0-r2'
@@ -138,8 +139,13 @@ project('spring-android-auth') {
             provided = true 
         }
         compile ("org.springframework.social:spring-social-core:$springSocialVersion") {
+            // exclude spring-web in favor of spring-android-rest-template
             exclude group: "org.springframework", module: "spring-web"
         }
+        compile ("org.springframework.security:spring-security-crypto:$springSecurityVersion") {
+            exclude group: "org.springframework", module: "spring-core"
+        }
+        compile project(':spring-android-rest-template')
     }
 }
 

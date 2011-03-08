@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.social.connect.support.Connection;
 import org.springframework.social.connect.support.ConnectionRepository;
 
@@ -38,8 +39,16 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 	
 	private final SqliteConnectionRepositoryHelper repositoryHelper;
 	
-	public SqliteConnectionRepository(Context context) {
-		repositoryHelper = new SqliteConnectionRepositoryHelper(context);
+	private final TextEncryptor textEncryptor;
+	
+	/**
+	 * Creates a SQLite-based connection repository.
+	 * @param context the Android Context to execute within
+	 * @param textEncryptor the encryptor to use when storing oauth keys
+	 */
+	public SqliteConnectionRepository(Context context, TextEncryptor textEncryptor) {
+		this.repositoryHelper = new SqliteConnectionRepositoryHelper(context);
+		this.textEncryptor = textEncryptor;
 	}
 
 	public boolean isConnected(Serializable accountId, String providerId) {
@@ -73,8 +82,7 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 
 	public Serializable findAccountIdByConnectionAccessToken(String provider, String accessToken) {
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		// TODO: Encrypt accessToken
-		String[] selectionArgs = {provider, accessToken};
+		String[] selectionArgs = {provider, encrypt(accessToken)};
 		Cursor c = db.rawQuery("select accountId from Connection where providerId = ? and accessToken = ?", selectionArgs);
 		
 		List<Serializable> accountIds = new ArrayList<Serializable>();
@@ -120,9 +128,9 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 			ContentValues values = new ContentValues();
 			values.put("accountId", accountId.toString());
 			values.put("providerId", providerId);
-			values.put("accessToken", connection.getAccessToken());
-			values.put("secret", connection.getSecret());
-			values.put("refreshToken", connection.getRefreshToken());
+			values.put("accessToken", encrypt(connection.getAccessToken()));
+			values.put("secret", encrypt(connection.getSecret()));
+			values.put("refreshToken", encrypt(connection.getRefreshToken()));
 			values.put("providerAccountId", connection.getProviderAccountId());
 			long connectionId = db.insertOrThrow("Connection", null, values);
 			db.close();
@@ -142,12 +150,19 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 	
 	// Helper methods
 	
+	private String encrypt(String text) {
+		return text != null ? textEncryptor.encrypt(text) : text;
+	}
+	
+	private String decrypt(String encryptedText) {
+		return encryptedText != null ? textEncryptor.decrypt(encryptedText) : encryptedText;
+	}
+	
 	private Connection assembleConnection(Cursor c) {
-		// TODO: Decrypt accessToken, secret, and refreshToken
 		return new Connection(c.getLong(c.getColumnIndex("id")),
-				c.getString(c.getColumnIndex("accessToken")), 
-				c.getString(c.getColumnIndex("secret")),
-				c.getString(c.getColumnIndex("refreshToken")), 
+				decrypt(c.getString(c.getColumnIndex("accessToken"))), 
+				decrypt(c.getString(c.getColumnIndex("secret"))),
+				decrypt(c.getString(c.getColumnIndex("refreshToken"))), 
 				c.getString(c.getColumnIndex("providerAccountId")));
 	}
 	
@@ -171,7 +186,7 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 
 		private static final String TAG = "SqliteConnectionRepositoryHelper";
 
-		private static final String DATABASE_NAME = "connection_repository.sqlite";
+		private static final String DATABASE_NAME = "spring_social_connection_repository.sqlite";
 
 		private static final int DATABASE_VERSION = 1;
 
