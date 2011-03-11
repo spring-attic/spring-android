@@ -229,6 +229,7 @@ project('spring-android-rest-template') {
             'org/springframework/util/LinkedCaseInsensitiveMap.java',
             'org/springframework/util/LinkedMultiValueMap.java',
             'org/springframework/util/MultiValueMap.java',
+            'org/springframework/util/NumberUtils.java',
             'org/springframework/util/ObjectUtils.java',
             'org/springframework/util/ReflectionUtils.java',
             'org/springframework/util/ResourceUtils.java',
