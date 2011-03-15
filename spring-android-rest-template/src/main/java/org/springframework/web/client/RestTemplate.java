@@ -33,19 +33,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.support.InterceptingHttpAccessor;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.feed.SyndFeedHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
+import org.springframework.http.converter.xml.SourceHttpMessageConverter;
+import org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.util.UriTemplate;
 import org.springframework.web.util.UriUtils;
+
+import android.os.Build;
 
 /**
  * <strong>The central class for client-side HTTP access.</strong> It simplifies communication with HTTP servers, and
@@ -99,7 +103,7 @@ import org.springframework.web.util.UriUtils;
  * HttpMessageConverter} instances. Converters for the main mime types are registered by default, but you can also write
  * your own converter and register it via the {@link #setMessageConverters messageConverters} bean property.
  *
- * <p>This template uses a {@link org.springframework.http.client.SimpleClientHttpRequestFactory} and a {@link
+ * <p>This template uses a {@link org.springframework.http.client.HttpComponentsClientHttpRequestFactory} and a {@link
  * DefaultResponseErrorHandler} as default strategies for creating HTTP connections or handling HTTP errors,
  * respectively. These defaults can be overridden through the {@link #setRequestFactory(ClientHttpRequestFactory)
  * requestFactory} and {@link #setErrorHandler(ResponseErrorHandler) errorHandler} bean properties.
@@ -113,6 +117,9 @@ import org.springframework.web.util.UriUtils;
  * @since 1.0.0
  */
 public class RestTemplate extends InterceptingHttpAccessor implements RestOperations {
+
+	private static final boolean javaxTransformPresent = 
+			(Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) >= 8);
 
 	private static final boolean simpleXmlPresent =
 			ClassUtils.isPresent("org.simpleframework.xml.Serializer", RestTemplate.class.getClassLoader());
@@ -134,14 +141,17 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 
 	/** Create a new instance of the {@link RestTemplate} using default settings. */
 	public RestTemplate() {
-		
-		// Default to HttpComponents 4.x Http Client
-		this.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-		
 		this.messageConverters.add(new ByteArrayHttpMessageConverter());
 		this.messageConverters.add(new StringHttpMessageConverter());
 		this.messageConverters.add(new ResourceHttpMessageConverter());
-
+		
+		if (javaxTransformPresent) {
+			this.messageConverters.add(new SourceHttpMessageConverter());
+			this.messageConverters.add(new XmlAwareFormHttpMessageConverter());
+		} else {
+			this.messageConverters.add(new FormHttpMessageConverter());
+		}
+		
 		if (simpleXmlPresent) {
 			this.messageConverters.add(new SimpleXmlHttpMessageConverter());
 		}
@@ -159,7 +169,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	 * Create a new instance of the {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
 	 * @param requestFactory HTTP request factory to use
 	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
-	 * @see org.springframework.http.client.CommonsClientHttpRequestFactory
+	 * @see org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 	 */
 	public RestTemplate(ClientHttpRequestFactory requestFactory) {
 		this();

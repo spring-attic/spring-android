@@ -143,6 +143,7 @@ project('spring-android-auth') {
             exclude group: "org.springframework", module: "spring-web"
         }
         compile ("org.springframework.security:spring-security-crypto:$springSecurityVersion") {
+            // exclude spring-core in favor of spring-android-rest-template
             exclude group: "org.springframework", module: "spring-core"
         }
         compile project(':spring-android-rest-template')
@@ -246,21 +247,19 @@ project('spring-android-rest-template') {
             'org/springframework/http/HttpRequest.java',
             'org/springframework/http/HttpStatus.java',
             'org/springframework/http/ResponseEntity.java',
-            'org/springframework/http/client/AbstractClientHttpRequest.java',
             'org/springframework/http/client/AbstractBufferingClientHttpRequest.java',
+            'org/springframework/http/client/AbstractClientHttpRequest.java',
+            'org/springframework/http/client/BufferingSimpleClientHttpRequest.java',
             'org/springframework/http/client/ClientHttpRequest.java',
             'org/springframework/http/client/ClientHttpRequestExecution.java',
             'org/springframework/http/client/ClientHttpRequestFactory.java',
-            'org/springframework/http/client/ClientHttpResponse.java',
-            'org/springframework/http/client/BufferingSimpleClientHttpRequest.java',
             'org/springframework/http/client/ClientHttpRequestInterceptor.java',
+            'org/springframework/http/client/ClientHttpResponse.java',
             'org/springframework/http/client/InterceptingClientHttpRequest.java',
             'org/springframework/http/client/InterceptingClientHttpRequestFactory.java',
-            'org/springframework/http/client/SimpleClientHttpRequest.java',
             'org/springframework/http/client/SimpleClientHttpRequestFactory.java',
             'org/springframework/http/client/SimpleClientHttpResponse.java',
             'org/springframework/http/client/StreamingSimpleClientHttpRequest.java',
-            'org/springframework/http/client/support/HttpAccessor.java',
             'org/springframework/http/client/support/HttpRequestWrapper.java',
             'org/springframework/http/client/support/InterceptingHttpAccessor.java',
             'org/springframework/http/converter/AbstractHttpMessageConverter.java',
@@ -272,6 +271,9 @@ project('spring-android-rest-template') {
             'org/springframework/http/converter/HttpMessageNotWritableException.java',
             'org/springframework/http/converter/StringHttpMessageConverter.java',
             'org/springframework/http/converter/json/MappingJacksonHttpMessageConverter.java',
+            'org/springframework/http/converter/xml/AbstractXmlHttpMessageConverter.java',
+            'org/springframework/http/converter/xml/SourceHttpMessageConverter.java',
+            'org/springframework/http/converter/xml/XmlAwareFormHttpMessageConverter.java',
             'org/springframework/web/client/DefaultResponseErrorHandler.java',
             'org/springframework/web/client/HttpClientErrorException.java',
             'org/springframework/web/client/HttpMessageConverterExtractor.java',
