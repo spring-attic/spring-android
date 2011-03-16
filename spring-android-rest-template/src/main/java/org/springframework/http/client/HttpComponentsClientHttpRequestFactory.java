@@ -40,6 +40,7 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
@@ -146,7 +147,7 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
             case OPTIONS:
                 return new HttpOptions(uri);
             case POST:
-                return new HttpPost(uri);
+            	return new HttpPost(uri);
             case PUT:
                 return new HttpPut(uri);
             case TRACE:
@@ -163,6 +164,8 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
      * @param httpRequest the HTTP request object to process
      */
     protected void postProcessHttpRequest(HttpUriRequest httpRequest) {
+    	HttpParams params = httpRequest.getParams();
+    	HttpProtocolParams.setUseExpectContinue(params, false);
     }
 
     /**
