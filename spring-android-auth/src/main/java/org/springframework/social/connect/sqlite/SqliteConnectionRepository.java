@@ -79,10 +79,9 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 		return connections;
 	}
 
-
-	public Serializable findAccountIdByConnectionAccessToken(String provider, String accessToken) {
+	public Serializable findAccountIdByConnectionAccessToken(String providerId, String accessToken) {
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		String[] selectionArgs = {provider, encrypt(accessToken)};
+		String[] selectionArgs = {providerId, encrypt(accessToken)};
 		Cursor c = db.rawQuery("select accountId from Connection where providerId = ? and accessToken = ?", selectionArgs);
 		
 		List<Serializable> accountIds = new ArrayList<Serializable>();
@@ -97,30 +96,30 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 		return !accountIds.isEmpty() ? accountIds.get(0) : null;
 	}
 
-	public List<Serializable> findAccountIdsForProviderAccountIds(String providerId, List<String> providerAccountIds) {
-		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		String[] selectionArgs = {providerId};
-		
-		final String sql = "select accountId "
-			+ "from Connection "
-			+ "where providerId = ?"
-			+ "and providerAccountId in ("
-			+ createCommaSeparatedString(providerAccountIds)
-			+ ")";
-			
-		Cursor c = db.rawQuery(sql, selectionArgs);
-		
-		List<Serializable> accountIds = new ArrayList<Serializable>();
-		c.moveToFirst();
-		for (int i = 0; i < c.getCount(); i++) {
-			accountIds.add(c.getString(c.getColumnIndex("accountId")));			
-			c.moveToNext();
-		}
-		c.deactivate();
-		db.close();
-		
-		return accountIds;
-	}
+//	public List<Serializable> findAccountIdsForProviderAccountIds(String providerId, List<String> providerAccountIds) {
+//		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
+//		String[] selectionArgs = {providerId};
+//		
+//		final String sql = "select accountId "
+//			+ "from Connection "
+//			+ "where providerId = ?"
+//			+ "and providerAccountId in ("
+//			+ createCommaSeparatedString(providerAccountIds)
+//			+ ")";
+//			
+//		Cursor c = db.rawQuery(sql, selectionArgs);
+//		
+//		List<Serializable> accountIds = new ArrayList<Serializable>();
+//		c.moveToFirst();
+//		for (int i = 0; i < c.getCount(); i++) {
+//			accountIds.add(c.getString(c.getColumnIndex("accountId")));			
+//			c.moveToNext();
+//		}
+//		c.deactivate();
+//		db.close();
+//		
+//		return accountIds;
+//	}
 	
 	public Connection saveConnection(Serializable accountId, String providerId,	Connection connection) {
 		try {
@@ -131,10 +130,9 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 			values.put("accessToken", encrypt(connection.getAccessToken()));
 			values.put("secret", encrypt(connection.getSecret()));
 			values.put("refreshToken", encrypt(connection.getRefreshToken()));
-			values.put("providerAccountId", connection.getProviderAccountId());
 			long connectionId = db.insertOrThrow("Connection", null, values);
 			db.close();
-			return new Connection(connectionId, connection.getAccessToken(), connection.getSecret(), connection.getRefreshToken(), connection.getProviderAccountId());
+			return new Connection(connectionId, connection.getAccessToken(), connection.getSecret(), connection.getRefreshToken());
 		} catch(SQLiteConstraintException e) {
 			throw new IllegalArgumentException("Access token is not unique: a connection already exists!", e);
 		}
@@ -162,22 +160,21 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 		return new Connection(c.getLong(c.getColumnIndex("id")),
 				decrypt(c.getString(c.getColumnIndex("accessToken"))), 
 				decrypt(c.getString(c.getColumnIndex("secret"))),
-				decrypt(c.getString(c.getColumnIndex("refreshToken"))), 
-				c.getString(c.getColumnIndex("providerAccountId")));
+				decrypt(c.getString(c.getColumnIndex("refreshToken"))));
 	}
 	
-	private static String createCommaSeparatedString(List<String> list) {
-		StringBuilder sb = new StringBuilder();
-		String separator = "";
-
-		for (String s : list) {
-			sb.append(separator);
-			sb.append(s);
-			separator = ",";
-		}
-
-		return sb.toString();
-	}
+//	private static String createCommaSeparatedString(List<String> list) {
+//		StringBuilder sb = new StringBuilder();
+//		String separator = "";
+//
+//		for (String s : list) {
+//			sb.append(separator);
+//			sb.append(s);
+//			separator = ",";
+//		}
+//
+//		return sb.toString();
+//	}
 	
 	
 	// private class for wiring up the database
@@ -201,9 +198,8 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 					+ "providerId varchar not null,"
 					+ "accessToken varchar not null,"
 					+ "secret varchar,"
-					+ "refreshToken varchar,"
-					+ "providerAccountId varchar)");
-			db.execSQL("create unique index AccessToken on Connection(accountId, providerId, accessToken)");
+					+ "refreshToken varchar);"
+					+ "create unique index AccessToken on Connection(accountId, providerId, accessToken)");
 		}
 
 		@Override

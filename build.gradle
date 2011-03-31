@@ -99,7 +99,7 @@ configure(javaprojects) {
     junitVersion = '4.7'
     log4jVersion = '1.2.16'
     springVersion = '3.1.0.M1'
-    springSocialVersion = '1.0.0.M2'
+    springSocialVersion = '1.0.0.BUILD-SNAPSHOT'
     springSecurityVersion = '3.1.0.RC1'
     androidVersion = '1.5_r3'
     httpComponentsClientVersion = '4.0.1'
