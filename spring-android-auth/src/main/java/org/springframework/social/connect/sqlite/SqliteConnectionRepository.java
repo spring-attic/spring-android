@@ -65,7 +65,7 @@ public class SqliteConnectionRepository implements ConnectionRepository {
 	public List<Connection> findConnections(Serializable accountId, String providerId) {
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
 		String[] selectionArgs = {accountId.toString(), providerId};        
-        Cursor c = db.rawQuery("select id, accessToken, secret, refreshToken, providerAccountId from Connection where accountId = ? and providerId = ? order by id", selectionArgs);
+        Cursor c = db.rawQuery("select id, accessToken, secret, refreshToken from Connection where accountId = ? and providerId = ? order by id", selectionArgs);
         
 		List<Connection> connections = new ArrayList<Connection>();
 		c.moveToFirst();
