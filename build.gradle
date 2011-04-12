@@ -131,64 +131,19 @@ configure(javaprojects) {
 //
 // @see configure(javaprojects) above for general config
 // -----------------------------------------------------------------------------
-project('spring-android-auth') {
-    description = 'Spring Android Auth'
-    
-    dependencies {
-        compile ("com.google.android:android:$androidVersion") { 
-            provided = true 
-        }
-        compile ("org.springframework.social:spring-social-core:$springSocialVersion") {
-            // exclude spring-web in favor of spring-android-rest-template
-            exclude group: "org.springframework", module: "spring-web"
-        }
-        compile ("org.springframework.security:spring-security-crypto:$springSecurityVersion") {
-            // exclude spring-core in favor of spring-android-rest-template
-            exclude group: "org.springframework", module: "spring-core"
-        }
-        compile project(':spring-android-rest-template')
-    }
-}
-
-project('spring-android-rest-template') {
-    description = 'Spring Android Rest Template'
+project('spring-android-core') {
+    description = "Spring Android Core"
     
     mainSrcDir = "$projectDir/src/main/java"
     mainResourcesDir = "$projectDir/src/main/resources"
     sharedSrcDir = "$projectDir/src/shared/java"
     sharedResourcesDir = "$projectDir/src/shared/resources"
-
+    
     // include the shared source directories in the main SourceSet
 	sourceSets.main.java.srcDirs = [mainSrcDir, sharedSrcDir]
 	sourceSets.main.resources.srcDirs = [mainResourcesDir, sharedResourcesDir]
-
-    repositories {
-        mavenRepo urls: 'https://android-rome-feed-reader.googlecode.com/svn/maven2/releases'
-    }
-    
-    dependencies {
-        compile ("com.google.android:android:$androidVersion") { 
-            provided = true 
-        }
-        compile ("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion") {
-            optional = true
-        }
-        compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion") { 
-            optional = true 
-        }
-        compile ("org.simpleframework:simple-xml:$simpleXmlVersion") { 
-            optional = true 
-            transitive = false 
-        }
-
-        testCompile "org.springframework:spring-core:$springVersion"
-        testCompile "javax.servlet:servlet-api:$javaxServletApiVersion"
-        testCompile "commons-fileupload:commons-fileupload:$commonsFileuploadVersion"
-        testCompile "org.mortbay.jetty:jetty:$jettyVersion"
-        testCompile "xmlunit:xmlunit:$xmlUnitVersion"
-    }
-
-    // delete the shared source files when cleaning the project
+	
+	// delete the shared source files when cleaning the project
     clean.doFirst {
         delete files(sharedSrcDir)
     }
@@ -196,22 +151,22 @@ project('spring-android-rest-template') {
     // configuration for extracting required source files from springframework
     configurations { explodedSourceFiles }
     dependencies {
-        explodedSourceFiles "org.springframework:spring-web:$springVersion:sources"
-        explodedSourceFiles "org.springframework:spring-core:$springVersion:sources"
         explodedSourceFiles "org.springframework:spring-beans:$springVersion:sources"
+        explodedSourceFiles "org.springframework:spring-core:$springVersion:sources"
     }
 
     compileJava.doFirst {
-        // Required springframework source files for RestTemplate support
         sourceFilter = [
             // spring-beans
             'org/springframework/beans/BeansException.java',
             'org/springframework/beans/PropertyAccessException.java',
             'org/springframework/beans/TypeMismatchException.java',
-            'org/springframework/beans/factory/DisposableBean.java',
-
+            'org/springframework/beans/factory/DisposableBean.java',        
             // spring-core
             'org/springframework/core/ErrorCoded.java',
+            'org/springframework/core/GenericTypeResolver.java',
+            'org/springframework/core/MethodParameter.java',
+            'org/springframework/core/ParameterNameDiscoverer.java',
             'org/springframework/core/NestedExceptionUtils.java',
             'org/springframework/core/NestedCheckedException.java',
             'org/springframework/core/NestedIOException.java',
@@ -236,7 +191,96 @@ project('spring-android-rest-template') {
             'org/springframework/util/ResourceUtils.java',
             'org/springframework/util/StringUtils.java',
             'org/springframework/util/TypeUtils.java',
+            ]
 
+        // loops through springframework jars, extracting and copying class files to the sharedSrcDir folder
+        FileCollection sourceJars = configurations.explodedSourceFiles
+        sourceJars.each { sourceJar ->
+            zipTree(sourceJar).visit { sourceFile ->
+                if (sourceFile.relativePath.toString() in sourceFilter) {
+                    filePath = sourceFile.relativePath.getPathString().minus(sourceFile.name)
+                    copy {
+                        from sourceFile.file
+                        into sharedSrcDir + '/' + filePath
+                    }
+                }
+            }
+        }
+    }
+}
+
+project('spring-android-auth') {
+    description = 'Spring Android Auth'
+    
+    dependencies {
+        compile ("com.google.android:android:$androidVersion") { 
+            provided = true 
+        }
+        compile ("org.springframework.social:spring-social-core:$springSocialVersion") {
+            // exclude spring-web in favor of spring-android-rest-template
+            exclude group: "org.springframework", module: "spring-web"
+        }
+        compile ("org.springframework.security:spring-security-crypto:$springSecurityVersion") {
+            // exclude spring-core in favor of spring-android-rest-template
+            exclude group: "org.springframework", module: "spring-core"
+        }
+        compile project (':spring-android-core')
+    }
+}
+
+project('spring-android-rest-template') {
+    description = 'Spring Android Rest Template'
+    
+    mainSrcDir = "$projectDir/src/main/java"
+    mainResourcesDir = "$projectDir/src/main/resources"
+    sharedSrcDir = "$projectDir/src/shared/java"
+    sharedResourcesDir = "$projectDir/src/shared/resources"
+
+    // include the shared source directories in the main SourceSet
+    sourceSets.main.java.srcDirs = [mainSrcDir, sharedSrcDir]
+    sourceSets.main.resources.srcDirs = [mainResourcesDir, sharedResourcesDir]
+
+    repositories {
+        mavenRepo urls: 'https://android-rome-feed-reader.googlecode.com/svn/maven2/releases'
+    }
+    
+    dependencies {
+        compile ("com.google.android:android:$androidVersion") { 
+            provided = true 
+        }
+        compile ("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion") {
+            optional = true
+        }
+        compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion") { 
+            optional = true 
+        }
+        compile ("org.simpleframework:simple-xml:$simpleXmlVersion") { 
+            optional = true 
+            transitive = false 
+        }
+        compile project (':spring-android-core')
+
+        testCompile "org.springframework:spring-core:$springVersion"
+        testCompile "javax.servlet:servlet-api:$javaxServletApiVersion"
+        testCompile "commons-fileupload:commons-fileupload:$commonsFileuploadVersion"
+        testCompile "org.mortbay.jetty:jetty:$jettyVersion"
+        testCompile "xmlunit:xmlunit:$xmlUnitVersion"
+    }
+
+    // delete the shared source files when cleaning the project
+    clean.doFirst {
+        delete files(sharedSrcDir)
+    }
+
+    // configuration for extracting required source files from springframework
+    configurations { explodedSourceFiles }
+    dependencies {
+        explodedSourceFiles "org.springframework:spring-web:$springVersion:sources"
+    }
+
+    compileJava.doFirst {
+        // Required springframework source files for RestTemplate support
+        sourceFilter = [
             // spring-web
             'org/springframework/http/HttpEntity.java',
             'org/springframework/http/HttpHeaders.java',
@@ -289,7 +333,7 @@ project('spring-android-rest-template') {
             'org/springframework/web/util/UriUtils.java'
             ]
 
-        // loops through springframework jars, extracting and copying class files to the lib folder
+        // loops through springframework jars, extracting and copying class files to the sharedSrcDir folder
         FileCollection sourceJars = configurations.explodedSourceFiles
         sourceJars.each { sourceJar ->
             zipTree(sourceJar).visit { sourceFile ->

@@ -15,191 +15,222 @@
  */
 package org.springframework.social.connect.sqlite;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.springframework.security.crypto.encrypt.TextEncryptor;
+import org.springframework.social.connect.DuplicateServiceProviderConnectionException;
+import org.springframework.social.connect.NoSuchServiceProviderConnectionException;
 import org.springframework.social.connect.ServiceProviderConnection;
 import org.springframework.social.connect.ServiceProviderConnectionData;
 import org.springframework.social.connect.ServiceProviderConnectionFactory;
 import org.springframework.social.connect.ServiceProviderConnectionFactoryLocator;
 import org.springframework.social.connect.ServiceProviderConnectionKey;
 import org.springframework.social.connect.ServiceProviderConnectionRepository;
-import org.springframework.social.connect.support.LocalUserIdLocator;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
-import android.content.Context;
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * @author Roy Clarkson
  */
 public class SqliteServiceProviderConnectionRepository implements ServiceProviderConnectionRepository {
 	
-	private final SqliteRepositoryHelper repositoryHelper;
+	private final String localUserId;
+	
+	private final SQLiteOpenHelper repositoryHelper;
 	
 	private final ServiceProviderConnectionFactoryLocator connectionFactoryLocator;
 	
-	private final LocalUserIdLocator localUserIdLocator;
-	
 	private final TextEncryptor textEncryptor;
 	
-	/**
-	 * Creates a SQLite-based connection repository.
-	 * @param context the Android Context to execute within
-	 * @param textEncryptor the encryptor to use when storing oauth keys
-	 */
-	public SqliteServiceProviderConnectionRepository(Context context, ServiceProviderConnectionFactoryLocator connectionFactoryLocator, LocalUserIdLocator localUserIdLocator,  TextEncryptor textEncryptor) {
-		this.repositoryHelper = new SqliteRepositoryHelper(context);
+	public SqliteServiceProviderConnectionRepository(String localUserId, SQLiteOpenHelper repositoryHelper, ServiceProviderConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
+		this.localUserId = localUserId;
+		this.repositoryHelper = repositoryHelper;
 		this.connectionFactoryLocator = connectionFactoryLocator;
-		this.localUserIdLocator = localUserIdLocator;
 		this.textEncryptor = textEncryptor;
 	}
 	
-	public List<ServiceProviderConnection<?>> findAllConnections() {
-		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		String[] selectionArgs = {getLocalUserId().toString()};        
-        Cursor c = db.rawQuery(SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? order by providerId, rank", selectionArgs);
-        
-		List<ServiceProviderConnection<?>> connections = new ArrayList<ServiceProviderConnection<?>>();
-		c.moveToFirst();
-		for (int i = 0; i < c.getCount(); i++) {
-			connections.add(mapConnectionRow(c));
-			c.moveToNext();
-		}
-		c.deactivate();
-		db.close();
-        
-		return connections;
+	public MultiValueMap<String, ServiceProviderConnection<?>> findConnectionsToProviders() {
+		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? order by providerId, rank";
+		final String[] selectionArgs = {localUserId};
+		List<ServiceProviderConnection<?>> resultList = findConnections(sql, selectionArgs);
+        MultiValueMap<String, ServiceProviderConnection<?>> connections = new LinkedMultiValueMap<String, ServiceProviderConnection<?>>();
+        Set<String> registeredProviderIds = connectionFactoryLocator.registeredProviderIds();
+        for (String registeredProviderId : registeredProviderIds) {
+            connections.put(registeredProviderId, Collections.<ServiceProviderConnection<?>>emptyList());
+        }
+        for (ServiceProviderConnection<?> connection : resultList) {
+            String providerId = connection.getKey().getProviderId();
+            if (connections.get(providerId).size() == 0) {
+                connections.put(providerId, new LinkedList<ServiceProviderConnection<?>>());
+            }
+            connections.add(providerId, connection);
+        }
+        return connections;
 	}
-	
+		
 	public List<ServiceProviderConnection<?>> findConnectionsToProvider(String providerId) {
-		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		String[] selectionArgs = {getLocalUserId().toString(), providerId};        
-        Cursor c = db.rawQuery(SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? order by rank", selectionArgs);
-        
-		List<ServiceProviderConnection<?>> connections = new ArrayList<ServiceProviderConnection<?>>();
-		c.moveToFirst();
-		for (int i = 0; i < c.getCount(); i++) {
-			connections.add(mapConnectionRow(c));
-			c.moveToNext();
-		}
-		c.deactivate();
-		db.close();
-        
-		return connections;
+		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? order by rank";
+		final String[] selectionArgs = {localUserId, providerId};
+		return findConnections(sql, selectionArgs);
 	}	
 	
-	public List<ServiceProviderConnection<?>> findConnectionsForUsers(Map<String, List<String>> providerUsers) {
+	public MultiValueMap<String, ServiceProviderConnection<?>> findConnectionsForUsers(MultiValueMap<String, String> providerUsers) {
 		if (providerUsers.isEmpty()) {
 			throw new IllegalArgumentException("Unable to execute find: no providerUsers provided");
 		}
 		StringBuilder providerUsersCriteriaSql = new StringBuilder();
-		List<Object> args = new ArrayList<Object>(1 + providerUsers.size() * 2);
-		args.add(getLocalUserId().toString());
-		for (Iterator<Entry<String, List<String>>> it = providerUsers.entrySet().iterator(); it.hasNext();) {
-			Entry<String, List<String>> entry = it.next();
-			providerUsersCriteriaSql.append("providerId = ? and providerUserId in (?)");
+		List<String> args = new ArrayList<String>(1 + providerUsers.size() * 2);
+		args.add(localUserId);
+		for (Iterator<Entry<String, List<String>>> entries = providerUsers.entrySet().iterator(); entries.hasNext();) {
+			Entry<String, List<String>> entry = entries.next();
+			providerUsersCriteriaSql.append("providerId = ? and providerUserId in (?");
 			args.add(entry.getKey());
-			args.add(entry.getValue());
-			if (it.hasNext()) {
-				providerUsersCriteriaSql.append(" or " );
+			
+			for (Iterator<String> values = entry.getValue().iterator(); values.hasNext();) {
+				String value = values.next();
+				args.add(value);
+				
+				if (values.hasNext()) {
+					providerUsersCriteriaSql.append(", ?");
+				}
+			}
+			
+			providerUsersCriteriaSql.append(")");
+			
+			if (entries.hasNext()) {
+				providerUsersCriteriaSql.append(" or ");
 			}
 		}
 		
-		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		String[] selectionArgs = args.toArray(new String[0]);
-        Cursor c = db.rawQuery(SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and " + providerUsersCriteriaSql, selectionArgs);
-        
-		List<ServiceProviderConnection<?>> connections = new ArrayList<ServiceProviderConnection<?>>();
-		c.moveToFirst();
-		for (int i = 0; i < c.getCount(); i++) {
-			connections.add(mapConnectionRow(c));
-			c.moveToNext();
+	    final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and " + providerUsersCriteriaSql + " order by providerId, rank";
+		final String[] selectionArgs = args.toArray(new String[0]);
+	    List<ServiceProviderConnection<?>> resultList = findConnections(sql, selectionArgs);
+		
+		MultiValueMap<String, ServiceProviderConnection<?>> connectionsForUsers = new LinkedMultiValueMap<String, ServiceProviderConnection<?>>();
+		for (ServiceProviderConnection<?> connection : resultList) {
+			String providerId = connection.getKey().getProviderId();
+			List<String> userIds = providerUsers.get(providerId);
+			List<ServiceProviderConnection<?>> connections = connectionsForUsers.get(providerId);
+			if (connections == null) {
+				connections = new ArrayList<ServiceProviderConnection<?>>(userIds.size());
+				for (int i = 0; i < userIds.size(); i++) {
+					connections.add(null);
+				}
+				connectionsForUsers.put(providerId, connections);
+			}
+			String providerUserId = connection.getKey().getProviderUserId();
+			int connectionIndex = userIds.indexOf(providerUserId);
+			connections.set(connectionIndex, connection);
 		}
-		c.deactivate();
-		db.close();
-        
-		return connections;
+		return connectionsForUsers;
 	}
 	
 	public ServiceProviderConnection<?> findConnection(ServiceProviderConnectionKey connectionKey) {		
-		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		String[] selectionArgs = {getLocalUserId().toString(), connectionKey.getProviderId(), connectionKey.getProviderUserId()};
-        Cursor c = db.rawQuery(SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? and providerUserId = ? order by rank", selectionArgs);
-        
-        ServiceProviderConnection<?> connection = null;
-        if (c.getCount() > 0) {
-			c.moveToFirst();
-			connection = mapConnectionRow(c);
-        }
-        
-		c.deactivate();
-		db.close();
-        
+		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? and providerUserId = ? order by rank";
+		final String[] selectionArgs = {localUserId, connectionKey.getProviderId(), connectionKey.getProviderUserId()};
+		ServiceProviderConnection<?> connection = findConnection(sql, selectionArgs);
+		
+		if (connection == null) {
+			throw new NoSuchServiceProviderConnectionException(connectionKey);
+		}
+		
 		return connection;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public <S> ServiceProviderConnection<S> findConnectionByServiceApi(Class<S> serviceApiType) {
-		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		String[] selectionArgs = {getLocalUserId().toString(), getProviderId(serviceApiType)};
-        Cursor c = db.rawQuery(SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? and rank = 1", selectionArgs);
-        
-		ServiceProviderConnection<?> connection = null;
-		if (c.getCount() > 0) {
-			c.moveToFirst();
-			connection = mapConnectionRow(c);
-		}
-		c.deactivate();
-		db.close();
-        
-		return (ServiceProviderConnection<S>) connection;
+		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? and rank = 1";
+		final String[] selectionArgs = {localUserId, getProviderId(serviceApiType)};		
+		return (ServiceProviderConnection<S>) findConnection(sql, selectionArgs);
 	}
+	
+    @SuppressWarnings("unchecked")
+	public <S> List<ServiceProviderConnection<S>> findConnectionsByServiceApi(Class<S> serviceApiType) {
+    	List<?> connections = findConnectionsToProvider(getProviderId(serviceApiType));
+    	return (List<ServiceProviderConnection<S>>) connections;
+    }
 	
 	@SuppressWarnings("unchecked")
 	public <S> ServiceProviderConnection<S> findConnectionByServiceApiForUser(Class<S> serviceApiType, String providerUserId) {
-		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		String[] selectionArgs = {getLocalUserId().toString(), getProviderId(serviceApiType), providerUserId};
-        Cursor c = db.rawQuery(SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? and providerUserId = ?", selectionArgs);
-        
-		ServiceProviderConnection<?> connection = null;
-		if (c.getCount() > 0) {
-			c.moveToFirst();
-			connection = mapConnectionRow(c);
-		}
-		c.deactivate();
-		db.close();
-        
-		return (ServiceProviderConnection<S>) connection;
+		String providerId = getProviderId(serviceApiType);
+		return (ServiceProviderConnection<S>) findConnection(new ServiceProviderConnectionKey(providerId, providerUserId));
 	}
 	
 	public void addConnection(ServiceProviderConnection<?> connection) {
+		try {
+			ServiceProviderConnectionData data = connection.createData();
+			SQLiteDatabase db = repositoryHelper.getWritableDatabase();		
+			
+			// generate rank
+			final String sql = "select ifnull(max(rank) + 1, 1) from ServiceProviderConnection where localUserId = ? and providerId = ?";
+			final String[] selectionArgs = {localUserId, data.getProviderId()};
+			Cursor c = db.rawQuery(sql, selectionArgs);
+			c.moveToFirst();
+			int rank = c.getInt(0);
+			c.close();
+			
+			// insert connection
+			ContentValues values = new ContentValues();
+			values.put("localUserId", localUserId);
+			values.put("providerId", data.getProviderId());
+			values.put("providerUserId", data.getProviderUserId());
+			values.put("rank", rank);
+			values.put("profileName", data.getProfileName());
+			values.put("profileUrl", data.getProfileUrl());
+			values.put("profilePictureUrl", data.getProfilePictureUrl());
+			values.put("accessToken", encrypt(data.getAccessToken()));
+			values.put("secret", encrypt(data.getSecret()));
+			values.put("refreshToken", encrypt(data.getRefreshToken()));
+			values.put("expireTime", data.getExpireTime());
+			db.insertOrThrow("ServiceProviderConnection", null, values);
+			db.close();
+		} catch(SQLiteConstraintException e) {
+			throw new DuplicateServiceProviderConnectionException(connection.getKey());
+		}
+	}
+	
+	public void updateConnection(ServiceProviderConnection<?> connection) {
 		ServiceProviderConnectionData data = connection.createData();
-		Serializable localUserId = getLocalUserId();
 		SQLiteDatabase db = repositoryHelper.getWritableDatabase();
-		String[] bindArgs = {localUserId.toString(), data.getProviderId(), data.getProviderUserId(), localUserId.toString(), data.getProviderId(), data.getProfileName(), data.getProfileUrl(), data.getProfilePictureUrl(), encrypt(data.getAccessToken()), encrypt(data.getSecret()), encrypt(data.getRefreshToken()), data.getExpireTime().toString()};
-		db.execSQL("insert into ServiceProviderConnection (localUserId, providerId, providerUserId, rank, profileName, profileUrl, profilePictureUrl, accessToken, secret, refreshToken, expireTime) values (?, ?, ?, (select ifnull(max(rank) + 1, 1) from ServiceProviderConnection where localUserId = ? and providerId = ?), ?, ?, ?, ?, ?, ?, ?)", bindArgs);
+		ContentValues values = new ContentValues();
+		values.put("profileName", data.getProfileName());
+		values.put("profileUrl", data.getProfileUrl());
+		values.put("profilePictureUrl", data.getProfilePictureUrl());
+		values.put("accessToken", encrypt(data.getAccessToken()));
+		values.put("secret", encrypt(data.getSecret()));
+		values.put("refreshToken", encrypt(data.getRefreshToken()));
+		values.put("expireTime", data.getExpireTime());
+		final String whereClause = "localUserId = ? and providerId = ? and providerUserId = ?";
+		final String[] whereArgs = {localUserId, data.getProviderId(), data.getProviderUserId()};
+		db.update("ServiceProviderConnection", values, whereClause, whereArgs);
 		db.close();
 	}
 	
 	public void removeConnectionsToProvider(String providerId) {		
 		SQLiteDatabase db = repositoryHelper.getWritableDatabase();
-		String[] bindArgs = {getLocalUserId().toString(), providerId};
-		db.execSQL("delete from ServiceProviderConnection where localUserId = ? and providerId = ?", bindArgs);
+		final String whereClause = "localUserId = ? and providerId = ?";
+		final String[] whereArgs = {localUserId, providerId};
+		db.delete("ServiceProviderConnection", whereClause, whereArgs);
 		db.close();
 	}
 
 	public void removeConnection(ServiceProviderConnectionKey connectionKey) {
 		SQLiteDatabase db = repositoryHelper.getWritableDatabase();
-		String[] bindArgs = {getLocalUserId().toString(), connectionKey.getProviderId(), connectionKey.getProviderUserId()};
-		db.execSQL("delete from ServiceProviderConnection where localUserId = ? and providerId = ? and providerUserId = ?", bindArgs);
+		final String whereClause = "localUserId = ? and providerId = ? and providerUserId = ?";
+		final String[] whereArgs = {localUserId, connectionKey.getProviderId(), connectionKey.getProviderUserId()};
+		db.delete("ServiceProviderConnection", whereClause, whereArgs);
 		db.close();
 	}
 	
@@ -207,10 +238,6 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 	// internal helpers
 	
 	private static final String SELECT_FROM_SERVICE_PROVIDER_CONNECTION = "select localUserId, providerId, providerUserId, profileName, profileUrl, profilePictureUrl, accessToken, secret, refreshToken, expireTime from ServiceProviderConnection";
-	
-	private Serializable getLocalUserId() {
-		return localUserIdLocator.getLocalUserId();
-	}
 	
 	private <S> String getProviderId(Class<S> serviceApiType) {
 		return connectionFactoryLocator.getConnectionFactory(serviceApiType).getProviderId();
@@ -222,6 +249,37 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 	
 	private String decrypt(String encryptedText) {
 		return encryptedText != null ? textEncryptor.decrypt(encryptedText) : encryptedText;
+	}
+	
+	private Long expireTime(long expireTime) {
+		return expireTime == 0 ? null : expireTime;
+	}
+	
+	private ServiceProviderConnection<?> findConnection(final String sql, final String[] selectionArgs) {
+		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(sql, selectionArgs);
+        ServiceProviderConnection<?> connection = null;
+        if (c.getCount() > 0) {
+			c.moveToFirst();
+			connection = mapConnectionRow(c);
+        }
+		c.close();
+		db.close();		
+		return connection;
+	}
+	
+	private List<ServiceProviderConnection<?>> findConnections(final String sql, final String[] selectionArgs) {
+		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
+        Cursor c = db.rawQuery(sql, selectionArgs);		
+		List<ServiceProviderConnection<?>> connections = new ArrayList<ServiceProviderConnection<?>>();
+		c.moveToFirst();
+		for (int i = 0; i < c.getCount(); i++) {
+			connections.add(mapConnectionRow(c));
+			c.moveToNext();
+		}
+		c.close();
+		db.close();
+		return connections;
 	}
 	
 	private ServiceProviderConnection<?> mapConnectionRow(Cursor c) {
@@ -239,46 +297,6 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 				decrypt(c.getString(c.getColumnIndex("accessToken"))), 
 				decrypt(c.getString(c.getColumnIndex("secret"))), 
 				decrypt(c.getString(c.getColumnIndex("refreshToken"))), 
-				c.getLong(c.getColumnIndex("expireTime")));
-	}
-	
-	
-	// private class for wiring up the database
-	
-	private class SqliteRepositoryHelper extends SQLiteOpenHelper {
-
-		private static final String TAG = "SqliteServiceProviderConnectionRepository";
-
-		private static final String DATABASE_NAME = "spring_social_connection_repository.sqlite";
-
-		private static final int DATABASE_VERSION = 1;
-
-		public SqliteRepositoryHelper(Context context) {
-			super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		}
-
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("create table ServiceProviderConnection (localUserId bigint not null,"
-					+ "providerId varchar not null,"
-					+ "providerUserId varchar,"
-					+ "rank int not null,"
-					+ "profileName varchar,"
-					+ "profileUrl varchar,"
-					+ "profilePictureUrl varchar,"
-					+ "accessToken varchar not null,"					
-					+ "secret varchar,"
-					+ "refreshToken varchar,"
-					+ "expireTime bigint,"
-					+ "primary key (localUserId, providerId, providerUserId));"
-					+ "create index ConnectionsToProviderUser on ServiceProviderConnection(providerId, providerUserId);");
-		}
-
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.w(TAG, "Upgrading connection repository database from version "
-					+ oldVersion + "to " + newVersion);
-			// TODO: Upgrade database
-		}
+				expireTime(c.getLong(c.getColumnIndex("expireTime"))));
 	}
 }
