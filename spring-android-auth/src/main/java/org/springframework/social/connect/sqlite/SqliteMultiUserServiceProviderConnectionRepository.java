@@ -15,6 +15,9 @@
  */
 package org.springframework.social.connect.sqlite;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -61,26 +64,35 @@ public class SqliteMultiUserServiceProviderConnectionRepository implements Multi
 	}
 
 	public Set<String> findLocalUserIdsConnectedTo(String providerId, List<String> providerUserIds) {
-//		MapSqlParameterSource parameters = new MapSqlParameterSource();
-//		parameters.addValue("providerId", providerId);
-//		parameters.addValue("providerUserIds", providerUserIds);
-//		final Set<String> localUserIds = new HashSet<String>();
-//		return new NamedParameterJdbcTemplate(jdbcTemplate).query("select localUserId from ServiceProviderConnection where providerId = :providerId and providerUserId in (:providerUserIds)", parameters,
-//			new ResultSetExtractor<Set<String>>() {
-//				public Set<String> extractData(ResultSet rs) throws SQLException, DataAccessException {
-//					while (rs.next()) {
-//						localUserIds.add(rs.getString("localUserId"));
-//					}
-//					return localUserIds;
-//				}
-//			});
+		StringBuilder providerUserIdsCriteriaSql = new StringBuilder();
+		providerUserIdsCriteriaSql.append("(");
+		List<String> args = new ArrayList<String>(1 + providerUserIds.size());
+		args.add(providerId);
+		for (Iterator<String> ids = providerUserIds.iterator(); ids.hasNext();) {
+			args.add(ids.next());
+			providerUserIdsCriteriaSql.append("?");
+			if (ids.hasNext()) {
+				providerUserIdsCriteriaSql.append(", ");
+			}
+		}
+		providerUserIdsCriteriaSql.append(")");
 		
-		// TODO: finish
-		return null;
+		final String sql = "select localUserId from ServiceProviderConnection where providerId = ? and providerUserId in " + providerUserIdsCriteriaSql;
+		final String[] selectionArgs = args.toArray(new String[0]);
+		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
+		Cursor c = db.rawQuery(sql, selectionArgs);
+		final Set<String> localUserIds = new HashSet<String>();
+		c.moveToFirst();
+		for (int i = 0; i < c.getCount(); i++) {
+			localUserIds.add(c.getString(c.getColumnIndex("localUserId")));
+			c.moveToNext();
+		}
+		c.close();
+		db.close();
+		return localUserIds;
 	}
 
 	public ServiceProviderConnectionRepository createConnectionRepository(String localUserId) {
 		return new SqliteServiceProviderConnectionRepository(localUserId, repositoryHelper, connectionFactoryLocator, textEncryptor);
 	}
-
 }

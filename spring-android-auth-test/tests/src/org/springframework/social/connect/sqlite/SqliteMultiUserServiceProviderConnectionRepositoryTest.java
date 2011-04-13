@@ -93,7 +93,7 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 	}
 	
 	@MediumTest
-	public void findLocalUserIdsConnectedTo() {
+	public void testFindLocalUserIdsConnectedTo() {
 		insertFacebookConnection();
 		insertFacebookConnection3();
 		Set<String> localUserIds = usersConnectionRepository.findLocalUserIdsConnectedTo("facebook", Arrays.asList("9", "11"));
@@ -234,7 +234,7 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 	}
 	
 	@MediumTest
-	public void findConnectionByServiceApiForUser() {
+	public void testFindConnectionByServiceApiForUser() {
 		insertFacebookConnection();
 		insertFacebookConnection2();	
 		assertFacebookConnection(connectionRepository.findConnectionByServiceApiForUser(TestFacebookApi.class, "9"));
