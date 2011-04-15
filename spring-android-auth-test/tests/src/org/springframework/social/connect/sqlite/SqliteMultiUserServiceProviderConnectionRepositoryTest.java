@@ -20,6 +20,7 @@ import org.springframework.social.connect.support.OAuth2ServiceProviderConnectio
 import org.springframework.social.oauth1.OAuth1Operations;
 import org.springframework.social.oauth1.OAuth1ServiceProvider;
 import org.springframework.social.oauth2.AccessGrant;
+import org.springframework.social.oauth2.GrantType;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2ServiceProvider;
 import org.springframework.util.LinkedMultiValueMap;
@@ -466,10 +467,10 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 
 		public OAuth2Operations getOAuthOperations() {
 			return new OAuth2Operations() {
-				public String buildAuthorizeUrl(String redirectUri, String scope, String state) {
+				public String buildAuthorizeUrl(String redirectUri, String scope, String state, GrantType grantType, MultiValueMap<String, String> additionalParameters) {
 					return null;
 				}
-				public String buildAuthenticateUrl(String redirectUri, String state) {
+				public String buildAuthenticateUrl(String redirectUri, String state, GrantType grantType, MultiValueMap<String, String> additionalParameters) {
 					return null;
 				}
 				public AccessGrant exchangeForAccess(String authorizationGrant, String redirectUri, MultiValueMap<String, String> additionalParameters) {
