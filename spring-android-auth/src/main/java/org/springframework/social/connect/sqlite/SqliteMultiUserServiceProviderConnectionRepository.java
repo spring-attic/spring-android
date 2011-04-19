@@ -63,7 +63,7 @@ public class SqliteMultiUserServiceProviderConnectionRepository implements Multi
 		return localUserId;
 	}
 
-	public Set<String> findLocalUserIdsConnectedTo(String providerId, List<String> providerUserIds) {
+	public Set<String> findLocalUserIdsConnectedTo(String providerId, Set<String> providerUserIds) {
 		StringBuilder providerUserIdsCriteriaSql = new StringBuilder();
 		providerUserIdsCriteriaSql.append("(");
 		List<String> args = new ArrayList<String>(1 + providerUserIds.size());

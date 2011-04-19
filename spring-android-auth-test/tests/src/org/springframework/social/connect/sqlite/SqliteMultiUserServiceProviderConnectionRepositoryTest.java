@@ -1,6 +1,7 @@
 package org.springframework.social.connect.sqlite;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -94,10 +95,17 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 	}
 	
 	@MediumTest
+	public void testFindLocalUserIdMultipleConnectionsToSameProviderUser() {
+		insertFacebookConnection();
+		insertFacebookConnectionSameFacebookUser();
+		assertNull(usersConnectionRepository.findLocalUserIdConnectedTo(new ServiceProviderConnectionKey("facebook", "9")));
+	}
+	
+	@MediumTest
 	public void testFindLocalUserIdsConnectedTo() {
 		insertFacebookConnection();
 		insertFacebookConnection3();
-		Set<String> localUserIds = usersConnectionRepository.findLocalUserIdsConnectedTo("facebook", Arrays.asList("9", "11"));
+		Set<String> localUserIds = usersConnectionRepository.findLocalUserIdsConnectedTo("facebook", new HashSet<String>(Arrays.asList("9", "11")));
 		assertEquals(2, localUserIds.size());
 		assertTrue(localUserIds.contains("1"));
 		assertTrue(localUserIds.contains("2"));        
@@ -109,7 +117,7 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		connectionFactoryRegistry.addConnectionFactory(new TestTwitterServiceProviderConnectionFactory());
 		insertTwitterConnection();
 		insertFacebookConnection();
-		MultiValueMap<String, ServiceProviderConnection<?>> connections = connectionRepository.findConnectionsToProviders();
+		MultiValueMap<String, ServiceProviderConnection<?>> connections = connectionRepository.findConnections();
 		assertEquals(2, connections.size());
 		ServiceProviderConnection<TestFacebookApi> facebook = (ServiceProviderConnection<TestFacebookApi>) connections.getFirst("facebook");
 		assertFacebookConnection(facebook);
@@ -120,7 +128,7 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 	@MediumTest
 	public void testFindAllConnectionsEmptyResult() {
 		connectionFactoryRegistry.addConnectionFactory(new TestTwitterServiceProviderConnectionFactory());
-		MultiValueMap<String, ServiceProviderConnection<?>> connections = connectionRepository.findConnectionsToProviders();
+		MultiValueMap<String, ServiceProviderConnection<?>> connections = connectionRepository.findConnections();
 		assertEquals(2, connections.size());
 		assertEquals(0, connections.get("facebook").size());
 		assertEquals(0, connections.get("twitter").size());		
@@ -131,7 +139,7 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		boolean success = false;
 		try {
 			insertTwitterConnection();
-			connectionRepository.findConnectionsToProviders();
+			connectionRepository.findConnections();
 		} catch (IllegalArgumentException e) {
 			success = true;
 		}
@@ -389,6 +397,22 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		values.put("accessToken", "456789012");
 		values.putNull("secret");
 		values.put("refreshToken", "56789012");
+		values.put("expireTime", System.currentTimeMillis() + 3600000);
+		insertConnection(values);
+	}
+	
+	private void insertFacebookConnectionSameFacebookUser() {
+		ContentValues values = new ContentValues();
+		values.put("localUserId", "2");
+		values.put("providerId", "facebook");
+		values.put("providerUserId", "9");
+		values.put("rank", 1);
+		values.putNull("profileName");
+		values.putNull("profileUrl");
+		values.putNull("profilePictureUrl");
+		values.put("accessToken", "234567890");
+		values.putNull("secret");
+		values.put("refreshToken", "345678901");
 		values.put("expireTime", System.currentTimeMillis() + 3600000);
 		insertConnection(values);
 	}

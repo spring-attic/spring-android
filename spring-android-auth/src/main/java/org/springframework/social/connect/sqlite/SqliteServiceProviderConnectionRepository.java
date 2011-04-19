@@ -60,11 +60,11 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 		this.connectionFactoryLocator = connectionFactoryLocator;
 		this.textEncryptor = textEncryptor;
 	}
-	
-	public MultiValueMap<String, ServiceProviderConnection<?>> findConnectionsToProviders() {
+		
+	public MultiValueMap<String, ServiceProviderConnection<?>> findConnections() {
 		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? order by providerId, rank";
 		final String[] selectionArgs = {localUserId};
-		List<ServiceProviderConnection<?>> resultList = findConnections(sql, selectionArgs);
+		List<ServiceProviderConnection<?>> resultList = queryForConnections(sql, selectionArgs);
         MultiValueMap<String, ServiceProviderConnection<?>> connections = new LinkedMultiValueMap<String, ServiceProviderConnection<?>>();
         Set<String> registeredProviderIds = connectionFactoryLocator.registeredProviderIds();
         for (String registeredProviderId : registeredProviderIds) {
@@ -83,7 +83,7 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 	public List<ServiceProviderConnection<?>> findConnectionsToProvider(String providerId) {
 		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? order by rank";
 		final String[] selectionArgs = {localUserId, providerId};
-		return findConnections(sql, selectionArgs);
+		return queryForConnections(sql, selectionArgs);
 	}	
 	
 	public MultiValueMap<String, ServiceProviderConnection<?>> findConnectionsForUsers(MultiValueMap<String, String> providerUsers) {
@@ -116,7 +116,7 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 		
 	    final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and " + providerUsersCriteriaSql + " order by providerId, rank";
 		final String[] selectionArgs = args.toArray(new String[0]);
-	    List<ServiceProviderConnection<?>> resultList = findConnections(sql, selectionArgs);
+	    List<ServiceProviderConnection<?>> resultList = queryForConnections(sql, selectionArgs);
 		
 		MultiValueMap<String, ServiceProviderConnection<?>> connectionsForUsers = new LinkedMultiValueMap<String, ServiceProviderConnection<?>>();
 		for (ServiceProviderConnection<?> connection : resultList) {
@@ -140,7 +140,7 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 	public ServiceProviderConnection<?> findConnection(ServiceProviderConnectionKey connectionKey) {		
 		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? and providerUserId = ? order by rank";
 		final String[] selectionArgs = {localUserId, connectionKey.getProviderId(), connectionKey.getProviderUserId()};
-		ServiceProviderConnection<?> connection = findConnection(sql, selectionArgs);
+		ServiceProviderConnection<?> connection = queryForConnection(sql, selectionArgs);
 		
 		if (connection == null) {
 			throw new NoSuchServiceProviderConnectionException(connectionKey);
@@ -153,7 +153,7 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 	public <S> ServiceProviderConnection<S> findConnectionByServiceApi(Class<S> serviceApiType) {
 		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? and rank = 1";
 		final String[] selectionArgs = {localUserId, getProviderId(serviceApiType)};		
-		return (ServiceProviderConnection<S>) findConnection(sql, selectionArgs);
+		return (ServiceProviderConnection<S>) queryForConnection(sql, selectionArgs);
 	}
 	
     @SuppressWarnings("unchecked")
@@ -255,7 +255,7 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 		return expireTime == 0 ? null : expireTime;
 	}
 	
-	private ServiceProviderConnection<?> findConnection(final String sql, final String[] selectionArgs) {
+	private ServiceProviderConnection<?> queryForConnection(final String sql, final String[] selectionArgs) {
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sql, selectionArgs);
         ServiceProviderConnection<?> connection = null;
@@ -268,7 +268,7 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 		return connection;
 	}
 	
-	private List<ServiceProviderConnection<?>> findConnections(final String sql, final String[] selectionArgs) {
+	private List<ServiceProviderConnection<?>> queryForConnections(final String sql, final String[] selectionArgs) {
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
         Cursor c = db.rawQuery(sql, selectionArgs);		
 		List<ServiceProviderConnection<?>> connections = new ArrayList<ServiceProviderConnection<?>>();
@@ -299,4 +299,5 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 				decrypt(c.getString(c.getColumnIndex("refreshToken"))), 
 				expireTime(c.getLong(c.getColumnIndex("expireTime"))));
 	}
+	
 }
