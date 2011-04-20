@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.http.client;
 
 import java.io.IOException;
@@ -49,14 +48,13 @@ final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpR
 
     private final HttpUriRequest httpRequest;
 
-
-    HttpComponentsClientHttpRequest(HttpClient httpClient, HttpUriRequest httpRequest) {
+    public HttpComponentsClientHttpRequest(HttpClient httpClient, HttpUriRequest httpRequest) {
         this.httpClient = httpClient;
         this.httpRequest = httpRequest;
     }
 
     public HttpMethod getMethod() {
-        return HttpMethod.valueOf(httpRequest.getRequestLine().getMethod());
+        return HttpMethod.valueOf(httpRequest.getMethod());
     }
     
 	public URI getURI() {
@@ -64,11 +62,11 @@ final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpR
 	}
 
     @Override
-    public ClientHttpResponse executeInternal(HttpHeaders headers, byte[] output) throws IOException {
+    public ClientHttpResponse executeInternal(HttpHeaders headers, byte[] bufferedOutput) throws IOException {
         for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
             String headerName = entry.getKey();
-            if (!headerName.equalsIgnoreCase(HTTP.CONTENT_LEN) 
-                    && !headerName.equalsIgnoreCase(HTTP.TRANSFER_ENCODING)) {
+            if (!headerName.equalsIgnoreCase(HTTP.CONTENT_LEN) && 
+            		!headerName.equalsIgnoreCase(HTTP.TRANSFER_ENCODING)) {
                 for (String headerValue : entry.getValue()) {
                     httpRequest.addHeader(headerName, headerValue);
                 }
@@ -76,7 +74,7 @@ final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpR
         }
         if (httpRequest instanceof HttpEntityEnclosingRequest) {
             HttpEntityEnclosingRequest entityEnclosingReq = (HttpEntityEnclosingRequest) httpRequest;
-            HttpEntity requestEntity = new ByteArrayEntity(output);
+            HttpEntity requestEntity = new ByteArrayEntity(bufferedOutput);
             entityEnclosingReq.setEntity(requestEntity);
         }
         HttpResponse httpResponse = httpClient.execute(httpRequest);

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.http.client;
 
 import java.io.IOException;
@@ -68,11 +67,7 @@ final class HttpComponentsClientHttpResponse implements ClientHttpResponse {
 
     public InputStream getBody() throws IOException {
         HttpEntity entity = httpResponse.getEntity();
-        if (entity != null) {
-            return entity.getContent();
-        } else {
-            return null;
-        }
+        return entity != null ? entity.getContent() : null;
     }
 
     public void close() {

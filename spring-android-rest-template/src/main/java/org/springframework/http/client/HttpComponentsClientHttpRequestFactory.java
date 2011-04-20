@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.http.client;
 
 import java.io.IOException;
@@ -47,7 +46,7 @@ import org.springframework.util.Assert;
 
 /**
  * {@link org.springframework.http.client.ClientHttpRequestFactory} implementation that uses
- * <a href="http://hc.apache.org/httpcomponents-client/">Apache HttpClient</a> to create requests.
+ * <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/">Http Components HttpClient</a> to create requests.
  *
  * <p>Allows to use a pre-configured {@link HttpClient} instance -
  * potentially with authentication, HTTP connection pooling, etc.
@@ -55,39 +54,39 @@ import org.springframework.util.Assert;
  * @author Oleg Kalnichevski
  * @author Roy Clarkson
  * @since 1.0.0
- * @see org.springframework.http.client.SimpleClientHttpRequestFactory
  */
 public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequestFactory, DisposableBean {
+	
+	private static final int DEFAULT_MAX_TOTAL_CONNECTIONS = 100;
 
-    private static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (60 * 1000);
+	private static final int DEFAULT_MAX_CONNECTIONS_PER_ROUTE = 5;
+
+	private static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (60 * 1000);
 
     private HttpClient httpClient;
 
     /**
-     * Create a new instance of the <code>HttpComponentsClientHttpRequestFactory</code> with a default
-     * {@link HttpClient} that uses a default {@link ThreadSafeClientConnManager}.
+     * Create a new instance of the {@code HttpComponentsClientHttpRequestFactory} with a default {@link HttpClient} that 
+     * uses a default {@link ThreadSafeClientConnManager}.
      */
     public HttpComponentsClientHttpRequestFactory() {
-        // Set total max connections to 100
-        // and max per route to 5
-        HttpParams params = new BasicHttpParams();
-        ConnManagerParams.setMaxTotalConnections(params, 100);
-        ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(5));
-        
         SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(
-                new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        schemeRegistry.register(
-                new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
         
-        ThreadSafeClientConnManager mrg = new ThreadSafeClientConnManager(params, schemeRegistry);
-        httpClient = new DefaultHttpClient(mrg, null);
+        HttpParams params = new BasicHttpParams();
+        ThreadSafeClientConnManager connectionManager = new ThreadSafeClientConnManager(params, schemeRegistry);
+        ConnManagerParams.setMaxTotalConnections(params, DEFAULT_MAX_TOTAL_CONNECTIONS);
+        ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(DEFAULT_MAX_CONNECTIONS_PER_ROUTE));
+
+        httpClient = new DefaultHttpClient(connectionManager, null);
         this.setReadTimeout(DEFAULT_READ_TIMEOUT_MILLISECONDS);
     }
 
     /**
-     * Create a new instance of the <code>HttpComponentsHttpRequestFactory</code> with the given
-     * {@link HttpClient} instance.
+     * Create a new instance of the {@code HttpComponentsClientHttpRequestFactory} with the given {@link HttpClient} 
+     * instance.
+     * 
      * @param httpClient the HttpClient instance to use for this factory
      */
     public HttpComponentsClientHttpRequestFactory(HttpClient httpClient) {
@@ -97,14 +96,14 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
 
 
     /**
-     * Set the <code>HttpClient</code> used by this factory.
+     * Set the {@code HttpClient} used by this factory.
      */
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
     }
 
     /**
-     * Return the <code>HttpClient</code> used by this factory.
+     * Return the {@code HttpClient} used by this factory.
      */
     public HttpClient getHttpClient() {
         return this.httpClient;
@@ -112,6 +111,7 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
 
     /**
      * Set the socket read timeout for the underlying HttpClient. A value of 0 means <em>never</em> timeout.
+     * 
      * @param timeout the timeout value in milliseconds
      * @see org.apache.http.params.HttpParams#setIntParameter(String, int) 
      */
@@ -130,11 +130,11 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
     }
 
     /**
-     * Create a HttpComponents HttpUrlRequest object for the given HTTP method
-     * and URI specification.
+     * Create a HttpComponents HttpUriRequest object for the given HTTP method and URI specification.
+     * 
      * @param httpMethod the HTTP method
      * @param uri the URI
-     * @return the HttpComponents HttpUrlRequest object
+     * @return the HttpComponents HttpUriRequest object
      */
     protected HttpUriRequest createHttpRequest(HttpMethod httpMethod, URI uri) {
         switch (httpMethod) {
@@ -158,9 +158,10 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
     }
 
     /**
-     * Template method that allows for manipulating the {@link HttpUriRequest}
-     * before it is returned as part of a {@link HttpComponentsClientHttpRequest}.
+     * Template method that allows for manipulating the {@link HttpUriRequest} before it is returned as part of a {@link 
+     * HttpComponentsClientHttpRequest}.
      * <p>The default implementation is empty.
+     * 
      * @param httpRequest the HTTP request object to process
      */
     protected void postProcessHttpRequest(HttpUriRequest httpRequest) {
