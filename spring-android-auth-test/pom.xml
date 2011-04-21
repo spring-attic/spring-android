@@ -15,17 +15,17 @@
 
 	<properties> 
 		<android-platform>3</android-platform>
-		<android-emulator>3</android-emulator>
+		<android-emulator>10</android-emulator>
 		<maven-android-plugin-version>2.8.4</maven-android-plugin-version>
 		<maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
 		<android-version>1.5_r3</android-version>
 		<spring-android-version>1.0.0.BUILD-SNAPSHOT</spring-android-version>
 		<spring-social-version>1.0.0.BUILD-SNAPSHOT</spring-social-version>
+		<java-version>1.6</java-version>
 	</properties>
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>tests/src</testSourceDirectory>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
@@ -38,24 +38,41 @@
 					</sdk>
 					<emulator>
 						<avd>${android-emulator}</avd>
+						<wait>60000</wait>
 					</emulator>
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 				</configuration>
+				<executions>
+					<execution>
+						<id>startemulator</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>emulator-start</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stopemulator</id>
+						<phase>install</phase>
+						<goals>
+							<goal>emulator-stop</goal>
+						</goals>
+					</execution>
+				</executions>
 				<extensions>true</extensions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler-plugin-version}</version>
+				<configuration>
+					<source>${java-version}</source>
+					<target>${java-version}</target>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.8</version>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<downloadJavadocs>true</downloadJavadocs>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -76,11 +93,6 @@
 		<dependency>
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-auth</artifactId>
-			<version>${spring-android-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.android</groupId>
-			<artifactId>spring-android-rest-template</artifactId>
 			<version>${spring-android-version}</version>
 		</dependency>
 		<dependency>

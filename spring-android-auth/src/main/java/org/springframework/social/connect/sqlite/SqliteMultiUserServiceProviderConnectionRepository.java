@@ -54,10 +54,10 @@ public class SqliteMultiUserServiceProviderConnectionRepository implements Multi
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
 		Cursor c = db.rawQuery(sql, selectionArgs);		
 		String localUserId = null;
-		if (c.getCount() > 0) {
+		if (c.getCount() == 1) {
 			c.moveToFirst();
 			localUserId = c.getString(c.getColumnIndex("localUserId"));
-		}
+		} 
 		c.close();
 		db.close();
 		return localUserId;

@@ -13,7 +13,8 @@ import org.springframework.social.connect.ServiceProviderConnection;
 import org.springframework.social.connect.ServiceProviderConnectionData;
 import org.springframework.social.connect.ServiceProviderConnectionKey;
 import org.springframework.social.connect.ServiceProviderConnectionRepository;
-import org.springframework.social.connect.ServiceProviderUser;
+import org.springframework.social.connect.ServiceProviderConnectionValues;
+import org.springframework.social.connect.ServiceProviderUserProfile;
 import org.springframework.social.connect.sqlite.support.SqliteServiceProviderConnectionRepositoryHelper;
 import org.springframework.social.connect.support.MapServiceProviderConnectionFactoryRegistry;
 import org.springframework.social.connect.support.OAuth1ServiceProviderConnectionFactory;
@@ -21,6 +22,7 @@ import org.springframework.social.connect.support.OAuth2ServiceProviderConnectio
 import org.springframework.social.oauth1.OAuth1Operations;
 import org.springframework.social.oauth1.OAuth1ServiceProvider;
 import org.springframework.social.oauth2.AccessGrant;
+import org.springframework.social.oauth2.AuthorizationParameters;
 import org.springframework.social.oauth2.GrantType;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2ServiceProvider;
@@ -315,12 +317,12 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		connectionFactoryRegistry.addConnectionFactory(new TestTwitterServiceProviderConnectionFactory());		
 		insertTwitterConnection();
 		ServiceProviderConnection<TestTwitterApi> twitter = connectionRepository.findConnectionByServiceApi(TestTwitterApi.class);
-		assertEquals("http://twitter.com/kdonald/picture", twitter.getUser().getProfilePictureUrl());
+		assertEquals("http://twitter.com/kdonald/picture", twitter.getImageUrl());
 		twitter.sync();
-		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter.getUser().getProfilePictureUrl());
+		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter.getImageUrl());
 		connectionRepository.updateConnection(twitter);
 		ServiceProviderConnection<TestTwitterApi> twitter2 = connectionRepository.findConnectionByServiceApi(TestTwitterApi.class);
-		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter2.getUser().getProfilePictureUrl());
+		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter2.getImageUrl());
 	}
 	
 	@MediumTest
@@ -438,10 +440,9 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 	private void assertNewConnection(ServiceProviderConnection<TestFacebookApi> connection) {
 		assertEquals("facebook", connection.getKey().getProviderId());
 		assertEquals("9", connection.getKey().getProviderUserId());
-		ServiceProviderUser user = connection.getUser();
-		assertEquals("Keith Donald", user.getProfileName());
-		assertEquals("http://facebook.com/keith.donald", user.getProfileUrl());
-		assertEquals("http://facebook.com/keith.donald/picture", user.getProfilePictureUrl());
+		assertEquals("Keith Donald", connection.getDisplayName());
+		assertEquals("http://facebook.com/keith.donald", connection.getProfileUrl());
+		assertEquals("http://facebook.com/keith.donald/picture", connection.getImageUrl());
 		assertTrue(connection.test());
 		TestFacebookApi api = connection.getServiceApi();
 		assertNotNull(api);
@@ -452,29 +453,27 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 
 	private void assertTwitterConnection(ServiceProviderConnection<TestTwitterApi> twitter) {
 		assertEquals(new ServiceProviderConnectionKey("twitter", "1"), twitter.getKey());
-		assertEquals("@kdonald", twitter.getUser().getProfileName());
-		assertEquals("http://twitter.com/kdonald", twitter.getUser().getProfileUrl());
-		assertEquals("http://twitter.com/kdonald/picture", twitter.getUser().getProfilePictureUrl());
+		assertEquals("@kdonald", twitter.getDisplayName());
+		assertEquals("http://twitter.com/kdonald", twitter.getProfileUrl());
+		assertEquals("http://twitter.com/kdonald/picture", twitter.getImageUrl());
 		TestTwitterApi twitterApi = twitter.getServiceApi();
 		assertEquals("123456789", twitterApi.getAccessToken());		
 		assertEquals("987654321", twitterApi.getSecret());
 		twitter.sync();
-		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter.getUser().getProfilePictureUrl());
+		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter.getImageUrl());
 	}
 
 	private void assertFacebookConnection(ServiceProviderConnection<TestFacebookApi> facebook) {
 		assertEquals(new ServiceProviderConnectionKey("facebook", "9"), facebook.getKey());
-		assertEquals("9", facebook.getUser().getId());
-		assertEquals(null, facebook.getUser().getProfileName());
-		assertEquals(null, facebook.getUser().getProfileUrl());
-		assertEquals(null, facebook.getUser().getProfilePictureUrl());
+		assertEquals(null, facebook.getDisplayName());
+		assertEquals(null, facebook.getProfileUrl());
+		assertEquals(null, facebook.getImageUrl());
 		TestFacebookApi facebookApi = facebook.getServiceApi();
 		assertEquals("234567890", facebookApi.getAccessToken());
 		facebook.sync();
-		assertEquals("9", facebook.getUser().getId());
-		assertEquals("Keith Donald", facebook.getUser().getProfileName());
-		assertEquals("http://facebook.com/keith.donald", facebook.getUser().getProfileUrl());
-		assertEquals("http://facebook.com/keith.donald/picture", facebook.getUser().getProfilePictureUrl());		
+		assertEquals("Keith Donald", facebook.getDisplayName());
+		assertEquals("http://facebook.com/keith.donald", facebook.getProfileUrl());
+		assertEquals("http://facebook.com/keith.donald/picture", facebook.getImageUrl());		
 	}
 	
 	// test facebook provider
@@ -491,10 +490,10 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 
 		public OAuth2Operations getOAuthOperations() {
 			return new OAuth2Operations() {
-				public String buildAuthorizeUrl(String redirectUri, String scope, String state, GrantType grantType, MultiValueMap<String, String> additionalParameters) {
+				public String buildAuthorizeUrl(GrantType grantType, AuthorizationParameters parameters) {
 					return null;
 				}
-				public String buildAuthenticateUrl(String redirectUri, String state, GrantType grantType, MultiValueMap<String, String> additionalParameters) {
+				public String buildAuthenticateUrl(GrantType grantType, AuthorizationParameters parameters) {
 					return null;
 				}
 				public AccessGrant exchangeForAccess(String authorizationGrant, String redirectUri, MultiValueMap<String, String> additionalParameters) {
@@ -536,8 +535,12 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 			return true;
 		}
 
-		public ServiceProviderUser getUser(TestFacebookApi serviceApi) {
-			return new ServiceProviderUser(accountId, name, profileUrl, profilePicture);
+		public ServiceProviderConnectionValues getConnectionValues(TestFacebookApi serviceApi) {
+			return new ServiceProviderConnectionValues(accountId, name, profileUrl, profilePicture);
+		}
+
+		public ServiceProviderUserProfile fetchUserProfile(TestFacebookApi serviceApi) {
+			return new ServiceProviderUserProfile(name, "Keith", "Donald", "keith@interface21.com", "kdonald");
 		}
 
 		public void updateStatus(TestFacebookApi serviceApi, String message) {
@@ -597,10 +600,14 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 			return true;
 		}
 
-		public ServiceProviderUser getUser(TestTwitterApi serviceApi) {
-			return new ServiceProviderUser(accountId, name, profileUrl, profilePicture);
+		public ServiceProviderConnectionValues getConnectionValues(TestTwitterApi serviceApi) {
+			return new ServiceProviderConnectionValues(accountId, name, profileUrl, profilePicture);
 		}
 
+		public ServiceProviderUserProfile fetchUserProfile(TestTwitterApi serviceApi) {
+			return new ServiceProviderUserProfile(name, null, null, null, "kdonald");
+		}
+		
 		public void updateStatus(TestTwitterApi serviceApi, String message) {
 		}
 		
