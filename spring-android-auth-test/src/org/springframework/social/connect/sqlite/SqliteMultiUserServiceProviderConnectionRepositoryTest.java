@@ -64,11 +64,13 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 	
 	private TestFacebookServiceProviderConnectionFactory connectionFactory;
 	
+	private TextEncryptor textEncryptor;
+	
 	private SQLiteOpenHelper repositoryHelper;
 
 	private SqliteMultiUserServiceProviderConnectionRepository usersConnectionRepository;
 
-	private ServiceProviderConnectionRepository connectionRepository;
+	private ServiceProviderConnectionRepository connectionRepository; 
 
 	@Override
     protected void setUp() throws Exception {
@@ -88,7 +90,7 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		 // generates a random 8-byte salt that is then hex-encoded
 		String salt = AndroidKeyGenerators.string().generateKey();
 		String password = "Unit tests are cool!";
-		TextEncryptor textEncryptor = AndroidEncryptors.queryableText(password, salt);
+		textEncryptor = AndroidEncryptors.queryableText(password, salt);
 		usersConnectionRepository = new SqliteMultiUserServiceProviderConnectionRepository(repositoryHelper, connectionFactoryRegistry, textEncryptor);
 		connectionRepository = usersConnectionRepository.createConnectionRepository("1");
 	}
@@ -375,8 +377,8 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		values.put("displayName", "@kdonald");
 		values.put("profileUrl", "http://twitter.com/kdonald");
 		values.put("imageUrl", "http://twitter.com/kdonald/picture");
-		values.put("accessToken", "123456789");
-		values.put("secret", "987654321");
+		values.put("accessToken", encrypt("123456789"));
+		values.put("secret", encrypt("987654321"));
 		values.putNull("refreshToken");
 		values.putNull("expireTime");
 		insertConnection(values);
@@ -391,9 +393,9 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		values.putNull("displayName");
 		values.putNull("profileUrl");
 		values.putNull("imageUrl");
-		values.put("accessToken", "234567890");
+		values.put("accessToken", encrypt("234567890"));
 		values.putNull("secret");
-		values.put("refreshToken", "345678901");
+		values.put("refreshToken", encrypt("345678901"));
 		values.put("expireTime", System.currentTimeMillis() + 3600000);
 		insertConnection(values);
 	}
@@ -407,9 +409,9 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		values.putNull("displayName");
 		values.putNull("profileUrl");
 		values.putNull("imageUrl");
-		values.put("accessToken", "456789012");
+		values.put("accessToken", encrypt("456789012"));
 		values.putNull("secret");
-		values.put("refreshToken", "56789012");
+		values.put("refreshToken", encrypt("56789012"));
 		values.put("expireTime", System.currentTimeMillis() + 3600000);
 		insertConnection(values);
 	}
@@ -423,9 +425,9 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		values.putNull("displayName");
 		values.putNull("profileUrl");
 		values.putNull("imageUrl");
-		values.put("accessToken", "456789012");
+		values.put("accessToken", encrypt("456789012"));
 		values.putNull("secret");
-		values.put("refreshToken", "56789012");
+		values.put("refreshToken", encrypt("56789012"));
 		values.put("expireTime", System.currentTimeMillis() + 3600000);
 		insertConnection(values);
 	}
@@ -439,11 +441,15 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		values.putNull("displayName");
 		values.putNull("profileUrl");
 		values.putNull("imageUrl");
-		values.put("accessToken", "234567890");
+		values.put("accessToken", encrypt("234567890"));
 		values.putNull("secret");
-		values.put("refreshToken", "345678901");
+		values.put("refreshToken", encrypt("345678901"));
 		values.put("expireTime", System.currentTimeMillis() + 3600000);
 		insertConnection(values);
+	}
+	
+	private String encrypt(String text) {
+		return text != null ?  textEncryptor.encrypt(text): text;
 	}
 	
 	private void insertConnection(final ContentValues values) {
