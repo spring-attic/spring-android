@@ -150,20 +150,20 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <S> ServiceProviderConnection<S> findConnectionByServiceApi(Class<S> serviceApiType) {
+	public <S> ServiceProviderConnection<S> findPrimaryConnectionToServiceApi(Class<S> serviceApiType) {
 		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where localUserId = ? and providerId = ? and rank = 1";
 		final String[] selectionArgs = {localUserId, getProviderId(serviceApiType)};		
 		return (ServiceProviderConnection<S>) queryForConnection(sql, selectionArgs);
 	}
 	
     @SuppressWarnings("unchecked")
-	public <S> List<ServiceProviderConnection<S>> findConnectionsByServiceApi(Class<S> serviceApiType) {
+	public <S> List<ServiceProviderConnection<S>> findConnectionsToServiceApi(Class<S> serviceApiType) {
     	List<?> connections = findConnectionsToProvider(getProviderId(serviceApiType));
     	return (List<ServiceProviderConnection<S>>) connections;
     }
 	
 	@SuppressWarnings("unchecked")
-	public <S> ServiceProviderConnection<S> findConnectionByServiceApiForUser(Class<S> serviceApiType, String providerUserId) {
+	public <S> ServiceProviderConnection<S> findConnectionToServiceApiForUser(Class<S> serviceApiType, String providerUserId) {
 		String providerId = getProviderId(serviceApiType);
 		return (ServiceProviderConnection<S>) findConnection(new ServiceProviderConnectionKey(providerId, providerUserId));
 	}
@@ -187,9 +187,9 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 			values.put("providerId", data.getProviderId());
 			values.put("providerUserId", data.getProviderUserId());
 			values.put("rank", rank);
-			values.put("profileName", data.getProfileName());
+			values.put("displayName", data.getDisplayName());
 			values.put("profileUrl", data.getProfileUrl());
-			values.put("profilePictureUrl", data.getProfilePictureUrl());
+			values.put("imageUrl", data.getImageUrl());
 			values.put("accessToken", encrypt(data.getAccessToken()));
 			values.put("secret", encrypt(data.getSecret()));
 			values.put("refreshToken", encrypt(data.getRefreshToken()));
@@ -205,9 +205,9 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 		ServiceProviderConnectionData data = connection.createData();
 		SQLiteDatabase db = repositoryHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put("profileName", data.getProfileName());
+		values.put("displayName", data.getDisplayName());
 		values.put("profileUrl", data.getProfileUrl());
-		values.put("profilePictureUrl", data.getProfilePictureUrl());
+		values.put("imageUrl", data.getImageUrl());
 		values.put("accessToken", encrypt(data.getAccessToken()));
 		values.put("secret", encrypt(data.getSecret()));
 		values.put("refreshToken", encrypt(data.getRefreshToken()));
@@ -237,7 +237,7 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 	
 	// internal helpers
 	
-	private static final String SELECT_FROM_SERVICE_PROVIDER_CONNECTION = "select localUserId, providerId, providerUserId, profileName, profileUrl, profilePictureUrl, accessToken, secret, refreshToken, expireTime from ServiceProviderConnection";
+	private static final String SELECT_FROM_SERVICE_PROVIDER_CONNECTION = "select localUserId, providerId, providerUserId, displayName, profileUrl, imageUrl, accessToken, secret, refreshToken, expireTime from ServiceProviderConnection";
 	
 	private <S> String getProviderId(Class<S> serviceApiType) {
 		return connectionFactoryLocator.getConnectionFactory(serviceApiType).getProviderId();
@@ -291,9 +291,9 @@ public class SqliteServiceProviderConnectionRepository implements ServiceProvide
 	private ServiceProviderConnectionData mapConnectionData(Cursor c) {
 		return new ServiceProviderConnectionData(c.getString(c.getColumnIndex("providerId")), 
 				c.getString(c.getColumnIndex("providerUserId")),
-				c.getString(c.getColumnIndex("profileName")), 
+				c.getString(c.getColumnIndex("displayName")), 
 				c.getString(c.getColumnIndex("profileUrl")), 
-				c.getString(c.getColumnIndex("profilePictureUrl")),
+				c.getString(c.getColumnIndex("imageUrl")),
 				decrypt(c.getString(c.getColumnIndex("accessToken"))), 
 				decrypt(c.getString(c.getColumnIndex("secret"))), 
 				decrypt(c.getString(c.getColumnIndex("refreshToken"))), 

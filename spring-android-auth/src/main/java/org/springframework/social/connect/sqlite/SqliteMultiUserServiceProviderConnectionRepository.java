@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.social.connect.MultiUserServiceProviderConnectionRepository;
+import org.springframework.social.connect.ServiceProviderConnection;
 import org.springframework.social.connect.ServiceProviderConnectionFactoryLocator;
 import org.springframework.social.connect.ServiceProviderConnectionKey;
 import org.springframework.social.connect.ServiceProviderConnectionRepository;
@@ -48,9 +49,10 @@ public class SqliteMultiUserServiceProviderConnectionRepository implements Multi
 		this.textEncryptor = textEncryptor;
 	}
 
-	public String findLocalUserIdConnectedTo(ServiceProviderConnectionKey connectionKey) {
+	public String findLocalUserIdWithConnection(ServiceProviderConnection<?> connection) {
 		final String sql = "select localUserId from ServiceProviderConnection where providerId = ? and providerUserId = ?";
-		final String[] selectionArgs = {connectionKey.getProviderId(), connectionKey.getProviderUserId()};		
+		ServiceProviderConnectionKey key = connection.getKey();
+		final String[] selectionArgs = {key.getProviderId(), key.getProviderUserId()};		
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
 		Cursor c = db.rawQuery(sql, selectionArgs);		
 		String localUserId = null;
