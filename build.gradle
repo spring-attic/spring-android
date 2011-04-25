@@ -102,7 +102,7 @@ configure(javaprojects) {
     springSocialVersion = '1.0.0.BUILD-SNAPSHOT'
     springSecurityVersion = '3.1.0.RC1'
     androidVersion = '1.5_r3'
-    httpComponentsClientVersion = '4.0.1'
+    commonsHttpclientVersion = '3.1'
     androidRomeVersion = '1.0.0-r2'
     simpleXmlVersion = '2.4.1'
     javaxServletApiVersion = '2.5'
@@ -258,6 +258,9 @@ project('spring-android-rest-template') {
             optional = true 
             transitive = false 
         }
+        compile ("commons-httpclient:commons-httpclient:$commonsHttpclientVersion") {
+            optional = true
+        }
         compile project (':spring-android-core')
 
         testCompile "org.springframework:spring-core:$springVersion"
@@ -293,12 +296,15 @@ project('spring-android-rest-template') {
             'org/springframework/http/ResponseEntity.java',
             'org/springframework/http/client/AbstractBufferingClientHttpRequest.java',
             'org/springframework/http/client/AbstractClientHttpRequest.java',
-            'org/springframework/http/client/BufferingSimpleClientHttpRequest.java',
+            'org/springframework/http/client/BufferingSimpleClientHttpRequest.java',            
             'org/springframework/http/client/ClientHttpRequest.java',
             'org/springframework/http/client/ClientHttpRequestExecution.java',
             'org/springframework/http/client/ClientHttpRequestFactory.java',
             'org/springframework/http/client/ClientHttpRequestInterceptor.java',
             'org/springframework/http/client/ClientHttpResponse.java',
+            'org/springframework/http/client/CommonsClientHttpRequest.java',
+            'org/springframework/http/client/CommonsClientHttpRequestFactory.java',
+            'org/springframework/http/client/CommonsClientHttpResponse.java',
             'org/springframework/http/client/InterceptingClientHttpRequest.java',
             'org/springframework/http/client/InterceptingClientHttpRequestFactory.java',
             'org/springframework/http/client/SimpleClientHttpRequestFactory.java',
