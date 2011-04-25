@@ -84,10 +84,12 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		connectionFactoryRegistry = new MapServiceProviderConnectionFactoryRegistry();
 		connectionFactory = new TestFacebookServiceProviderConnectionFactory();
 		connectionFactoryRegistry.addConnectionFactory(connectionFactory);
-		String salt = AndroidKeyGenerators.string().generateKey(); // generates a random 8-byte salt that is then hex-encoded
+		
+		 // generates a random 8-byte salt that is then hex-encoded
+		String salt = AndroidKeyGenerators.string().generateKey();
 		String password = "Unit tests are cool!";
 		TextEncryptor textEncryptor = AndroidEncryptors.queryableText(password, salt);
-		usersConnectionRepository = new SqliteMultiUserServiceProviderConnectionRepository(repositoryHelper, connectionFactoryRegistry, textEncryptor); //EncodingUtils.hexEncode(EncodingUtils.utf8Encode("I am salt"))
+		usersConnectionRepository = new SqliteMultiUserServiceProviderConnectionRepository(repositoryHelper, connectionFactoryRegistry, textEncryptor);
 		connectionRepository = usersConnectionRepository.createConnectionRepository("1");
 	}
 	
