@@ -221,10 +221,11 @@ project('spring-android-auth') {
             exclude group: "org.springframework", module: "spring-web"
         }
         compile ("org.springframework.security:spring-security-crypto:$springSecurityVersion") {
-            // exclude spring-core in favor of spring-android-rest-template
+            // exclude spring-core in favor of spring-android-core
             exclude group: "org.springframework", module: "spring-core"
         }
         compile project (':spring-android-core')
+        compile project (':spring-android-rest-template');
     }
 }
 
