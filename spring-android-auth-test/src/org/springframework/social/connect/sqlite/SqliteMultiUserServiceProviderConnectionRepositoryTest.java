@@ -90,7 +90,7 @@ public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends Andr
 		 // generates a random 8-byte salt that is then hex-encoded
 		String salt = AndroidKeyGenerators.string().generateKey();
 		String password = "Unit tests are cool!";
-		textEncryptor = AndroidEncryptors.queryableText(password, salt);
+		textEncryptor = AndroidEncryptors.text(password, salt);
 		usersConnectionRepository = new SqliteMultiUserServiceProviderConnectionRepository(repositoryHelper, connectionFactoryRegistry, textEncryptor);
 		connectionRepository = usersConnectionRepository.createConnectionRepository("1");
 	}
