@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class SqliteServiceProviderConnectionRepositoryHelper extends SQLiteOpenHelper {
+public final class SqliteServiceProviderConnectionRepositoryHelper extends SQLiteOpenHelper {
 
 	private static final String TAG = SqliteServiceProviderConnectionRepositoryHelper.class.getSimpleName();
 
