@@ -261,6 +261,7 @@ project('spring-android-rest-template') {
         }
         compile ("commons-httpclient:commons-httpclient:$commonsHttpclientVersion") {
             optional = true
+            transitive = false
         }
         compile project (':spring-android-core')
 
