@@ -15,10 +15,6 @@
  */
 package org.springframework.security.crypto.encrypt;
 
-import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
-import org.springframework.security.crypto.encrypt.BytesEncryptor;
-import org.springframework.security.crypto.encrypt.HexEncodingTextEncryptor;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.keygen.AndroidKeyGenerators;
 
 /**
@@ -39,7 +35,7 @@ public class AndroidEncryptors {
      * @param salt an hex-encoded, random, site-global salt value to use to generate the key
      */
     public static BytesEncryptor standard(String password, String salt) {
-        return new AesBytesEncryptor(password, password, AndroidKeyGenerators.secureRandom(16));
+        return new AndroidAesBytesEncryptor(password, password, AndroidKeyGenerators.secureRandom(16));
     }
 
     /**
@@ -60,7 +56,7 @@ public class AndroidEncryptors {
      * @param salt an hex-encoded, random, site-global salt value to use to generate the secret key
      */
     public static TextEncryptor queryableText(String password, String salt) {
-        return new HexEncodingTextEncryptor(new AesBytesEncryptor(password, salt, AndroidKeyGenerators.shared(16)));
+        return new HexEncodingTextEncryptor(new AndroidAesBytesEncryptor(password, salt, AndroidKeyGenerators.shared(16)));
     }
 
     /**
