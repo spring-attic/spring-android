@@ -5,15 +5,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public final class SqliteServiceProviderConnectionRepositoryHelper extends SQLiteOpenHelper {
+public final class SQLiteConnectionRepositoryHelper extends SQLiteOpenHelper {
 
-	private static final String TAG = SqliteServiceProviderConnectionRepositoryHelper.class.getSimpleName();
+	private static final String TAG = SQLiteConnectionRepositoryHelper.class.getSimpleName();
 
 	private static final String DATABASE_NAME = "spring_social_connection_repository.sqlite";
 
 	private static final int DATABASE_VERSION = 1;
 
-	public SqliteServiceProviderConnectionRepositoryHelper(Context context) {
+	public SQLiteConnectionRepositoryHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 

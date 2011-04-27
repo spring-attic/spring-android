@@ -58,7 +58,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 /**
  * @author Roy Clarkson
  */
-public class SqliteMultiUserServiceProviderConnectionRepositoryTest extends AndroidTestCase {
+public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 
 	private MapServiceProviderConnectionFactoryRegistry connectionFactoryRegistry;
 	

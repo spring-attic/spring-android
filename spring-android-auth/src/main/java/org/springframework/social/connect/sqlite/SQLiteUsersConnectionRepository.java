@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.security.crypto.encrypt.TextEncryptor;
-import org.springframework.social.connect.MultiUserServiceProviderConnectionRepository;
-import org.springframework.social.connect.ServiceProviderConnection;
-import org.springframework.social.connect.ServiceProviderConnectionFactoryLocator;
-import org.springframework.social.connect.ServiceProviderConnectionKey;
-import org.springframework.social.connect.ServiceProviderConnectionRepository;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.ConnectionKey;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.UsersConnectionRepository;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -37,23 +37,23 @@ import android.database.sqlite.SQLiteOpenHelper;
  * 
  * @author Roy Clarkson
  */
-public class SqliteMultiUserServiceProviderConnectionRepository implements MultiUserServiceProviderConnectionRepository {
+public class SQLiteUsersConnectionRepository implements UsersConnectionRepository {
 
 	private final SQLiteOpenHelper repositoryHelper;
 	
-	private final ServiceProviderConnectionFactoryLocator connectionFactoryLocator;
+	private final ConnectionFactoryLocator connectionFactoryLocator;
 
 	private final TextEncryptor textEncryptor;
 
-	public SqliteMultiUserServiceProviderConnectionRepository(SQLiteOpenHelper repositoryHelper, ServiceProviderConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
+	public SQLiteUsersConnectionRepository(SQLiteOpenHelper repositoryHelper, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
 		this.repositoryHelper = repositoryHelper;
 		this.connectionFactoryLocator = connectionFactoryLocator;
 		this.textEncryptor = textEncryptor;
 	}
 
-	public String findLocalUserIdWithConnection(ServiceProviderConnection<?> connection) {
+	public String findUserIdWithConnection(Connection<?> connection) {
 		final String sql = "select localUserId from ServiceProviderConnection where providerId = ? and providerUserId = ?";
-		ServiceProviderConnectionKey key = connection.getKey();
+		ConnectionKey key = connection.getKey();
 		final String[] selectionArgs = {key.getProviderId(), key.getProviderUserId()};		
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
 		Cursor c = db.rawQuery(sql, selectionArgs);		
@@ -67,7 +67,7 @@ public class SqliteMultiUserServiceProviderConnectionRepository implements Multi
 		return localUserId;
 	}
 
-	public Set<String> findLocalUserIdsConnectedTo(String providerId, Set<String> providerUserIds) {
+	public Set<String> findUserIdsConnectedTo(String providerId, Set<String> providerUserIds) {
 		StringBuilder providerUserIdsCriteriaSql = new StringBuilder();
 		providerUserIdsCriteriaSql.append("(");
 		List<String> args = new ArrayList<String>(1 + providerUserIds.size());
@@ -96,7 +96,7 @@ public class SqliteMultiUserServiceProviderConnectionRepository implements Multi
 		return localUserIds;
 	}
 
-	public ServiceProviderConnectionRepository createConnectionRepository(String localUserId) {
-		return new SqliteServiceProviderConnectionRepository(localUserId, repositoryHelper, connectionFactoryLocator, textEncryptor);
+	public ConnectionRepository createConnectionRepository(String localUserId) {
+		return new SQLiteConnectionRepository(localUserId, repositoryHelper, connectionFactoryLocator, textEncryptor);
 	}
 }
