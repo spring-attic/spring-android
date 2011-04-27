@@ -23,20 +23,20 @@ import java.util.Set;
 import org.springframework.security.crypto.encrypt.AndroidEncryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.keygen.AndroidKeyGenerators;
-import org.springframework.social.connect.DuplicateServiceProviderConnectionException;
-import org.springframework.social.connect.NoSuchServiceProviderConnectionException;
-import org.springframework.social.connect.ServiceApiAdapter;
-import org.springframework.social.connect.ServiceProviderConnection;
-import org.springframework.social.connect.ServiceProviderConnectionData;
-import org.springframework.social.connect.ServiceProviderConnectionKey;
-import org.springframework.social.connect.ServiceProviderConnectionRepository;
-import org.springframework.social.connect.ServiceProviderConnectionValues;
-import org.springframework.social.connect.ServiceProviderUserProfile;
-import org.springframework.social.connect.ServiceProviderUserProfileBuilder;
-import org.springframework.social.connect.sqlite.support.SqliteServiceProviderConnectionRepositoryHelper;
-import org.springframework.social.connect.support.MapServiceProviderConnectionFactoryRegistry;
-import org.springframework.social.connect.support.OAuth1ServiceProviderConnectionFactory;
-import org.springframework.social.connect.support.OAuth2ServiceProviderConnectionFactory;
+import org.springframework.social.connect.ApiAdapter;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionData;
+import org.springframework.social.connect.ConnectionKey;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.ConnectionValues;
+import org.springframework.social.connect.DuplicateConnectionException;
+import org.springframework.social.connect.NoSuchConnectionException;
+import org.springframework.social.connect.UserProfile;
+import org.springframework.social.connect.UserProfileBuilder;
+import org.springframework.social.connect.sqlite.support.SQLiteConnectionRepositoryHelper;
+import org.springframework.social.connect.support.ConnectionFactoryRegistry;
+import org.springframework.social.connect.support.OAuth1ConnectionFactory;
+import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth1.OAuth1Operations;
 import org.springframework.social.oauth1.OAuth1ServiceProvider;
 import org.springframework.social.oauth2.AccessGrant;
@@ -60,38 +60,38 @@ import android.test.suitebuilder.annotation.SmallTest;
  */
 public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 
-	private MapServiceProviderConnectionFactoryRegistry connectionFactoryRegistry;
+	private ConnectionFactoryRegistry connectionFactoryRegistry;
 	
-	private TestFacebookServiceProviderConnectionFactory connectionFactory;
+	private TestFacebookConnectionFactory connectionFactory;
 	
 	private TextEncryptor textEncryptor;
 	
 	private SQLiteOpenHelper repositoryHelper;
 
-	private SqliteMultiUserServiceProviderConnectionRepository usersConnectionRepository;
+	private SQLiteUsersConnectionRepository usersConnectionRepository;
 
-	private ServiceProviderConnectionRepository connectionRepository; 
+	private ConnectionRepository connectionRepository; 
 
 	@Override
     protected void setUp() throws Exception {
         super.setUp();
         // creates the database, if it does not exist
-		repositoryHelper = new SqliteServiceProviderConnectionRepositoryHelper(getContext());
+		repositoryHelper = new SQLiteConnectionRepositoryHelper(getContext());
 		
 		// clear out any existing connections in the database
 		SQLiteDatabase db = repositoryHelper.getWritableDatabase();
-		db.delete("ServiceProviderConnection", null, null);
+		db.delete("UserConnection", null, null);
 		db.close();
 		
-		connectionFactoryRegistry = new MapServiceProviderConnectionFactoryRegistry();
-		connectionFactory = new TestFacebookServiceProviderConnectionFactory();
+		connectionFactoryRegistry = new ConnectionFactoryRegistry();
+		connectionFactory = new TestFacebookConnectionFactory();
 		connectionFactoryRegistry.addConnectionFactory(connectionFactory);
 		
 		 // generates a random 8-byte salt that is then hex-encoded
 		String salt = AndroidKeyGenerators.string().generateKey();
 		String password = "Unit tests are cool!";
 		textEncryptor = AndroidEncryptors.text(password, salt);
-		usersConnectionRepository = new SqliteMultiUserServiceProviderConnectionRepository(repositoryHelper, connectionFactoryRegistry, textEncryptor);
+		usersConnectionRepository = new SQLiteUsersConnectionRepository(repositoryHelper, connectionFactoryRegistry, textEncryptor);
 		connectionRepository = usersConnectionRepository.createConnectionRepository("1");
 	}
 	
@@ -113,53 +113,53 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	}
 
 	@MediumTest
-	public void testFindLocalUserIdConnectedTo() {
+	public void testFindUserIdConnectedTo() {
 		insertFacebookConnection();
-		String localUserId = usersConnectionRepository.findLocalUserIdWithConnection(connectionRepository.findPrimaryConnectionToServiceApi(TestFacebookApi.class));
-		assertEquals("1", localUserId);
+		String userId = usersConnectionRepository.findUserIdWithConnection(connectionRepository.findPrimaryConnectionToApi(TestFacebookApi.class));
+		assertEquals("1", userId);
 	}
 	
 	@MediumTest
-	public void testFindLocalUserIdConnectedToNoSuchConnection() {
-		ServiceProviderConnection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("12345"));
-		assertNull(usersConnectionRepository.findLocalUserIdWithConnection(connection));
+	public void testFindUserIdConnectedToNoSuchConnection() {
+		Connection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("12345"));
+		assertNull(usersConnectionRepository.findUserIdWithConnection(connection));
 	}
 	
 	@MediumTest
-	public void testFindLocalUserIdMultipleConnectionsToSameProviderUser() {
+	public void testFindUserIdMultipleConnectionsToSameProviderUser() {
 		insertFacebookConnection();
 		insertFacebookConnectionSameFacebookUser();
-		assertNull(usersConnectionRepository.findLocalUserIdWithConnection(connectionRepository.findPrimaryConnectionToServiceApi(TestFacebookApi.class)));
+		assertNull(usersConnectionRepository.findUserIdWithConnection(connectionRepository.findPrimaryConnectionToApi(TestFacebookApi.class)));
 	}
 	
 	@MediumTest
-	public void testFindLocalUserIdsConnectedTo() {
+	public void testFindUserIdsConnectedTo() {
 		insertFacebookConnection();
 		insertFacebookConnection3();
-		Set<String> localUserIds = usersConnectionRepository.findLocalUserIdsConnectedTo("facebook", new HashSet<String>(Arrays.asList("9", "11")));
-		assertEquals(2, localUserIds.size());
-		assertTrue(localUserIds.contains("1"));
-		assertTrue(localUserIds.contains("2"));        
+		Set<String> userIds = usersConnectionRepository.findUserIdsConnectedTo("facebook", new HashSet<String>(Arrays.asList("9", "11")));
+		assertEquals(2, userIds.size());
+		assertTrue(userIds.contains("1"));
+		assertTrue(userIds.contains("2"));        
 	}
 	
 	@MediumTest
 	@SuppressWarnings("unchecked")
 	public void testFindConnectionsToProviders() {
-		connectionFactoryRegistry.addConnectionFactory(new TestTwitterServiceProviderConnectionFactory());
+		connectionFactoryRegistry.addConnectionFactory(new TestTwitterConnectionFactory());
 		insertTwitterConnection();
 		insertFacebookConnection();
-		MultiValueMap<String, ServiceProviderConnection<?>> connections = connectionRepository.findConnections();
+		MultiValueMap<String, Connection<?>> connections = connectionRepository.findConnections();
 		assertEquals(2, connections.size());
-		ServiceProviderConnection<TestFacebookApi> facebook = (ServiceProviderConnection<TestFacebookApi>) connections.getFirst("facebook");
+		Connection<TestFacebookApi> facebook = (Connection<TestFacebookApi>) connections.getFirst("facebook");
 		assertFacebookConnection(facebook);
-		ServiceProviderConnection<TestTwitterApi> twitter = (ServiceProviderConnection<TestTwitterApi>) connections.getFirst("twitter");
+		Connection<TestTwitterApi> twitter = (Connection<TestTwitterApi>) connections.getFirst("twitter");
 		assertTwitterConnection(twitter);
 	}
 
 	@MediumTest
 	public void testFindAllConnectionsEmptyResult() {
-		connectionFactoryRegistry.addConnectionFactory(new TestTwitterServiceProviderConnectionFactory());
-		MultiValueMap<String, ServiceProviderConnection<?>> connections = connectionRepository.findConnections();
+		connectionFactoryRegistry.addConnectionFactory(new TestTwitterConnectionFactory());
+		MultiValueMap<String, Connection<?>> connections = connectionRepository.findConnections();
 		assertEquals(2, connections.size());
 		assertEquals(0, connections.get("facebook").size());
 		assertEquals(0, connections.get("twitter").size());		
@@ -180,11 +180,11 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	@MediumTest
 	@SuppressWarnings("unchecked")
 	public void testFindConnectionsToProvider() {
-		connectionFactoryRegistry.addConnectionFactory(new TestTwitterServiceProviderConnectionFactory());
+		connectionFactoryRegistry.addConnectionFactory(new TestTwitterConnectionFactory());
 		insertTwitterConnection();
-		List<ServiceProviderConnection<?>> connections = connectionRepository.findConnectionsToProvider("twitter");
+		List<Connection<?>> connections = connectionRepository.findConnectionsToProvider("twitter");
 		assertEquals(1, connections.size());
-		assertTwitterConnection((ServiceProviderConnection<TestTwitterApi>) connections.get(0));
+		assertTwitterConnection((Connection<TestTwitterApi>) connections.get(0));
 	}
 	
 	@MediumTest
@@ -195,7 +195,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	@MediumTest
 	@SuppressWarnings("unchecked")
 	public void testFindConnectionsForUsersEmpty() {
-		connectionFactoryRegistry.addConnectionFactory(new TestTwitterServiceProviderConnectionFactory());
+		connectionFactoryRegistry.addConnectionFactory(new TestTwitterConnectionFactory());
 		insertTwitterConnection();
 		insertFacebookConnection();
 		insertFacebookConnection2();
@@ -203,11 +203,11 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		providerUsers.add("facebook", "10");
 		providerUsers.add("facebook", "9");
 		providerUsers.add("twitter", "1");
-		MultiValueMap<String, ServiceProviderConnection<?>> connectionsForUsers = connectionRepository.findConnectionsForUsers(providerUsers);
+		MultiValueMap<String, Connection<?>> connectionsForUsers = connectionRepository.findConnectionsForUsers(providerUsers);
 		assertEquals(2, connectionsForUsers.size());
 		assertEquals("10", connectionsForUsers.getFirst("facebook").getKey().getProviderUserId());
-		assertFacebookConnection((ServiceProviderConnection<TestFacebookApi>) connectionsForUsers.get("facebook").get(1));
-		assertTwitterConnection((ServiceProviderConnection<TestTwitterApi>) connectionsForUsers.getFirst("twitter"));
+		assertFacebookConnection((Connection<TestFacebookApi>) connectionsForUsers.get("facebook").get(1));
+		assertTwitterConnection((Connection<TestTwitterApi>) connectionsForUsers.getFirst("twitter"));
 	}
 	
 	@MediumTest
@@ -233,60 +233,60 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	@SuppressWarnings("unchecked")
 	public void testFindConnection() {
 		insertFacebookConnection();
-		assertFacebookConnection((ServiceProviderConnection<TestFacebookApi>) connectionRepository.findConnection(new ServiceProviderConnectionKey("facebook", "9")));
+		assertFacebookConnection((Connection<TestFacebookApi>) connectionRepository.findConnection(new ConnectionKey("facebook", "9")));
 	}
 	
 	@MediumTest
 	public void testFindConnectionNoSuchConnection() {
 		boolean success = false;
 		try {
-			connectionRepository.findConnection(new ServiceProviderConnectionKey("facebook", "bogus"));
-		} catch (NoSuchServiceProviderConnectionException e) {
+			connectionRepository.findConnection(new ConnectionKey("facebook", "bogus"));
+		} catch (NoSuchConnectionException e) {
 			success = true;
 		}
 		assertTrue(success);
 	}
 
 	@MediumTest
-	public void testFindPrimaryConnectionToServiceApi() {
+	public void testFindPrimaryConnectionToApi() {
 		insertFacebookConnection();
-		assertFacebookConnection(connectionRepository.findPrimaryConnectionToServiceApi(TestFacebookApi.class));
+		assertFacebookConnection(connectionRepository.findPrimaryConnectionToApi(TestFacebookApi.class));
 	}
 
 	@MediumTest
-	public void testFindPrimaryConnectionToServiceApiSelectFromMultipleByRank() {
+	public void testFindPrimaryConnectionToApiSelectFromMultipleByRank() {
 		insertFacebookConnection2();
 		insertFacebookConnection();
-		assertFacebookConnection(connectionRepository.findPrimaryConnectionToServiceApi(TestFacebookApi.class));
+		assertFacebookConnection(connectionRepository.findPrimaryConnectionToApi(TestFacebookApi.class));
 	}
 
-	public void testFindPrimaryConnectionToServiceApiNoSuchConnection() {
-		assertNull(connectionRepository.findPrimaryConnectionToServiceApi(TestFacebookApi.class));
+	public void testFindPrimaryConnectionToApiNoSuchConnection() {
+		assertNull(connectionRepository.findPrimaryConnectionToApi(TestFacebookApi.class));
 	}
 
 	@MediumTest
-	public void testFindConnectionsToServiceApi() {
+	public void testFindConnectionsToApi() {
 		insertFacebookConnection();
 		insertFacebookConnection2();
-		List<ServiceProviderConnection<TestFacebookApi>> connections = connectionRepository.findConnectionsToServiceApi(TestFacebookApi.class);
+		List<Connection<TestFacebookApi>> connections = connectionRepository.findConnectionsToApi(TestFacebookApi.class);
 		assertEquals(2, connections.size());
 		assertFacebookConnection(connections.get(0));
 	}
 	
 	@MediumTest
-	public void testFindConnectionToServiceApiForUser() {
+	public void testFindConnectionToApiForUser() {
 		insertFacebookConnection();
 		insertFacebookConnection2();	
-		assertFacebookConnection(connectionRepository.findConnectionToServiceApiForUser(TestFacebookApi.class, "9"));
-		assertEquals("10", connectionRepository.findConnectionToServiceApiForUser(TestFacebookApi.class, "10").getKey().getProviderUserId());
+		assertFacebookConnection(connectionRepository.findConnectionToApiForUser(TestFacebookApi.class, "9"));
+		assertEquals("10", connectionRepository.findConnectionToApiForUser(TestFacebookApi.class, "10").getKey().getProviderUserId());
 	}
 
 	@MediumTest
-	public void testFindConnectionToServiceApiForUserNoSuchConnection() {
+	public void testFindConnectionToApiForUserNoSuchConnection() {
 		boolean success = false;
 		try {
-			assertFacebookConnection(connectionRepository.findConnectionToServiceApiForUser(TestFacebookApi.class, "9"));
-		} catch (NoSuchServiceProviderConnectionException e) {
+			assertFacebookConnection(connectionRepository.findConnectionToApiForUser(TestFacebookApi.class, "9"));
+		} catch (NoSuchConnectionException e) {
 			success = true;
 		}
 		assertTrue(success);
@@ -310,20 +310,20 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	public void testRemoveConnection() {
 		insertFacebookConnection();
 		assertTrue(queryConnectionExists("facebook"));
-		connectionRepository.removeConnection(new ServiceProviderConnectionKey("facebook", "9"));
+		connectionRepository.removeConnection(new ConnectionKey("facebook", "9"));
 		assertFalse(queryConnectionExists("facebook"));		
 	}
 
 	@MediumTest
 	public void testRemoveConnectionNoOp() {
-		connectionRepository.removeConnection(new ServiceProviderConnectionKey("facebook", "1"));
+		connectionRepository.removeConnection(new ConnectionKey("facebook", "1"));
 	}
 
 	@MediumTest
 	public void testAddConnection() {
-		ServiceProviderConnection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("123456789", null, "987654321", 3600));
+		Connection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("123456789", null, "987654321", 3600));
 		connectionRepository.addConnection(connection);
-		ServiceProviderConnection<TestFacebookApi> restoredConnection = connectionRepository.findPrimaryConnectionToServiceApi(TestFacebookApi.class);
+		Connection<TestFacebookApi> restoredConnection = connectionRepository.findPrimaryConnectionToApi(TestFacebookApi.class);
 		assertEquals(connection, restoredConnection);	
 		assertNewConnection(restoredConnection);
 	}
@@ -332,10 +332,10 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	public void testAddConnectionDuplicate() {
 		boolean success = false;
 		try {
-			ServiceProviderConnection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("123456789", null, "987654321", 3600));
+			Connection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("123456789", null, "987654321", 3600));
 			connectionRepository.addConnection(connection);
 			connectionRepository.addConnection(connection);
-		} catch (DuplicateServiceProviderConnectionException e) {
+		} catch (DuplicateConnectionException e) {
 			success = true;
 		}
 		assertTrue(success);
@@ -343,34 +343,34 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	
 	@MediumTest
 	public void testUpdateConnectionProfileFields() {
-		connectionFactoryRegistry.addConnectionFactory(new TestTwitterServiceProviderConnectionFactory());		
+		connectionFactoryRegistry.addConnectionFactory(new TestTwitterConnectionFactory());		
 		insertTwitterConnection();
-		ServiceProviderConnection<TestTwitterApi> twitter = connectionRepository.findPrimaryConnectionToServiceApi(TestTwitterApi.class);
+		Connection<TestTwitterApi> twitter = connectionRepository.findPrimaryConnectionToApi(TestTwitterApi.class);
 		assertEquals("http://twitter.com/kdonald/picture", twitter.getImageUrl());
 		twitter.sync();
 		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter.getImageUrl());
 		connectionRepository.updateConnection(twitter);
-		ServiceProviderConnection<TestTwitterApi> twitter2 = connectionRepository.findPrimaryConnectionToServiceApi(TestTwitterApi.class);
+		Connection<TestTwitterApi> twitter2 = connectionRepository.findPrimaryConnectionToApi(TestTwitterApi.class);
 		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter2.getImageUrl());
 	}
 	
 	@MediumTest
 	public void testUpdateConnectionAccessFields() {
 		insertFacebookConnection();
-		ServiceProviderConnection<TestFacebookApi> facebook = connectionRepository.findPrimaryConnectionToServiceApi(TestFacebookApi.class);
-		assertEquals("234567890", facebook.getServiceApi().getAccessToken());
+		Connection<TestFacebookApi> facebook = connectionRepository.findPrimaryConnectionToApi(TestFacebookApi.class);
+		assertEquals("234567890", facebook.getApi().getAccessToken());
 		facebook.refresh();
 		connectionRepository.updateConnection(facebook);
-		ServiceProviderConnection<TestFacebookApi> facebook2 = connectionRepository.findPrimaryConnectionToServiceApi(TestFacebookApi.class);
-		assertEquals("765432109", facebook2.getServiceApi().getAccessToken());
-		ServiceProviderConnectionData data = facebook.createData();
+		Connection<TestFacebookApi> facebook2 = connectionRepository.findPrimaryConnectionToApi(TestFacebookApi.class);
+		assertEquals("765432109", facebook2.getApi().getAccessToken());
+		ConnectionData data = facebook.createData();
 		assertEquals("654321098", data.getRefreshToken());
 	}
 
 		
 	private void insertTwitterConnection() {
 		ContentValues values = new ContentValues();
-		values.put("localUserId", "1");
+		values.put("userId", "1");
 		values.put("providerId", "twitter");
 		values.put("providerUserId", "1");
 		values.put("rank", 1);
@@ -386,7 +386,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	
 	private void insertFacebookConnection() {
 		ContentValues values = new ContentValues();
-		values.put("localUserId", "1");
+		values.put("userId", "1");
 		values.put("providerId", "facebook");
 		values.put("providerUserId", "9");
 		values.put("rank", 1);
@@ -402,7 +402,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	
 	private void insertFacebookConnection2() {
 		ContentValues values = new ContentValues();
-		values.put("localUserId", "1");
+		values.put("userId", "1");
 		values.put("providerId", "facebook");
 		values.put("providerUserId", "10");
 		values.put("rank", 2);
@@ -418,7 +418,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	
 	private void insertFacebookConnection3() {
 		ContentValues values = new ContentValues();
-		values.put("localUserId", "2");
+		values.put("userId", "2");
 		values.put("providerId", "facebook");
 		values.put("providerUserId", "11");
 		values.put("rank", 2);
@@ -434,7 +434,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	
 	private void insertFacebookConnectionSameFacebookUser() {
 		ContentValues values = new ContentValues();
-		values.put("localUserId", "2");
+		values.put("userId", "2");
 		values.put("providerId", "facebook");
 		values.put("providerUserId", "9");
 		values.put("rank", 1);
@@ -454,12 +454,12 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	
 	private void insertConnection(final ContentValues values) {
 		SQLiteDatabase db = repositoryHelper.getWritableDatabase();
-		db.insertOrThrow("ServiceProviderConnection", null, values);
+		db.insertOrThrow("UserConnection", null, values);
 		db.close();
 	}
 	
 	private boolean queryConnectionExists(String providerId) {
-		final String sql = "select exists (select 1 from ServiceProviderConnection where providerId = ?)";
+		final String sql = "select exists (select 1 from UserConnection where providerId = ?)";
 		final String[] selectionArgs = {providerId};
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
 		Cursor c = db.rawQuery(sql, selectionArgs);
@@ -470,38 +470,38 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		return b;
 	}
 	
-	private void assertNewConnection(ServiceProviderConnection<TestFacebookApi> connection) {
+	private void assertNewConnection(Connection<TestFacebookApi> connection) {
 		assertEquals("facebook", connection.getKey().getProviderId());
 		assertEquals("9", connection.getKey().getProviderUserId());
 		assertEquals("Keith Donald", connection.getDisplayName());
 		assertEquals("http://facebook.com/keith.donald", connection.getProfileUrl());
 		assertEquals("http://facebook.com/keith.donald/picture", connection.getImageUrl());
 		assertTrue(connection.test());
-		TestFacebookApi api = connection.getServiceApi();
+		TestFacebookApi api = connection.getApi();
 		assertNotNull(api);
 		assertEquals("123456789", api.getAccessToken());
 		assertEquals("123456789", connection.createData().getAccessToken());
 		assertEquals("987654321", connection.createData().getRefreshToken());
 	}
 
-	private void assertTwitterConnection(ServiceProviderConnection<TestTwitterApi> twitter) {
-		assertEquals(new ServiceProviderConnectionKey("twitter", "1"), twitter.getKey());
+	private void assertTwitterConnection(Connection<TestTwitterApi> twitter) {
+		assertEquals(new ConnectionKey("twitter", "1"), twitter.getKey());
 		assertEquals("@kdonald", twitter.getDisplayName());
 		assertEquals("http://twitter.com/kdonald", twitter.getProfileUrl());
 		assertEquals("http://twitter.com/kdonald/picture", twitter.getImageUrl());
-		TestTwitterApi twitterApi = twitter.getServiceApi();
+		TestTwitterApi twitterApi = twitter.getApi();
 		assertEquals("123456789", twitterApi.getAccessToken());		
 		assertEquals("987654321", twitterApi.getSecret());
 		twitter.sync();
 		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter.getImageUrl());
 	}
 
-	private void assertFacebookConnection(ServiceProviderConnection<TestFacebookApi> facebook) {
-		assertEquals(new ServiceProviderConnectionKey("facebook", "9"), facebook.getKey());
+	private void assertFacebookConnection(Connection<TestFacebookApi> facebook) {
+		assertEquals(new ConnectionKey("facebook", "9"), facebook.getKey());
 		assertEquals(null, facebook.getDisplayName());
 		assertEquals(null, facebook.getProfileUrl());
 		assertEquals(null, facebook.getImageUrl());
-		TestFacebookApi facebookApi = facebook.getServiceApi();
+		TestFacebookApi facebookApi = facebook.getApi();
 		assertEquals("234567890", facebookApi.getAccessToken());
 		facebook.sync();
 		assertEquals("Keith Donald", facebook.getDisplayName());
@@ -511,10 +511,10 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	
 	// test facebook provider
 	
-	private static class TestFacebookServiceProviderConnectionFactory extends OAuth2ServiceProviderConnectionFactory<TestFacebookApi> {
+	private static class TestFacebookConnectionFactory extends OAuth2ConnectionFactory<TestFacebookApi> {
 
-		public TestFacebookServiceProviderConnectionFactory() {
-			super("facebook", new TestFacebookServiceProvider(), new TestFacebookServiceApiAdapter());
+		public TestFacebookConnectionFactory() {
+			super("facebook", new TestFacebookServiceProvider(), new TestFacebookApiAdapter());
 		}
 		
 	}
@@ -538,7 +538,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 			};
 		}
 
-		public TestFacebookApi getServiceApi(final String accessToken) {
+		public TestFacebookApi getApi(final String accessToken) {
 			return new TestFacebookApi() {
 				public String getAccessToken() {
 					return accessToken;
@@ -554,7 +554,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		
 	}
 	
-	private static class TestFacebookServiceApiAdapter implements ServiceApiAdapter<TestFacebookApi> {
+	private static class TestFacebookApiAdapter implements ApiAdapter<TestFacebookApi> {
 
 		private String accountId = "9";
 		
@@ -564,22 +564,22 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		
 		private String profilePictureUrl = "http://facebook.com/keith.donald/picture";
 		
-		public boolean test(TestFacebookApi serviceApi) {
+		public boolean test(TestFacebookApi api) {
 			return true;
 		}
 
-		public void setConnectionValues(TestFacebookApi serviceApi, ServiceProviderConnectionValues values) {
+		public void setConnectionValues(TestFacebookApi api, ConnectionValues values) {
 			values.setProviderUserId(accountId);
 			values.setDisplayName(name);
 			values.setProfileUrl(profileUrl);
 			values.setImageUrl(profilePictureUrl);
 		}
 
-		public ServiceProviderUserProfile fetchUserProfile(TestFacebookApi serviceApi) {
-			return new ServiceProviderUserProfileBuilder().setName(name).setEmail("keith@interface21.com").setUsername("Keith.Donald").build();
+		public UserProfile fetchUserProfile(TestFacebookApi serviceApi) {
+			return new UserProfileBuilder().setName(name).setEmail("keith@interface21.com").setUsername("Keith.Donald").build();
 		}
 
-		public void updateStatus(TestFacebookApi serviceApi, String message) {
+		public void updateStatus(TestFacebookApi api, String message) {
 			
 		}
 		
@@ -587,10 +587,10 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	
 	// test twitter provider
 	
-	private static class TestTwitterServiceProviderConnectionFactory extends OAuth1ServiceProviderConnectionFactory<TestTwitterApi> {
+	private static class TestTwitterConnectionFactory extends OAuth1ConnectionFactory<TestTwitterApi> {
 
-		public TestTwitterServiceProviderConnectionFactory() {
-			super("twitter", new TestTwitterServiceProvider(), new TestTwitterServiceApiAdapter());
+		public TestTwitterConnectionFactory() {
+			super("twitter", new TestTwitterServiceProvider(), new TestTwitterApiAdapter());
 		}
 		
 	}
@@ -601,7 +601,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 			return null;
 		}
 
-		public TestTwitterApi getServiceApi(final String accessToken, final String secret) {
+		public TestTwitterApi getApi(final String accessToken, final String secret) {
 			return new TestTwitterApi() {
 				public String getAccessToken() {
 					return accessToken;
@@ -622,7 +622,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		
 	}
 	
-	private static class TestTwitterServiceApiAdapter implements ServiceApiAdapter<TestTwitterApi> {
+	private static class TestTwitterApiAdapter implements ApiAdapter<TestTwitterApi> {
 
 		private String accountId = "1";
 		
@@ -632,22 +632,22 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		
 		private String profilePictureUrl = "http://twitter.com/kdonald/a_new_picture";
 		
-		public boolean test(TestTwitterApi serviceApi) {
+		public boolean test(TestTwitterApi api) {
 			return true;
 		}
 
-		public void setConnectionValues(TestTwitterApi serviceApi, ServiceProviderConnectionValues values) {
+		public void setConnectionValues(TestTwitterApi api, ConnectionValues values) {
 			values.setProviderUserId(accountId);
 			values.setDisplayName(name);
 			values.setProfileUrl(profileUrl);
 			values.setImageUrl(profilePictureUrl);
 		}
 
-		public ServiceProviderUserProfile fetchUserProfile(TestTwitterApi serviceApi) {
-			return new ServiceProviderUserProfileBuilder().setName(name).setUsername("kdonald").build();			
+		public UserProfile fetchUserProfile(TestTwitterApi api) {
+			return new UserProfileBuilder().setName(name).setUsername("kdonald").build();			
 		}
 		
-		public void updateStatus(TestTwitterApi serviceApi, String message) {
+		public void updateStatus(TestTwitterApi api, String message) {
 		}
 		
 	}

@@ -52,19 +52,19 @@ public class SQLiteUsersConnectionRepository implements UsersConnectionRepositor
 	}
 
 	public String findUserIdWithConnection(Connection<?> connection) {
-		final String sql = "select localUserId from ServiceProviderConnection where providerId = ? and providerUserId = ?";
+		final String sql = "select userId from UserConnection where providerId = ? and providerUserId = ?";
 		ConnectionKey key = connection.getKey();
 		final String[] selectionArgs = {key.getProviderId(), key.getProviderUserId()};		
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
 		Cursor c = db.rawQuery(sql, selectionArgs);		
-		String localUserId = null;
+		String userId = null;
 		if (c.getCount() == 1) {
 			c.moveToFirst();
-			localUserId = c.getString(c.getColumnIndex("localUserId"));
+			userId = c.getString(c.getColumnIndex("userId"));
 		} 
 		c.close();
 		db.close();
-		return localUserId;
+		return userId;
 	}
 
 	public Set<String> findUserIdsConnectedTo(String providerId, Set<String> providerUserIds) {
@@ -81,22 +81,22 @@ public class SQLiteUsersConnectionRepository implements UsersConnectionRepositor
 		}
 		providerUserIdsCriteriaSql.append(")");
 		
-		final String sql = "select localUserId from ServiceProviderConnection where providerId = ? and providerUserId in " + providerUserIdsCriteriaSql;
+		final String sql = "select userId from UserConnection where providerId = ? and providerUserId in " + providerUserIdsCriteriaSql;
 		final String[] selectionArgs = args.toArray(new String[0]);
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
 		Cursor c = db.rawQuery(sql, selectionArgs);
-		final Set<String> localUserIds = new HashSet<String>();
+		final Set<String> userIds = new HashSet<String>();
 		c.moveToFirst();
 		for (int i = 0; i < c.getCount(); i++) {
-			localUserIds.add(c.getString(c.getColumnIndex("localUserId")));
+			userIds.add(c.getString(c.getColumnIndex("userId")));
 			c.moveToNext();
 		}
 		c.close();
 		db.close();
-		return localUserIds;
+		return userIds;
 	}
 
-	public ConnectionRepository createConnectionRepository(String localUserId) {
-		return new SQLiteConnectionRepository(localUserId, repositoryHelper, connectionFactoryLocator, textEncryptor);
+	public ConnectionRepository createConnectionRepository(String userId) {
+		return new SQLiteConnectionRepository(userId, repositoryHelper, connectionFactoryLocator, textEncryptor);
 	}
 }

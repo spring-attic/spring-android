@@ -19,7 +19,7 @@ public final class SQLiteConnectionRepositoryHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("create table ServiceProviderConnection (localUserId varchar not null,"
+		db.execSQL("create table UserConnection (userId varchar not null,"
 				+ "providerId varchar not null,"
 				+ "providerUserId varchar,"
 				+ "rank int not null,"
@@ -30,8 +30,8 @@ public final class SQLiteConnectionRepositoryHelper extends SQLiteOpenHelper {
 				+ "secret varchar,"
 				+ "refreshToken varchar,"
 				+ "expireTime bigint,"
-				+ "primary key (localUserId, providerId, providerUserId));"
-				+ "create unique index ServiceProviderConnectionRank on ServiceProviderConnection(localUserId, providerId, rank);");
+				+ "primary key (userId, providerId, providerUserId));"
+				+ "create unique index UserConnectionRank on UserConnection(userId, providerId, rank);");
 	}
 
 	@Override
