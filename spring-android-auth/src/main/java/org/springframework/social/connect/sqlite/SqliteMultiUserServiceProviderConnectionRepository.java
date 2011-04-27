@@ -33,6 +33,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
+ * {@link MultiUserServiceProviderConnectionRepository} that uses the SQLite to persist connection data to a relational database.
+ * 
  * @author Roy Clarkson
  */
 public class SqliteMultiUserServiceProviderConnectionRepository implements MultiUserServiceProviderConnectionRepository {

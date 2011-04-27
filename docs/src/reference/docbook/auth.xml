@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="auth" xmlns:xlink="http://www.w3.org/1999/xlink">
+	
+  <title>Spring Android Auth Module</title>
+
+  <section id="auth-introduction">
+	
+    <title>Introduction</title>
+
+    <para>The spring-android-auth module provides support for utilizing Spring Social in an Android project. It includes a SQLite repository, and Android compatible Spring Security encryption.</para>
+
+  </section>
+
+  <section id="auth-overview">
+
+	<title>Overview</title>
+
+	<para>The Spring Social project enables your applications to establish Connections with Software-as-a-Service (SaaS) Providers such as Facebook and Twitter to invoke Service APIs on behalf of Users. In order to make use of Spring Social on Android the following classes are available.</para>
+	
+	<section>
+		
+		<title>SQLite Connection Repository</title>
+		
+		<para>The SqliteServiceProviderConnectionRepository class implements the ServiceProviderConnectionRepository interface from Spring Social. It is used to persist the connection information to a SQLite database on the Android device.  This connection repository is designed for a single user who accesses multiple service providers and may even have multiple accounts on each service provider.</para>
+		
+		<para>If your device and application are used by multiple people, then a SqliteMultiUserServiceProviderConnectionRepository class is available for storing multiple user accounts, where each user account may have multiple connections per provider.  This scenario is probably not as typical, however, as many people do not share their phones or devices.</para>
+		
+	</section>
+	
+	<section>
+		
+		<title>Encryption</title>
+		
+		<para>The Spring Security Crypto library is not currently supported on Android.  To take advantage of the encryption tools in Spring Security, three Android specific classes have been provided in Spring Android: AndroidEncryptors, AndroidKeyGenerators, and AndroidSecureRandomBytesKeyGenerator. These classes use an Android compatible SecureRandom provider for generating byte array based keys using the SHA1PRNG algorithm.</para>
+		
+	</section>
+
+  </section>
+
+  <section id="auth-howtoget">
+	
+    <title>How to get</title>
+
+	<para>Add the spring-android-auth artifact to your classpath:
+		
+		<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.android</groupId>
+    <artifactId>spring-android-auth</artifactId>
+    <version>${spring-android-version}</version>
+</dependency>]]>
+		</programlisting>
+		
+	</para>
+	
+  </section>
+
+  <section id="auth-examples">
+	
+  	<title>Usage Examples</title>
+
+  	<para>Below are several usage examples that illustrate how to use Spring Android with Spring Social.</para>
+
+	<para>The following examples are based on a <link xlink:href="http://git.springsource.org/spring-mobile/samples">sample Android application</link>, which has Facebook and Twitter examples using Spring Social.  You can retrieve the source code for the sample app with Git:</para>
+	
+	<programlisting>
+$ git clone git://git.springsource.org/spring-mobile/samples.git
+	</programlisting>
+
+  	<section>
+	
+		<title>Initializing the SQLite Database</title>
+		
+		<para>SqliteServiceProviderConnectionRepositoryHelper extends <link xlink:href="http://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html">SQLiteOpenHelper</link>.  Create a new instance by passing a <link xlink:href="http://developer.android.com/reference/android/content/Context.html">context</link> reference. Depending on your implementation, and to avoid <link xlink:href="http://developer.android.com/resources/articles/avoiding-memory-leaks.html">memory leaks</link>, you will probably want to use the Application Context when creating a new instance of SqliteServiceProviderConnectionRepositoryHelper. The name of the database file created is "spring_social_connection_repository.sqlite", and is created the first time the application attempts to open it.</para>
+		
+		<programlisting language="java"><![CDATA[
+Context context = getApplicationContext();
+SQLiteOpenHelper repositoryHelper = new SqliteServiceProviderConnectionRepositoryHelper(context);]]>
+		</programlisting>
+
+	</section>
+	
+  	<section>
+
+		<title>Single User App Environment</title>
+
+		<para>This example show how to set up the ServiceProviderConnectionRepository for use with Facebook.  Once established the user can connect to multiple Facebook accounts.</para>
+
+		<programlisting language="java"><![CDATA[
+// The ConnectionFactoryRegistry stores the different Spring Social connections to be used in the application
+MapServiceProviderConnectionFactoryRegistry connectionFactoryRegistry = new MapServiceProviderConnectionFactoryRegistry();
+
+// the App ID and App Secret are provided when you register a new Facebook application at facebook.com
+String appId = "8ae8f060d81d51e90fadabaab1414a97";
+String appSecret = "473e66d79ddc0e360851dc512fe0fb1e";
+
+// Prepare a Facebook connection factory passing the App ID and App Secret
+FacebookServiceProviderConnectionFactory connectionFactory = new FacebookServiceProviderConnectionFactory(appId, appSecret);
+
+// Register the Facebook connection factory
+connectionFactoryRegistry.addConnectionFactory(connectionFactory);
+
+// Create the SQLiteOpenHelper for creating the local database
+Context context = getApplicationContext();
+SQLiteOpenHelper repositoryHelper = new SqliteServiceProviderConnectionRepositoryHelper(context);
+
+// If you are developing an app for a single user environment, then you need to specify a global user ID
+String localUserId = "1";
+
+// The connection repository takes a TextEncryptor as a parameter for encrypting the OAuth information
+TextEncryptor textEncryptor = AndroidEncryptors.noOpText();
+
+// Create the connection repository
+connectionRepository = new SqliteServiceProviderConnectionRepository(localUserId, repositoryHelper, connectionFactoryRegistry, textEncryptor);]]>
+		</programlisting>
+
+	</section>
+	
+	<section>
+
+		<title>Encrypting OAuth Data</title>
+
+		<para>Spring Social supports encrypting the user's OAuth connection information within the ServiceProviderConnectionRepository through the use of a Spring Security TextEncryptor.  The password and salt values are used to generate the encryptor's secret key. The salt value should be hex-encoded, random, and application-global.</para>
+
+		<programlisting language="java"><![CDATA[
+String password = "password";
+String salt = "5c0744940b5c369b";
+TextEncryptor textEncryptor = AndroidEncryptors.text(password, salt);
+connectionRepository = new SqliteServiceProviderConnectionRepository(localUserId, 
+	repositoryHelper, connectionFactoryRegistry, textEncryptor);]]>
+		</programlisting>
+		
+		<para>During development you may wish to avoid encryption so you can more easily debug your application by viewing the OAuth data being saved to the database. This TextEncryptor performs no encryption.</para>
+		
+		<programlisting language="java"><![CDATA[
+TextEncryptor textEncryptor = AndroidEncryptors.noOpText();
+connectionRepository = new SqliteServiceProviderConnectionRepository(localUserId, 
+	repositoryHelper, connectionFactoryRegistry, textEncryptor);]]>
+		</programlisting>
+	
+	</section>
+	
+	<section>
+			
+		<title>OAuth 1.0a Walkthrough with Twitter</title>
+	
+		<para>The following steps illustrate how to establish a connection to Twitter. A working example is provided in the sample application described earlier.</para>
+	
+		<para>Set up the Twitter service provider and connection repository</para>
+	
+			<programlisting language="java"><![CDATA[
+Context context;
+MapServiceProviderConnectionFactoryRegistry connectionFactoryRegistry;
+TwitterServiceProviderConnectionFactory connectionFactory;
+SQLiteOpenHelper repositoryHelper;
+SqliteServiceProviderConnectionRepository connectionRepository;
+				
+connectionFactoryRegistry = new MapServiceProviderConnectionFactoryRegistry();
+connectionFactory = new TwitterServiceProviderConnectionFactory(getConsumerToken(), getConsumerTokenSecret());
+connectionFactoryRegistry.addConnectionFactory(_connectionFactory);
+context = getApplicationContext()
+repositoryHelper = new SqliteServiceProviderConnectionRepositoryHelper(context);
+connectionRepository = new SqliteServiceProviderConnectionRepository(getLocalUserId(), 
+	repositoryHelper, connectionFactoryRegistry, AndroidEncryptors.text("password", "5c0744940b5c369b"));]]>
+		</programlisting>
+	
+		<programlisting language="java"><![CDATA[
+OAuth1Operations oauth = _connectionFactory.getOAuthOperations();
+
+// Fetch a one time use Request Token from Twitter
+OAuthToken requestToken = oauth.fetchRequestToken(getOAuthCallbackUrl(), null);
+
+// save the Request Token to be used later
+SharedPreferences preferences = _context.getSharedPreferences(TWITTER_PREFERENCES, Context.MODE_PRIVATE);
+SharedPreferences.Editor editor = preferences.edit();
+editor.putString(REQUEST_TOKEN_KEY, requestToken.getValue());
+editor.putString(REQUEST_TOKEN_SECRET_KEY, requestToken.getSecret());
+editor.commit();
+
+// Generate the Twitter authorization url to be used in the browser or web view
+return oauth.buildAuthorizeUrl(requestToken.getValue(), new OAuth1Parameters(getOAuthCallbackUrl()));
+		]]>
+		</programlisting>
+		
+	</section>
+	
+  </section>
+
+</chapter>

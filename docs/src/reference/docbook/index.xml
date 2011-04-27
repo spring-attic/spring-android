@@ -34,6 +34,8 @@
   
   <xi:include href="./overview.xml"/>
   <xi:include href="./rest-template.xml"/>
+  <xi:include href="./auth.xml"/>
+  <xi:include href="./core.xml"/>
   <xi:include href="./maven.xml"/>
   
 </book>

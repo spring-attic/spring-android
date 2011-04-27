@@ -6,8 +6,8 @@
   <section id="spring-android-overview-introduction">
     <title>Introduction</title>
     <para>
- 		The Spring Android project supports the usage of the Spring Framework in an Android environment.
- 		This includes the ability to use RestTemplate as the REST client for your Android applications.
+		The Spring Android project supports the usage of the Spring Framework in an Android environment.
+		This includes the ability to use RestTemplate as the REST client for your Android applications.
     </para>
   </section>
 

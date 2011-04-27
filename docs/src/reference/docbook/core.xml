@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="core" 
+	xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>Spring Android Core Module</title>
+
+  <section id="core-introduction">
+    <title>Introduction</title>
+    <para>
+		The spring-android-core module provides common functionality to the other Spring Android modules. It includes 
+		a subset of the functionality available in Spring Framework Core.
+    </para>
+  </section>
+
+  <section id="core-howtoget">
+    <title>How to get</title>
+	<para>
+		Add the spring-android-core artifact to your classpath:
+		<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.android</groupId>
+    <artifactId>spring-android-core</artifactId>
+    <version>${spring-android-version}</version>
+</dependency>]]>
+		</programlisting>
+	</para>
+  </section>
+
+</chapter>
