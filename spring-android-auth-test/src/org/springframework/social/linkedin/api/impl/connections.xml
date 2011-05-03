@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<connections total="234" count="233" start="0">
+  <person>
+    <id>kR0lnX1ll8</id>
+    <first-name>Keith</first-name>
+    <last-name>Donald</last-name>
+    <headline>SpringSource Cofounder</headline>
+    <location>
+      <name>Melbourne, Florida Area</name>
+      <country>
+        <code>us</code>
+      </country>
+    </location>
+    <industry>Computer Software</industry>
+    <site-standard-profile-request>
+      <url>http://www.linkedin.com/profile?viewProfile=&amp;key=2526541&amp;authToken=61Sm&amp;authType=name&amp;trk=api*a121026*s129482*</url>
+    </site-standard-profile-request>
+  </person>
+  <person>
+    <id>VRcwcqPCtP</id>
+    <first-name>Rod</first-name>
+    <last-name>Johnson</last-name>
+    <headline>GM, SpringSource and SVP, Middleware at VMware</headline>
+    <location>
+      <name>San Francisco Bay Area</name>
+      <country>
+        <code>us</code>
+      </country>
+    </location>
+    <industry>Computer Software</industry>
+    <site-standard-profile-request>
+      <url>http://www.linkedin.com/profile?viewProfile=&amp;key=210059&amp;authToken=3hU1&amp;authType=name&amp;trk=api*a121026*s129482*</url>
+    </site-standard-profile-request>
+  </person>
+  <person>
+    <id>Ia7uR1OmDB</id>
+    <first-name>Ramnivas</first-name>
+    <last-name>Laddad</last-name>
+    <headline>Spring and AOP expert; author AspectJ in Action</headline>
+    <location>
+      <name>San Francisco Bay Area</name>
+      <country>
+        <code>us</code>
+      </country>
+    </location>
+    <industry>Computer Software</industry>
+    <site-standard-profile-request>
+      <url>http://www.linkedin.com/profile?viewProfile=&amp;key=208994&amp;authToken=P5K9&amp;authType=name&amp;trk=api*a121026*s129482*</url>
+    </site-standard-profile-request>
+    <picture-url>http://media.linkedin.com/mpr/mprx/0__gnH4Z-585hJSJSu_M6B4RrHCikUf0pu30CB4Rhqg6KwrUI2fUQXnUNVuSXku4j8CYN9cyYH-JuX</picture-url>
+  </person>
+  <person>
+    <id>gKEMq4CMdl</id>
+    <first-name>Guillaume</first-name>
+    <last-name>Laforge</last-name>
+    <headline>Head of Groovy Development at SpringSource</headline>
+    <location>
+      <name>Paris Area, France</name>
+      <country>
+        <code>fr</code>
+      </country>
+    </location>
+    <industry>Information Technology and Services</industry>
+    <site-standard-profile-request>
+      <url>http://www.linkedin.com/profile?viewProfile=&amp;key=822306&amp;authToken=YmIW&amp;authType=name&amp;trk=api*a121026*s129482*</url>
+    </site-standard-profile-request>
+    <picture-url>http://media.linkedin.com/mpr/mprx/0_CV5yQ4-Er7cqa-ZZhJziQU1WpS3v2qZZhRliQU1Miez51K74apvKHRbB-iTE71MN_JbCWpT7SdWe</picture-url>
+  </person>
+</connections>
+

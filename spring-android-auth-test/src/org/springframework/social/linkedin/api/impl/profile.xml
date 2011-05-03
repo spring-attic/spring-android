@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<person>
+  <id>z37f0n3A05</id>
+  <first-name>Craig</first-name>
+  <last-name>Walls</last-name>
+  <location>
+    <name>Dallas/Fort Worth Area</name>
+    <country>
+      <code>us</code>
+    </country>
+  </location>
+  <headline>Just a guy</headline>
+  <industry>Computer Software</industry>
+  <num-recommenders>15</num-recommenders>
+  <connections total="234" />
+  <positions total="0" />
+  <educations total="0" />
+  <member-url-resources total="0" />
+  <api-public-profile-request>
+    <url>http://api.linkedin.com/v1/people/url=http%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fin%2Fhabuma:public</url>
+  </api-public-profile-request>
+  <site-public-profile-request>
+    <url>http://www.linkedin.com/in/habuma</url>
+  </site-public-profile-request>
+  <site-standard-profile-request>
+    <url>http://www.linkedin.com/standardProfileUrl</url>
+  </site-standard-profile-request>
+  <public-profile-url>http://www.linkedin.com/in/habuma</public-profile-url>
+  <picture-url>http://media.linkedin.com/pictureUrl</picture-url>
+</person>
+

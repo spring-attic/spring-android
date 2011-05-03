@@ -108,7 +108,7 @@ configure(javaprojects) {
     javaxServletApiVersion = '2.5'
     commonsFileuploadVersion = '1.2'
     jettyVersion = '6.1.9'
-    jacksonVersion = '1.4.2'
+    jacksonVersion = '1.8.0'
     xmlUnitVersion = '1.3'
     
     // dependencies that are common across all java projects
@@ -337,6 +337,7 @@ project('spring-android-rest-template') {
             'org/springframework/web/client/ResponseExtractor.java',
             'org/springframework/web/client/RestClientException.java',
             'org/springframework/web/client/RestOperations.java',
+            'org/springframework/web/client/support/RestGatewaySupport.java',
             'org/springframework/web/util/UriTemplate.java',
             'org/springframework/web/util/UriUtils.java'
             ]

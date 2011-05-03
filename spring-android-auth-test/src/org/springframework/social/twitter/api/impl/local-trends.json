@@ -1,0 +1,28 @@
+[
+   {
+      "as_of":"2011-03-18T16:49:17Z",
+      "created_at":"2011-03-18T16:45:33Z",
+      "trends":[
+         {
+            "promoted_content":null,
+            "url":"http:\/\/search.twitter.com\/search?q=Cool+Stuff",
+            "query":"Cool+Stuff",
+            "events":null,
+            "name":"Cool Stuff"
+         },
+         {
+            "promoted_content":null,
+            "url":"http:\/\/search.twitter.com\/search?q=%23springsocial",
+            "query":"%23springsocial",
+            "events":null,
+            "name":"#springsocial"
+         }
+      ],
+      "locations":[
+         {
+            "name":"Los Angeles",
+            "woeid":2442047
+         }
+      ]
+   }
+]

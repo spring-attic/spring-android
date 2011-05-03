@@ -1,0 +1,16 @@
+{
+	"top_spots" : [
+		{
+			"name" : "Burrito Shack",
+			"user_checkins_count" : 100
+		},
+		{
+			"name" : "Chicken Hut",
+			"user_checkins_count" : 25
+		},
+		{
+			"name" : "Burger Bell",
+			"user_checkins_count" : 3
+		}
+	]
+}

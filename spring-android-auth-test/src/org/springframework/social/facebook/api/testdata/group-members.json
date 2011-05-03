@@ -1,0 +1,20 @@
+{
+    "data":
+    [
+        {
+            "name":"Art Names",
+            "id":"100001387295207"
+        },
+        {
+            "name":"Craig Walls",
+            "id":"738140579",
+            "administrator":true
+        },
+		{
+			"name":"Chuck Wagon",
+			"id":"627039468",
+			"administrator":true
+		}
+    ]
+}
+

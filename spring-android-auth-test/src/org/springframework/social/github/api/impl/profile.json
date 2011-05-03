@@ -1,0 +1,12 @@
+{
+	"user" : {
+		"id" : 123456,
+		"login" : "habuma",
+		"name" : "Craig Walls",
+		"location" : "Plano, TX",
+		"company" : "SpringSource",
+		"blog" : "http://blog.springsource.com/author/cwalls",
+		"email" : "cwalls@vmware.com",
+		"created_at" : "2010/06/09 12:34:56 -0600"
+	}
+}

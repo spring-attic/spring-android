@@ -36,14 +36,14 @@
 					<sdk>
 						<platform>${android-platform}</platform>
 					</sdk>
-					<emulator>
+					<!-- <emulator>
 						<avd>${android-emulator}</avd>
 						<wait>60000</wait>
-					</emulator>
+					</emulator> -->
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 				</configuration>
-				<executions>
+<!-- 				<executions>
 					<execution>
 						<id>startemulator</id>
 						<phase>initialize</phase>
@@ -58,7 +58,7 @@
 							<goal>emulator-stop</goal>
 						</goals>
 					</execution>
-				</executions>
+				</executions> -->
 				<extensions>true</extensions>
 			</plugin>
 			<plugin>
@@ -112,12 +112,144 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-<!-- 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
-			<scope>test</scope>
-	    </dependency> -->
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-test</artifactId>
+			<version>${spring-social-version}</version>
+			<exclusions>
+				<exclusion>
+					<!-- exclude in favor of spring-android-rest-template -->
+					<artifactId>spring-web</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- Commons Logging is provided by Android -->
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-twitter</artifactId>
+			<version>${spring-social-version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-social-web</artifactId>
+					<groupId>org.springframework.social</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- exclude in favor of spring-android-rest-template -->
+					<artifactId>spring-web</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- Commons Logging is provided by Android -->
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-facebook</artifactId>
+			<version>${spring-social-version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-social-web</artifactId>
+					<groupId>org.springframework.social</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- exclude in favor of spring-android-rest-template -->
+					<artifactId>spring-web</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring-webmvc</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- Commons Logging is provided by Android -->
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-linkedin</artifactId>
+			<version>${spring-social-version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-social-web</artifactId>
+					<groupId>org.springframework.social</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- exclude in favor of spring-android-rest-template -->
+					<artifactId>spring-web</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring-webmvc</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- Commons Logging is provided by Android -->
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-gowalla</artifactId>
+			<version>${spring-social-version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-social-web</artifactId>
+					<groupId>org.springframework.social</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- exclude in favor of spring-android-rest-template -->
+					<artifactId>spring-web</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring-webmvc</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- Commons Logging is provided by Android -->
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-github</artifactId>
+			<version>${spring-social-version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-social-web</artifactId>
+					<groupId>org.springframework.social</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- exclude in favor of spring-android-rest-template -->
+					<artifactId>spring-web</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>spring-webmvc</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+				<exclusion>
+					<!-- Commons Logging is provided by Android -->
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 	</dependencies>
 
 	<repositories>

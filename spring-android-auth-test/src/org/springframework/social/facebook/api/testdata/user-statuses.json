@@ -1,0 +1,41 @@
+
+{
+    "data":
+    [
+        {
+            "id":"161195833936659",
+            "from":
+            {
+                "name":"Art Names",
+                "id":"100001387295207"
+            },
+            "message":"One more...just for fun",
+            "updated_time":"2011-03-28T14:54:07+0000"
+        },
+        {
+            "id":"161195783936664",
+            "from":
+            {
+                "name":"Art Names",
+                "id":"100001387295207"
+            },
+            "message":"Just another status.",
+            "updated_time":"2011-03-28T14:53:57+0000"
+        },
+        {
+            "id":"161195107270065",
+            "from":
+            {
+                "name":"Art Names",
+                "id":"100001387295207"
+            },
+            "message":"Good morning Monday!",
+            "updated_time":"2011-03-28T14:50:27+0000"
+        }
+    ],
+    "paging":
+    {
+        "previous":"https:\/\/graph.facebook.com\/me\/statuses?limit=25&since=1301324047",
+        "next":"https:\/\/graph.facebook.com\/me\/statuses?limit=25&until=1294352716"
+    }
+}

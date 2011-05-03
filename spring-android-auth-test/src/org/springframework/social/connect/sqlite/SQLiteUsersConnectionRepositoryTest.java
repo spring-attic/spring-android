@@ -53,7 +53,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
-import android.test.suitebuilder.annotation.SmallTest;
 
 /**
  * @author Roy Clarkson
@@ -95,18 +94,14 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		connectionRepository = usersConnectionRepository.createConnectionRepository("1");
 	}
 	
-    /**
-     * The name 'test preconditions' is a convention to signal that if this
-     * test doesn't pass, the test case was not set up properly and it might
-     * explain any and all failures in other tests.  This is not guaranteed
-     * to run before other tests, as junit uses reflection to find the tests.
-     */
-    @SmallTest
-    public void testPreconditions() {
-    }
-
 	@Override
 	public void tearDown() {
+		connectionFactoryRegistry = null;
+		connectionFactory = null;
+		textEncryptor = null;
+		repositoryHelper = null;
+		usersConnectionRepository = null;
+		
 		if (repositoryHelper != null) {
 			repositoryHelper.close();
 		}
