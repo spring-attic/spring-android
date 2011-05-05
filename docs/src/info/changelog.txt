@@ -1,6 +1,35 @@
 Spring Android
 ================================
 
+1.0.0.M3 (2011.05.05)
+
+New Features
+* Support for Spring Social 1.0.0.M3 through the new Spring Android Auth 
+  library, which includes a SQLite datastore, and Android compatible Spring 
+  Security Encryptors. Spring Social is currently supported in Android 
+  version 2.3.1 (API Level 9) and higher.
+* Updated RestTemplate to be compatible with Spring Framework 3.1.0.M1.
+* Separated core functionality into a new Spring Android Core library.
+* Restored support for CommonsClientHttpRequestFactory.
+
+Known Issues:
+  There are several known issues when working with Spring Social in an Android
+  environment. The majority of these are specific to older Android releases.
+
+* https://jira.springsource.org/browse/SOCIAL-138 - String.getBytes(Charset 
+  charset) is not available in Android versions prior to API level 9
+* https://jira.springsource.org/browse/SOCIAL-139 - The HttpComponents version 
+  verification is failing on 1.x Android versions
+* https://jira.springsource.org/browse/SOCIAL-144 - TwitterTemplate 
+  TimelineTemplate.updateStatus() is throwing an exception in Android API level 
+  8 and lower.
+* https://jira.springsource.org/browse/SOCIAL-148 - LinkedInTemplate not 
+  working on Android because of javax.xml.bind.annotation.XmlRootElement 
+  dependency
+* https://jira.springsource.org/browse/SOCIAL-149 - All OAuth2 template tests 
+  are failing on Android 1.x
+
+
 1.0.0.M2 (2011.02.07)
 
 New Features

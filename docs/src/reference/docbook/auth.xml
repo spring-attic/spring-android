@@ -252,6 +252,56 @@ connectionRepository.addConnection(connection);]]>
 		
 	</section>
 	
+	<section>
+
+		<title>Establishing an OAuth 2.0 connection</title>
+
+		<para>The following steps illustrate how to establish a connection to Facebook. A working example is provided in the sample application described earlier.  Keep in mind that each provider's implementation may be different.  You may have to adjust these steps when connecting to a different OAuth 2.0 provider.</para>
+
+		<para>The first step is to retrieve the connection factory from the registry that we created earlier.</para>
+
+		<programlisting language="java"><![CDATA[
+FacebookConnectionFactory connectionFactory;
+connectionFactory = (FacebookConnectionFactory) connectionFactoryRegistry.getConnectionFactory(FacebookApi.class);]]>
+		</programlisting>
+		
+		<para>Specify the redirect url.  In the case of Facebook, we are using the client-side authorization flow. In order to retrieve the access token, Facebook will redirect to a success page that contains the access token in a URI fragment.</para>
+		
+		<programlisting language="java"><![CDATA[
+String redirectUri = "https://www.facebook.com/connect/login_success.html";]]>
+		</programlisting>
+
+		<para>Define the scope of permissions your app requires.</para>
+
+		<programlisting language="java"><![CDATA[
+String scope = "publish_stream,offline_access,read_stream,user_about_me";]]>
+		</programlisting>
+		
+		<para>In order to display a mobile formatted web page for Facebook authorization, you must pass an additional parameter in the request. This parameter is not part of the OAuth specification, but the following illustrates how Spring Social supports additional parameters.</para>
+
+		<programlisting language="java"><![CDATA[
+MultiValueMap<String, String> additionalParameters = new LinkedMultiValueMap<String, String>();
+additionalParameters.add("display", "touch");]]>
+		</programlisting>
+		
+		<para>Now we can generate the Facebook authorization url to be used in the browser or web view</para>
+
+		<programlisting language="java"><![CDATA[
+OAuth2Parameters parameters = new OAuth2Parameters(redirectUri, scope, null, additionalParameters);
+OAuth2Operations oauth = connectionFactory.getOAuthOperations();
+String authorizeUrl = oauth.buildAuthorizeUrl(GrantType.IMPLICIT_GRANT, parameters);]]>
+		</programlisting>
+		
+		<para>The next step is to load the generated authorization url into a webview within your application.  After the user logs in and authorizes your application, the browser will redirect to the url specified earlier.  If authentication was successful, the url of the redirected page will now include a URI fragment which contains an access_token parameter.  Retrieve the access token from the URI fragment and use it to create the Facebook connection.  One method of doing this is provided in the sample application.</para>
+		
+		<programlisting language="java"><![CDATA[
+AccessGrant accessGrant = new AccessGrant(accessToken, null, null, null);
+Connection<FacebookApi> connection = connectionFactory.createConnection(accessGrant);
+connectionRepository.addConnection(connection);]]>
+		</programlisting>
+		
+	</section>
+	
   </section>
 
 </chapter>
