@@ -57,6 +57,31 @@
 		
 	</para>
 	
+	<para>To use one of the built in Spring Social providers, you can add it to your classpath:
+
+		<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.social</groupId>
+    <artifactId>spring-social-twitter</artifactId>
+    <version>${spring-social-version}</version>
+    <exclusions>
+        <exclusion>
+            <!-- Exclude in favor of Spring Android RestTemplate -->
+            <artifactId>spring-social-web</artifactId>
+            <groupId>org.springframework.social</groupId>
+        </exclusion>
+        <exclusion>
+            <!-- Provided by Android -->
+            <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
+        </exclusion>
+    </exclusions>
+</dependency>]]>
+		</programlisting>
+
+	</para>
+
+	
   </section>
 
   <section id="auth-examples">
