@@ -164,6 +164,7 @@ project('spring-android-core') {
             'org/springframework/beans/factory/DisposableBean.java',        
             // spring-core
             'org/springframework/core/ErrorCoded.java',
+            'org/springframework/core/GenericCollectionTypeResolver.java',
             'org/springframework/core/GenericTypeResolver.java',
             'org/springframework/core/MethodParameter.java',
             'org/springframework/core/ParameterNameDiscoverer.java',
