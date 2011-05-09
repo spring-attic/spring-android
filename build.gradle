@@ -104,7 +104,7 @@ configure(javaprojects) {
     androidVersion = '1.5_r3'
     commonsHttpclientVersion = '3.1'
     androidRomeVersion = '1.0.0-r2'
-    simpleXmlVersion = '2.4.1'
+    simpleXmlVersion = '2.5.3'
     javaxServletApiVersion = '2.5'
     commonsFileuploadVersion = '1.2'
     jettyVersion = '6.1.9'
