@@ -97,7 +97,7 @@
 <dependency>
     <groupId>org.springframework.android</groupId>
     <artifactId>spring-android-rest-template</artifactId>
-    <version>1.0.0.BUILD-SNAPSHOT</version>
+    <version>${spring-android-version}</version>
 </dependency>]]>
 		</programlisting>
 	</para>
@@ -124,14 +124,14 @@
 <dependency>
     <groupId>org.codehaus.jackson</groupId>
     <artifactId>jackson-mapper-asl</artifactId>
-    <version>1.7.1</version>
+    <version>${jackson-version}</version>
 </dependency>]]>
 		</programlisting>
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.codehaus.jackson</groupId>
     <artifactId>jackson-core-asl</artifactId>
-    <version>1.7.1</version>
+    <version>${jackson-version}</version>
 </dependency>]]>
 		</programlisting>
 	</section>
@@ -150,7 +150,7 @@
 <dependency>
     <groupId>org.simpleframework</groupId>
     <artifactId>simple-xml</artifactId>
-    <version>2.4.1</version>
+    <version>${simple-version}</version>
 </dependency>]]>
 		</programlisting>
 	</section>
@@ -173,14 +173,14 @@
 <dependency>
     <groupId>com.google.code.android-rome-feed-reader</groupId>
     <artifactId>android-rome-feed-reader</artifactId>
-    <version>1.0.0-r2</version>
+    <version>${android-rome-version}</version>
 </dependency>]]>
 		</programlisting>
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.jdom</groupId>
     <artifactId>jdom</artifactId>
-    <version>1.1.1-android-fork</version>
+    <version>${jdom-fork-version}</version>
 </dependency>]]>
 		</programlisting>
 	</section>

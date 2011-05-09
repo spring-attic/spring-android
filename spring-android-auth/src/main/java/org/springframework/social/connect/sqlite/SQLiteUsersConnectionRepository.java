@@ -33,7 +33,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * {@link UsersConnectionRepository} that uses the SQLite to persist connection data to a relational database.
+ * {@link UsersConnectionRepository} that uses SQLite to persist connection data to a relational database.
  * 
  * @author Roy Clarkson
  */

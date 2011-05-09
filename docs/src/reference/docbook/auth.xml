@@ -232,7 +232,7 @@ OAuthToken requestToken = oauth.fetchRequestToken(callbackUrl, null);]]>
 		<para>Generate the url for authorizing against Twitter. Once you have the url, you use it in a WebView so the user can login and authorize your application.  One method of doing this is provided in the sample application.</para>
 
 		<programlisting language="java"><![CDATA[
-String authorizeUrl = oauth.buildAuthorizeUrl(requestToken.getValue(), new OAuth1Parameters(null));]]>
+String authorizeUrl = oauth.buildAuthorizeUrl(requestToken.getValue(), OAuth1Parameters.NONE);]]>
 		</programlisting>
 		
 		<para>Once the user has successfully authenticated and authorized the application, Twitter will call back to your application with the oauth verifier.  The following settings from an AndroidManifest illustrate how to associate a callback url with a specific Activity.  In this case, when the request is made from Twitter to the callback url, the TwitterActivity will respond.</para>
@@ -320,7 +320,7 @@ String authorizeUrl = oauth.buildAuthorizeUrl(GrantType.IMPLICIT_GRANT, paramete
 		<para>The next step is to load the generated authorization url into a webview within your application.  After the user logs in and authorizes your application, the browser will redirect to the url specified earlier.  If authentication was successful, the url of the redirected page will now include a URI fragment which contains an access_token parameter.  Retrieve the access token from the URI fragment and use it to create the Facebook connection.  One method of doing this is provided in the sample application.</para>
 		
 		<programlisting language="java"><![CDATA[
-AccessGrant accessGrant = new AccessGrant(accessToken, null, null, null);
+AccessGrant accessGrant = new AccessGrant(accessToken);
 Connection<FacebookApi> connection = connectionFactory.createConnection(accessGrant);
 connectionRepository.addConnection(connection);]]>
 		</programlisting>
