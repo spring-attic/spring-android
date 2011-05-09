@@ -42,7 +42,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * {@link ConnectionRepository} that uses the SQLite to persist connection data to a relational database.
+ * {@link ConnectionRepository} that uses SQLite to persist connection data to a relational database.
  * 
  * @author Roy Clarkson
  */
@@ -55,6 +55,10 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
 	private final ConnectionFactoryLocator connectionFactoryLocator;
 	
 	private final TextEncryptor textEncryptor;
+	
+	public SQLiteConnectionRepository(SQLiteOpenHelper repositoryHelper, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
+		this("1", repositoryHelper, connectionFactoryLocator, textEncryptor);
+	}
 	
 	public SQLiteConnectionRepository(String userId, SQLiteOpenHelper repositoryHelper, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
 		this.userId = userId;
