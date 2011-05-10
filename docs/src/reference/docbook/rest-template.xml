@@ -26,11 +26,6 @@
 			The HttpComponentsClientHttpRequestFactory is set as the default RequestFactory when you create a new 
 			RestTemplate instance, so you are not required to set it manually.
 		</para>
-		<para>
-			Please note that the M1 release of Spring Android included Commons HttpClient 3.x support. This support is
-			now deprecated in M2, and will not be available in the next milestone release.  Because the HttpComponents 4.x
-			client is native to Android and available without an additional dependency, it should be used instead.
-		</para>
 	</section>
 	<section>
 		<title>Object to JSON Marshaling</title>
