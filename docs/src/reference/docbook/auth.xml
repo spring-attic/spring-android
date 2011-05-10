@@ -129,7 +129,7 @@ ConnectionRepository connectionRepository;]]>
 connectionFactoryRegistry = new ConnectionFactoryRegistry();]]>
 		</programlisting>
 
-		<para>You can create a FacebookConnectionFactory, if you application requires Facebook connectivity.</para>
+		<para>You can create a FacebookConnectionFactory, if your application requires Facebook connectivity.</para>
 		
 		<programlisting language="java"><![CDATA[
 // the App ID and App Secret are provided when you register a new Facebook application at facebook.com
@@ -167,15 +167,12 @@ connectionFactoryRegistry.addConnectionFactory(twitterConnectionFactory);]]>
 Context context = getApplicationContext();
 SQLiteOpenHelper repositoryHelper = new SQLiteConnectionRepositoryHelper(context);
 
-// If you are developing an app for a single user environment, then you need to specify a global user ID
-String localUserId = "1";
-
 // The connection repository takes a TextEncryptor as a parameter for encrypting the OAuth information
 TextEncryptor textEncryptor = AndroidEncryptors.noOpText();
 
 // Create the connection repository
-ConnectionRepository connectionRepository = new SQLiteConnectionRepository(localUserId, 
-		repositoryHelper, connectionFactoryRegistry, textEncryptor);]]>
+ConnectionRepository connectionRepository = new SQLiteConnectionRepository(repositoryHelper, 
+	connectionFactoryRegistry, textEncryptor);]]>
 		</programlisting>
 
 	</section>
@@ -184,22 +181,22 @@ ConnectionRepository connectionRepository = new SQLiteConnectionRepository(local
 
 		<title>Encrypting OAuth Data</title>
 
-		<para>Spring Social supports encrypting the user's OAuth connection information within the ConnectionRepository through the use of a Spring Security TextEncryptor.  The password and salt values are used to generate the encryptor's secret key. The salt value should be hex-encoded, random, and application-global.</para>
+		<para>Spring Social supports encrypting the user's OAuth connection information within the ConnectionRepository through the use of a Spring Security TextEncryptor.  The password and salt values are used to generate the encryptor's secret key. The salt value should be hex-encoded, random, and application-global.  While this will encrypt the OAuth credentials stored in the database, it is not an absolute solution.  When designing your application, keep in mind that there are already tools available for translating a DEX to a JAR file, and decompiling to source code.  Because your application is distributed to a user's device, it is more vulnerable than if it were running on a web server, for example.</para>
 
 		<programlisting language="java"><![CDATA[
 String password = "password";
 String salt = "5c0744940b5c369b";
 TextEncryptor textEncryptor = AndroidEncryptors.text(password, salt);
-connectionRepository = new SqliteServiceProviderConnectionRepository(localUserId, 
-	repositoryHelper, connectionFactoryRegistry, textEncryptor);]]>
+connectionRepository = new SQLiteConnectionRepository(repositoryHelper, 
+	connectionFactoryRegistry, textEncryptor);]]>
 		</programlisting>
 		
 		<para>During development you may wish to avoid encryption so you can more easily debug your application by viewing the OAuth data being saved to the database. This TextEncryptor performs no encryption.</para>
 		
 		<programlisting language="java"><![CDATA[
 TextEncryptor textEncryptor = AndroidEncryptors.noOpText();
-connectionRepository = new SqliteServiceProviderConnectionRepository(localUserId, 
-	repositoryHelper, connectionFactoryRegistry, textEncryptor);]]>
+connectionRepository = new SQLiteConnectionRepository(repositoryHelper, 
+	connectionFactoryRegistry, textEncryptor);]]>
 		</programlisting>
 	
 	</section>

@@ -1,7 +1,7 @@
 Spring Android
 ================================
 
-1.0.0.M3 (2011.05.05)
+1.0.0.M3 (2011.05.10)
 
 New Features
 * Support for Spring Social 1.0.0.M3 through the new Spring Android Auth 
