@@ -188,11 +188,11 @@
 		the different methods for making RESTful requests.
 	<para>
 		All of the following examples are based on a 
-		<link xlink:href="http://git.springsource.org/spring-mobile/samples">sample Android application</link>.  You 
+		<link xlink:href="https://github.com/SpringSource/spring-android-samples">sample Android application</link>.  You 
 		can retrieve the source code for the sample app with the following command:
 	</para>
 	<programlisting>
-$ git clone git://git.springsource.org/spring-mobile/samples.git
+$ git clone git://github.com/SpringSource/spring-android-samples.git
 	</programlisting>
   	</para>
   	<section>
