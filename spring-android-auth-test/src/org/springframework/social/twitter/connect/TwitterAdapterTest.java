@@ -26,18 +26,18 @@ import org.springframework.social.twitter.api.ListOperations;
 import org.springframework.social.twitter.api.SearchOperations;
 import org.springframework.social.twitter.api.SuggestionCategory;
 import org.springframework.social.twitter.api.TimelineOperations;
-import org.springframework.social.twitter.api.TwitterApi;
+import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.TwitterProfile;
 import org.springframework.social.twitter.api.UserOperations;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-public class TwitterApiAdapterTest extends AndroidTestCase {
+public class TwitterAdapterTest extends AndroidTestCase {
 
-	private TwitterApiAdapter apiAdapter;
+	private TwitterAdapter apiAdapter;
 	
-	private TwitterApi api;
+	private Twitter api;
 	
 	private UserOperationsMock userOperations;
 	
@@ -45,9 +45,9 @@ public class TwitterApiAdapterTest extends AndroidTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         
-        apiAdapter = new TwitterApiAdapter();
+        apiAdapter = new TwitterAdapter();
         userOperations = new UserOperationsMock();
-        api = new TwitterApiMock(userOperations);
+        api = new TwitterMock(userOperations);
 	}
 	
     @Override
@@ -101,11 +101,11 @@ public class TwitterApiAdapterTest extends AndroidTestCase {
 	}
 	
 	
-	private class TwitterApiMock implements TwitterApi {
+	private class TwitterMock implements Twitter {
 		
 		private UserOperations userOperationsMock;
 		
-		public TwitterApiMock(UserOperations userOperations) {
+		public TwitterMock(UserOperations userOperations) {
 			this.userOperationsMock = userOperations;
 		}
 

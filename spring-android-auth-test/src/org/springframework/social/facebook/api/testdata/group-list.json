@@ -1,0 +1,47 @@
+{
+   "data": [
+      {
+         "owner": {
+            "name": "Javed Mandary",
+            "id": "680947045"
+         },
+         "name": "Spring User Group - Mauritius",
+         "description": "Spring User Group - Mauritius has for purpose to propagate the use Spring Framework within Mauritius.",
+         "privacy": "OPEN",
+         "icon": "http://b.static.ak.fbcdn.net/rsrc.php/v1/y_/r/CbwcMZjMUbR.png",
+         "updated_time": "2011-03-05T10:01:31+0000",
+         "email": "108286519250791\u0040groups.facebook.com",
+         "version": 1,
+         "id": "108286519250791"
+      },
+      {
+         "owner": {
+            "name": "Kate Clark",
+            "id": "25500170"
+         },
+         "name": "Atlanta Spring User Group",
+         "description": "ASUG is the first user group created to support the growing Spring community in the Atlanta area.",
+         "privacy": "OPEN",
+         "icon": "http://b.static.ak.fbcdn.net/rsrc.php/v1/y_/r/CbwcMZjMUbR.png",
+         "updated_time": "2010-05-20T21:46:07+0000",
+         "version": 0,
+         "id": "120726277961844"
+      },
+      {
+         "owner": {
+            "name": "Jay Logelin",
+            "id": "709242026"
+         },
+         "name": "Martimes Java User Group",
+         "description": "The Maritime Area Java Users\u2019 Group was founded in December of 2009 by Ron Smith and Senan Almosawie of Mariner.",
+         "privacy": "OPEN",
+         "icon": "http://b.static.ak.fbcdn.net/rsrc.php/v1/y_/r/CbwcMZjMUbR.png",
+         "updated_time": "2010-04-01T01:16:44+0000",
+         "version": 0,
+         "id": "114934361850206"
+      }
+   ],
+   "paging": {
+      "next": "https://graph.facebook.com/search?q=Spring+User+Group&type=group&limit=25&offset=25"
+   }
+}

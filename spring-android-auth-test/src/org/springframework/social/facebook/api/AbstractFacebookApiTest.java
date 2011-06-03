@@ -38,11 +38,10 @@ public class AbstractFacebookApiTest extends AndroidTestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		
 		facebook = new FacebookTemplate(ACCESS_TOKEN);
 		mockServer = MockRestServiceServer.createServer(facebook.getRestTemplate());
 		responseHeaders = new HttpHeaders();
-		responseHeaders.setContentType(new MediaType("text", "javascript"));
+		responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 	}
 	
 	@Override

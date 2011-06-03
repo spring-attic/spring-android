@@ -1,0 +1,97 @@
+{
+    "country":"United States",
+    "url":"http:\/\/api.twitter.com\/1\/geo\/id\/0bba15b36bd9e8cc.json",
+    "country_code":"US",
+    "bounding_box":
+    {
+        "type":"Polygon",
+        "coordinates":
+        [
+            [
+                [
+                    -94.973045,
+                    33.153661
+                ],
+                [
+                    -94.973045,
+                    33.153661
+                ],
+                [
+                    -94.973045,
+                    33.153661
+                ],
+                [
+                    -94.973045,
+                    33.153661
+                ]
+            ]
+        ]
+    },
+    "attributes":
+    {
+        "190530:url":"http:\/\/national.citysearch.com\/profile\/45768645\/mt_pleasant_tx\/restaurant_mexico.html",
+        "postal_code":"75455",
+        "190530:id":"45768645",
+        "street_address":"301 W Ferguson Rd",
+        "162830:id":"143723731",
+        "174368:id":"840481000163269",
+        "phone":"(903) 577-9421",
+        "189390:id":"restaurant-mexico-mount-pleasant-tx-75455"
+    },
+    "name":"Restaurant Mexico",
+    "full_name":"Restaurant Mexico, Mount Pleasant",
+    "place_type":"poi",
+    "contained_within":
+    [
+        {
+            "country":"United States",
+            "url":"http:\/\/api.twitter.com\/1\/geo\/id\/2e056b6d9c0ff3cd.json",
+            "country_code":"US",
+            "bounding_box":
+            {
+                "type":"Polygon",
+                "coordinates":
+                [
+                    [
+                        [
+                            -95.00708,
+                            33.111693
+                        ],
+                        [
+                            -94.93626,
+                            33.111693
+                        ],
+                        [
+                            -94.93626,
+                            33.201431
+                        ],
+                        [
+                            -95.00708,
+                            33.201431
+                        ]
+                    ]
+                ]
+            },
+            "attributes":
+            {
+            },
+            "name":"Mount Pleasant",
+            "full_name":"Mount Pleasant, TX",
+            "place_type":"city",
+            "id":"2e056b6d9c0ff3cd"
+        }
+    ],
+    "geometry":
+    {
+        "type":"Point",
+        "coordinates":
+        [
+            -94.973045,
+            33.153661
+        ]
+    },
+    "id":"0bba15b36bd9e8cc",
+    "polylines":
+    [
+    ]
+}

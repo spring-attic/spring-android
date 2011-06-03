@@ -59,13 +59,13 @@ public class TimelineTemplateTest extends AbstractTwitterApiTest {
 	public void testUpdateStatus_withLocation() {
 		mockServer.expect(requestTo("https://api.twitter.com/1/statuses/update.json"))
 				.andExpect(method(POST))
-				.andExpect(body("status=Test+Message&long=-111.2&lat=123.1"))
+				.andExpect(body("status=Test+Message&lat=123.1&long=-111.2"))
 				.andRespond(withResponse("{}", responseHeaders));
-
+		
 		StatusDetails details = new StatusDetails();
 		details.setLocation(123.1f, -111.2f);
 		twitter.timelineOperations().updateStatus("Test Message", details);
-
+		
 		mockServer.verify();
 	}
 

@@ -1,0 +1,10 @@
+{
+   "data": [
+      {
+         "status_update": 1,
+         "offline_access": 1,
+         "read_stream": 1,
+         "publish_stream": 1
+      }
+   ]
+}

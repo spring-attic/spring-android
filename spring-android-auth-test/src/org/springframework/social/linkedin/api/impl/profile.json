@@ -1,0 +1,31 @@
+{
+  "lastName": "Walls",
+  "sitePublicProfileRequest": {"url": "http://www.linkedin.com/in/habuma"},
+  "location": {
+    "name": "Dallas/Fort Worth Area",
+    "country": {"code": "us"}
+  },
+  "siteStandardProfileRequest": {"url": "http://www.linkedin.com/standardProfileUrl"},
+  "memberUrlResources": {"_total": 0},
+  "numRecommenders": 15,
+  "headline": "Just a guy",
+  "id": "z37f0n3A05",
+  "publicProfileUrl": "http://www.linkedin.com/in/habuma",
+  "positions": {"_total": 0},
+  "pictureUrl": "http://media.linkedin.com/pictureUrl",
+  "apiPublicProfileRequest": {"url": "http://api.linkedin.com/v1/people/url=http%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fin%2Fhabuma:public"},
+  "apiStandardProfileRequest": {
+    "headers": {
+      "values": [{
+        "name": "x-li-auth-token",
+        "value": "name:0IpZ"
+      }],
+      "_total": 1
+    },
+    "url": "http://api.linkedin.com/v1/people/50A3nOf73z"
+  },
+  "connections": {"_total": 243},
+  "educations": {"_total": 0},
+  "firstName": "Craig",
+  "industry": "Computer Software"
+}

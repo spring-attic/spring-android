@@ -19,24 +19,24 @@ import java.util.List;
 
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.gowalla.api.Checkin;
-import org.springframework.social.gowalla.api.GowallaApi;
+import org.springframework.social.gowalla.api.Gowalla;
 import org.springframework.social.gowalla.api.GowallaProfile;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-public class GowallaApiAdapterTest extends AndroidTestCase {
+public class GowallaAdapterTest extends AndroidTestCase {
 
-	private GowallaApiAdapter apiAdapter;
+	private GowallaAdapter apiAdapter;
 	
-	private GowallaApi api;
+	private Gowalla api;
 	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		
-		apiAdapter = new GowallaApiAdapter();
-		api = new GowallaApiMock();
+		apiAdapter = new GowallaAdapter();
+		api = new GowallaMock();
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public class GowallaApiAdapterTest extends AndroidTestCase {
 		assertEquals("habuma", profile.getUsername());
 	}
 	
-	private class GowallaApiMock implements GowallaApi {
+	private class GowallaMock implements Gowalla {
 		
 		@Override
 		public String getProfileId() {

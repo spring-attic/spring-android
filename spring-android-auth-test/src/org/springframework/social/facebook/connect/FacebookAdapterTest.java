@@ -15,10 +15,12 @@
  */
 package org.springframework.social.facebook.connect;
 
+import java.util.List;
+
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.facebook.api.CommentOperations;
 import org.springframework.social.facebook.api.EventOperations;
-import org.springframework.social.facebook.api.FacebookApi;
+import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.FeedOperations;
 import org.springframework.social.facebook.api.FriendOperations;
@@ -26,25 +28,26 @@ import org.springframework.social.facebook.api.GroupOperations;
 import org.springframework.social.facebook.api.ImageType;
 import org.springframework.social.facebook.api.LikeOperations;
 import org.springframework.social.facebook.api.MediaOperations;
+import org.springframework.social.facebook.api.PageOperations;
 import org.springframework.social.facebook.api.PlacesOperations;
+import org.springframework.social.facebook.api.Reference;
 import org.springframework.social.facebook.api.UserOperations;
 import org.springframework.util.MultiValueMap;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-public class FacebookApiAdapterTest extends AndroidTestCase {
+public class FacebookAdapterTest extends AndroidTestCase {
 
-	private FacebookApiAdapter apiAdapter;
+	private FacebookAdapter apiAdapter;
 	
-	private FacebookApi api;
+	private Facebook api;
 	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		
-		apiAdapter = new FacebookApiAdapter();
-		api = new FacebookApiMock();
+		this.apiAdapter = new FacebookAdapter();
+		this.api = new FacebookMock();
 	}
 	
 	@Override
@@ -64,7 +67,7 @@ public class FacebookApiAdapterTest extends AndroidTestCase {
 	}
 	
 	
-	private class FacebookApiMock implements FacebookApi {
+	private class FacebookMock implements Facebook {
 		
 		UserOperationsMock userOperationsMock = new UserOperationsMock();
 
@@ -74,8 +77,20 @@ public class FacebookApiAdapterTest extends AndroidTestCase {
 		}
 
 		@Override
+		public <T> T fetchObject(String objectId, Class<T> type,
+				MultiValueMap<String, String> queryParameters) {
+			return null;
+		}
+
+		@Override
 		public <T> T fetchConnections(String objectId, String connectionType,
 				Class<T> type, String... fields) {
+			return null;
+		}
+
+		@Override
+		public <T> T fetchConnections(String objectId, String connectionType,
+				Class<T> type, MultiValueMap<String, String> queryParameters) {
 			return null;
 		}
 
@@ -87,7 +102,7 @@ public class FacebookApiAdapterTest extends AndroidTestCase {
 
 		@Override
 		public String publish(String objectId, String connectionType,
-				MultiValueMap<String, String> data) {
+				MultiValueMap<String, Object> data) {
 			return null;
 		}
 
@@ -143,6 +158,11 @@ public class FacebookApiAdapterTest extends AndroidTestCase {
 		}
 
 		@Override
+		public PageOperations pageOperations() {
+			return null;
+		}
+
+		@Override
 		public PlacesOperations placesOperations() {
 			return null;
 		}
@@ -183,6 +203,16 @@ public class FacebookApiAdapterTest extends AndroidTestCase {
 
 		@Override
 		public byte[] getUserProfileImage(String userId, ImageType imageType) {
+			return null;
+		}
+
+		@Override
+		public List<String> getUserPermissions() {
+			return null;
+		}
+
+		@Override
+		public List<Reference> search(String query) {
 			return null;
 		}
 		

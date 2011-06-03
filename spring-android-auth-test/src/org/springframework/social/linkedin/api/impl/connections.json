@@ -1,0 +1,95 @@
+{
+  "values": [
+    {
+      "headline": "SpringSource Cofounder",
+      "id": "kR0lnX1ll8",
+      "lastName": "Donald",
+      "location": {
+        "name": "Melbourne, Florida Area",
+        "country": {"code": "us"}
+      },
+      "siteStandardProfileRequest": {"url": "http://www.linkedin.com/profile?viewProfile=&key=2526541&authToken=61Sm&authType=name&trk=api*a121026*s129482*"},
+      "apiStandardProfileRequest": {
+        "headers": {
+          "values": [{
+            "name": "x-li-auth-token",
+            "value": "name:61Sm"
+          }],
+          "_total": 1
+        },
+        "url": "http://api.linkedin.com/v1/people/kR0lnX1ll8"
+      },
+      "industry": "Computer Software",
+      "firstName": "Keith"
+    },
+    {
+      "headline": "GM, SpringSource and SVP, Middleware at VMware",
+      "id": "VRcwcqPCtP",
+      "lastName": "Johnson",
+      "location": {
+        "name": "San Francisco Bay Area",
+        "country": {"code": "us"}
+      },
+      "siteStandardProfileRequest": {"url": "http://www.linkedin.com/profile?viewProfile=&key=210059&authToken=3hU1&authType=name&trk=api*a121026*s129482*"},
+      "apiStandardProfileRequest": {
+        "headers": {
+          "values": [{
+            "name": "x-li-auth-token",
+            "value": "name:3hU1"
+          }],
+          "_total": 1
+        },
+        "url": "http://api.linkedin.com/v1/people/VRcwcqPCtP"
+      },
+      "industry": "Computer Software",
+      "firstName": "Rod"
+    },
+    {
+      "headline": "Spring and AOP expert; author AspectJ in Action",
+      "id": "Ia7uR1OmDB",
+      "lastName": "Laddad",
+      "pictureUrl": "http://media.linkedin.com/mpr/mprx/0__gnH4Z-585hJSJSu_M6B4RrHCikUf0pu30CB4Rhqg6KwrUI2fUQXnUNVuSXku4j8CYN9cyYH-JuX",
+      "location": {
+        "name": "San Francisco Bay Area",
+        "country": {"code": "us"}
+      },
+      "siteStandardProfileRequest": {"url": "http://www.linkedin.com/profile?viewProfile=&key=208994&authToken=P5K9&authType=name&trk=api*a121026*s129482*"},
+      "apiStandardProfileRequest": {
+        "headers": {
+          "values": [{
+            "name": "x-li-auth-token",
+            "value": "name:P5K9"
+          }],
+          "_total": 1
+        },
+        "url": "http://api.linkedin.com/v1/people/Ia7uR1OmDB"
+      },
+      "industry": "Computer Software",
+      "firstName": "Ramnivas"
+    },
+    {
+      "headline": "Head of Groovy Development at SpringSource",
+      "id": "gKEMq4CMdl",
+      "lastName": "Laforge",
+      "pictureUrl": "http://media.linkedin.com/mpr/mprx/0_CV5yQ4-Er7cqa-ZZhJziQU1WpS3v2qZZhRliQU1Miez51K74apvKHRbB-iTE71MN_JbCWpT7SdWe",
+      "location": {
+        "name": "Paris Area, France",
+        "country": {"code": "fr"}
+      },
+      "siteStandardProfileRequest": {"url": "http://www.linkedin.com/profile?viewProfile=&key=822306&authToken=YmIW&authType=name&trk=api*a121026*s129482*"},
+      "apiStandardProfileRequest": {
+        "headers": {
+          "values": [{
+            "name": "x-li-auth-token",
+            "value": "name:YmIW"
+          }],
+          "_total": 1
+        },
+        "url": "http://api.linkedin.com/v1/people/gKEMq4CMdl"
+      },
+      "industry": "Information Technology and Services",
+      "firstName": "Guillaume"
+    }
+  ],
+  "_total": 243
+}

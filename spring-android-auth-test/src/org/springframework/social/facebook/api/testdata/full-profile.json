@@ -37,6 +37,15 @@
             "id": "298846151879",
             "name": "Improving"
          },
+         "location": {
+            "id": "108424279189115",
+            "name": "New York, New York"
+         },
+         "position": {
+            "id": "220711744608585",
+            "name": "Head Honcho and Big Cheese"
+         },
+         "description": "Cleaned up messes",
          "start_date": "2009-03",
          "end_date": "2010-05"
       }
@@ -100,7 +109,24 @@
             "id": "117348274968344",
             "name": "1994"
          },
-         "type": "College"
+         "concentration": [
+            {
+               "id": "192578844099494",
+               "name": "Computer Science"
+            },
+            {
+               "id": "146136662113078",
+               "name": "Mathematics"
+            }
+         ],
+         "type": "College",
+         "classes": [
+            {
+               "id": "163916393657110",
+               "name": "Spanish 1",
+               "description": "No recuerdo"
+            }
+         ]
       },
       {
          "school": {

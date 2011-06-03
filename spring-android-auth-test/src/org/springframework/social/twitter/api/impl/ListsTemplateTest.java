@@ -242,10 +242,10 @@ public class ListsTemplateTest extends AbstractTwitterApiTest {
 
 	@MediumTest
 	public void testIsMember_byScreenName() {
-		mockServer.expect(requestTo("https://api.twitter.com/1/lists/members/show.json?owner_screen_name=habuma&screen_name=royclarkson&slug=forfun"))
+		mockServer.expect(requestTo("https://api.twitter.com/1/lists/members/show.json?owner_screen_name=habuma&slug=forfun&screen_name=royclarkson"))
 			.andExpect(method(GET))
 			.andRespond(withResponse(new ClassPathResource("twitter-profile.json", getClass()), responseHeaders));
-		mockServer.expect(requestTo("https://api.twitter.com/1/lists/members/show.json?owner_screen_name=habuma&screen_name=kdonald&slug=forfun"))
+		mockServer.expect(requestTo("https://api.twitter.com/1/lists/members/show.json?owner_screen_name=habuma&slug=forfun&screen_name=kdonald"))
 			.andExpect(method(GET))
 			.andRespond(withResponse("{}", responseHeaders, HttpStatus.NOT_FOUND, ""));
 		assertTrue(twitter.listOperations().isMember("habuma", "forfun", "royclarkson"));
@@ -266,10 +266,10 @@ public class ListsTemplateTest extends AbstractTwitterApiTest {
 
 	@MediumTest
 	public void testIsSubscriber_byScreenName() {
-		mockServer.expect(requestTo("https://api.twitter.com/1/lists/subscribers/show.json?owner_screen_name=habuma&screen_name=royclarkson&slug=forfun"))
+		mockServer.expect(requestTo("https://api.twitter.com/1/lists/subscribers/show.json?owner_screen_name=habuma&slug=forfun&screen_name=royclarkson"))
 			.andExpect(method(GET))
 			.andRespond(withResponse(new ClassPathResource("twitter-profile.json", getClass()), responseHeaders));
-		mockServer.expect(requestTo("https://api.twitter.com/1/lists/subscribers/show.json?owner_screen_name=habuma&screen_name=kdonald&slug=forfun"))
+		mockServer.expect(requestTo("https://api.twitter.com/1/lists/subscribers/show.json?owner_screen_name=habuma&slug=forfun&screen_name=kdonald"))
 			.andExpect(method(GET))
 			.andRespond(withResponse("{}", responseHeaders, HttpStatus.NOT_FOUND, ""));
 		assertTrue(twitter.listOperations().isSubscriber("habuma", "forfun", "royclarkson"));

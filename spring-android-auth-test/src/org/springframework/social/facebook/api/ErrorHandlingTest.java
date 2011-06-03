@@ -25,6 +25,10 @@ import static org.springframework.social.test.client.ResponseCreators.withRespon
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.social.BadCredentialsException;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.social.test.client.MockRestServiceServer;
+import org.springframework.web.client.HttpClientErrorException;
 
 import android.test.suitebuilder.annotation.MediumTest;
 
@@ -99,8 +103,39 @@ public class ErrorHandlingTest extends AbstractFacebookApiTest {
 			facebook.fetchObject("dummyalias", FacebookProfile.class);
 			fail("Expected GraphAPIException when fetching an unknown object alias");
 		} catch (GraphAPIException e) {
-			assertEquals("Unknown alias: dummyalias", e.getMessage());
+			assertEquals("(#803) Some of the aliases you requested do not exist: dummyalias", e.getMessage());
 		}				
+	}
+	
+	@MediumTest
+	public void testCurrentUser_noAccessToken() {
+		FacebookTemplate facebook = new FacebookTemplate(); // use anonymous FacebookTemplate in this test
+		MockRestServiceServer mockServer = MockRestServiceServer.createServer(facebook.getRestTemplate());
+		try {
+			mockServer.expect(requestTo("https://graph.facebook.com/me"))
+				.andExpect(method(GET))
+				.andRespond(withResponse(new ClassPathResource("testdata/error-current-user-no-token.json", getClass()), responseHeaders, HttpStatus.BAD_REQUEST, ""));
+			facebook.userOperations().getUserProfile();
+			fail("Expected BadCredentialsException when fetching an unknown object alias");
+		} catch (BadCredentialsException e) {
+			assertEquals("An active access token must be used to query information about the current user.", e.getMessage());
+		}						
+	}
+	
+	@MediumTest
+	public void testHtmlErrorResponse() {
+		boolean success = false;
+		try {
+			FacebookTemplate facebook = new FacebookTemplate(); // use anonymous FacebookTemplate in this test
+			MockRestServiceServer mockServer = MockRestServiceServer.createServer(facebook.getRestTemplate());
+			mockServer.expect(requestTo("https://graph.facebook.com/me/picture?type=normal"))
+				.andExpect(method(GET))
+				.andRespond(withResponse(new ClassPathResource("testdata/error-not-json.html", getClass()), responseHeaders, HttpStatus.BAD_REQUEST, ""));
+			facebook.userOperations().getUserProfileImage();
+		} catch(HttpClientErrorException e) {
+			success = true;
+		}
+		assertTrue(success);
 	}
 	
 }

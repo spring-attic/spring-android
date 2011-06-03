@@ -16,36 +16,36 @@
 package org.springframework.social.github.connect;
 
 import org.springframework.social.connect.UserProfile;
-import org.springframework.social.github.api.GitHubApi;
+import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubUserProfile;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 
-public class GitHubServiceApiAdapterTest extends AndroidTestCase {
+public class GitHubAdapterTest extends AndroidTestCase {
 
-	private GitHubApiAdapter apiAdapter;
+	private GitHubAdapter apiAdapter;
 	
-	private GitHubApi serviceApi;
+	private GitHub api;
 	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		
-		apiAdapter = new GitHubApiAdapter();
-		serviceApi = new GitHubApiMock();
+		apiAdapter = new GitHubAdapter();
+		api = new GitHubMock();
 	}
 	
 	@Override
 	public void tearDown() {
 		apiAdapter = null;
-		serviceApi = null;
+		api = null;
 	}
 	
 	@MediumTest
 	public void testFetchProfile() {		
-		((GitHubApiMock) serviceApi).setUserProfile(new GitHubUserProfile(123456L, "habuma", "Craig Walls", "Plano, TX", "SpringSource", null, "cwalls@vmware.com", null, null));
-		UserProfile profile = apiAdapter.fetchUserProfile(serviceApi);
+		((GitHubMock) api).setUserProfile(new GitHubUserProfile(123456L, "habuma", "Craig Walls", "Plano, TX", "SpringSource", null, "cwalls@vmware.com", null, null));
+		UserProfile profile = apiAdapter.fetchUserProfile(api);
 		assertEquals("Craig Walls", profile.getName());
 		assertEquals("Craig", profile.getFirstName());
 		assertEquals("Walls", profile.getLastName());
@@ -55,8 +55,8 @@ public class GitHubServiceApiAdapterTest extends AndroidTestCase {
 	
 	@MediumTest
 	public void testFetchProfileFirstNameOnly() {
-		((GitHubApiMock) serviceApi).setUserProfile(new GitHubUserProfile(123456L, "habuma", "Craig", "Plano, TX", "SpringSource", null, "cwalls@vmware.com", null, null));
-		UserProfile profile = apiAdapter.fetchUserProfile(serviceApi);
+		((GitHubMock) api).setUserProfile(new GitHubUserProfile(123456L, "habuma", "Craig", "Plano, TX", "SpringSource", null, "cwalls@vmware.com", null, null));
+		UserProfile profile = apiAdapter.fetchUserProfile(api);
 		assertEquals("Craig", profile.getName());
 		assertEquals("Craig", profile.getFirstName());
 		assertNull(profile.getLastName());
@@ -66,8 +66,8 @@ public class GitHubServiceApiAdapterTest extends AndroidTestCase {
 
 	@MediumTest
 	public void testFetchProfileMiddleName() {
-		((GitHubApiMock) serviceApi).setUserProfile(new GitHubUserProfile(123456L, "habuma", "Michael Craig Walls", "Plano, TX", "SpringSource", null, "cwalls@vmware.com", null, null));
-		UserProfile profile = apiAdapter.fetchUserProfile(serviceApi);
+		((GitHubMock) api).setUserProfile(new GitHubUserProfile(123456L, "habuma", "Michael Craig Walls", "Plano, TX", "SpringSource", null, "cwalls@vmware.com", null, null));
+		UserProfile profile = apiAdapter.fetchUserProfile(api);
 		assertEquals("Michael Craig Walls", profile.getName());
 		assertEquals("Michael", profile.getFirstName());
 		assertEquals("Walls", profile.getLastName());
@@ -77,8 +77,8 @@ public class GitHubServiceApiAdapterTest extends AndroidTestCase {
 	
 	@MediumTest
 	public void testFetchProfileExtraWhitespace() {
-		((GitHubApiMock) serviceApi).setUserProfile(new GitHubUserProfile(123456L, "habuma", "Michael    Craig Walls", "Plano, TX", "SpringSource", null, "cwalls@vmware.com", null, null));
-		UserProfile profile = apiAdapter.fetchUserProfile(serviceApi);
+		((GitHubMock) api).setUserProfile(new GitHubUserProfile(123456L, "habuma", "Michael    Craig Walls", "Plano, TX", "SpringSource", null, "cwalls@vmware.com", null, null));
+		UserProfile profile = apiAdapter.fetchUserProfile(api);
 		assertEquals("Michael    Craig Walls", profile.getName());
 		assertEquals("Michael", profile.getFirstName());
 		assertEquals("Walls", profile.getLastName());
@@ -87,7 +87,7 @@ public class GitHubServiceApiAdapterTest extends AndroidTestCase {
 	}
 
 	
-	private class GitHubApiMock implements GitHubApi {
+	private class GitHubMock implements GitHub {
 		
 		private GitHubUserProfile userProfileMock;
 
