@@ -46,7 +46,7 @@ public class LinkedInTemplateTest extends AndroidTestCase {
 		linkedIn = new LinkedInTemplate("API_KEY", "API_SECRET", "ACCESS_TOKEN", "ACCESS_TOKEN_SECRET");
 		mockServer = MockRestServiceServer.createServer(linkedIn.getRestTemplate());
 		responseHeaders = new HttpHeaders();
-		responseHeaders.setContentType(MediaType.APPLICATION_XML);
+		responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 	}
 	
 	@Override
