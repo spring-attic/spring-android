@@ -23,6 +23,7 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -128,8 +129,7 @@ public class GsonHttpMessageConverter extends AbstractHttpMessageConverter<Objec
 	protected Object readInternal(Class<?> clazz, HttpInputMessage inputMessage)
 			throws IOException, HttpMessageNotReadableException {
 		
-		Charset charset = getEncoding(inputMessage.getHeaders().getContentType());
-		Reader json = new InputStreamReader(inputMessage.getBody(), charset);
+		Reader json = new InputStreamReader(inputMessage.getBody(), getCharset(inputMessage.getHeaders()));
 		
 		try {
 			Type typeOfT = getType();
@@ -151,8 +151,7 @@ public class GsonHttpMessageConverter extends AbstractHttpMessageConverter<Objec
 	protected void writeInternal(Object o, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException {
 		
-		Charset charset = getEncoding(outputMessage.getHeaders().getContentType());
-		OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), charset);
+		OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), getCharset(outputMessage.getHeaders()));
 		
 		try {
 			if (this.prefixJson) {
@@ -170,10 +169,14 @@ public class GsonHttpMessageConverter extends AbstractHttpMessageConverter<Objec
 		}	
 	}
 	
-	private Charset getEncoding(MediaType contentType) {
-		if (contentType != null && contentType.getCharSet() != null) {
-			return contentType.getCharSet();
-		}		
+	
+	// helpers
+	
+	private Charset getCharset(HttpHeaders headers) {
+		if (headers != null && headers.getContentType() != null
+				&& headers.getContentType().getCharSet() != null) {
+			return headers.getContentType().getCharSet();
+		}
 		return DEFAULT_CHARSET;
 	}
 
