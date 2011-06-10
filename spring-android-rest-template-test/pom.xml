@@ -23,6 +23,7 @@
 		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3 -->
 		<org.springframework.android.version>1.0.0.BUILD-SNAPSHOT</org.springframework.android.version>
 		<com.google.code.gson.version>1.7.1</com.google.code.gson.version>
+		<org.simpleframework.version>2.5.3</org.simpleframework.version>
 	</properties>
 
 	<dependencies>
@@ -47,6 +48,27 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>${com.google.code.gson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.simpleframework</groupId>
+			<artifactId>simple-xml</artifactId>
+			<version>${org.simpleframework.version}</version>
+			<exclusions>
+				<!-- StAX is not available on Android -->
+ 				<exclusion>
+					<artifactId>stax</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>stax-api</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+				<!-- Provided by Android -->
+				<exclusion>
+					<artifactId>xpp3</artifactId>
+					<groupId>xpp3</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
