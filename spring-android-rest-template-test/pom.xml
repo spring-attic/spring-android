@@ -24,6 +24,7 @@
 		<org.springframework.android.version>1.0.0.BUILD-SNAPSHOT</org.springframework.android.version>
 		<com.google.code.gson.version>1.7.1</com.google.code.gson.version>
 		<org.simpleframework.version>2.5.3</org.simpleframework.version>
+		<com.google.code.android-rome-feed-reader.version>1.0.0-r2</com.google.code.android-rome-feed-reader.version>
 	</properties>
 
 	<dependencies>
@@ -55,7 +56,7 @@
 			<version>${org.simpleframework.version}</version>
 			<exclusions>
 				<!-- StAX is not available on Android -->
- 				<exclusion>
+				<exclusion>
 					<artifactId>stax</artifactId>
 					<groupId>stax</groupId>
 				</exclusion>
@@ -69,6 +70,11 @@
 					<groupId>xpp3</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.android-rome-feed-reader</groupId>
+			<artifactId>android-rome-feed-reader</artifactId>
+			<version>${com.google.code.android-rome-feed-reader.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -101,6 +107,12 @@
 	</build>
 
 	<repositories>
+		<!-- For developing with Android ROME Feed Reader -->
+		<repository>
+			<id>android-rome-feed-reader-repository</id>
+			<name>Android ROME Feed Reader Repository</name>
+			<url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
+		</repository>
 		<!-- For testing against latest Spring snapshots -->
 		<repository>
 			<id>org.springframework.maven.snapshot</id>

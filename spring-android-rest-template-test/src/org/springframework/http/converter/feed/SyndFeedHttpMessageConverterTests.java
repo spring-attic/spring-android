@@ -16,60 +16,62 @@
 
 package org.springframework.http.converter.feed;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Before;
-import org.junit.Test;
+import junit.framework.TestCase;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
+
+import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEntry;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
 
 /** 
  * @author Roy Clarkson 
- * */
-public class SyndFeedHttpMessageConverterTests {
+ */
+public class SyndFeedHttpMessageConverterTests extends TestCase {
 
-	private SyndFeedHttpMessageConverter converter;
+	private static final Charset UTF_8 = Charset.forName("UTF-8");
+	
+	private SyndFeedHttpMessageConverter converter;	
 
-	private Charset utf8;
-
-	@Before
-	public void setUp() {
-		utf8 = Charset.forName("UTF-8");
+	@Override
+	public void setUp() throws Exception{
+		super.setUp();
 		converter = new SyndFeedHttpMessageConverter();
-		XMLUnit.setIgnoreWhitespace(true);
+	}
+	
+	@Override
+	public void tearDown() {
+		converter = null;
 	}
 
-	@Test
-	public void canRead() {
+	@SmallTest
+	public void estCanRead() {
 		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "rss+xml")));
-		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "rss+xml", utf8)));
+		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "rss+xml", UTF_8)));
 		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "atom+xml")));
-		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "atom+xml", utf8)));
+		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "atom+xml", UTF_8)));
 	}
 
-	@Test
-	public void canWrite() {
+	@SmallTest
+	public void testCanWrite() {
 		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "rss+xml")));
-		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "rss+xml", Charset.forName("UTF-8"))));
+		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "rss+xml", UTF_8)));
 		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "atom+xml")));
-		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "atom+xml", Charset.forName("UTF-8"))));
+		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "atom+xml", UTF_8)));
 	}
 
-	@Test
-	public void readRss() throws IOException {
+	@SmallTest
+	public void testReadRss() throws IOException {
 		InputStream is = getClass().getResourceAsStream("rss.xml");
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(is);
-		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", utf8));
+		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", UTF_8));
 		SyndFeed feed = converter.read(SyndFeed.class, inputMessage);
 		assertEquals("title", feed.getTitle());
 		assertEquals("http://example.com", feed.getLink());
@@ -85,11 +87,11 @@ public class SyndFeedHttpMessageConverterTests {
 		assertEquals("title2", entry2.getTitle());
 	}
 	
-	@Test
-	public void readAtom() throws IOException {
+	@SmallTest
+	public void testReadAtom() throws IOException {
 		InputStream is = getClass().getResourceAsStream("atom.xml");
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(is);
-		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", utf8));
+		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", UTF_8));
 		SyndFeed feed = converter.read(SyndFeed.class, inputMessage);
 		assertEquals("title", feed.getTitle());
 		List<?> entries = feed.getEntries();
