@@ -32,6 +32,7 @@ import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.DuplicateConnectionException;
 import org.springframework.social.connect.NoSuchConnectionException;
+import org.springframework.social.connect.NotConnectedException;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -67,8 +68,8 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
 		this.textEncryptor = textEncryptor;
 	}
 		
-	public MultiValueMap<String, Connection<?>> findConnections() {
-		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where userId = ? order by providerId, rank";
+	public MultiValueMap<String, Connection<?>> findAllConnections() {
+		final String sql = selectFromUserConnection() + " where userId = ? order by providerId, rank";
 		final String[] selectionArgs = {userId};
 		List<Connection<?>> resultList = queryForConnections(sql, selectionArgs);
         MultiValueMap<String, Connection<?>> connections = new LinkedMultiValueMap<String, Connection<?>>();
@@ -85,14 +86,20 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
         }
         return connections;
 	}
-		
-	public List<Connection<?>> findConnectionsToProvider(String providerId) {
-		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where userId = ? and providerId = ? order by rank";
+			
+	public List<Connection<?>> findConnections(String providerId) {
+		final String sql = selectFromUserConnection() + " where userId = ? and providerId = ? order by rank";
 		final String[] selectionArgs = {userId, providerId};
 		return queryForConnections(sql, selectionArgs);
-	}	
+	}
 	
-	public MultiValueMap<String, Connection<?>> findConnectionsForUsers(MultiValueMap<String, String> providerUsers) {
+	@SuppressWarnings("unchecked")
+	public <A> List<Connection<A>> findConnections(Class<A> apiType) {
+		List<?> connections = findConnections(getProviderId(apiType));
+		return (List<Connection<A>>) connections;
+	}
+	
+	public MultiValueMap<String, Connection<?>> findConnectionsToUsers(MultiValueMap<String, String> providerUsers) {
 		if (providerUsers.isEmpty()) {
 			throw new IllegalArgumentException("Unable to execute find: no providerUsers provided");
 		}
@@ -120,7 +127,7 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
 			}
 		}
 		
-	    final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where userId = ? and " + providerUsersCriteriaSql + " order by providerId, rank";
+	    final String sql = selectFromUserConnection() + " where userId = ? and " + providerUsersCriteriaSql + " order by providerId, rank";
 		final String[] selectionArgs = args.toArray(new String[0]);
 	    List<Connection<?>> resultList = queryForConnections(sql, selectionArgs);
 		
@@ -143,8 +150,8 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
 		return connectionsForUsers;
 	}
 	
-	public Connection<?> findConnection(ConnectionKey connectionKey) {		
-		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where userId = ? and providerId = ? and providerUserId = ? order by rank";
+	public Connection<?> getConnection(ConnectionKey connectionKey) {		
+		final String sql = selectFromUserConnection() + " where userId = ? and providerId = ? and providerUserId = ? order by rank";
 		final String[] selectionArgs = {userId, connectionKey.getProviderId(), connectionKey.getProviderUserId()};
 		Connection<?> connection = queryForConnection(sql, selectionArgs);
 		
@@ -156,35 +163,38 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <S> Connection<S> findPrimaryConnectionToApi(Class<S> apiType) {
-		final String sql = SELECT_FROM_SERVICE_PROVIDER_CONNECTION + " where userId = ? and providerId = ? and rank = 1";
-		final String[] selectionArgs = {userId, getProviderId(apiType)};		
-		return (Connection<S>) queryForConnection(sql, selectionArgs);
+	public <A> Connection<A> getConnection(Class<A> apiType, String providerUserId) {
+		String providerId = getProviderId(apiType);
+		return (Connection<A>) getConnection(new ConnectionKey(providerId, providerUserId));
+	}
+		
+	@SuppressWarnings("unchecked")
+	public <A> Connection<A> getPrimaryConnection(Class<A> apiType) {
+		String providerId = getProviderId(apiType);
+		Connection<A> connection = (Connection<A>) findPrimaryConnection(providerId);
+		if (connection == null) {
+			throw new NotConnectedException(providerId);
+		}
+		return connection;
 	}
 	
-    @SuppressWarnings("unchecked")
-	public <S> List<Connection<S>> findConnectionsToApi(Class<S> apiType) {
-    	List<?> connections = findConnectionsToProvider(getProviderId(apiType));
-    	return (List<Connection<S>>) connections;
-    }
-	
 	@SuppressWarnings("unchecked")
-	public <S> Connection<S> findConnectionToApiForUser(Class<S> apiType, String providerUserId) {
+	public <A> Connection<A> findPrimaryConnection(Class<A> apiType) {
 		String providerId = getProviderId(apiType);
-		return (Connection<S>) findConnection(new ConnectionKey(providerId, providerUserId));
+		return (Connection<A>) findPrimaryConnection(providerId);
 	}
 	
 	public void addConnection(Connection<?> connection) {
 		try {
 			ConnectionData data = connection.createData();
-			SQLiteDatabase db = repositoryHelper.getWritableDatabase();		
+			SQLiteDatabase db = repositoryHelper.getWritableDatabase();
 			
 			// generate rank
-			final String sql = "select ifnull(max(rank) + 1, 1) from UserConnection where userId = ? and providerId = ?";
+			final String sql = "select ifnull(max(rank) + 1, 1) as rank from UserConnection where userId = ? and providerId = ?";
 			final String[] selectionArgs = {userId, data.getProviderId()};
 			Cursor c = db.rawQuery(sql, selectionArgs);
 			c.moveToFirst();
-			int rank = c.getInt(0);
+			int rank = c.getInt(c.getColumnIndex("rank"));
 			c.close();
 			
 			// insert connection
@@ -224,7 +234,7 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
 		db.close();
 	}
 	
-	public void removeConnectionsToProvider(String providerId) {		
+	public void removeConnections(String providerId) {		
 		SQLiteDatabase db = repositoryHelper.getWritableDatabase();
 		final String whereClause = "userId = ? and providerId = ?";
 		final String[] whereArgs = {userId, providerId};
@@ -243,9 +253,22 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
 	
 	// internal helpers
 	
-	private static final String SELECT_FROM_SERVICE_PROVIDER_CONNECTION = "select userId, providerId, providerUserId, displayName, profileUrl, imageUrl, accessToken, secret, refreshToken, expireTime from UserConnection";
+	private String selectFromUserConnection() {
+		return "select userId, providerId, providerUserId, displayName, profileUrl, imageUrl, accessToken, secret, refreshToken, expireTime from UserConnection";
+	}
 	
-	private <S> String getProviderId(Class<S> apiType) {
+	private Connection<?> findPrimaryConnection(String providerId) {
+		final String sql = selectFromUserConnection() + " where userId = ? and providerId = ? and rank = 1";
+		final String[] selectionArgs = {userId, providerId};
+		List<Connection<?>> connections = queryForConnections(sql, selectionArgs);
+		if (connections.size() > 0) {
+			return connections.get(0);
+		} else {
+			return null;
+		}		
+	}
+
+	private <A> String getProviderId(Class<A> apiType) {
 		return connectionFactoryLocator.getConnectionFactory(apiType).getProviderId();
 	}
 	

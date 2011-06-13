@@ -26,6 +26,7 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionKey;
 import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UsersConnectionRepository;
 
 import android.database.Cursor;
@@ -34,7 +35,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * {@link UsersConnectionRepository} that uses SQLite to persist connection data to a relational database.
- * 
  * @author Roy Clarkson
  */
 public class SQLiteUsersConnectionRepository implements UsersConnectionRepository {
@@ -44,13 +44,25 @@ public class SQLiteUsersConnectionRepository implements UsersConnectionRepositor
 	private final ConnectionFactoryLocator connectionFactoryLocator;
 
 	private final TextEncryptor textEncryptor;
+	
+	private ConnectionSignUp connectionSignUp;
 
 	public SQLiteUsersConnectionRepository(SQLiteOpenHelper repositoryHelper, ConnectionFactoryLocator connectionFactoryLocator, TextEncryptor textEncryptor) {
 		this.repositoryHelper = repositoryHelper;
 		this.connectionFactoryLocator = connectionFactoryLocator;
 		this.textEncryptor = textEncryptor;
 	}
-
+	
+	/**
+	 * The command to execute to create a new local user profile in the event no user id could be mapped to a connection.
+	 * Allows for implicitly creating a user profile from connection data during a provider sign-in attempt.
+	 * Defaults to null, indicating explicit sign-up will be required to complete the provider sign-in attempt.
+	 * @see #findUserIdWithConnection(Connection)
+	 */
+	public void setConnectionSignUp(ConnectionSignUp connectionSignUp) {
+		this.connectionSignUp = connectionSignUp;
+	}
+	
 	public String findUserIdWithConnection(Connection<?> connection) {
 		final String sql = "select userId from UserConnection where providerId = ? and providerUserId = ?";
 		ConnectionKey key = connection.getKey();
@@ -58,12 +70,19 @@ public class SQLiteUsersConnectionRepository implements UsersConnectionRepositor
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
 		Cursor c = db.rawQuery(sql, selectionArgs);		
 		String userId = null;
+		if (c.getCount() == 0) {
+			if (connectionSignUp != null) {
+				String newUserId = connectionSignUp.execute(connection);
+				createConnectionRepository(newUserId).addConnection(connection);
+				return newUserId;
+			}
+		}
 		if (c.getCount() == 1) {
 			c.moveToFirst();
 			userId = c.getString(c.getColumnIndex("userId"));
 		} 
 		c.close();
-		db.close();
+		db.close();		
 		return userId;
 	}
 
@@ -97,6 +116,9 @@ public class SQLiteUsersConnectionRepository implements UsersConnectionRepositor
 	}
 
 	public ConnectionRepository createConnectionRepository(String userId) {
+		if (userId == null) {
+			throw new IllegalArgumentException("userId cannot be null");
+		}
 		return new SQLiteConnectionRepository(userId, repositoryHelper, connectionFactoryLocator, textEncryptor);
 	}
 }
