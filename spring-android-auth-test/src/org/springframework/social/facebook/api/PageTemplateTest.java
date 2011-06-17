@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,13 @@ import static org.springframework.social.test.client.ResponseCreators.withRespon
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.social.BadCredentialsException;
+import org.springframework.social.NotAuthorizedException;
 
 import android.test.suitebuilder.annotation.MediumTest;
 
 /**
  * @author Craig Walls
+ * @author Roy Clarkson
  */
 public class PageTemplateTest extends AbstractFacebookApiTest {
 	
@@ -114,6 +115,18 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 		assertTrue(facebook.pageOperations().isPageAdmin("987654321"));
 	}
 	
+
+	@MediumTest
+	public void testIsPageAdmin_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.pageOperations().isPageAdmin("2468013579");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	@MediumTest
 	public void testPost_message() throws Exception {
 		expectFetchAccounts();
@@ -128,19 +141,30 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 	}
 
 	@MediumTest
-	public void testPost_message_notAdmin() throws Exception {
+	public void testPostMessage_notAdmin() throws Exception {
 		boolean success = false;
 		try {
 			expectFetchAccounts();
 			facebook.pageOperations().post("2468013579", "Hello Facebook World");
-		} catch(BadCredentialsException e) {
+		} catch (PageAdministrationException e) {
 			success = true;
 		}
-		assertTrue(success);
+		assertTrue("Expected PageAdministrationException", success);
 	}
-	
+
 	@MediumTest
-	public void testPost_link() throws Exception {
+	public void testPostMessage_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.pageOperations().post("2468013579", "Hello Facebook World");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	@MediumTest
+	public void testPostLink() throws Exception {
 		expectFetchAccounts();
 		String requestBody = "link=someLink&name=some+name&caption=some+caption&description=some+description&message=Hello+Facebook+World&access_token=pageAccessToken";
 		mockServer.expect(requestTo("https://graph.facebook.com/987654321/feed")).andExpect(method(POST))
@@ -153,18 +177,30 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 	}
 
 	@MediumTest
-	public void testPost_link_notAdmin() throws Exception {
+	public void testPostLink_notAdmin() throws Exception {
 		boolean success = false;
 		try {
 			expectFetchAccounts();
 			FacebookLink link = new FacebookLink("someLink", "some name", "some caption", "some description");
 			facebook.pageOperations().post("2468013579", "Hello Facebook World", link);
-		} catch(BadCredentialsException e) {
+		} catch (PageAdministrationException e) {
 			success = true;
 		}
-		assertTrue(success);
+		assertTrue("Expected PageAdministrationException", success);
 	}
-	
+
+	@MediumTest
+	public void testPostLink_unauthorized() {
+		boolean success = false;
+		try {
+			FacebookLink link = new FacebookLink("someLink", "some name", "some caption", "some description");
+			unauthorizedFacebook.pageOperations().post("2468013579", "Hello Facebook World", link);
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	@MediumTest
 	public void testPostPhoto_noCaption() {
 		expectFetchAccounts();
@@ -179,6 +215,17 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 	}
 
 	@MediumTest
+	public void testPostPhoto_noCaption_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.pageOperations().postPhoto("987654321", "192837465", null);
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+	
+	@MediumTest
 	public void testPostPhoto_withCaption() {
 		expectFetchAccounts();
 		mockServer.expect(requestTo("https://graph.facebook.com/192837465/photos"))
@@ -191,6 +238,17 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 		assertEquals("12345", photoId);
 	}
 	
+	@MediumTest
+	public void testPostPhoto_withCaption_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.pageOperations().postPhoto("987654321", "192837465", null, "Some caption");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	// private helpers
 	
 	private void expectFetchAccounts() {

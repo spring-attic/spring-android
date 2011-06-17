@@ -21,17 +21,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import junit.framework.TestCase;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.test.client.MockRestServiceServer;
 
-import android.test.AndroidTestCase;
-
-public class AbstractFacebookApiTest extends AndroidTestCase {
+public class AbstractFacebookApiTest extends TestCase {
+	
 	protected static final String ACCESS_TOKEN = "someAccessToken";
-
 	protected FacebookTemplate facebook;
+	protected FacebookTemplate unauthorizedFacebook;
 	protected MockRestServiceServer mockServer;
 	protected HttpHeaders responseHeaders;
 	
@@ -42,6 +43,8 @@ public class AbstractFacebookApiTest extends AndroidTestCase {
 		mockServer = MockRestServiceServer.createServer(facebook.getRestTemplate());
 		responseHeaders = new HttpHeaders();
 		responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+		unauthorizedFacebook = new FacebookTemplate();
+		MockRestServiceServer.createServer(unauthorizedFacebook.getRestTemplate());
 	}
 	
 	@Override
@@ -49,6 +52,7 @@ public class AbstractFacebookApiTest extends AndroidTestCase {
 		facebook = null;
 		mockServer = null;
 		responseHeaders = null;
+		unauthorizedFacebook = null;
 	}
 
 
@@ -58,7 +62,6 @@ public class AbstractFacebookApiTest extends AndroidTestCase {
 		try {
 			return FB_DATE_FORMAT.parse(dateString);
 		} catch (ParseException e) {
-			System.out.println(e);
 			return null;
 		}
 	}

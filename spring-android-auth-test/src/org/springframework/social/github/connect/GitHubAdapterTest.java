@@ -109,6 +109,11 @@ public class GitHubAdapterTest extends AndroidTestCase {
 		public String getProfileUrl() {
 			return null;
 		}
+
+		@Override
+		public boolean isAuthorized() {
+			return false;
+		}
 		
 	}
 }

@@ -1,0 +1,12 @@
+{
+	"id" : 12345,
+	"text" : "Tweet 1",
+	"user" : {
+		"id" : 112233,
+		"screen_name" : "habuma",
+		"profile_image_url" : "http://a3.twimg.com/profile_images/1205746571/me2_300.jpg"
+	},
+	"source" : "Spring Social Showcase",
+	"in_reply_to_user_id" : "332211",
+	"created_at" : "Tue Jul 13 17:38:21 +0000 2010"
+}

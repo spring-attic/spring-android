@@ -15,10 +15,10 @@
  */
 package org.springframework.social.twitter.api.impl;
 
-import android.test.AndroidTestCase;
+import junit.framework.TestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-public class TwitterTemplateTest extends AndroidTestCase {
+public class TwitterTemplateTest extends TestCase {
 	
 	@Override
 	public void setUp() throws Exception {
@@ -28,13 +28,13 @@ public class TwitterTemplateTest extends AndroidTestCase {
 	@SmallTest
 	public void testIsAuthorizedForUser() {
 		TwitterTemplate twitter = new TwitterTemplate("API_KEY", "API_SECRET", "ACCESS_TOKEN", "ACCESS_TOKEN_SECRET");
-		assertTrue(twitter.isAuthorizedForUser());
+		assertTrue(twitter.isAuthorized());
 	}
 
 	@SmallTest
 	public void testIsAuthorizedForUser_notAuthorized() {
 		TwitterTemplate twitter = new TwitterTemplate();
-		assertFalse(twitter.isAuthorizedForUser());
+		assertFalse(twitter.isAuthorized());
 	}
 
 }

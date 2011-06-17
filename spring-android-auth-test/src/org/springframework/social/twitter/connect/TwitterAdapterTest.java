@@ -110,7 +110,7 @@ public class TwitterAdapterTest extends AndroidTestCase {
 		}
 
 		@Override
-		public boolean isAuthorizedForUser() {
+		public boolean isAuthorized() {
 			return false;
 		}
 

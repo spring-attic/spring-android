@@ -17,9 +17,13 @@ package org.springframework.security.crypto.keygen;
 
 import java.security.SecureRandom;
 
+import org.springframework.security.crypto.keygen.BytesKeyGenerator;
+import org.springframework.security.crypto.keygen.StringKeyGenerator;
+
 /**
  * Factory for commonly used key generators.
  * Public API for constructing a {@link BytesKeyGenerator} or {@link StringKeyGenerator}.
+ * 
  * @author Keith Donald
  */
 public class AndroidKeyGenerators {

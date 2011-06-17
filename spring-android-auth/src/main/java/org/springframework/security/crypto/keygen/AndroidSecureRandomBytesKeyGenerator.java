@@ -19,10 +19,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
+import org.springframework.security.crypto.keygen.BytesKeyGenerator;
+
 /**
  * A KeyGenerator that uses SecureRandom to generate byte array-based keys.
  * Defaults to 8 byte keys produced by the SHA1PRNG algorithm developed by the BouncyCastle Provider.
+ * 
  * @author Keith Donald
+ * @author Roy Clarkson
  */
 final class AndroidSecureRandomBytesKeyGenerator implements BytesKeyGenerator {
 

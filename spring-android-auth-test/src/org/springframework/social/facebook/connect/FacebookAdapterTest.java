@@ -171,6 +171,11 @@ public class FacebookAdapterTest extends AndroidTestCase {
 		public UserOperations userOperations() {
 			return userOperationsMock;
 		}
+
+		@Override
+		public boolean isAuthorized() {
+			return false;
+		}
 		
 	}
 	

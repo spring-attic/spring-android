@@ -61,6 +61,11 @@ public class LinkedInAdapterTest extends AndroidTestCase {
 		public List<LinkedInProfile> getConnections() {
 			return null;
 		}
+
+		@Override
+		public boolean isAuthorized() {
+			return false;
+		}
 		
 	}
 

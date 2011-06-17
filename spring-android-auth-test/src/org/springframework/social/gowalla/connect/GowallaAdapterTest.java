@@ -81,6 +81,11 @@ public class GowallaAdapterTest extends AndroidTestCase {
 		public List<Checkin> getTopCheckins(String userId) {
 			return null;
 		}
+
+		@Override
+		public boolean isAuthorized() {
+			return false;
+		}
 		
 	}
 }

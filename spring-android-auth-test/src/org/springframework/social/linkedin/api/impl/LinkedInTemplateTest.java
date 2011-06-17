@@ -22,19 +22,20 @@ import static org.springframework.social.test.client.ResponseCreators.withRespon
 
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.social.linkedin.api.LinkedInProfile;
 import org.springframework.social.test.client.MockRestServiceServer;
 
-import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 
 /**
  * @author Craig Walls
  */
-public class LinkedInTemplateTest extends AndroidTestCase {
+public class LinkedInTemplateTest extends TestCase {
 
 	private LinkedInTemplate linkedIn;
 	private MockRestServiceServer mockServer;
@@ -58,8 +59,8 @@ public class LinkedInTemplateTest extends AndroidTestCase {
 
 	@MediumTest
 	public void testGetUserProfile() {
-		mockServer.expect(requestTo("https://api.linkedin.com/v1/people/~:public?format=json")).andExpect(method(GET))
-				.andRespond(withResponse(new ClassPathResource("profile.json", getClass()), responseHeaders));
+		mockServer.expect(requestTo(LinkedInTemplate.PROFILE_URL)).andExpect(method(GET))
+			.andRespond(withResponse(new ClassPathResource("profile.json", getClass()), responseHeaders));
 		LinkedInProfile profile = linkedIn.getUserProfile();
 		assertEquals("z37f0n3A05", profile.getId());
 		assertEquals("Just a guy", profile.getHeadline());
@@ -73,36 +74,36 @@ public class LinkedInTemplateTest extends AndroidTestCase {
 
 	@MediumTest
 	public void testGetProfileId() {
-		mockServer.expect(requestTo("https://api.linkedin.com/v1/people/~:public?format=json")).andExpect(method(GET))
-				.andRespond(withResponse(new ClassPathResource("profile.json", getClass()), responseHeaders));
+		mockServer.expect(requestTo(LinkedInTemplate.PROFILE_URL)).andExpect(method(GET))
+			.andRespond(withResponse(new ClassPathResource("profile.json", getClass()), responseHeaders));
 		assertEquals("z37f0n3A05", linkedIn.getProfileId());
 	}
 
 	@MediumTest
 	public void testGetProfileUrl() {
-		mockServer.expect(requestTo("https://api.linkedin.com/v1/people/~:public?format=json")).andExpect(method(GET))
-				.andRespond(withResponse(new ClassPathResource("profile.json", getClass()), responseHeaders));
+		mockServer.expect(requestTo(LinkedInTemplate.PROFILE_URL)).andExpect(method(GET))
+			.andRespond(withResponse(new ClassPathResource("profile.json", getClass()), responseHeaders));
 		assertEquals("http://www.linkedin.com/in/habuma", linkedIn.getProfileUrl());
 	}
 
 	@MediumTest
 	public void testGetConnections() {
 		mockServer.expect(requestTo("https://api.linkedin.com/v1/people/~/connections?format=json")).andExpect(method(GET))
-				.andRespond(withResponse(new ClassPathResource("connections.json", getClass()), responseHeaders));
+			.andRespond(withResponse(new ClassPathResource("connections.json", getClass()), responseHeaders));
 		List<LinkedInProfile> connections = linkedIn.getConnections();
 		assertEquals(4, connections.size());
 		assertProfile(connections.get(0), "kR0lnX1ll8", "SpringSource Cofounder", "Keith", "Donald", "Computer Software",
-				"http://www.linkedin.com/profile?viewProfile=&key=2526541&authToken=61Sm&authType=name&trk=api*a121026*s129482*");
+			"http://www.linkedin.com/profile?viewProfile=&key=2526541&authToken=61Sm&authType=name&trk=api*a121026*s129482*");
 		assertProfile(connections.get(1), "VRcwcqPCtP", "GM, SpringSource and SVP, Middleware at VMware", "Rod",
-				"Johnson",
-				"Computer Software",
-				"http://www.linkedin.com/profile?viewProfile=&key=210059&authToken=3hU1&authType=name&trk=api*a121026*s129482*");
+			"Johnson",
+			"Computer Software",
+			"http://www.linkedin.com/profile?viewProfile=&key=210059&authToken=3hU1&authType=name&trk=api*a121026*s129482*");
 		assertProfile(connections.get(2), "Ia7uR1OmDB", "Spring and AOP expert; author AspectJ in Action", "Ramnivas",
-				"Laddad", "Computer Software",
-				"http://www.linkedin.com/profile?viewProfile=&key=208994&authToken=P5K9&authType=name&trk=api*a121026*s129482*");
+			"Laddad", "Computer Software",
+			"http://www.linkedin.com/profile?viewProfile=&key=208994&authToken=P5K9&authType=name&trk=api*a121026*s129482*");
 		assertProfile(connections.get(3), "gKEMq4CMdl", "Head of Groovy Development at SpringSource", "Guillaume",
-				"Laforge", "Information Technology and Services",
-				"http://www.linkedin.com/profile?viewProfile=&key=822306&authToken=YmIW&authType=name&trk=api*a121026*s129482*");
+			"Laforge", "Information Technology and Services",
+			"http://www.linkedin.com/profile?viewProfile=&key=822306&authToken=YmIW&authType=name&trk=api*a121026*s129482*");
 	}
 
 	private void assertProfile(LinkedInProfile connection, String id, String headline, String firstName,

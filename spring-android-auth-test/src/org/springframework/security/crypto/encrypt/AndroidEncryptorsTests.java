@@ -15,6 +15,10 @@
  */
 package org.springframework.security.crypto.encrypt;
 
+import org.springframework.security.crypto.encrypt.AndroidEncryptors;
+import org.springframework.security.crypto.encrypt.BytesEncryptor;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
+
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 

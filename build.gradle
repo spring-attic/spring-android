@@ -98,10 +98,10 @@ configure(javaprojects) {
 
     junitVersion = '4.7'
     log4jVersion = '1.2.16'
-    springVersion = '3.1.0.M1'
+    springVersion = '3.1.0.M2'
     springSocialVersion = '1.0.0.BUILD-SNAPSHOT'
-    springSecurityVersion = '3.1.0.RC1'
-    androidVersion = '1.5_r3'
+    springSecurityVersion = '3.1.0.RC2.crypto'
+    androidVersion = '2.1_r1'
     commonsHttpclientVersion = '3.1'
     jacksonVersion = '1.8.1'
 	gsonVersion = '1.7.1'
@@ -223,8 +223,7 @@ project('spring-android-auth') {
             exclude group: "org.springframework", module: "spring-web"
         }
         compile ("org.springframework.security:spring-security-crypto:$springSecurityVersion") {
-            // exclude spring-core in favor of spring-android-core
-            exclude group: "org.springframework", module: "spring-core"
+            transitive = false
         }
         compile project (':spring-android-core')
         compile project (':spring-android-rest-template');
@@ -302,6 +301,7 @@ project('spring-android-rest-template') {
             'org/springframework/http/HttpStatus.java',
             'org/springframework/http/ResponseEntity.java',
             'org/springframework/http/client/AbstractBufferingClientHttpRequest.java',
+            'org/springframework/http/client/AbstractClientHttpRequestFactoryWrapper.java',
             'org/springframework/http/client/AbstractClientHttpRequest.java',
             'org/springframework/http/client/BufferingSimpleClientHttpRequest.java',            
             'org/springframework/http/client/ClientHttpRequest.java',
