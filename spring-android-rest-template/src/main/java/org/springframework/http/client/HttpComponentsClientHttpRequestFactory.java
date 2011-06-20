@@ -119,7 +119,7 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
         if (timeout < 0) {
             throw new IllegalArgumentException("timeout must be a non-negative value");
         }
-        this.httpClient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, timeout);
+        getHttpClient().getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT, timeout);
     }
 
 

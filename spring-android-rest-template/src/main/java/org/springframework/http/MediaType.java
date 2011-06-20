@@ -111,22 +111,22 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Public constant media type for {@code multipart/form-data}.
-	 *  */
+	 */
 	public final static MediaType MULTIPART_FORM_DATA;
 
 	/**
 	 * Public constant media type for {@code text/html}.
-	 *  */
+	 */
 	public final static MediaType TEXT_HTML;
 
 	/**
 	 * Public constant media type for {@code text/plain}.
-	 *  */
+	 */
 	public final static MediaType TEXT_PLAIN;
 
 	/**
 	 * Public constant media type for {@code text/xml}.
-	 *  */
+	 */
 	public final static MediaType TEXT_XML;
 
 
@@ -200,7 +200,7 @@ public class MediaType implements Comparable<MediaType> {
 
 
 	/**
-	 * Create a new {@link MediaType} for the given primary type.
+	 * Create a new {@code MediaType} for the given primary type.
 	 * <p>The {@linkplain #getSubtype() subtype} is set to <code>&#42;</code>, parameters empty.
 	 * @param type the primary type
 	 * @throws IllegalArgumentException if any of the parameters contain illegal characters
@@ -210,7 +210,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Create a new {@link MediaType} for the given primary type and subtype.
+	 * Create a new {@code MediaType} for the given primary type and subtype.
 	 * <p>The parameters are empty.
 	 * @param type the primary type
 	 * @param subtype the subtype
@@ -221,18 +221,18 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Create a new {@link MediaType} for the given type, subtype, and character set.
+	 * Create a new {@code MediaType} for the given type, subtype, and character set.
 	 * @param type the primary type
 	 * @param subtype the subtype
 	 * @param charSet the character set
 	 * @throws IllegalArgumentException if any of the parameters contain illegal characters
 	 */
 	public MediaType(String type, String subtype, Charset charSet) {
-		this(type, subtype, Collections.singletonMap(PARAM_CHARSET, charSet.name()));
+		this(type, subtype, Collections.singletonMap(PARAM_CHARSET, charSet.displayName()));
 	}
 
 	/**
-	 * Create a new {@link MediaType} for the given type, subtype, and quality value.
+	 * Create a new {@code MediaType} for the given type, subtype, and quality value.
 	 *
 	 * @param type the primary type
 	 * @param subtype the subtype
@@ -244,7 +244,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Copy-constructor that copies the type and subtype of the given {@link MediaType},
+	 * Copy-constructor that copies the type and subtype of the given {@code MediaType},
 	 * and allows for different parameter.
 	 * @param other the other media type
 	 * @param parameters the parameters, may be <code>null</code>
@@ -255,7 +255,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Create a new {@link MediaType} for the given type, subtype, and parameters.
+	 * Create a new {@code MediaType} for the given type, subtype, and parameters.
 	 * @param type the primary type
 	 * @param subtype the subtype
 	 * @param parameters the parameters, may be <code>null</code>
@@ -335,7 +335,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Indicate whether the {@linkplain #getType() type} is the wildcard character <code>&#42;</code> or not.
+	 * Indicates whether the {@linkplain #getType() type} is the wildcard character <code>&#42;</code> or not.
 	 */
 	public boolean isWildcardType() {
 		return WILDCARD_TYPE.equals(type);
@@ -349,11 +349,20 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Indicate whether the {@linkplain #getSubtype() subtype} is the wildcard character <code>&#42;</code> or not.
+	 * Indicates whether the {@linkplain #getSubtype() subtype} is the wildcard character <code>&#42;</code> or not.
 	 * @return whether the subtype is <code>&#42;</code>
 	 */
 	public boolean isWildcardSubtype() {
 		return WILDCARD_TYPE.equals(subtype);
+	}
+
+	/**
+	 * Indicates whether this media type is concrete, i.e. whether neither the type or subtype is a wildcard
+	 * character <code>&#42;</code>.
+	 * @return whether this media type is concrete
+	 */
+	public boolean isConcrete() {
+		return !isWildcardType() && !isWildcardSubtype();
 	}
 
 	/**
@@ -385,9 +394,9 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Indicate whether this {@link MediaType} includes the given media type.
-	 * <p>For instance, {@code text/*} includes {@code text/plain}, {@code text/html}, and {@code application/*+xml}
-	 * includes {@code application/soap+xml}, etc. This method is non-symmetic.
+	 * Indicate whether this {@code MediaType} includes the given media type.
+	 * <p>For instance, {@code text/*} includes {@code text/plain} and {@code text/html}, and {@code application/*+xml}
+	 * includes {@code application/soap+xml}, etc. This method is <b>not</b> symmetric.
 	 * @param other the reference media type with which to compare
 	 * @return <code>true</code> if this media type includes the given media type; <code>false</code> otherwise
 	 */
@@ -420,9 +429,9 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Indicate whether this {@link MediaType} is compatible with the given media type.
+	 * Indicate whether this {@code MediaType} is compatible with the given media type.
 	 * <p>For instance, {@code text/*} is compatible with {@code text/plain}, {@code text/html}, and vice versa.
-	 * In effect, this method is similar to {@link #includes(MediaType)}, except that it's symmetric.
+	 * In effect, this method is similar to {@link #includes(MediaType)}, except that it <b>is</b> symmetric.
 	 * @param other the reference media type with which to compare
 	 * @return <code>true</code> if this media type is compatible with the given media type; <code>false</code> otherwise
 	 */
@@ -457,7 +466,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Compares this {@link MediaType} to another alphabetically.
+	 * Compares this {@code MediaType} to another alphabetically.
 	 * @param other media type to compare to
 	 * @see #sortBySpecificity(List)
 	 */
@@ -546,7 +555,7 @@ public class MediaType implements Comparable<MediaType> {
 
 
 	/**
-	 * Parse the given String value into a {@link MediaType} object,
+	 * Parse the given String value into a {@code MediaType} object,
 	 * with this method name following the 'valueOf' naming convention
 	 * (as supported by {@link org.springframework.core.convert.ConversionService}.
 	 * @see #parseMediaType(String)
@@ -556,7 +565,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Parse the given String into a single {@link MediaType}.
+	 * Parse the given String into a single {@code MediaType}.
 	 * @param mediaType the string to parse
 	 * @return the media type
 	 * @throws IllegalArgumentException if the string cannot be parsed
@@ -599,7 +608,7 @@ public class MediaType implements Comparable<MediaType> {
 
 
 	/**
-	 * Parse the given, comma-seperated string into a list of {@link MediaType} objects.
+	 * Parse the given, comma-separated string into a list of {@code MediaType} objects.
 	 * <p>This method can be used to parse an Accept or Content-Type header.
 	 * @param mediaTypes the string to parse
 	 * @return the list of media types
@@ -618,7 +627,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Return a string representation of the given list of {@link MediaType} objects.
+	 * Return a string representation of the given list of {@code MediaType} objects.
 	 * <p>This method can be used to for an {@code Accept} or {@code Content-Type} header.
 	 * @param mediaTypes the string to parse
 	 * @return the list of media types
@@ -637,7 +646,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Sorts the given list of {@link MediaType} objects by specificity.
+	 * Sorts the given list of {@code MediaType} objects by specificity.
 	 * <p>Given two media types:
 	 * <ol>
 	 *   <li>if either media type has a {@linkplain #isWildcardType() wildcard type}, then the media type without the
@@ -670,7 +679,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Sorts the given list of {@link MediaType} objects by quality value.
+	 * Sorts the given list of {@code MediaType} objects by quality value.
 	 * <p>Given two media types:
 	 * <ol>
 	 *   <li>if the two media types have different {@linkplain #getQualityValue() quality value}, then the media type
@@ -697,7 +706,10 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 
-	static final Comparator<MediaType> SPECIFICITY_COMPARATOR = new Comparator<MediaType>() {
+	/**
+	 * Comparator used by {@link #sortBySpecificity(List)}.
+	 */
+	public static final Comparator<MediaType> SPECIFICITY_COMPARATOR = new Comparator<MediaType>() {
 
 		public int compare(MediaType mediaType1, MediaType mediaType2) {
 			if (mediaType1.isWildcardType() && !mediaType2.isWildcardType()) { // */* < audio/*
@@ -737,7 +749,10 @@ public class MediaType implements Comparable<MediaType> {
 	};
 
 
-	static final Comparator<MediaType> QUALITY_VALUE_COMPARATOR = new Comparator<MediaType>() {
+	/**
+	 * Comparator used by {@link #sortByQualityValue(List)}.
+	 */
+	public static final Comparator<MediaType> QUALITY_VALUE_COMPARATOR = new Comparator<MediaType>() {
 
 		public int compare(MediaType mediaType1, MediaType mediaType2) {
 			double quality1 = mediaType1.getQualityValue();
