@@ -24,13 +24,13 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementArray;
 import org.simpleframework.xml.Root;
+import org.springframework.android.test.Assert;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
 import org.springframework.http.MockHttpOutputMessage;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
 
 /** 
  * @author Roy Clarkson 
@@ -97,21 +97,11 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		assertEquals("Invalid result", 123, result.getNumber());
 		assertEquals("Invalid result", "Example message", result.getString());
 		assertEquals("Invalid result", 42.0f, result.getFraction());
-		assertArrayEquals("Invalid result", new String[]{"Foo", "Bar"}, result.getArray());
+		Assert.assertArrayEquals("Invalid result", new String[]{"Foo", "Bar"}, result.getArray());
 		assertTrue(result.isBool());
 		assertNull(result.getNullstring());
 	}
-	
-//	<complexObject number="123">
-//	<array length="2">
-//	<string>Foo</string>
-//	<string>Bar</string>
-//	</array>
-//	<string>Example message</string>
-//	<fraction>42.0</fraction>
-//	<bool>true</bool>
-//	</complexObject>
-	
+		
 	@SmallTest
 	public void testReadSimpleNonAnnotated() throws IOException {
 		boolean success = false;
@@ -143,7 +133,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		SimpleObject result = (SimpleObject) converter.read(SimpleObject.class, inputMessage);
 		assertEquals("Invalid result", 123, result.getNumber());
 		byte[] bytes = new byte[] {(byte)0xA0, (byte)0xA1, (byte)0xA2, (byte)0xA3, (byte)0xA4, (byte)0xA5};
-		assertArrayEquals("Invalid result", bytes, result.getString().getBytes(ISO_8859_1.displayName()));
+		Assert.assertArrayEquals("Invalid result", bytes, result.getString().getBytes(ISO_8859_1.displayName()));
 		assertEquals("Invalid result", new String(bytes, ISO_8859_1.displayName()), result.getString());
 	}
 	
@@ -172,7 +162,6 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
 		converter.write(body, null, outputMessage);
 		String result = outputMessage.getBodyAsString(UTF_8);
-		Log.d("*********", result);
 		assertTrue(result.contains("<string>Example message</string>"));
 		assertTrue(result.contains("number=\"123\""));
 		assertTrue(result.contains("<fraction>42.0</fraction>"));
@@ -194,25 +183,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		
 	
 	// helpers
-	
-	private static void assertArrayEquals(String message, String[] expecteds, String[] actuals) {
-		assertEquals(message, expecteds.length, actuals.length);
-		if (expecteds.length == actuals.length) {
-			for (int i = 0; i < expecteds.length; i++) {
-				assertEquals(message, expecteds[i], actuals[i]);
-			}
-		}
-	}
-	
-	private static void assertArrayEquals(String message, byte[] expecteds, byte[] actuals) {
-		assertEquals(message, expecteds.length, actuals.length);
-		if (expecteds.length == actuals.length) {
-			for (int i = 0; i < expecteds.length; i++) {
-				assertEquals(message, expecteds[i], actuals[i]);
-			}
-		}
-	}
-	
+		
 	@Root
 	private static class SimpleObject {
 
