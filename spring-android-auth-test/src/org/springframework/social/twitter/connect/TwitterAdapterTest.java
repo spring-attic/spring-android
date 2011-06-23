@@ -21,6 +21,7 @@ import java.util.List;
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.twitter.api.DirectMessageOperations;
 import org.springframework.social.twitter.api.FriendOperations;
+import org.springframework.social.twitter.api.GeoOperations;
 import org.springframework.social.twitter.api.ImageSize;
 import org.springframework.social.twitter.api.ListOperations;
 import org.springframework.social.twitter.api.SearchOperations;
@@ -142,6 +143,11 @@ public class TwitterAdapterTest extends AndroidTestCase {
 		@Override
 		public UserOperations userOperations() {
 			return userOperationsMock;
+		}
+
+		@Override
+		public GeoOperations geoOperations() {
+			return null;
 		}
 		
 	}
