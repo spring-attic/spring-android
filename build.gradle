@@ -292,7 +292,6 @@ project('spring-android-rest-template') {
         sourceFilter = [
             // spring-web
             'org/springframework/http/HttpEntity.java',
-            'org/springframework/http/HttpHeaders.java',
             'org/springframework/http/HttpInputMessage.java',
             'org/springframework/http/HttpMessage.java',
             'org/springframework/http/HttpMethod.java',
@@ -303,7 +302,10 @@ project('spring-android-rest-template') {
             'org/springframework/http/client/AbstractBufferingClientHttpRequest.java',
             'org/springframework/http/client/AbstractClientHttpRequestFactoryWrapper.java',
             'org/springframework/http/client/AbstractClientHttpRequest.java',
-            'org/springframework/http/client/BufferingSimpleClientHttpRequest.java',            
+            'org/springframework/http/client/BufferingClientHttpRequest.java',
+            'org/springframework/http/client/BufferingClientHttpRequestFactory.java',
+            'org/springframework/http/client/BufferingClientHttpResponse.java',
+            'org/springframework/http/client/BufferingSimpleClientHttpRequest.java',
             'org/springframework/http/client/ClientHttpRequest.java',
             'org/springframework/http/client/ClientHttpRequestExecution.java',
             'org/springframework/http/client/ClientHttpRequestFactory.java',
@@ -315,7 +317,6 @@ project('spring-android-rest-template') {
             'org/springframework/http/client/InterceptingClientHttpRequest.java',
             'org/springframework/http/client/InterceptingClientHttpRequestFactory.java',
             'org/springframework/http/client/SimpleClientHttpRequestFactory.java',
-            'org/springframework/http/client/SimpleClientHttpResponse.java',
             'org/springframework/http/client/StreamingSimpleClientHttpRequest.java',
             'org/springframework/http/client/support/HttpRequestWrapper.java',
             'org/springframework/http/client/support/InterceptingHttpAccessor.java',

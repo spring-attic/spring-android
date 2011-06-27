@@ -17,14 +17,14 @@ package org.springframework.http.client;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-
+import org.springframework.http.ContentCodingType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.client.ClientHttpResponse;
 
 /**
  * {@link org.springframework.http.client.ClientHttpResponse} implementation that uses
@@ -67,7 +67,18 @@ final class HttpComponentsClientHttpResponse implements ClientHttpResponse {
 
     public InputStream getBody() throws IOException {
         HttpEntity entity = httpResponse.getEntity();
-        return entity != null ? entity.getContent() : null;
+        if (entity == null) {
+        	return null;
+        }
+        
+        InputStream body = entity.getContent();
+        if (entity.getContentEncoding() != null) {
+        	ContentCodingType codingType = ContentCodingType.parseCodingType(entity.getContentEncoding().getValue());
+	        if (codingType.equals(ContentCodingType.GZIP)) {
+	        	return new GZIPInputStream(body);
+	        }
+        }
+        return body;
     }
 
     public void close() {
