@@ -38,7 +38,7 @@ import org.springframework.util.Assert;
 
 /**
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter HttpMessageConverter}
- * that can read and write XML using Simple's {@link Persister} abstraction.
+ * that can read and write XML using Simple's {@link Serializer} abstraction.
  * *
  * <p>By default, this converter supports {@code text/xml} and {@code application/xml}. This can be
  * overridden by setting the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
@@ -53,7 +53,7 @@ public class SimpleXmlHttpMessageConverter extends AbstractHttpMessageConverter<
 	private Serializer serializer;
 	
 	/**
-	 * Construct a new {@code SimpleXmlHttpMessageConverter} with a default {@link Serializer#Serializer() Serializer}.
+	 * Construct a new {@code SimpleXmlHttpMessageConverter} with a default {@link Serializer}.
 	 * Sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}
 	 * to {@code text/xml} and {@code application/xml}, and {@code application/*-xml}.
 	 */
@@ -62,7 +62,7 @@ public class SimpleXmlHttpMessageConverter extends AbstractHttpMessageConverter<
 	}
 
 	/**
-	 * Construct a new {@code SimpleXmlHttpMessageConverter} with a customized {@link Serializer#Serializer() Serializer}.
+	 * Construct a new {@code SimpleXmlHttpMessageConverter} with a customized {@link Serializer}.
 	 * Sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}
 	 * to {@code text/xml} and {@code application/xml}, and {@code application/*-xml}.
 	 */
@@ -73,7 +73,7 @@ public class SimpleXmlHttpMessageConverter extends AbstractHttpMessageConverter<
 	
 	/**
 	 * Sets the {@code Serializer} for this view. If not set, a default
-	 * {@link Serializer#Serializer() Serializer} is used.
+	 * {@link Serializer} is used.
 	 * <p>Setting a custom-configured {@code Serializer} is one way to take further control of the XML serialization
 	 * process.
 	 * @throws IllegalArgumentException if serializer is null

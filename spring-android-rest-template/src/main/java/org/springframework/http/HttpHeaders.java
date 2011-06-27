@@ -49,8 +49,6 @@ import org.springframework.util.StringUtils;
  * <li>{@link #set(String, String)} sets the header value to a single string value</li>
  * </ul>
  *
- * <p>Inspired by {@link com.sun.net.httpserver.Headers}.
- *
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 3.0

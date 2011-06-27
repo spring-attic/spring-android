@@ -246,7 +246,7 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	/**
 	 * Indicate whether this {@code ContentCodingType} is compatible with the given coding type.
 	 * <p>For instance, {@code *} is compatible with {@code gzip}, {@code deflate}, and vice versa.
-	 * In effect, this method is similar to {@link #includes(MediaType)}, except that it <b>is</b> symmetric.
+	 * In effect, this method is similar to {@link #includes(ContentCodingType)}, except that it <b>is</b> symmetric.
 	 * @param other the reference coding type with which to compare
 	 * @return <code>true</code> if this coding type is compatible with the given coding type; <code>false</code> otherwise
 	 */
@@ -264,7 +264,7 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	
 	/**
 	 * Compares this {@code ContentCodingType} to another alphabetically.
-	 * @param other media type to compare to
+	 * @param other content coding type to compare to
 	 */
 	public int compareTo(ContentCodingType other) {
 		int comp = this.type.compareToIgnoreCase(other.type);
@@ -342,10 +342,10 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	}
 
 	/**
-	 * Parse the given String value into a {@code MediaType} object,
+	 * Parse the given String value into a {@code ContentCodingType} object,
 	 * with this method name following the 'valueOf' naming convention
 	 * (as supported by {@link org.springframework.core.convert.ConversionService}.
-	 * @see #parseMediaType(String)
+	 * @see #parseCodingType(String)
 	 */
 	public static ContentCodingType valueOf(String value) {
 		return parseCodingType(value);
@@ -383,8 +383,8 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	/**
 	 * Parse the given, comma-separated string into a list of {@code ContentCodingType} objects.
 	 * <p>This method can be used to parse an Accept-Encoding.
-	 * @param contentTypes the string to parse
-	 * @return the list of media types
+	 * @param codingTypes the string to parse
+	 * @return the list of content coding types
 	 * @throws IllegalArgumentException if the string cannot be parsed
 	 */
 	public static List<ContentCodingType> parseCodingTypes(String codingTypes) {
@@ -420,7 +420,7 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 
 	/**
 	 * Sorts the given list of {@code ContentCodingType} objects by quality value.
-	 * <p>Given two media types:
+	 * <p>Given two content coding types:
 	 * <ol>
 	 *   <li>if the two coding types have different {@linkplain #getQualityValue() quality value}, then the coding type
 	 *   with the highest quality value is ordered before the other.</li>
