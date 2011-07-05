@@ -66,6 +66,8 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 	private static final String CACHE_CONTROL = "Cache-Control";
 
 	private static final String CONTENT_DISPOSITION = "Content-Disposition";
+	
+	private static final String CONTENT_ENCODING = "Content-Encoding";
 
 	private static final String CONTENT_LENGTH = "Content-Length";
 
@@ -195,7 +197,7 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 	
 	/**
 	 * Set the list of acceptable {@linkplain ContentCodingType coding types}, as specified by the {@code Accept-Encoding} header.
-	 * @param acceptableEncodingTypes the acceptable media types
+	 * @param acceptableEncodingTypes the acceptable content coding types
 	 */
 	public void setAcceptEncoding(List<ContentCodingType> acceptableEncodingTypes) {
 		set(ACCEPT_ENCODING, ContentCodingType.toString(acceptableEncodingTypes));
@@ -203,8 +205,8 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 
 	/**
 	 * Return the list of acceptable {@linkplain ContentCodingType coding types}, as specified by the {@code Accept-Encoding} header.
-	 * <p>Returns an empty list when the acceptable media types are unspecified.
-	 * @return the acceptable media types
+	 * <p>Returns an empty list when the acceptable content coding types are unspecified.
+	 * @return the acceptable content coding types
 	 */
 	public List<ContentCodingType> getAcceptEncoding() {
 		String value = getFirst(ACCEPT_ENCODING);
@@ -271,6 +273,24 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 		set(CONTENT_DISPOSITION, builder.toString());
 	}
 
+	/**
+	 * Set the list of {@linkplain ContentCodingType content coding types}, as specified by the {@code Content-Encoding} header.
+	 * @param contentEncodingTypes the content coding types
+	 */
+	public void setContentEncoding(List<ContentCodingType> contentEncodingTypes) {
+		set(CONTENT_ENCODING, ContentCodingType.toString(contentEncodingTypes));
+	}
+
+	/**
+	 * Return the list of {@linkplain ContentCodingType content coding types}, as specified by the {@code Content-Encoding} header.
+	 * <p>Returns an empty list when the content coding type(s) are unspecified.
+	 * @return the content coding types
+	 */
+	public List<ContentCodingType> getContentEncoding() {
+		String value = getFirst(CONTENT_ENCODING);
+		return (value != null ? ContentCodingType.parseCodingTypes(value) : Collections.<ContentCodingType>emptyList());
+	}
+	
 	/**
 	 * Set the length of the body in bytes, as specified by the {@code Content-Length} header.
 	 * @param contentLength the content length

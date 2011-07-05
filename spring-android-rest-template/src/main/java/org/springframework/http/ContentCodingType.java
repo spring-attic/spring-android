@@ -34,10 +34,10 @@ import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.util.StringUtils;
 
 /**
- * Represents an Compression Type, as defined in the HTTP specification.
+ * Represents a Compression Type, as defined in the HTTP specification.
  *
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  */
 public class ContentCodingType implements Comparable<ContentCodingType> {
 	
@@ -50,11 +50,6 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	 *  Public constant encoding type for {@code gzip}.
 	 */
 	public final static ContentCodingType GZIP;
-	
-	/**
-	 *  Public constant encoding type for {@code deflate}.
-	 */
-	public final static ContentCodingType DEFLATE;
 	
 	
 	private static final BitSet TOKEN;
@@ -104,7 +99,6 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 		
 		ALL = new ContentCodingType("*");
 		GZIP = new ContentCodingType("gzip");
-		DEFLATE = new ContentCodingType("deflate");
 	}
 
 

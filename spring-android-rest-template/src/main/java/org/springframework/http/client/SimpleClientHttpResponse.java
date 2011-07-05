@@ -19,9 +19,7 @@ package org.springframework.http.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.util.zip.GZIPInputStream;
 
-import org.springframework.http.ContentCodingType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -34,7 +32,7 @@ import org.springframework.util.StringUtils;
  * @author Arjen Poutsma
  * @since 3.0
  */
-final class SimpleClientHttpResponse implements ClientHttpResponse {
+final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 
 	private final HttpURLConnection connection;
 
@@ -75,19 +73,9 @@ final class SimpleClientHttpResponse implements ClientHttpResponse {
 		return this.headers;
 	}
 
-	public InputStream getBody() throws IOException {
-		InputStream body = this.connection.getErrorStream();
-		if (body == null) {
-			body = this.connection.getInputStream();
-		}
-		
-		if (this.connection.getContentEncoding() != null) {
-			ContentCodingType codingType = ContentCodingType.parseCodingType(this.connection.getContentEncoding());
-			if (codingType == ContentCodingType.GZIP) {
-				return new GZIPInputStream(body);
-			}
-		}
-		return body;
+	public InputStream getBodyInternal() throws IOException {
+		InputStream errorStream = this.connection.getErrorStream();
+		return (errorStream != null ? errorStream : this.connection.getInputStream());
 	}
 
 	public void close() {

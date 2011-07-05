@@ -301,7 +301,6 @@ project('spring-android-rest-template') {
             'org/springframework/http/ResponseEntity.java',
             'org/springframework/http/client/AbstractBufferingClientHttpRequest.java',
             'org/springframework/http/client/AbstractClientHttpRequestFactoryWrapper.java',
-            'org/springframework/http/client/AbstractClientHttpRequest.java',
             'org/springframework/http/client/BufferingClientHttpRequest.java',
             'org/springframework/http/client/BufferingClientHttpRequestFactory.java',
             'org/springframework/http/client/BufferingClientHttpResponse.java',
