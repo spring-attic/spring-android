@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.android</groupId>
-	<artifactId>spring-android-auth-test</artifactId>
+	<artifactId>spring-android-rest-test</artifactId>
 	<version>1.0.0.BUILD-SNAPSHOT</version>
 	<packaging>apk</packaging>
-	<name>spring-android-auth-test</name>
+	<name>spring-android-rest-test</name>
 	<url>http://www.springsource.org</url>
 	<organization>
 		<name>SpringSource</name>

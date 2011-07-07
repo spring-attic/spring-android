@@ -232,15 +232,6 @@ project('spring-android-auth') {
 
 project('spring-android-rest-template') {
     description = 'Spring Android Rest Template'
-    
-    mainSrcDir = "$projectDir/src/main/java"
-    mainResourcesDir = "$projectDir/src/main/resources"
-    sharedSrcDir = "$projectDir/src/shared/java"
-    sharedResourcesDir = "$projectDir/src/shared/resources"
-
-    // include the shared source directories in the main SourceSet
-    sourceSets.main.java.srcDirs = [mainSrcDir, sharedSrcDir]
-    sourceSets.main.resources.srcDirs = [mainResourcesDir, sharedResourcesDir]
 
     repositories {
         mavenRepo urls: 'https://android-rome-feed-reader.googlecode.com/svn/maven2/releases'
@@ -274,92 +265,6 @@ project('spring-android-rest-template') {
         testCompile "commons-fileupload:commons-fileupload:$commonsFileuploadVersion"
         testCompile "org.mortbay.jetty:jetty:$jettyVersion"
         testCompile "xmlunit:xmlunit:$xmlUnitVersion"
-    }
-
-    // delete the shared source files when cleaning the project
-    clean.doFirst {
-        delete files(sharedSrcDir)
-    }
-
-    // configuration for extracting required source files from springframework
-    configurations { explodedSourceFiles }
-    dependencies {
-        explodedSourceFiles "org.springframework:spring-web:$springVersion:sources"
-    }
-
-    compileJava.doFirst {
-        // Required springframework source files for RestTemplate support
-        sourceFilter = [
-            // spring-web
-            'org/springframework/http/HttpEntity.java',
-            'org/springframework/http/HttpInputMessage.java',
-            'org/springframework/http/HttpMessage.java',
-            'org/springframework/http/HttpMethod.java',
-            'org/springframework/http/HttpOutputMessage.java',
-            'org/springframework/http/HttpRequest.java',
-            'org/springframework/http/HttpStatus.java',
-            'org/springframework/http/ResponseEntity.java',
-            'org/springframework/http/client/AbstractBufferingClientHttpRequest.java',
-            'org/springframework/http/client/AbstractClientHttpRequestFactoryWrapper.java',
-            'org/springframework/http/client/BufferingClientHttpRequest.java',
-            'org/springframework/http/client/BufferingClientHttpRequestFactory.java',
-            'org/springframework/http/client/BufferingClientHttpResponse.java',
-            'org/springframework/http/client/BufferingSimpleClientHttpRequest.java',
-            'org/springframework/http/client/ClientHttpRequest.java',
-            'org/springframework/http/client/ClientHttpRequestExecution.java',
-            'org/springframework/http/client/ClientHttpRequestFactory.java',
-            'org/springframework/http/client/ClientHttpRequestInterceptor.java',
-            'org/springframework/http/client/ClientHttpResponse.java',
-            'org/springframework/http/client/CommonsClientHttpRequest.java',
-            'org/springframework/http/client/CommonsClientHttpRequestFactory.java',
-            'org/springframework/http/client/CommonsClientHttpResponse.java',
-            'org/springframework/http/client/InterceptingClientHttpRequest.java',
-            'org/springframework/http/client/InterceptingClientHttpRequestFactory.java',
-            'org/springframework/http/client/SimpleClientHttpRequestFactory.java',
-            'org/springframework/http/client/StreamingSimpleClientHttpRequest.java',
-            'org/springframework/http/client/support/HttpRequestWrapper.java',
-            'org/springframework/http/client/support/InterceptingHttpAccessor.java',
-            'org/springframework/http/converter/AbstractHttpMessageConverter.java',
-            'org/springframework/http/converter/ByteArrayHttpMessageConverter.java',
-            'org/springframework/http/converter/FormHttpMessageConverter.java',
-            'org/springframework/http/converter/HttpMessageConversionException.java',
-            'org/springframework/http/converter/HttpMessageConverter.java',
-            'org/springframework/http/converter/HttpMessageNotReadableException.java',
-            'org/springframework/http/converter/HttpMessageNotWritableException.java',
-            'org/springframework/http/converter/StringHttpMessageConverter.java',
-            'org/springframework/http/converter/json/MappingJacksonHttpMessageConverter.java',
-            'org/springframework/http/converter/xml/AbstractXmlHttpMessageConverter.java',
-            'org/springframework/http/converter/xml/SourceHttpMessageConverter.java',
-            'org/springframework/http/converter/xml/XmlAwareFormHttpMessageConverter.java',
-            'org/springframework/web/client/DefaultResponseErrorHandler.java',
-            'org/springframework/web/client/HttpClientErrorException.java',
-            'org/springframework/web/client/HttpMessageConverterExtractor.java',
-            'org/springframework/web/client/HttpServerErrorException.java',
-            'org/springframework/web/client/HttpStatusCodeException.java',
-            'org/springframework/web/client/RequestCallback.java',
-            'org/springframework/web/client/ResourceAccessException.java',
-            'org/springframework/web/client/ResponseErrorHandler.java',
-            'org/springframework/web/client/ResponseExtractor.java',
-            'org/springframework/web/client/RestClientException.java',
-            'org/springframework/web/client/RestOperations.java',
-            'org/springframework/web/client/support/RestGatewaySupport.java',
-            'org/springframework/web/util/UriTemplate.java',
-            'org/springframework/web/util/UriUtils.java'
-            ]
-
-        // loops through springframework jars, extracting and copying jar files to the sharedSrcDir folder
-        FileCollection sourceJars = configurations.explodedSourceFiles
-        sourceJars.each { sourceJar ->
-            zipTree(sourceJar).visit { sourceFile ->
-                if (sourceFile.relativePath.toString() in sourceFilter) {
-                    filePath = sourceFile.relativePath.getPathString().minus(sourceFile.name)
-                    copy {
-                        from sourceFile.file
-                        into sharedSrcDir + '/' + filePath
-                    }
-                }
-            }
-        }
     }
 }
 
