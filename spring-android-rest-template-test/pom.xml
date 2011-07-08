@@ -76,6 +76,12 @@
 			<artifactId>android-rome-feed-reader</artifactId>
 			<version>${com.google.code.android-rome-feed-reader.version}</version>
 		</dependency>
+		<dependency>
+			<!-- easymock 3.x does NOT work on Android -->
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>2.5.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -30,7 +30,6 @@ import org.springframework.http.MockHttpOutputMessage;
 import org.xml.sax.SAXException;
 
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
 
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Entry;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed;
@@ -113,8 +112,8 @@ public class AtomFeedHttpMessageConverterTests extends TestCase {
 				"<entry><id>id1</id><title>title1</title></entry>" +
 				"<entry><id>id2</id><title>title2</title></entry></feed>";
 		
-		Log.d("*******", outputMessage.getBodyAsString(UTF_8));
-		assertEquals("Invalid content-type", new MediaType("application", "atom+xml", UTF_8), outputMessage.getHeaders().getContentType());
+		assertEquals("Invalid content-type", new MediaType("application", "atom+xml", UTF_8), 
+				outputMessage.getHeaders().getContentType());
 	}
 
 	@SmallTest
