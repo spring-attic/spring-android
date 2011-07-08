@@ -46,7 +46,7 @@ import org.springframework.util.Assert;
  * {@link #setSupportedMediaTypes(List) supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  * @see org.springframework.web.servlet.view.json.MappingJacksonJsonView
  */
 public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConverter<Object> {

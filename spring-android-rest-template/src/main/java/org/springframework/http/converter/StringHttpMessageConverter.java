@@ -37,7 +37,7 @@ import org.springframework.util.FileCopyUtils;
  * #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public class StringHttpMessageConverter extends AbstractHttpMessageConverter<String> {
 

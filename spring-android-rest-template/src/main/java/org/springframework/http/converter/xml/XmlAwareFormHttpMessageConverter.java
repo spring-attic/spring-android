@@ -23,7 +23,7 @@ import org.springframework.http.converter.FormHttpMessageConverter;
  * adding support for XML-based parts through a {@link SourceHttpMessageConverter}.
  *
  * @author Juergen Hoeller
- * @since 3.0.3
+ * @since 1.0
  */
 public class XmlAwareFormHttpMessageConverter extends FormHttpMessageConverter {
 

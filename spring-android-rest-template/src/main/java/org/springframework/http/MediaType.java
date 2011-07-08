@@ -44,7 +44,7 @@ import org.springframework.util.StringUtils;
  * @author Arjen Poutsma
  * @author Juergen Hoeller
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  * @see <a href="http://tools.ietf.org/html/rfc2616#section-3.7">HTTP 1.1, section 3.7</a>
  */
 public class MediaType implements Comparable<MediaType> {

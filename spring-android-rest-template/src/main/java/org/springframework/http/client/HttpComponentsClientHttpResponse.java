@@ -32,7 +32,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author Oleg Kalnichevski
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  * @see HttpComponentsClientHttpRequest#execute()
  */
 final class HttpComponentsClientHttpResponse extends AbstractClientHttpResponse {

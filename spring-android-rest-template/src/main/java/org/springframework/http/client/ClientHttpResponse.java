@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
  * <code>finally</code> block.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public interface ClientHttpResponse extends HttpInputMessage {
 

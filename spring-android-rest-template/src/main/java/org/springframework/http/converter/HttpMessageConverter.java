@@ -28,7 +28,7 @@ import org.springframework.http.MediaType;
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
- * @since 3.0
+ * @since 1.0
  */
 public interface HttpMessageConverter<T> {
 

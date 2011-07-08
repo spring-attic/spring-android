@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
  * Wrapper for a {@link ClientHttpRequestFactory} that has support for {@link ClientHttpRequestInterceptor}s.
  *
  * @author Arjen Poutsma
- * @since 3.1
+ * @since 1.0
  */
 public class InterceptingClientHttpRequestFactory extends AbstractClientHttpRequestFactoryWrapper {
 

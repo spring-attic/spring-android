@@ -115,7 +115,7 @@ import android.util.Log;
  * @see RequestCallback
  * @see ResponseExtractor
  * @see ResponseErrorHandler
- * @since 1.0.0
+ * @since 1.0
  */
 public class RestTemplate extends InterceptingHttpAccessor implements RestOperations {
 	

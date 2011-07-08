@@ -28,7 +28,7 @@ import org.springframework.http.HttpRequest;
  *
  * @author Arjen Poutsma
  * @see ClientHttpRequestInterceptor
- * @since 3.1
+ * @since 1.0
  */
 public interface ClientHttpRequestExecution {
 

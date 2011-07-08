@@ -21,7 +21,7 @@ package org.springframework.http;
  * via {@link #getHeaders()}.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public interface HttpMessage {
 

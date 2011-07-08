@@ -31,7 +31,7 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Fee
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @see Feed
- * @since 1.0.0
+ * @since 1.0
  */
 public class AtomFeedHttpMessageConverter extends AbstractWireFeedHttpMessageConverter<Feed> {
 

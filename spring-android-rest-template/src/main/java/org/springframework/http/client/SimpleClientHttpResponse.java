@@ -30,7 +30,7 @@ import org.springframework.util.StringUtils;
  * {@link StreamingSimpleClientHttpRequest#execute()}.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 

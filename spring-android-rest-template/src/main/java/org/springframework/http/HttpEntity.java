@@ -45,7 +45,7 @@ import org.springframework.util.MultiValueMap;
  * </pre>
  *
  * @author Arjen Poutsma
- * @since 3.0.2
+ * @since 1.0
  * @see org.springframework.web.client.RestTemplate
  * @see #getBody()
  * @see #getHeaders()

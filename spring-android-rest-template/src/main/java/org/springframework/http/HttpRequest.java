@@ -23,7 +23,7 @@ import java.net.URI;
  * and {@linkplain #getURI() uri}.
  *
  * @author Arjen Poutsma
- * @since 3.1
+ * @since 1.0
  */
 public interface HttpRequest extends HttpMessage {
 

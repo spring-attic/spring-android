@@ -33,7 +33,7 @@ import org.springframework.util.FileCopyUtils;
  * This behavior can be changed by overriding the {@link #hasError(HttpStatus)} method.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  * @see RestTemplate#setErrorHandler
  */
 public class DefaultResponseErrorHandler implements ResponseErrorHandler {

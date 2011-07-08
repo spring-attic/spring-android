@@ -36,7 +36,7 @@ import android.util.Log;
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  * @see org.springframework.web.client.RestTemplate
  */
 public abstract class HttpAccessor {

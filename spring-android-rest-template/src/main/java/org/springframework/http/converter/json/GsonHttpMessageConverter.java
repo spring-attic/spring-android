@@ -40,6 +40,7 @@ import com.google.gson.JsonSyntaxException;
 
 /**
  * @author Roy Clarkson
+ * @since 1.0
  */
 public class GsonHttpMessageConverter extends AbstractHttpMessageConverter<Object> {
 

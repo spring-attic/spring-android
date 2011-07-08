@@ -31,7 +31,7 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Chan
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @see Channel
- * @since 1.0.0
+ * @since 1.0
  */
 public class RssChannelHttpMessageConverter extends AbstractWireFeedHttpMessageConverter<Channel> {
 

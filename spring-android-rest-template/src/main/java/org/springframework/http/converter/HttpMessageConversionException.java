@@ -22,7 +22,7 @@ import org.springframework.core.NestedRuntimeException;
  * Thrown by {@link HttpMessageConverter} implementations when the conversion fails.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public class HttpMessageConversionException extends NestedRuntimeException {
 

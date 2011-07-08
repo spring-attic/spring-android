@@ -24,7 +24,7 @@ import org.springframework.http.client.ClientHttpResponse;
  * Strategy interface used by the {@link RestTemplate} to determine whether a particular response has an error or not.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public interface ResponseErrorHandler {
 

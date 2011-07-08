@@ -37,7 +37,7 @@ import org.springframework.http.HttpMethod;
  * <p>Created via the {@link CommonsClientHttpRequestFactory}.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  * @see CommonsClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  * @deprecated In favor of {@link HttpComponentsClientHttpRequest}
  */

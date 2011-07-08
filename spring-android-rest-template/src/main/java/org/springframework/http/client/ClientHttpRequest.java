@@ -29,7 +29,7 @@ import org.springframework.http.HttpRequest;
  * which can be read from.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  * @see ClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  */
 public interface ClientHttpRequest extends HttpRequest, HttpOutputMessage {

@@ -29,7 +29,7 @@ import org.springframework.util.FileCopyUtils;
  * Simple implementation of {@link ClientHttpRequest} that wraps another request.
  *
  * @author Arjen Poutsma
- * @since 3.1
+ * @since 1.0
  */
 class BufferingClientHttpRequest extends AbstractBufferingClientHttpRequest {
 

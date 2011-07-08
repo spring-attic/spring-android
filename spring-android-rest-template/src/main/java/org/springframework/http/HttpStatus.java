@@ -22,6 +22,7 @@ package org.springframework.http;
  * <p>The HTTP status code series can be retrieved via {@link #series()}.
  *
  * @author Arjen Poutsma
+ * @since 1.0
  * @see HttpStatus.Series
  * @see <a href="http://www.iana.org/assignments/http-status-codes">HTTP Status Code Registry</a>
  */

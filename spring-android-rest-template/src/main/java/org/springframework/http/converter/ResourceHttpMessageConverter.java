@@ -33,7 +33,7 @@ import org.springframework.util.FileCopyUtils;
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  */
 public class ResourceHttpMessageConverter extends AbstractHttpMessageConverter<Resource> {
 

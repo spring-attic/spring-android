@@ -26,7 +26,7 @@ import java.io.InputStream;
  * <p>Typically implemented by an HTTP request on the server-side, or a response on the client-side.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public interface HttpInputMessage extends HttpMessage {
 

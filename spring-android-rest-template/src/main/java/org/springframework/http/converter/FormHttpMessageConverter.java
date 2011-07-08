@@ -68,7 +68,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Arjen Poutsma
  * @see MultiValueMap
- * @since 3.0
+ * @since 1.0
  */
 public class FormHttpMessageConverter implements HttpMessageConverter<MultiValueMap<String, ?>> {
 

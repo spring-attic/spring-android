@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
  * @author Arjen Poutsma
  * @see java.net.HttpURLConnection
  * @see CommonsClientHttpRequestFactory
- * @since 3.0
+ * @since 1.0
  */
 public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory {
 

@@ -42,7 +42,7 @@ import org.springframework.util.Assert;
  * potentially with authentication, HTTP connection pooling, etc.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  * @see org.springframework.http.client.SimpleClientHttpRequestFactory
  * @deprecated In favor of {@link HttpComponentsClientHttpRequestFactory}
  */

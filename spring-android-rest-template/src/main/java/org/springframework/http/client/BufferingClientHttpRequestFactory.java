@@ -27,7 +27,7 @@ import org.springframework.http.HttpMethod;
  * <p>Using this wrapper allows for multiple reads of the {@linkplain ClientHttpResponse#getBody() response body}.
  *
  * @author Arjen Poutsma
- * @since 3.1
+ * @since 1.0
  */
 public class BufferingClientHttpRequestFactory extends AbstractClientHttpRequestFactoryWrapper {
 

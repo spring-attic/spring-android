@@ -25,7 +25,7 @@ import org.springframework.http.HttpStatus;
  *
  * @author Arjen Poutsma
  * @see DefaultResponseErrorHandler
- * @since 3.0
+ * @since 1.0
  */
 public class HttpServerErrorException extends HttpStatusCodeException {
 

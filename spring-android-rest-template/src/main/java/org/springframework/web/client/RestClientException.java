@@ -22,7 +22,7 @@ import org.springframework.core.NestedRuntimeException;
  * Base class for exceptions thrown by {@link RestTemplate} whenever it encounters client-side HTTP errors.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public class RestClientException extends NestedRuntimeException {
 

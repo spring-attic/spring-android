@@ -38,7 +38,7 @@ import org.springframework.http.HttpMethod;
  *
  * @author Oleg Kalnichevski
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  * @see HttpComponentsClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  */
 final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpRequest {

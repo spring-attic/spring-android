@@ -41,7 +41,7 @@ import org.springframework.http.converter.HttpMessageConversionException;
  * supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public abstract class AbstractXmlHttpMessageConverter<T> extends AbstractHttpMessageConverter<T> {
 

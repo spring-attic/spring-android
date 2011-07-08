@@ -24,7 +24,7 @@ import org.springframework.http.HttpStatus;
  * Exception thrown when an HTTP 4xx is received.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  * @see DefaultResponseErrorHandler
  */
 public class HttpClientErrorException extends HttpStatusCodeException {

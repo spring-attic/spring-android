@@ -22,7 +22,7 @@ import java.io.IOException;
  * Exception thrown when an I/O error occurs.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public class ResourceAccessException extends RestClientException {
 

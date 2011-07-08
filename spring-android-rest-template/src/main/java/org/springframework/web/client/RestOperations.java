@@ -32,7 +32,7 @@ import org.springframework.http.ResponseEntity;
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
- * @since 3.0
+ * @since 1.0
  * @see RestTemplate
  */
 public interface RestOperations {

@@ -29,7 +29,7 @@ import org.springframework.util.FileCopyUtils;
  * multiple invocations of {@link #getBody()}.
  *
  * @author Arjen Poutsma
- * @since 3.1
+ * @since 1.0
  */
 class BufferingClientHttpResponse implements ClientHttpResponse {
 

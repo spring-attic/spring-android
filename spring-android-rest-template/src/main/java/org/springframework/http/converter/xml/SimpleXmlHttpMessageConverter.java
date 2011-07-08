@@ -44,7 +44,7 @@ import org.springframework.util.Assert;
  * overridden by setting the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
  *
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  */
 public class SimpleXmlHttpMessageConverter extends AbstractHttpMessageConverter<Object> {
 	

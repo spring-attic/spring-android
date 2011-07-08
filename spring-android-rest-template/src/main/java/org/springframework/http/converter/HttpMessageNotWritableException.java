@@ -21,7 +21,7 @@ package org.springframework.http.converter;
  * {@link org.springframework.http.converter.HttpMessageConverter#write(Object, org.springframework.http.HttpOutputMessage) write} method fails.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public class HttpMessageNotWritableException extends HttpMessageConversionException {
 

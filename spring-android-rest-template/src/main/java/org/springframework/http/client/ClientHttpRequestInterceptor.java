@@ -29,7 +29,7 @@ import org.springframework.http.HttpRequest;
  * <p>The main entry point for interceptors is {@link #intercept(HttpRequest, byte[], ClientHttpRequestExecution)}.
  *
  * @author Arjen Poutsma
- * @since 3.1
+ * @since 1.0
  */
 public interface ClientHttpRequestInterceptor {
 

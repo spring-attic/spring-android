@@ -38,7 +38,7 @@ import org.springframework.util.Assert;
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
- * @since 3.0
+ * @since 1.0
  * @see <a href="http://bitworking.org/projects/URI-Templates/">URI Templates</a>
  */
 public class UriTemplate implements Serializable {

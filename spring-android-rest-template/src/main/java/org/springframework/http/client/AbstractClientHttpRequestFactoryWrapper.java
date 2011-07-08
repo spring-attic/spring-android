@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
  * Abstract base class for {@link ClientHttpRequestFactory} implementations that decorate another request factory.
  *
  * @author Arjen Poutsma
- * @since 3.1
+ * @since 1.0
  */
 public abstract class AbstractClientHttpRequestFactoryWrapper implements ClientHttpRequestFactory {
 

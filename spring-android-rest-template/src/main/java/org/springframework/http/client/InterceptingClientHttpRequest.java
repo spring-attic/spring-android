@@ -30,7 +30,7 @@ import org.springframework.util.FileCopyUtils;
  * Wrapper for a {@link ClientHttpRequest} that has support for {@link ClientHttpRequestInterceptor}s.
  *
  * @author Arjen Poutsma
- * @since 3.1
+ * @since 1.0
  */
 class InterceptingClientHttpRequest extends AbstractBufferingClientHttpRequest {
 

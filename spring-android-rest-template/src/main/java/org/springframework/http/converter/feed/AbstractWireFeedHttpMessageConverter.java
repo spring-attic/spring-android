@@ -44,7 +44,7 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.io.WireFeedOu
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  * @see AtomFeedHttpMessageConverter
  * @see RssChannelHttpMessageConverter
  */

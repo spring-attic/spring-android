@@ -32,7 +32,7 @@ import android.util.Log;
  *
  * @author Arjen Poutsma
  * @see RestTemplate
- * @since 3.0
+ * @since 1.0
  */
 public class HttpMessageConverterExtractor<T> implements ResponseExtractor<T> {
 	

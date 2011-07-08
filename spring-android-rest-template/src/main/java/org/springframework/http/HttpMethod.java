@@ -22,7 +22,7 @@ package org.springframework.http;
  * and {@link org.springframework.web.client.RestTemplate}.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public enum HttpMethod {
 

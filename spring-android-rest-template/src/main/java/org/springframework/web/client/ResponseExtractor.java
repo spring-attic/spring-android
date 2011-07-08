@@ -29,7 +29,7 @@ import org.springframework.http.client.ClientHttpResponse;
  * <p>Used internally by the {@link RestTemplate}, but also useful for application code.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  * @see RestTemplate#execute
  */
 public interface ResponseExtractor<T> {

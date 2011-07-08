@@ -28,7 +28,7 @@ import org.springframework.http.client.ClientHttpRequest;
  *
  * @author Arjen Poutsma
  * @see RestTemplate#execute
- * @since 3.0
+ * @since 1.0
  */
 public interface RequestCallback {
 

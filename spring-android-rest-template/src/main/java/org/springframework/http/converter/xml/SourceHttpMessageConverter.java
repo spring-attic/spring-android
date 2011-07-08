@@ -42,7 +42,7 @@ import org.xml.sax.InputSource;
  * Source} objects.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public class SourceHttpMessageConverter<T extends Source> extends AbstractXmlHttpMessageConverter<T> {
 

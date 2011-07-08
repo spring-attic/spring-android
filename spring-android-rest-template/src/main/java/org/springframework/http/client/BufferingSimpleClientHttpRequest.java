@@ -32,7 +32,7 @@ import org.springframework.util.FileCopyUtils;
  * Created via the {@link SimpleClientHttpRequestFactory}.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  * @see SimpleClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  */
 final class BufferingSimpleClientHttpRequest extends AbstractBufferingClientHttpRequest {

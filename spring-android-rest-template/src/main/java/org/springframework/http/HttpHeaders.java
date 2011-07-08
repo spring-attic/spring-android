@@ -51,7 +51,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
- * @since 3.0
+ * @since 1.0
  */
 public class HttpHeaders implements MultiValueMap<String, String> {
 

@@ -26,7 +26,7 @@ import java.io.OutputStream;
  * <p>Typically implemented by an HTTP request on the client-side, or a response on the server-side.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public interface HttpOutputMessage extends HttpMessage {
 

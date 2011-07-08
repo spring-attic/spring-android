@@ -21,7 +21,7 @@ package org.springframework.http.converter;
  * {@link HttpMessageConverter#read(Class, org.springframework.http.HttpInputMessage) read} method fails.
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  */
 public class HttpMessageNotReadableException extends HttpMessageConversionException {
 
