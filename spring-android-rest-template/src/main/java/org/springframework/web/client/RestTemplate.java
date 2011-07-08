@@ -50,6 +50,7 @@ import org.springframework.web.util.UriTemplate;
 import org.springframework.web.util.UriUtils;
 
 import android.os.Build;
+import android.util.Log;
 
 /**
  * <strong>The central class for client-side HTTP access.</strong> It simplifies communication with HTTP servers, and
@@ -117,6 +118,8 @@ import android.os.Build;
  * @since 1.0.0
  */
 public class RestTemplate extends InterceptingHttpAccessor implements RestOperations {
+	
+	private static final String TAG = RestTemplate.class.getSimpleName();
 
 	private static final boolean javaxTransformPresent = 
 			(Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) >= 8);
@@ -208,21 +211,21 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	public <T> T getForObject(String url, Class<T> responseType, Object... urlVariables) throws RestClientException {
 		AcceptHeaderRequestCallback requestCallback = new AcceptHeaderRequestCallback(responseType);
 		HttpMessageConverterExtractor<T> responseExtractor =
-				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters(), logger);
+				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters());
 		return execute(url, HttpMethod.GET, requestCallback, responseExtractor, urlVariables);
 	}
 
 	public <T> T getForObject(String url, Class<T> responseType, Map<String, ?> urlVariables) throws RestClientException {
 		AcceptHeaderRequestCallback requestCallback = new AcceptHeaderRequestCallback(responseType);
 		HttpMessageConverterExtractor<T> responseExtractor =
-				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters(), logger);
+				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters());
 		return execute(url, HttpMethod.GET, requestCallback, responseExtractor, urlVariables);
 	}
 
 	public <T> T getForObject(URI url, Class<T> responseType) throws RestClientException {
 		AcceptHeaderRequestCallback requestCallback = new AcceptHeaderRequestCallback(responseType);
 		HttpMessageConverterExtractor<T> responseExtractor =
-				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters(), logger);
+				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters());
 		return execute(url, HttpMethod.GET, requestCallback, responseExtractor);
 	}
 
@@ -288,7 +291,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			throws RestClientException {
 		HttpEntityRequestCallback requestCallback = new HttpEntityRequestCallback(request, responseType);
 		HttpMessageConverterExtractor<T> responseExtractor =
-				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters(), logger);
+				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters());
 		return execute(url, HttpMethod.POST, requestCallback, responseExtractor, uriVariables);
 	}
 
@@ -296,7 +299,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			throws RestClientException {
 		HttpEntityRequestCallback requestCallback = new HttpEntityRequestCallback(request, responseType);
 		HttpMessageConverterExtractor<T> responseExtractor =
-				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters(), logger);
+				new HttpMessageConverterExtractor<T>(responseType, getMessageConverters());
 		return execute(url, HttpMethod.POST, requestCallback, responseExtractor, uriVariables);
 	}
 
@@ -473,9 +476,9 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	}
 
 	private void logResponseStatus(HttpMethod method, URI url, ClientHttpResponse response) {
-		if (logger.isDebugEnabled()) {
+		if (Log.isLoggable(TAG, Log.DEBUG)) {
 			try {
-				logger.debug(
+				Log.d(TAG, 
 						method.name() + " request for \"" + url + "\" resulted in " + response.getStatusCode() + " (" +
 								response.getStatusText() + ")");
 			}
@@ -486,9 +489,9 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	}
 
 	private void handleResponseError(HttpMethod method, URI url, ClientHttpResponse response) throws IOException {
-		if (logger.isWarnEnabled()) {
+		if (Log.isLoggable(TAG, Log.DEBUG)) {
 			try {
-				logger.warn(
+				Log.d(TAG, 
 						method.name() + " request for \"" + url + "\" resulted in " + response.getStatusCode() + " (" +
 								response.getStatusText() + "); invoking error handler");
 			}
@@ -528,8 +531,8 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 				}
 				if (!allSupportedMediaTypes.isEmpty()) {
 					MediaType.sortBySpecificity(allSupportedMediaTypes);
-					if (logger.isDebugEnabled()) {
-						logger.debug("Setting request Accept header to " + allSupportedMediaTypes);
+					if (Log.isLoggable(TAG, Log.DEBUG)) {
+						Log.d(TAG, "Setting request Accept header to " + allSupportedMediaTypes);
 					}
 					request.getHeaders().setAccept(allSupportedMediaTypes);
 				}
@@ -588,13 +591,13 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 						if (!requestHeaders.isEmpty()) {
 							httpRequest.getHeaders().putAll(requestHeaders);
 						}
-						if (logger.isDebugEnabled()) {
+						if (Log.isLoggable(TAG, Log.DEBUG)) {
 							if (requestContentType != null) {
-								logger.debug("Writing [" + requestBody + "] as \"" + requestContentType + 
+								Log.d(TAG, "Writing [" + requestBody + "] as \"" + requestContentType + 
 										"\" using [" + messageConverter + "]");
 							}
 							else {
-								logger.debug("Writing [" + requestBody + "] using [" + messageConverter + "]");
+								Log.d(TAG, "Writing [" + requestBody + "] using [" + messageConverter + "]");
 							}
 
 						}
@@ -621,7 +624,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 
 		public ResponseEntityResponseExtractor(Class<T> responseType) {
 			if (responseType != null) {
-				this.delegate = new HttpMessageConverterExtractor<T>(responseType, getMessageConverters(), logger);
+				this.delegate = new HttpMessageConverterExtractor<T>(responseType, getMessageConverters());
 			} else {
 				this.delegate = null;
 			}

@@ -19,13 +19,12 @@ package org.springframework.web.client;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.Assert;
+
+import android.util.Log;
 
 /**
  * Response extractor that uses the given {@linkplain HttpMessageConverter entity converters} to convert the response
@@ -36,27 +35,22 @@ import org.springframework.util.Assert;
  * @since 3.0
  */
 public class HttpMessageConverterExtractor<T> implements ResponseExtractor<T> {
+	
+	private static final String TAG = HttpMessageConverterExtractor.class.getSimpleName();
 
 	private final Class<T> responseType;
 
 	private final List<HttpMessageConverter<?>> messageConverters;
-
-	private final Log logger;
 
 	/**
 	 * Creates a new instance of the {@code HttpMessageConverterExtractor} with the given response type and message
 	 * converters. The given converters must support the response type.
 	 */
 	public HttpMessageConverterExtractor(Class<T> responseType, List<HttpMessageConverter<?>> messageConverters) {
-		this(responseType, messageConverters, LogFactory.getLog(HttpMessageConverterExtractor.class));
-	}
-
-	HttpMessageConverterExtractor(Class<T> responseType, List<HttpMessageConverter<?>> messageConverters, Log logger) {
 		Assert.notNull(responseType, "'responseType' must not be null");
 		Assert.notEmpty(messageConverters, "'messageConverters' must not be empty");
 		this.responseType = responseType;
 		this.messageConverters = messageConverters;
-		this.logger = logger;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -67,8 +61,8 @@ public class HttpMessageConverterExtractor<T> implements ResponseExtractor<T> {
 		}
 		for (HttpMessageConverter messageConverter : messageConverters) {
 			if (messageConverter.canRead(responseType, contentType)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Reading [" + responseType.getName() + "] as \"" + contentType
+				if (Log.isLoggable(TAG, Log.DEBUG)) {
+					Log.d(TAG, "Reading [" + responseType.getName() + "] as \"" + contentType
 							+"\" using [" + messageConverter + "]");
 				}
 				return (T) messageConverter.read(this.responseType, response);

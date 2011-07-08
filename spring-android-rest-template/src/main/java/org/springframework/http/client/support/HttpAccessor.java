@@ -19,13 +19,13 @@ package org.springframework.http.client.support;
 import java.io.IOException;
 import java.net.URI;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.Assert;
+
+import android.util.Log;
 
 /**
  * Base class for {@link org.springframework.web.client.RestTemplate}
@@ -40,12 +40,9 @@ import org.springframework.util.Assert;
  * @see org.springframework.web.client.RestTemplate
  */
 public abstract class HttpAccessor {
-
-	/**
-	 * Logger available to subclasses.
-	 */
-	protected final Log logger = LogFactory.getLog(getClass());
-
+	
+	private static final String TAG = HttpAccessor.class.getSimpleName();
+	
 	private ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 
 
@@ -74,8 +71,8 @@ public abstract class HttpAccessor {
 	 */
 	protected ClientHttpRequest createRequest(URI url, HttpMethod method) throws IOException {
 		ClientHttpRequest request = getRequestFactory().createRequest(url, method);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Created " + method.name() + " request for \"" + url + "\"");
+		if (Log.isLoggable(TAG, Log.DEBUG)) {
+			Log.d(TAG, "Created " + method.name() + " request for \"" + url + "\"");
 		}
 		return request;
 	}
