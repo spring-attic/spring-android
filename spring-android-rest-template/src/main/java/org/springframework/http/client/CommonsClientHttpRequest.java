@@ -27,7 +27,6 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.EntityEnclosingMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 

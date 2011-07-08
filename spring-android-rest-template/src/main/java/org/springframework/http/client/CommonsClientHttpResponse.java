@@ -21,7 +21,6 @@ import java.io.InputStream;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpMethod;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 

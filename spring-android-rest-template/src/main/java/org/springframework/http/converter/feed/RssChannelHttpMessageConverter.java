@@ -16,9 +16,9 @@
 
 package org.springframework.http.converter.feed;
 
-import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel;
-
 import org.springframework.http.MediaType;
+
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel;
 
 /**
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} that can read and write RSS feeds.

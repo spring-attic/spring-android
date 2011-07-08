@@ -16,9 +16,9 @@
 
 package org.springframework.http.converter.feed;
 
-import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed;
-
 import org.springframework.http.MediaType;
+
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed;
 
 /**
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} that can read and write Atom feeds.
