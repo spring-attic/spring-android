@@ -36,7 +36,7 @@ import android.util.Log;
  */
 public class HttpMessageConverterExtractor<T> implements ResponseExtractor<T> {
 	
-	private static final String TAG = HttpMessageConverterExtractor.class.getSimpleName();
+	private static final String TAG = "RestTemplate";
 
 	private final Class<T> responseType;
 

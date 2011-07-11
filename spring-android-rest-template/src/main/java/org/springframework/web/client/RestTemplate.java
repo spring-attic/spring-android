@@ -119,7 +119,7 @@ import android.util.Log;
  */
 public class RestTemplate extends InterceptingHttpAccessor implements RestOperations {
 	
-	private static final String TAG = RestTemplate.class.getSimpleName();
+	private static final String TAG = "RestTemplate";
 
 	private static final boolean javaxTransformPresent = 
 			(Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) >= 8);
