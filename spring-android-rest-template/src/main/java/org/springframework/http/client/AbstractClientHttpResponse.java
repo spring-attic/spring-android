@@ -49,7 +49,6 @@ public abstract class AbstractClientHttpResponse implements ClientHttpResponse {
 	/**
 	 * Abstract template method that returns the body.
 	 *
-	 * @param headers the HTTP headers
 	 * @return the body output stream
 	 */
 	protected abstract InputStream getBodyInternal() throws IOException;

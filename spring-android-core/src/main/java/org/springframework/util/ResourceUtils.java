@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,14 +34,8 @@ import java.net.URL;
  * object, which in turn allows to obtain a <code>java.io.File</code> in the
  * file system through its <code>getFile()</code> method.
  *
- * <p>The main reason for these utility methods for resource location handling
- * is to support {@link Log4jConfigurer}, which must be able to resolve
- * resource locations <i>before the logging system has been initialized</i>.
- * Spring' Resource abstraction in the core package, on the other hand,
- * already expects the logging system to be available.
- *
  * @author Juergen Hoeller
- * @since 1.1.5
+ * @since 1.0
  * @see org.springframework.core.io.Resource
  * @see org.springframework.core.io.ClassPathResource
  * @see org.springframework.core.io.FileSystemResource

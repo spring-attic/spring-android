@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.springframework.util.StringUtils;
  * the "file:" protocol.
  *
  * @author Juergen Hoeller
- * @since 28.12.2003
+ * @since 1.0
  * @see java.net.URL
  */
 public class UrlResource extends AbstractFileResolvingResource {

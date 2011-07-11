@@ -33,8 +33,7 @@ import java.util.Arrays;
  * @author Rod Johnson
  * @author Rob Harrop
  * @author Chris Beams
- * @since 19.03.2004
- * @see org.apache.commons.lang.ObjectUtils
+ * @since 1.0
  */
 public abstract class ObjectUtils {
 

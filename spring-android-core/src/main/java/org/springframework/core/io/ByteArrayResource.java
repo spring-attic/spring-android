@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2007 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import java.util.Arrays;
  * where JavaMail needs to be able to read the stream multiple times.
  *
  * @author Juergen Hoeller
- * @since 1.2.3
+ * @since 1.0
  * @see java.io.ByteArrayInputStream
  * @see InputStreamResource
  * @see org.springframework.mail.javamail.MimeMessageHelper#addAttachment(String, InputStreamSource)

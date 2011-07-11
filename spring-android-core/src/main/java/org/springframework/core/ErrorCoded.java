@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2005 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ package org.springframework.core;
  * <p>An error code can be resolved by a MessageSource, for example.
  *
  * @author Rod Johnson
+ * @since 1.0
  * @see org.springframework.context.MessageSource
  */
 public interface ErrorCoded {

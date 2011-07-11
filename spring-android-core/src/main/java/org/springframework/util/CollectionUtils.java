@@ -31,7 +31,7 @@ import java.util.Properties;
  *
  * @author Juergen Hoeller
  * @author Rob Harrop
- * @since 1.1.3
+ * @since 1.0
  */
 public abstract class CollectionUtils {
 

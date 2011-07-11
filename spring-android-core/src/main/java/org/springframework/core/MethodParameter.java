@@ -36,7 +36,7 @@ import org.springframework.util.Assert;
  * @author Juergen Hoeller
  * @author Rob Harrop
  * @author Andy Clement
- * @since 2.0
+ * @since 1.0
  * @see GenericCollectionTypeResolver
  */
 public class MethodParameter {

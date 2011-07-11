@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import java.io.IOException;
  * class is unavoidable, as this class needs to derive from IOException.
  *
  * @author Juergen Hoeller
- * @since 2.0
+ * @since 1.0
  * @see #getMessage
  * @see #printStackTrace
  * @see org.springframework.core.NestedCheckedException

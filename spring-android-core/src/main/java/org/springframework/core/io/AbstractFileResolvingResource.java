@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,11 @@ import org.springframework.util.ResourceUtils;
  * Abstract base class for resources which resolve URLs into File references,
  * such as {@link UrlResource} or {@link ClassPathResource}.
  *
- * <p>Detects the "file" protocol as well as the JBoss "vfs" protocol in URLs,
- * resolving file system references accordingly.
+ * <p>Detects the "file" protocol, resolving file system references accordingly.
  *
  * @author Juergen Hoeller
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  */
 public abstract class AbstractFileResolvingResource extends AbstractResource {
 

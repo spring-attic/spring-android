@@ -19,6 +19,7 @@ package org.springframework.http.client;
 
 public class CommonsHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected ClientHttpRequestFactory createRequestFactory() {
 		return new CommonsClientHttpRequestFactory();

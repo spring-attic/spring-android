@@ -35,7 +35,7 @@ import java.util.Map;
  * (to be able to attempt type conversion if appropriate).
  *
  * @author Juergen Hoeller
- * @since 2.0
+ * @since 1.0
  */
 public abstract class GenericCollectionTypeResolver {
 
