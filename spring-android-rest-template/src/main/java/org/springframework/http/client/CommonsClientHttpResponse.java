@@ -31,12 +31,13 @@ import org.springframework.http.HttpStatus;
  * <p>Created via the {@link CommonsClientHttpRequest}.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 1.0
  * @see CommonsClientHttpRequest#execute()
  * @deprecated In favor of {@link HttpComponentsClientHttpResponse}
  */
 @Deprecated
-final class CommonsClientHttpResponse implements ClientHttpResponse {
+final class CommonsClientHttpResponse extends AbstractClientHttpResponse {
 
 	private final HttpMethod httpMethod;
 
@@ -66,7 +67,7 @@ final class CommonsClientHttpResponse implements ClientHttpResponse {
 		return this.headers;
 	}
 
-	public InputStream getBody() throws IOException {
+	public InputStream getBodyInternal() throws IOException {
 		return this.httpMethod.getResponseBodyAsStream();
 	}
 
