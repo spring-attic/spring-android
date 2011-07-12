@@ -29,6 +29,7 @@ import org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import android.os.Build;
 import android.test.suitebuilder.annotation.SmallTest;
 
 /** 
@@ -36,13 +37,21 @@ import android.test.suitebuilder.annotation.SmallTest;
  * @author Roy Clarkson 
  */
 public class FormHttpMessageConverterTests extends TestCase {
+	
+	private static final boolean javaxXmlTransformPresent = 
+		(Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) >= 8);
 
 	private FormHttpMessageConverter converter;
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		converter = new XmlAwareFormHttpMessageConverter();
+		if (javaxXmlTransformPresent) {
+			converter = new XmlAwareFormHttpMessageConverter();
+		} else {
+			// javax.xml.transform not available on this version of Android
+			converter = new FormHttpMessageConverter();
+		}
 	}
 	
 	@Override

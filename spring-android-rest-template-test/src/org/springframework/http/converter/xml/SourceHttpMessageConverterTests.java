@@ -37,6 +37,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 
+import android.os.Build;
 import android.test.suitebuilder.annotation.SmallTest;
 
 /** 
@@ -44,13 +45,20 @@ import android.test.suitebuilder.annotation.SmallTest;
  * @author Roy Clarkson 
  */
 public class SourceHttpMessageConverterTests extends TestCase {
+	
+	private static final boolean javaxXmlTransformPresent = 
+		(Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) >= 8);
 
 	private SourceHttpMessageConverter<Source> converter;
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		converter = new SourceHttpMessageConverter<Source>();
+		if (javaxXmlTransformPresent) {
+			converter = new SourceHttpMessageConverter<Source>();
+		} else {
+			fail("SourceHttpMessageConverter is not compatible with this version of Android");
+		}
 	}
 	
 	@Override
