@@ -39,8 +39,9 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.io.WireFeedIn
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.WireFeedOutput;
 
 /**
- * Abstract base class for Atom and RSS Feed message converters, using java.net's
- * <a href="https://rome.dev.java.net/">ROME</a> package.
+ * Abstract base class for Atom and RSS Feed message converters that uses 
+ * <a href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>,
+ * which is a repackaging of java.net's <a href="https://rome.dev.java.net/">ROME</a>.
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson

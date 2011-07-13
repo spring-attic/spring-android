@@ -121,7 +121,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	
 	private static final String TAG = "RestTemplate";
 
-	private static final boolean javaxTransformPresent = 
+	private static final boolean javaxXmlTransformPresent = 
 			(Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) >= 8);
 
 	private static final boolean simpleXmlPresent =
@@ -148,7 +148,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		this.messageConverters.add(new StringHttpMessageConverter());
 		this.messageConverters.add(new ResourceHttpMessageConverter());
 		
-		if (javaxTransformPresent) {
+		if (javaxXmlTransformPresent) {
 			this.messageConverters.add(new SourceHttpMessageConverter());
 			this.messageConverters.add(new XmlAwareFormHttpMessageConverter());
 		} else {

@@ -21,9 +21,11 @@ import org.springframework.http.MediaType;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel;
 
 /**
- * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} that can read and write RSS feeds.
- * Specifically, this converter can handle {@link Channel} objects, from the <a href="https://rome.dev.java.net/">ROME</a>
- * project.
+ * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} 
+ * that can read and write RSS feeds. Specifically, this converter can handle 
+ * {@link Channel} objects, from the 
+ * <a href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>,
+ * which is a repackaging of java.net's <a href="https://rome.dev.java.net/">ROME</a>.
  *
  * <p>By default, this converter reads and writes the media type ({@code application/rss+xml}). This can
  * be overridden by setting the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.

@@ -39,16 +39,18 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedIn
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedOutput;
 
 /**
- * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} that can read and 
- * write RSS and ATOM feeds.  Specifically, this converter can handle {@link SyndFeed} objects, from the 
- * <a href="https://rome.dev.java.net/">ROME</a> project.
+ * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} 
+ * that can read and write RSS and ATOM feeds. Specifically, this converter can 
+ * handle {@link SyndFeed} objects, from the 
+ * <a href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>,
+ * which is a repackaging of java.net's <a href="https://rome.dev.java.net/">ROME</a>. 
  *
- * <p>By default, this converter reads and writes the media types ({@code application/rss+xml} and 
- * {@code application/atom+xml}). This can be overridden by setting the 
+ * <p>By default, this converter reads and writes the media types ({@code application/rss+xml} 
+ * and {@code application/atom+xml}). This can be overridden by setting the 
  * {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
  *
  * @author Roy Clarkson
- * @since 1.0.0
+ * @since 1.0
  * @see SyndFeed
  */
 public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<SyndFeed> {
@@ -56,8 +58,8 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
 	/**
-	 * Protected constructor that sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}
-	 * to {@code text/xml} and {@code application/xml}, and {@code application/*-xml}.
+	 * Constructor that sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}
+	 * to {@code application/rss+xml} and {@code application/atom+xml}.
 	 */
 	public SyndFeedHttpMessageConverter() {
 		super(MediaType.APPLICATION_RSS_XML, MediaType.APPLICATION_ATOM_XML);
