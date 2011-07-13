@@ -23,8 +23,8 @@
 		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3 -->
 		<org.springframework.android.version>1.0.0.BUILD-SNAPSHOT</org.springframework.android.version>
 		<com.google.code.gson.version>1.7.1</com.google.code.gson.version>
-		<org.codehaus.jackson.version>1.8.2</org.codehaus.jackson.version>
-		<org.simpleframework.version>2.5.3</org.simpleframework.version>
+		<org.codehaus.jackson.version>1.8.3</org.codehaus.jackson.version>
+		<org.simpleframework.version>2.6</org.simpleframework.version>
 		<com.google.code.android-rome-feed-reader.version>1.0.0-r2</com.google.code.android-rome-feed-reader.version>
 	</properties>
 
