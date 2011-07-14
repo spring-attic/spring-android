@@ -25,7 +25,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.codehaus.jackson.map.type.TypeFactory;
 import org.codehaus.jackson.type.JavaType;
 import org.springframework.android.test.Assert;
 import org.springframework.http.MediaType;
@@ -85,11 +84,10 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 	@SuppressWarnings("unchecked")
 	public void testReadGenerics() throws IOException {
 		converter = new MappingJacksonHttpMessageConverter() {
-			@SuppressWarnings("deprecation")
 			@Override
 			protected JavaType getJavaType(Class<?> clazz) {
 				if (List.class.isAssignableFrom(clazz)) {
-					return TypeFactory.collectionType(ArrayList.class, MyBean.class);
+					return getTypeFactory().constructCollectionType(ArrayList.class, MyBean.class);
 				}
 				else {
 					return super.getJavaType(clazz);

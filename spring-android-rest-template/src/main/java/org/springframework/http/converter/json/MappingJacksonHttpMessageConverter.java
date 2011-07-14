@@ -97,12 +97,12 @@ public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConve
 	/**
 	 * Returns the Jackson {@link JavaType} for the specific class.
 	 *
-	 * <p>Default implementation returns {@link TypeFactory#type(java.lang.reflect.Type)}, but this can be overridden
+	 * <p>Default implementation returns {@link TypeFactory#constructType(java.lang.reflect.Type)}, but this can be overridden
 	 * in subclasses, to allow for custom generic collection handling. For instance:
 	 * <pre class="code">
 	 * protected JavaType getJavaType(Class&lt;?&gt; clazz) {
 	 *   if (List.class.isAssignableFrom(clazz)) {
-	 *     return TypeFactory.collectionType(ArrayList.class, MyBean.class);
+	 *     return getTypeFactory().constructCollectionType(ArrayList.class, MyBean.class);
 	 *   } else {
 	 *     return super.getJavaType(clazz);
 	 *   }
@@ -113,7 +113,18 @@ public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConve
 	 * @return the java type
 	 */
 	protected JavaType getJavaType(Class<?> clazz) {
-		return TypeFactory.type(clazz);
+		return this.objectMapper.getTypeFactory().constructType(clazz);
+	}
+	
+	/**
+	 * Can be used when overriding {@link MappingJacksonHttpMessageConverter#getJavaType(Class)}
+	 * to retrieve the {@link TypeFactory} associated with then internal {@link ObjectMapper} 
+	 * instance. 
+	 * 
+	 * @return the TypeFactory from the internal ObjectMapper instance
+	 */
+	protected TypeFactory getTypeFactory() {
+		return this.objectMapper.getTypeFactory();
 	}
 
 	@Override

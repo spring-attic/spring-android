@@ -42,6 +42,7 @@ import org.xml.sax.InputSource;
  * Source} objects.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 1.0
  */
 public class SourceHttpMessageConverter<T extends Source> extends AbstractXmlHttpMessageConverter<T> {
@@ -54,7 +55,7 @@ public class SourceHttpMessageConverter<T extends Source> extends AbstractXmlHtt
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected T readFromSource(Class clazz, HttpHeaders headers, Source source) throws IOException {
+	protected T readFromSource(Class<? extends T> clazz, HttpHeaders headers, Source source) throws IOException {
 		try {
 			if (DOMSource.class.equals(clazz)) {
 				DOMResult domResult = new DOMResult();

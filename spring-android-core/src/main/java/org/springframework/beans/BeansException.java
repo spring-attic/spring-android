@@ -28,9 +28,12 @@ import org.springframework.util.ObjectUtils;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
+ * @author Roy Clarkson
  * @since 1.0
  */
 public abstract class BeansException extends NestedRuntimeException {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create a new BeansException with the specified message.

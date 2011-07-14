@@ -38,10 +38,13 @@ import org.springframework.util.Assert;
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
+ * @author Roy Clarkson
  * @since 1.0
  * @see <a href="http://bitworking.org/projects/URI-Templates/">URI Templates</a>
  */
 public class UriTemplate implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/** Captures URI template variable names. */
 	private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)\\}");

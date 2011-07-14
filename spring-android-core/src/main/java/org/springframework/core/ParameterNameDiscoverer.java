@@ -29,6 +29,7 @@ import java.lang.reflect.Method;
  *
  * @author Rod Johnson
  * @author Adrian Colyer
+ * @author Roy Clarkson
  * @since 1.0
  */
 public interface ParameterNameDiscoverer {
@@ -49,6 +50,6 @@ public interface ParameterNameDiscoverer {
 	 * @return an array of parameter names if the names can be resolved,
 	 * or <code>null</code> if they cannot
 	 */
-	String[] getParameterNames(Constructor ctor);
+	String[] getParameterNames(Constructor<?> ctor);
 
 }

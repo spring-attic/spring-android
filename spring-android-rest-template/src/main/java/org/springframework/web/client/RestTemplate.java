@@ -547,7 +547,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	private class HttpEntityRequestCallback extends AcceptHeaderRequestCallback {
 
 		@SuppressWarnings("rawtypes")
-		private final HttpEntity requestEntity;
+		private final HttpEntity<Object> requestEntity;
 
 		private HttpEntityRequestCallback(Object requestBody) {
 			this(requestBody, null);
@@ -557,10 +557,10 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		private HttpEntityRequestCallback(Object requestBody, Class<?> responseType) {
 			super(responseType);
 			if (requestBody instanceof HttpEntity) {
-				this.requestEntity = (HttpEntity) requestBody;
+				this.requestEntity = (HttpEntity<Object>) requestBody;
 			}
 			else if (requestBody != null) {
-				this.requestEntity = new HttpEntity(requestBody);
+				this.requestEntity = new HttpEntity<Object>(requestBody);
 			}
 			else {
 				this.requestEntity = HttpEntity.EMPTY;

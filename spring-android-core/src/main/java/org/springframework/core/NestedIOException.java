@@ -29,6 +29,7 @@ import java.io.IOException;
  * class is unavoidable, as this class needs to derive from IOException.
  *
  * @author Juergen Hoeller
+ * @author Roy Clarkson
  * @since 1.0
  * @see #getMessage
  * @see #printStackTrace
@@ -36,6 +37,8 @@ import java.io.IOException;
  * @see org.springframework.core.NestedRuntimeException
  */
 public class NestedIOException extends IOException {
+
+	private static final long serialVersionUID = 1L;
 
 	static {
 		// Eagerly load the NestedExceptionUtils class to avoid classloader deadlock

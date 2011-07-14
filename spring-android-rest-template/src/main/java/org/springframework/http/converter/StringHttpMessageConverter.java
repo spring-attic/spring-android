@@ -37,6 +37,7 @@ import org.springframework.util.FileCopyUtils;
  * #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 1.0
  */
 public class StringHttpMessageConverter extends AbstractHttpMessageConverter<String> {
@@ -66,7 +67,7 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 	}
 
 	@Override
-	protected String readInternal(Class clazz, HttpInputMessage inputMessage) throws IOException {
+	protected String readInternal(Class<? extends String> clazz, HttpInputMessage inputMessage) throws IOException {
 		Charset charset = getContentTypeCharset(inputMessage.getHeaders().getContentType());
 		return FileCopyUtils.copyToString(new InputStreamReader(inputMessage.getBody(), charset));
 	}

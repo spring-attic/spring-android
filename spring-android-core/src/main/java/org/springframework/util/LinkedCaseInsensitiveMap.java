@@ -31,9 +31,12 @@ import java.util.Map;
  * <p>Does <i>not</i> support <code>null</code> keys.
  *
  * @author Juergen Hoeller
+ * @author Roy Clarkson
  * @since 1.0
  */
 public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
+
+	private static final long serialVersionUID = 1L;
 
 	private final Map<String, String> caseInsensitiveKeys;
 

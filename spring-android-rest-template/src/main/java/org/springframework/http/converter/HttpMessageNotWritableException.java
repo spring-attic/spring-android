@@ -22,9 +22,12 @@ package org.springframework.http.converter;
  * org.springframework.http.HttpOutputMessage) write} method fails.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 1.0
  */
 public class HttpMessageNotWritableException extends HttpMessageConversionException {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create a new HttpMessageNotWritableException.

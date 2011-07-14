@@ -26,10 +26,13 @@ import org.springframework.core.ErrorCoded;
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
+ * @author Roy Clarkson
  * @since 1.0
  */
 public abstract class PropertyAccessException extends BeansException implements ErrorCoded {
 
+	private static final long serialVersionUID = 1L;
+	
 	private transient PropertyChangeEvent propertyChangeEvent;
 	
 

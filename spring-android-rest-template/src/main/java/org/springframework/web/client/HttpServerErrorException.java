@@ -24,10 +24,13 @@ import org.springframework.http.HttpStatus;
  * Exception thrown when an HTTP 5xx is received.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @see DefaultResponseErrorHandler
  * @since 1.0
  */
 public class HttpServerErrorException extends HttpStatusCodeException {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct a new instance of {@code HttpServerErrorException} based on a {@link HttpStatus}.

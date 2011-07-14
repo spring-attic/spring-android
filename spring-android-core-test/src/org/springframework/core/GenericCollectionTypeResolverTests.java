@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -115,6 +116,7 @@ public class GenericCollectionTypeResolverTests extends AbstractGenericsTests {
 	}
 
 
+	@SuppressWarnings("rawtypes")
 	private interface Foo {
 
 		Map<String, Integer> a();

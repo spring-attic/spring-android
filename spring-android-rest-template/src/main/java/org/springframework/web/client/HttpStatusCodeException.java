@@ -25,9 +25,12 @@ import org.springframework.http.HttpStatus;
  * Abstract base class for exceptions based on an {@link HttpStatus}.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 1.0
  */
 public abstract class HttpStatusCodeException extends RestClientException {
+
+	private static final long serialVersionUID = 1L;
 
 	private static final Charset DEFAULT_CHARSET = Charset.forName("ISO-8859-1");
 
