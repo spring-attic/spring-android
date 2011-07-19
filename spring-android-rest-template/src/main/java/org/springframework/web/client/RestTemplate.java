@@ -546,14 +546,13 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	 */
 	private class HttpEntityRequestCallback extends AcceptHeaderRequestCallback {
 
-		@SuppressWarnings("rawtypes")
 		private final HttpEntity<Object> requestEntity;
 
 		private HttpEntityRequestCallback(Object requestBody) {
 			this(requestBody, null);
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings("unchecked")
 		private HttpEntityRequestCallback(Object requestBody, Class<?> responseType) {
 			super(responseType);
 			if (requestBody instanceof HttpEntity) {
