@@ -40,6 +40,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.feed.SyndFeedHttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
@@ -130,6 +131,9 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	private static final boolean jacksonPresent =
 			ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", RestTemplate.class.getClassLoader()) &&
 					ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", RestTemplate.class.getClassLoader());
+	
+	private static final boolean gsonPresent = 
+			ClassUtils.isPresent("com.google.gson.Gson", RestTemplate.class.getClassLoader());
 
 	private static boolean romePresent =
 			ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed", RestTemplate.class.getClassLoader());
@@ -148,6 +152,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		this.messageConverters.add(new StringHttpMessageConverter());
 		this.messageConverters.add(new ResourceHttpMessageConverter());
 		
+		// if javax.xml.transform is not available, fall back to standard Form message converter
 		if (javaxXmlTransformPresent) {
 			this.messageConverters.add(new SourceHttpMessageConverter());
 			this.messageConverters.add(new XmlAwareFormHttpMessageConverter());
@@ -159,8 +164,11 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			this.messageConverters.add(new SimpleXmlHttpMessageConverter());
 		}
 		
+		// Jackson takes precedence over Gson
 		if (jacksonPresent) {
 			this.messageConverters.add(new MappingJacksonHttpMessageConverter());
+		} else if (gsonPresent) {
+			this.messageConverters.add(new GsonHttpMessageConverter());
 		}
 		
 		if (romePresent) {
