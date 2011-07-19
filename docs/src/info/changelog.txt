@@ -5,7 +5,7 @@ Spring Android
 
 Minimum Requirements:
 * This release is now being built against Android 2.1 update 1 (API Level 7).
-  Previous Android versions are no longer officially supported.
+  Previous Android versions are not officially supported.
 
 New Features
 * Support for Spring Social 1.0.0.RC1 in Spring Android Auth. The known issues
@@ -13,14 +13,15 @@ New Features
 * Support for Spring Security 3.1.0.RC2 in Spring Android Auth
 * Updated RestTemplate to be compatible with Spring Framework 3.1.0.M2
 * Added gzip compression support in Rest Template.
-* Added support for Google's GSON JSON parsing library.
-* Updated support for Jackson 1.8.3
+* Added support for Google's Gson, JSON parsing library.
+* Updated support for Jackson 1.8.x
 * Fixed several issues in the JavaDoc
 * Several bug fixes
 
 Deprecated:
 * Deprecated CommonsClientHttpRequestFactory and supporting classes. Commons
-  Client support is now deprecated in Spring Framework 3.1.0.M2
+  Client support is now deprecated in Spring Framework 3.1.0.M2 as well as
+  Spring Android.
 
 
 1.0.0.M3 (2011.05.10)
