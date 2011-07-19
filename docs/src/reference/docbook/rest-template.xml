@@ -3,118 +3,145 @@
  <title>Spring Android Rest Template Module</title>
 
   <section id="rest-template-introduction">
+	
 	<title>Introduction</title>
-	<para>
-		Spring's RestTemplate is a robust, popular Java-based REST client.
-		The Spring Android Rest Template Module provides a version of RestTemplate that works in an Android environment.
-	</para>
+	
+	<para>Spring's RestTemplate is a robust, popular Java-based REST client. The Spring Android Rest Template Module provides a version of RestTemplate that works in an Android environment.</para>
+	
   </section>
 
   <section id="rest-template-overview">
+	
 	<title>Overview</title>
-	<para>
-		The RestTemplate object is the heart of the Spring Android Rest Template library. When you create a new
-		RestTemplate instance, the constructor sets up several supporting objects that make up the RestTemplate
-		functionality. 
-	</para>
+	
+	<para>The RestTemplate class is the heart of the Spring Android Rest Template library. When you create a new RestTemplate instance, the constructor sets up several supporting objects that make up the RestTemplate functionality.  Here is an overview of the functionality supported within RestTemplate.</para>
+	
 	<section>
-		<title>HttpComponents HttpClient 4.x</title>
-		<para>
-			The <link xlink:href="http://hc.apache.org/httpcomponents-client-ga/index.html">HttpComponents HttpClient</link> 
-			is the native http client available on the Android platform. Within Spring
-			Android Rest Template this HttpClient is made available through the HttpComponentsClientHttpRequestFactory.
-			The HttpComponentsClientHttpRequestFactory is set as the default RequestFactory when you create a new 
-			RestTemplate instance, so you are not required to set it manually.
-		</para>
+		
+		<title>HTTP Client</title>
+		
+		<para>RestTemplate provides an abstraction for making RESTful http requests, and internally, RestTemplate utilizes a native HTTP client library for those requests.</para>
+		
+		<section>
+		
+			<title>HttpComponents HttpClient</title>
+		
+			<para>The <link xlink:href="http://hc.apache.org/httpcomponents-client-ga/index.html">HttpComponents HttpClient</link> is a native HTTP client available on the Android platform. Within Spring Android Rest Template the HttpClient is made available through the HttpComponentsClientHttpRequestFactory. This class is set as the default RequestFactory when you create a new RestTemplate instance, so you are not required to set it manually.</para>
+		
+		</section>
+		
+		<section>
+		
+			<title>Java.net Client</title>
+		
+			<para><link xlink:href="http://developer.android.com/reference/java/net/HttpURLConnection.html">HttpURLConnection</link> is another native HTTP client library available on the Android platform. Within Spring Android Rest Template this HTTP client is made available through the SimpleClientHttpRequestFactory. To utilize the SimpleClientHttpRequestFactory, you must either pass a new instance into the RestTemplate constructor, or call setRequestFactory(ClientHttpRequestFactory requestFactory) on an existing RestTemplate instance.</para>
+		
+		</section>
+		
 	</section>
+	
 	<section>
+		
+		<title>Gzip Compression</title>
+		
+		<para>RestTemplate supports sending and receiving data encoded with gzip compression.</para>
+		
+	</section>
+	
+	<section>
+		
 		<title>Object to JSON Marshaling</title>
-		<para>
-			Object to JSON marshaling in Spring Android Rest Template requires the use of a third party JSON mapping
-			library. The <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link> is used within 
-			the MappingJacksonHttpMessageConverter to provide this marshaling functionality. The media type supported 
-			by this message converter is "application/json".
-		</para>
-		<para>
-			The MappingJacksonHttpMessageConverter is conditionally loaded when you create a new RestTemplate instance.
-			If the Jackson dependencies are found in your classpath, the message converter will be automatically added
-			and available for use in REST operations.  See the <link linkend="rest-template-howtoget-jackson">How to Get</link> 
-			section for more details on including Jackson in your project.  Additionally, the 
-			<link linkend="rest-template-examples">Usage Examples</link> section provides code samples.
-		</para>
+		
+		<para>Object to JSON marshaling in Spring Android Rest Template requires the use of a third party JSON mapping library. There are two libraries supported in Spring Android: Jackson, and GSON.</para>
+		
+		<section>
+			
+			<title>Jackson JSON Processor</title>
+			
+			<para>The <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link> library is used within the MappingJacksonHttpMessageConverter to provide this marshaling functionality. The default media type supported by this message converter is "application/json".</para>
+			
+			<para>The MappingJacksonHttpMessageConverter is conditionally loaded when you create a new RestTemplate instance. If the Jackson dependencies are found in your classpath, the message converter will be automatically added and available for use in REST operations.  See the <link linkend="rest-template-howtoget-jackson">How to Get</link> section for more details on including Jackson in your project.  Additionally, the <link linkend="rest-template-examples">Usage Examples</link> section provides code samples.</para>
+			
+		</section>
+		
+		<section>
+			
+			<title>Google Gson</title>
+			
+			<para>The <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link> library is used within the GsonHttpMessageConverter to provide this marshaling functionality. The default media type supported by this message converter is "application/json".</para>
+			
+			<para>The GsonHttpMessageConverter is not loaded when you create a new RestTemplate instance. To make the Gson message converter available for use in REST operations, you must add it to a new Rest Template instance.  See the <link linkend="rest-template-howtoget-gson">How to Get</link> section for more details on including Gson in your project.  Additionally, the <link linkend="rest-template-examples">Usage Examples</link> section provides code samples.</para>
+			
+		</section>
+		
 	</section>
+	
 	<section>
+		
 		<title>Object to XML Marshaling</title>
-		<para>
-			Object to XML marshaling in Spring Android Rest Template requires the use of a third party XML mapping
-			library. The <link xlink:href="http://simple.sourceforge.net">Simple XML serializer</link> is used within 
-			the SimpleXmlHttpMessageConverter to provide this marshaling functionality.  The media types supported by 
-			this message converter are "application/xml", "text/xml", and "application/*+xml".
-		</para>
-		<para>
-			The SimpleXmlHttpMessageConverter is conditionally loaded when you create a new RestTemplate instance.
-			If the Simple dependency is found in your classpath, the message converter will be automatically added
-			and available for use in REST operations.  See the <link linkend="rest-template-howtoget-simple">How to Get</link> 
-			section for more details on including Simple in your project.  Additionally, the 
-			<link linkend="rest-template-examples">Usage Examples</link> section provides code samples.
-		</para>
+		
+		<para>Object to XML marshaling in Spring Android Rest Template requires the use of a third party XML mapping library.</para>
+		
+		<section>
+			
+			<title>Simple XML Serialization</title>
+			
+			<para>The <link xlink:href="http://simple.sourceforge.net">Simple XML serializer</link> is used within the SimpleXmlHttpMessageConverter to provide this marshaling functionality.  The media types supported by this message converter are "application/xml", "text/xml", and "application/*+xml".</para>
+			
+			<para>The SimpleXmlHttpMessageConverter is conditionally loaded when you create a new RestTemplate instance. If the Simple dependency is found in your classpath, the message converter will be automatically added and available for use in REST operations.  See the <link linkend="rest-template-howtoget-simple">How to Get</link> section for more details on including Simple in your project.  Additionally, the <link linkend="rest-template-examples">Usage Examples</link> section provides code samples.</para>
+			
+		</section>
+		
 	</section>
+	
 	<section>
+		
 		<title>RSS and Atom Support</title>
-		<para>
-			RSS and Atom feed support in Spring Android Rest Template requires the use of a third party feed reader
-			library. The <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> 
-			is used within the SyndFeedHttpMessageConverter, RssChannelHttpMessageConverter, and the 
-			AtomFeedHttpMessageConverter to provide this functionality.  The media types supported by these message 
-			converters are "application/rss+xml" and "application/atom+xml".
-		</para>
-		<para>
-			The SyndFeedHttpMessageConverter is conditionally loaded when you create a new RestTemplate instance.
-			If the Android ROME dependencies are found in your classpath, the message converter will be automatically added
-			and available for use in REST operations.  See the <link linkend="rest-template-howtoget-rome">How to Get</link> 
-			section for more details on including Android ROME in your project.  Additionally, the 
-			<link linkend="rest-template-examples">Usage Examples</link> section provides code samples.
-		</para>
-		<para>
-			Because the SyndFeedHttpMessageConverter provides a higher level abstraction around RSS and Atom feeds, the 
-			RssChannelHttpMessageConverter, and AtomFeedHttpMessageConverter are not automatically added 
-			when you create a new RestTemplate instance.  If you prefer to use one of these message converters 
-			then you have to manually add it to the RestTemplate instance.
-		</para>
+		
+		<para>RSS and Atom feed support in Spring Android Rest Template requires the use of a third party feed reader library.</para>
+		
+		<section>
+			
+			<title>Android ROME Feed Reader</title>
+		
+			<para>The <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> is used within the SyndFeedHttpMessageConverter, RssChannelHttpMessageConverter, and the AtomFeedHttpMessageConverter to provide this functionality.  The media types supported by these message converters are "application/rss+xml" and "application/atom+xml".</para>
+			
+			<para>The SyndFeedHttpMessageConverter is conditionally loaded when you create a new RestTemplate instance. If the Android ROME dependencies are found in your classpath, the message converter will be automatically added and available for use in REST operations.  See the <link linkend="rest-template-howtoget-rome">How to Get</link> section for more details on including Android ROME in your project.  Additionally, the <link linkend="rest-template-examples">Usage Examples</link> section provides code samples.</para>
+			
+			<para>Because the SyndFeedHttpMessageConverter provides a higher level abstraction around RSS and Atom feeds, the RssChannelHttpMessageConverter, and AtomFeedHttpMessageConverter are not automatically added when you create a new RestTemplate instance.  If you prefer to use one of these message converters then you have to manually add it to the RestTemplate instance.</para>
+			
+		</section>
+		
 	</section>
+	
   </section>
 
   <section id="rest-template-howtoget">
+	
 	<title>How to get</title>
-	<para>
-		Add the spring-android-rest-template artifact to your classpath:
-		<programlisting language="xml"><![CDATA[
+	
+	<para>Add the spring-android-rest-template artifact to your classpath:</para>
+		
+	<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.android</groupId>
     <artifactId>spring-android-rest-template</artifactId>
     <version>${spring-android-version}</version>
 </dependency>]]>
-		</programlisting>
-	</para>
-	<para>
-		Unfortunately, Google's provided Android toolset does not include dependency management support. However, 
-		through the use of third party tools, you can use Maven to manage dependencies and build your Android app.
-		See the <link linkend="spring-android-maven">Spring Android and Maven</link> section for more information.
-	</para>
-	<para>
-		Spring Android Rest Template supports several optional libraries.  These optional libraries are used by 
-		different Http Message Converters within Rest Template.  If you would like to make use of these Message 
-		Converters, then you need to include the corresponding libraries in your classpath.
-	</para>	
+	</programlisting>
+	
+	<para>Google's provided Android toolset does not include dependency management support. However, through the use of third party tools, you can use Maven to manage dependencies and build your Android app. See the <link linkend="spring-android-maven">Spring Android and Maven</link> section for more information.</para>
+
+	<para>Spring Android Rest Template supports several optional libraries.  These optional libraries are used by different Http Message Converters within Rest Template.  If you would like to make use of these Message Converters, then you need to include the corresponding libraries in your classpath.</para>	
+	
 	<section id="rest-template-howtoget-jackson">
+		
 		<title>Jackson JSON Processor</title>
-		<para>
-			The MappingJacksonHttpMessageConverter is used to marshal Objects to JSON. The 
-			<link xlink:href="http://jackson.codehaus.org">Jackson</link> library provides this functionality.
-		</para>
-		<para>
-			Add the following Jackson dependencies to your classpath to enable this Message Converter. 
-		</para>
+		
+		<para>The MappingJacksonHttpMessageConverter is used to marshal Objects to JSON. The <link xlink:href="http://jackson.codehaus.org">Jackson</link> library provides this functionality.</para>
+		
+		<para>Add the following Jackson dependencies to your classpath to enable this Message Converter.</para>
+		
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.codehaus.jackson</groupId>
@@ -122,6 +149,7 @@
     <version>${jackson-version}</version>
 </dependency>]]>
 		</programlisting>
+		
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.codehaus.jackson</groupId>
@@ -129,18 +157,35 @@
     <version>${jackson-version}</version>
 </dependency>]]>
 		</programlisting>
+		
 	</section>
 	
+		<section id="rest-template-howtoget-gson">
+			
+			<title>Google Gson</title>
+			
+			<para>The GsonHttpMessageConverter is used to marshal Objects to JSON. The <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link> library provides this functionality.</para>
+			
+			<para>Add the following Gson dependency to your classpath to enable this Message Converter.</para>
+			
+			<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>com.google.code.gson</groupId>
+    <artifactId>gson</artifactId>
+    <version>${gson-version}</version>
+</dependency>]]>
+			</programlisting>
+			
+		</section>
+	
 	<section id="rest-template-howtoget-simple">
+		
 		<title>Simple XML Serializer</title>
-		<para>
-			The SimpleXmlHttpMessageConverter is used to marshal Objects to XML. 
-			<link xlink:href="http://simple.sourceforge.net">Simple</link> is an XML serialization and configuration 
-			framework for Java that is compatible with Android.
-		</para>
-		<para>
-			 Add the following Simple dependency to your classpath to enable this Message Converter.
-		</para>
+		
+		<para>The SimpleXmlHttpMessageConverter is used to marshal Objects to XML. <link xlink:href="http://simple.sourceforge.net">Simple</link> is an XML serialization and configuration framework for Java that is compatible with Android.</para>
+		
+		<para>Add the following Simple dependency to your classpath to enable this Message Converter.</para>
+		
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.simpleframework</groupId>
@@ -148,22 +193,17 @@
     <version>${simple-version}</version>
 </dependency>]]>
 		</programlisting>
+		
 	</section>
 	
 	<section id="rest-template-howtoget-rome">
+		
 		<title>Android ROME Feed Reader</title>
-		<para>
-			The RssChannelHttpMessageConverter, AtomFeedHttpMessageConverter, and SyndFeedHttpMessageConverter are
-			used to process RSS and Atom feeds. 
-			<link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> is a 
-			port of the popular ROME library that is compatible with Android.
-		</para>
-		<para>
-			Add the following Android ROME dependencies to your classpath to enable these Message Converters. 
-			This library depends on a forked version of JDOM to work on Android 2.1 and earlier. The JDOM library 
-			addresses a <link xlink:href="http://www.jdom.org/pipermail/jdom-interest/2009-July/016345.html">bug</link> 
-			in the Android XML parser.
-		</para>
+		
+		<para>The RssChannelHttpMessageConverter, AtomFeedHttpMessageConverter, and SyndFeedHttpMessageConverter are used to process RSS and Atom feeds. <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> is a port of the popular ROME library that is compatible with Android.</para>
+		
+		<para>Add the following Android ROME dependencies to your classpath to enable these Message Converters. This library depends on a forked version of JDOM to work on Android 2.1 and earlier. The JDOM library addresses a <link xlink:href="http://www.jdom.org/pipermail/jdom-interest/2009-July/016345.html">bug</link> in the Android XML parser.</para>
+		
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>com.google.code.android-rome-feed-reader</groupId>
@@ -171,6 +211,7 @@
     <version>${android-rome-version}</version>
 </dependency>]]>
 		</programlisting>
+		
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.jdom</groupId>
@@ -178,43 +219,45 @@
     <version>${jdom-fork-version}</version>
 </dependency>]]>
 		</programlisting>
+		
 	</section>
+	
   </section>
 
   <section id="rest-template-examples">
+	
   	<title>Usage Examples</title>
-  	<para>
-		Using Rest Template, it's easy to invoke RESTful APIs.  Below are several usage examples that illustrate 
-		the different methods for making RESTful requests.
-	<para>
-		All of the following examples are based on a 
-		<link xlink:href="https://github.com/SpringSource/spring-android-samples">sample Android application</link>.  You 
-		can retrieve the source code for the sample app with the following command:
-	</para>
+
+  	<para>Using Rest Template, it's easy to invoke RESTful APIs.  Below are several usage examples that illustrate the different methods for making RESTful requests.</para>
+	
+	<para>All of the following examples are based on a <link xlink:href="https://github.com/SpringSource/spring-android-samples">sample Android application</link>. You can retrieve the source code for the sample app with the following command:</para>
+	
 	<programlisting>
 $ git clone git://github.com/SpringSource/spring-android-samples.git
-	</programlisting>
-  	</para>
+	</programlisting>	
+
   	<section>
+	
 		<title>Basic Usage Example</title>
-		<para>
-			The following example shows a query to google for the search term "SpringSource". 
-		</para>
+		
+		<para>The following example shows a query to google for the search term "SpringSource".</para>
+		
 		<programlisting language="java"><![CDATA[
 RestTemplate restTemplate = new RestTemplate();
 String url = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q={query}";
 String result = restTemplate.getForObject(url, String.class, "SpringSource");]]>
 		</programlisting>
+		
 	</section>
   
 	<section>
+		
 		<title>Retrieving JSON data via HTTP GET</title>
-		<para>
-			Suppose you have defined a Java object you wish to populate from a RESTful web request that returns JSON content.
-		</para>
-		<para>
-			Define your object based on the JSON data being returned from the RESTful request:
-		</para>
+		
+		<para>Suppose you have defined a Java object you wish to populate from a RESTful web request that returns JSON content.</para>
+		
+		<para>Define your object based on the JSON data being returned from the RESTful request:</para>
+		
 		<programlisting language="java"><![CDATA[
 public class Event {
 
@@ -239,17 +282,17 @@ public class Event {
     }
 }]]>
 		</programlisting>
-		<para>
-			Make the RestTemplate request: 
-		</para>
+		
+		<para>Make the RestTemplate request:</para>
+		
 		<programlisting language="java"><![CDATA[
 String url = "http://mypretendservice.com/events";
 RestTemplate restTemplate = new RestTemplate();
 Event[] events = restTemplate.getForObject(url, Event[].class);]]>
 		</programlisting>
-		<para>
-			You can also set the Accept header for the request:
-		</para>
+		
+		<para>You can also set the Accept header for the request:</para>
+		
 		<programlisting language="java"><![CDATA[
 List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
 acceptableMediaTypes.add(new MediaType("application","json"));
@@ -265,17 +308,17 @@ RestTemplate restTemplate = new RestTemplate();
 ResponseEntity<Event[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Event[].class);
 Event[] events = responseEntity.getBody();]]>
 		</programlisting>
+		
 	</section>
 	
 	<section>
+		
 		<title>Retrieving XML data via HTTP GET</title>
-		<para>
-			Using the same Java object we defined earlier, we can modify the requests to retrieve XML.
-		</para>
-		<para>
-			Define your object based on the XML data being returned from the RESTful request. Note the
-			annotations used by Simple to marshal the object:
-		</para>
+		
+		<para>Using the same Java object we defined earlier, we can modify the requests to retrieve XML.</para>
+		
+		<para>Define your object based on the XML data being returned from the RESTful request. Note the annotations used by Simple to marshal the object:</para>
+		
 		<programlisting language="java"><![CDATA[
 @Root
 public class Event {
@@ -303,9 +346,9 @@ public class Event {
     }
 }]]>
 		</programlisting>
-		<para>
-			To marshal an array of events from xml, we need to define a wrapper class for the list:
-		</para>
+		
+		<para>To marshal an array of events from xml, we need to define a wrapper class for the list:</para>
+		
 		<programlisting language="java"><![CDATA[
 @Root(name="events")
 public class EventList {
@@ -322,17 +365,17 @@ public class EventList {
    }
 }]]>
 		</programlisting>
-		<para>
-			Make the RestTemplate request: 
-		</para>
+		
+		<para>Make the RestTemplate request:</para>
+		
 		<programlisting language="java"><![CDATA[
 String url = "http://mypretendservice.com/events";
 RestTemplate restTemplate = new RestTemplate();
 EventList eventList = restTemplate.getForObject(url, EventList.class);]]>
 		</programlisting>
-		<para>
-			You can also specify the Accept header for the request:
-		</para>
+		
+		<para>You can also specify the Accept header for the request:</para>
+		
 		<programlisting language="java"><![CDATA[
 List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
 acceptableMediaTypes.add(new MediaType("application","xml"));
@@ -348,16 +391,17 @@ RestTemplate restTemplate = new RestTemplate();
 ResponseEntity<EventList> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, EventList.class);
 EventList eventList = responseEntity.getBody();]]>
 		</programlisting>
+		
 	</section>
 	
 	<section>
+		
 		<title>Send JSON data via HTTP POST</title>
-		<para>
-			POST a Java object you have defined to a RESTful service that accepts JSON data. 
-		</para>
-		<para>
-			Define your object based on the JSON data expected by the RESTful request:
-		</para>
+		
+		<para>POST a Java object you have defined to a RESTful service that accepts JSON data.</para>
+		
+		<para>Define your object based on the JSON data expected by the RESTful request:</para>
+		
 		<programlisting language="java"><![CDATA[
 public class Message 
 {
@@ -392,9 +436,9 @@ public class Message
     }
 }]]>
 		</programlisting>
-		<para>
-			Make the RestTemplate request. In this example, the request responds with a string value: 
-		</para>
+		
+		<para>Make the RestTemplate request. In this example, the request responds with a string value:</para>
+		
 		<programlisting language="java"><![CDATA[
 Message message = new Message();
 message.setId(555);
@@ -405,9 +449,9 @@ String url = "http://mypretendservice.com/sendmessage";
 RestTemplate restTemplate = new RestTemplate();
 String response = restTemplate.postForObject(url, message, String.class);]]>
 		</programlisting>
-		<para>
-			You can also specify the Content-Type header in your request:
-		</para>
+		
+		<para>You can also specify the Content-Type header in your request:</para>
+		
 		<programlisting language="java"><![CDATA[
 Message message = new Message();
 message.setId(555);
@@ -428,21 +472,19 @@ String result = responseEntity.getBody();]]>
 	</section>
 	
 	<section>
+		
 		<title>Retrieve RSS or Atom feed</title>
-		<para>
-			The following is a basic example of loading an RSS feed:
-		</para>
+		
+		<para>The following is a basic example of loading an RSS feed:</para>
+		
 		<programlisting language="java"><![CDATA[
 String url = "http://mypretendservice.com/rssfeed";
 RestTemplate restTemplate = new RestTemplate();
 SyndFeed = restTemplate.getForObject(url, SyndFeed.class);]]>
 		</programlisting>
-		<para>
-			It is possible that you need to adjust the Media Type associated with the SyndFeedHttpMessageConverter. 
-			By default, the converter is associated with "application/rss+xml" and "application/atom+xml".  An RSS
-			feed might instead have a media type of "text/xml", for example. The following code illustrates how to 
-			set the media type.
-		</para>
+		
+		<para>It is possible that you need to adjust the Media Type associated with the SyndFeedHttpMessageConverter. By default, the converter is associated with "application/rss+xml" and "application/atom+xml".  An RSS feed might instead have a media type of "text/xml", for example. The following code illustrates how to set the media type.</para>
+		
 		<programlisting language="java"><![CDATA[
 String url = "http://mypretendservice.com/rssfeed";
 
@@ -458,6 +500,9 @@ RestTemplate restTemplate = new RestTemplate();
 restTemplate.setMessageConverters(messageConverters);
 SyndFeed feed = restTemplate.getForObject(url, SyndFeed.class);]]>
 		</programlisting>
+		
 	</section>
+	
   </section>
+
 </chapter>
