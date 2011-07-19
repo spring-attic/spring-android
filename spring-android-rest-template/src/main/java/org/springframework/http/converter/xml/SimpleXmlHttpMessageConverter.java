@@ -55,7 +55,7 @@ public class SimpleXmlHttpMessageConverter extends AbstractHttpMessageConverter<
 	/**
 	 * Construct a new {@code SimpleXmlHttpMessageConverter} with a default {@link Serializer}.
 	 * Sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}
-	 * to {@code text/xml} and {@code application/xml}, and {@code application/*-xml}.
+	 * to {@code text/xml} and {@code application/xml}, and {@code application/*+xml}.
 	 */
 	public SimpleXmlHttpMessageConverter() {
 		this(new Persister());
