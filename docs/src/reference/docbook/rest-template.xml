@@ -44,7 +44,7 @@
 		
 		<title>Gzip Compression</title>
 		
-		<para>RestTemplate supports sending and receiving data encoded with gzip compression.</para>
+		<para>RestTemplate supports sending and receiving data encoded with gzip compression.  The HTTP specification allows for additional values in the Accept-Encoding header field, however Rest Template only supports gzip compression at this time.</para>
 		
 	</section>
 	
@@ -249,6 +249,22 @@ String result = restTemplate.getForObject(url, String.class, "SpringSource");]]>
 		</programlisting>
 		
 	</section>
+	
+  	<section>
+
+		<title>Using Gzip Compression</title>
+
+		<para>The following example shows how to add the gzip Accept-Encoding header to the request.</para>
+
+		<programlisting language="java"><![CDATA[
+HttpHeaders requestHeaders = new HttpHeaders();
+requestHeaders.setAcceptEncoding(Collections.singletonList(ContentCodingType.GZIP));
+HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+RestTemplate restTemplate = new RestTemplate();
+ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);]]>
+		</programlisting>
+
+	</section>
   
 	<section>
 		
@@ -294,17 +310,35 @@ Event[] events = restTemplate.getForObject(url, Event[].class);]]>
 		<para>You can also set the Accept header for the request:</para>
 		
 		<programlisting language="java"><![CDATA[
-List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
-acceptableMediaTypes.add(new MediaType("application","json"));
-
 HttpHeaders requestHeaders = new HttpHeaders();
-requestHeaders.setAccept(acceptableMediaTypes);
+requestHeaders.setAccept(Collections.singletonList(new MediaType("application","json")));
 
 HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
 
 String url = "http://mypretendservice.com/events";
 
 RestTemplate restTemplate = new RestTemplate();
+ResponseEntity<Event[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Event[].class);
+Event[] events = responseEntity.getBody();]]>
+		</programlisting>
+		
+		<para>Alternatively, you can use the GsonHttpMessageConverter for JSON marshaling. The following repeats the same request, utilizing Gson.</para>
+		
+		<programlisting language="java"><![CDATA[
+HttpHeaders requestHeaders = new HttpHeaders();
+requestHeaders.setAccept(Collections.singletonList(new MediaType("application","json")));
+
+HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+
+String url = "http://mypretendservice.com/events";
+
+GsonHttpMessageConverter messageConverter = new GsonHttpMessageConverter();
+List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+messageConverters.add(messageConverter);
+
+RestTemplate restTemplate = new RestTemplate();
+restTemplate.setMessageConverters(messageConverters);
+
 ResponseEntity<Event[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Event[].class);
 Event[] events = responseEntity.getBody();]]>
 		</programlisting>
