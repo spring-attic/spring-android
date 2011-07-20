@@ -38,7 +38,7 @@
 		
 		<title>Object to JSON Marshaling</title>
 		
-		<para>Object to JSON marshaling in Spring Android RestTemplate requires the use of a third party JSON mapping library. There are two libraries supported in Spring Android, <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>, and <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>.</para>
+		<para>Object to JSON marshaling in Spring Android RestTemplate requires the use of a third party JSON mapping library. There are two libraries supported in Spring Android, <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>, and <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>.  While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
 		
 	</section>
 	
@@ -318,6 +318,12 @@ public interface HttpMessageConverter<T> {
     <groupId>org.springframework.android</groupId>
     <artifactId>spring-android-rest-template</artifactId>
     <version>${spring-android-version}</version>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.android</groupId>
+    <artifactId>spring-android-core</artifactId>
+    <version>${spring-android-version}</version>
 </dependency>]]>
 	</programlisting>
 	
@@ -401,6 +407,17 @@ public interface HttpMessageConverter<T> {
     <artifactId>jdom</artifactId>
     <version>${jdom-fork-version}</version>
 </dependency>]]>
+		</programlisting>
+		
+		<para>The Android ROME Feed Reader is not available through the Maven central repository. When using Maven, you will need to include the following repository in your POM.</para>
+		
+		<programlisting language="xml"><![CDATA[
+<!-- For developing with Android ROME Feed Reader -->
+<repository>
+    <id>android-rome-feed-reader-repository</id>
+    <name>Android ROME Feed Reader Repository</name>
+    <url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
+</repository>]]>
 		</programlisting>
 		
 	</section>

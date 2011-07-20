@@ -7,9 +7,9 @@
 	
     <title>Introduction</title>
 
-    <para>Many mobile applications today connect to external web services to access some type of data.  These web services may be a third-party data provider, such as Twitter, or it may be an in house service for connecting to a corporate calendar, for example.  In many of these cases, to access that data through the web service, you must authenticate and authorize an application on your mobile device.  The goal of the spring-android-auth module is to address the need of an Android application to gain authorization to a web service.</para>
+    <para>Many mobile applications today connect to external web services to access some type of data.  These web services may be a third-party data provider, such as <link xlink:href="http://twitter.com">Twitter</link>, or it may be an in house service for connecting to a corporate calendar, for example.  In many of these cases, to access that data through the web service, you must authenticate and authorize an application on your mobile device.  The goal of the spring-android-auth module is to address the need of an Android application to gain authorization to a web service.</para>
 
-  	<para>There are many types of authorization methods and protocols, some custom and proprietary, while others are open standards.  One protocol that is rapidly growing in popularity is OAuth. OAuth is an open protocol that allows users to give permission to a third-party application or web site to access restricted resources on another web site or service.  The third-party application receives an access token with which it can make requests to the protected service.  By using this access token strategy, a user's login credentials are never stored within an application, and are only required when authenticating to the service.</para>
+  	<para>There are many types of authorization methods and protocols, some custom and proprietary, while others are open standards.  One protocol that is rapidly growing in popularity is <link xlink:href="http://oauth.net/">OAuth</link>. OAuth is an open protocol that allows users to give permission to a third-party application or web site to access restricted resources on another web site or service.  The third-party application receives an access token with which it can make requests to the protected service.  By using this access token strategy, a user's login credentials are never stored within an application, and are only required when authenticating to the service.</para>
 
 	<para></para>
 
@@ -19,15 +19,15 @@
 
 	<title>Overview</title>
 
-	<para>The initial release of the spring-android-auth module provides OAuth 1.x and 2.0 support in an Android application by utilizing Spring Social. It includes a SQLite repository, and Android compatible Spring Security encryption.  The Spring Social project enables your applications to establish Connections with Software-as-a-Service (SaaS) Providers such as Facebook and Twitter to invoke Service APIs on behalf of Users. In order to make use of Spring Social on Android the following classes are available.</para>
+	<para>The initial release of the spring-android-auth module provides <link xlink:href="http://oauth.net/">OAuth</link> 1.x and 2.0 support in an Android application by utilizing <link xlink:href="http://www.springsource.org/spring-social">Spring Social</link>. It includes a <link xlink:href="http://www.sqlite.org/">SQLite</link> repository, and Android compatible <link xlink:href="http://static.springsource.org/spring-security/site/index.html">Spring Security</link> encryption.  The Spring Social project enables your applications to establish Connections with Software-as-a-Service (SaaS) Providers such as <link xlink:href="http://facebook.com">Facebook</link> and <link xlink:href="http://twitter.com">Twitter</link> to invoke Service APIs on behalf of Users. In order to make use of Spring Social on Android the following classes are available.</para>
 	
 	<section>
 		
 		<title>SQLite Connection Repository</title>
 		
-		<para>The SQLiteConnectionRepository class implements the ConnectionRepository interface from Spring Social. It is used to persist the connection information to a SQLite database on the Android device.  This connection repository is designed for a single user who accesses multiple service providers and may even have multiple accounts on each service provider.</para>
+		<para>The <link xlink:href="http://static.springsource.org/spring-android/docs/1.0.x/api/org/springframework/social/connect/sqlite/SQLiteConnectionRepository.html"><classname>SQLiteConnectionRepository</classname></link> class implements the <link xlink:href="http://static.springsource.org/spring-social/docs/1.0.x/api/org/springframework/social/connect/ConnectionRepository.html"><interfacename>ConnectionRepository</interfacename></link> interface from Spring Social. It is used to persist the connection information to a <link xlink:href="http://www.sqlite.org/">SQLite</link> database on the Android device.  This connection repository is designed for a single user who accesses multiple service providers and may even have multiple accounts on each service provider.</para>
 		
-		<para>If your device and application are used by multiple people, then a SQLiteUsersConnectionRepository class is available for storing multiple user accounts, where each user account may have multiple connections per provider.  This scenario is probably not as typical, however, as many people do not share their phones or devices.</para>
+		<para>If your device and application are used by multiple people, then a <link xlink:href="http://static.springsource.org/spring-android/docs/1.0.x/api/index.html?org/springframework/social/connect/sqlite/SQLiteConnectionRepository.html"><classname>SQLiteUsersConnectionRepository</classname></link> class is available for storing multiple user accounts, where each user account may have multiple connections per provider.  This scenario is probably not as typical, however, as many people do not share their phones or devices.</para>
 		
 	</section>
 	
@@ -35,7 +35,7 @@
 		
 		<title>Encryption</title>
 		
-		<para>The Spring Security Crypto library is not currently supported on Android.  To take advantage of the encryption tools in Spring Security, the Android specific class, AndroidEncryptors has been provided in Spring Android. This class uses an Android compatible SecureRandom provider for generating byte array based keys using the SHA1PRNG algorithm.</para>
+		<para>The Spring Security Crypto library is not currently supported on Android.  To take advantage of the encryption tools in Spring Security, the Android specific class, <link xlink:href="http://static.springsource.org/spring-android/docs/1.0.x/api/org/springframework/security/crypto/encrypt/AndroidEncryptors.html"><classname>AndroidEncryptors</classname></link> has been provided in Spring Android. This class uses an Android compatible <link xlink:href="http://developer.android.com/reference/java/security/SecureRandom.html"><classname>SecureRandom</classname></link> provider for generating byte array based keys using the SHA1PRNG algorithm.</para>
 		
 	</section>
 
@@ -45,21 +45,69 @@
 	
     <title>How to get</title>
 
-	<para>Add the spring-android-auth artifact to your classpath:
+	<para>Add the spring-android-auth and the supporting artifacts to your classpath. Maven will handle the dependency management, but the required dependencies are listed here for clarity.  </para>
 		
-		<programlisting language="xml"><![CDATA[
+	<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.android</groupId>
     <artifactId>spring-android-auth</artifactId>
     <version>${spring-android-version}</version>
-</dependency>]]>
-		</programlisting>
-		
-	</para>
-	
-	<para>To use one of the built in Spring Social providers, you can add it to your classpath:
+</dependency>
 
-		<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.android</groupId>
+    <artifactId>spring-android-rest-template</artifactId>
+    <version>${spring-android-version}</version>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.android</groupId>
+    <artifactId>spring-android-core</artifactId>
+    <version>${spring-android-version}</version>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-crypto</artifactId>
+    <version>3.1.0.RC2.crypto</version>
+    <exclusions>
+        <!-- Exclude in favor of Spring Android Core -->
+        <exclusion>
+            <artifactId>spring-core</artifactId>
+            <groupId>org.springframework</groupId>
+        </exclusion>
+    </exclusions>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.social</groupId>
+    <artifactId>spring-social-core</artifactId>
+    <version>${spring-social-version}</version>
+    <exclusions>
+        <!-- Exclude in favor of Spring Android RestTemplate -->
+        <exclusion>
+            <artifactId>spring-web</artifactId>
+            <groupId>org.springframework</groupId>
+        </exclusion>
+    </exclusions>
+</dependency>
+
+<dependency>
+	<groupId>org.codehaus.jackson</groupId>
+	<artifactId>jackson-mapper-asl</artifactId>
+	<version>${jackson-version}</version>
+</dependency>
+
+<dependency>
+	<groupId>org.codehaus.jackson</groupId>
+	<artifactId>jackson-core-asl</artifactId>
+	<version>${jackson-version}</version>
+</dependency>]]>
+	</programlisting>
+	
+	<para>To use the Spring Social Twitter provider, you can add it to your classpath.  Note the exclusions in this dependency. Commons Logging is built into Android, and many of the Spring Social provider libraries are built with support for Spring Web, which is not needed on Android.</para>
+
+	<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.social</groupId>
     <artifactId>spring-social-twitter</artifactId>
@@ -77,10 +125,33 @@
         </exclusion>
     </exclusions>
 </dependency>]]>
-		</programlisting>
+	</programlisting>
+	
+	<para>Similarly, you can use the Spring Social Facebook provider by adding it to your classpath. Again note the exclusions.</para>
 
-	</para>
-
+	<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.social</groupId>
+    <artifactId>spring-social-facebook</artifactId>
+    <version>${spring-social-version}</version>
+    <exclusions>
+        <!-- Exclude in favor of Spring Android RestTemplate -->
+        <exclusion>
+            <artifactId>spring-social-web</artifactId>
+            <groupId>org.springframework.social</groupId>
+        </exclusion>
+        <!-- Provided by Android -->
+        <exclusion>
+            <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
+        </exclusion>
+        <exclusion>
+            <artifactId>spring-webmvc</artifactId>
+            <groupId>org.springframework</groupId>
+        </exclusion>
+    </exclusions>
+</dependency>]]>
+	</programlisting>
 	
   </section>
 
@@ -100,7 +171,7 @@ $ git clone git://github.com/SpringSource/spring-android-samples.git
 	
 		<title>Initializing the SQLite Database</title>
 		
-		<para>SQLiteConnectionRepositoryHelper extends <link xlink:href="http://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html">SQLiteOpenHelper</link>.  Create a new instance by passing a <link xlink:href="http://developer.android.com/reference/android/content/Context.html">context</link> reference. Depending on your implementation, and to avoid <link xlink:href="http://developer.android.com/resources/articles/avoiding-memory-leaks.html">memory leaks</link>, you will probably want to use the Application Context when creating a new instance of SQLiteConnectionRepositoryHelper. The name of the database file created is "spring_social_connection_repository.sqlite", and is created the first time the application attempts to open it.</para>
+		<para><link xlink:href="http://static.springsource.org/spring-android/docs/1.0.x/api/org/springframework/social/connect/sqlite/support/SQLiteConnectionRepositoryHelper.html"><classname>SQLiteConnectionRepositoryHelper</classname></link> extends <link xlink:href="http://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html"><classname>SQLiteOpenHelper</classname></link>.  Create a new instance by passing a <link xlink:href="http://developer.android.com/reference/android/content/Context.html"><classname>context</classname></link> reference. Depending on your implementation, and to avoid <link xlink:href="http://developer.android.com/resources/articles/avoiding-memory-leaks.html">memory leaks</link>, you will probably want to use the Application Context when creating a new instance of <classname>SQLiteConnectionRepositoryHelper</classname>. The name of the database file created is <literal>spring_social_connection_repository.sqlite</literal>, and is created the first time the application attempts to open it.</para>
 		
 		<programlisting language="java"><![CDATA[
 Context context = getApplicationContext();
@@ -113,9 +184,9 @@ SQLiteOpenHelper repositoryHelper = new SQLiteConnectionRepositoryHelper(context
 
 		<title>Single User App Environment</title>
 
-		<para>This example show how to set up the ConnectionRepository for use with multiple connection factories.</para>
+		<para>This example show how to set up the <interfacename>ConnectionRepository</interfacename> for use with multiple connection factories.</para>
 		
-		<para>To establish a ConnectionRepository, you will need the following objects.</para>
+		<para>To establish a <interfacename>ConnectionRepository</interfacename>, you will need the following objects.</para>
 
 		<programlisting language="java"><![CDATA[
 ConnectionFactoryRegistry connectionFactoryRegistry;
@@ -123,13 +194,13 @@ SQLiteOpenHelper repositoryHelper;
 ConnectionRepository connectionRepository;]]>
 		</programlisting>
 			
-		<para>The ConnectionFactoryRegistry stores the different Spring Social connections to be used in the application.</para>
+		<para>The <link xlink:href="http://static.springsource.org/spring-social/docs/1.0.x/api/org/springframework/social/connect/support/ConnectionFactoryRegistry.html"><classname>ConnectionFactoryRegistry</classname></link> stores the different Spring Social connections to be used in the application.</para>
 		
 		<programlisting language="java"><![CDATA[
 connectionFactoryRegistry = new ConnectionFactoryRegistry();]]>
 		</programlisting>
 
-		<para>You can create a FacebookConnectionFactory, if your application requires Facebook connectivity.</para>
+		<para>You can create a <link xlink:href="http://static.springsource.org/spring-social-facebook/docs/1.0.x/api/org/springframework/social/facebook/connect/FacebookConnectionFactory.html"><classname>FacebookConnectionFactory</classname></link>, if your application requires Facebook connectivity.</para>
 		
 		<programlisting language="java"><![CDATA[
 // the App ID and App Secret are provided when you register a new Facebook application at facebook.com
@@ -141,7 +212,7 @@ FacebookConnectionFactory facebookConnectionFactory;
 facebookConnectionFactory = new FacebookConnectionFactory(appId, appSecret);]]>
 		</programlisting>
 
-		<para>Similarly, you can also create a TwitterConnectionFactory.  Spring Social offers several different connection factories to popular services.  Additionally, you can create your own connection factory based on the Spring Social framework.</para>
+		<para>Similarly, you can also create a <link xlink:href="http://static.springsource.org/spring-social-twitter/docs/1.0.x/api/org/springframework/social/twitter/connect/TwitterConnectionFactory.html"><classname>TwitterConnectionFactory</classname></link>.  Spring Social offers several different connection factories to popular services.  Additionally, you can create your own connection factory based on the Spring Social framework.</para>
 
 		<programlisting language="java"><![CDATA[
 // The consumer token and secret are provided when you register a new Twitter application at twitter.com
@@ -181,7 +252,7 @@ ConnectionRepository connectionRepository = new SQLiteConnectionRepository(repos
 
 		<title>Encrypting OAuth Data</title>
 
-		<para>Spring Social supports encrypting the user's OAuth connection information within the ConnectionRepository through the use of a Spring Security TextEncryptor.  The password and salt values are used to generate the encryptor's secret key. The salt value should be hex-encoded, random, and application-global.  While this will encrypt the OAuth credentials stored in the database, it is not an absolute solution.  When designing your application, keep in mind that there are already tools available for translating a DEX to a JAR file, and decompiling to source code.  Because your application is distributed to a user's device, it is more vulnerable than if it were running on a web server, for example.</para>
+		<para>Spring Social supports encrypting the user's OAuth connection information within the <classname>ConnectionRepository</classname> through the use of a Spring Security <classname>TextEncryptor</classname>.  The password and salt values are used to generate the encryptor's secret key. The salt value should be hex-encoded, random, and application-global.  While this will encrypt the OAuth credentials stored in the database, it is not an absolute solution.  When designing your application, keep in mind that there are already tools available for translating a DEX to a JAR file, and decompiling to source code.  Because your application is distributed to a user's device, it is more vulnerable than if it were running on a web server, for example.</para>
 
 		<programlisting language="java"><![CDATA[
 String password = "password";
@@ -191,7 +262,7 @@ connectionRepository = new SQLiteConnectionRepository(repositoryHelper,
 	connectionFactoryRegistry, textEncryptor);]]>
 		</programlisting>
 		
-		<para>During development you may wish to avoid encryption so you can more easily debug your application by viewing the OAuth data being saved to the database. This TextEncryptor performs no encryption.</para>
+		<para>During development you may wish to avoid encryption so you can more easily debug your application by viewing the OAuth data being saved to the database. This <classname>TextEncryptor</classname> performs no encryption.</para>
 		
 		<programlisting language="java"><![CDATA[
 TextEncryptor textEncryptor = AndroidEncryptors.noOpText();
@@ -211,7 +282,7 @@ connectionRepository = new SQLiteConnectionRepository(repositoryHelper,
 		
 		<programlisting language="java"><![CDATA[
 TwitterConnectionFactory connectionFactory;
-connectionFactory = (TwitterConnectionFactory) connectionFactoryRegistry.getConnectionFactory(TwitterApi.class);]]>
+connectionFactory = (TwitterConnectionFactory) connectionFactoryRegistry.getConnectionFactory(Twitter.class);]]>
 		</programlisting>
 		
 		<para>Fetch a one time use request token.  You must save this request token, because it will be needed in a later step.</para>
@@ -245,7 +316,7 @@ String authorizeUrl = oauth.buildAuthorizeUrl(requestToken.getValue(), OAuth1Par
 </activity>]]>
 		</programlisting>
 		
-		<para>The Activity that responds to the callback url should retrieve the oauth_verifier querystring parameter from the request.</para>
+		<para>The Activity that responds to the callback url should retrieve the <literal>oauth_verifier</literal> querystring parameter from the request.</para>
 		
 		<programlisting language="java"><![CDATA[
 Uri uri = getIntent().getData();
@@ -284,7 +355,7 @@ connectionRepository.addConnection(connection);]]>
 
 		<programlisting language="java"><![CDATA[
 FacebookConnectionFactory connectionFactory;
-connectionFactory = (FacebookConnectionFactory) connectionFactoryRegistry.getConnectionFactory(FacebookApi.class);]]>
+connectionFactory = (FacebookConnectionFactory) connectionFactoryRegistry.getConnectionFactory(Facebook.class);]]>
 		</programlisting>
 		
 		<para>Specify the redirect url.  In the case of Facebook, we are using the client-side authorization flow. In order to retrieve the access token, Facebook will redirect to a success page that contains the access token in a URI fragment.</para>
@@ -299,7 +370,7 @@ String redirectUri = "https://www.facebook.com/connect/login_success.html";]]>
 String scope = "publish_stream,offline_access,read_stream,user_about_me";]]>
 		</programlisting>
 		
-		<para>In order to display a mobile formatted web page for Facebook authorization, you must pass an additional parameter in the request. This parameter is not part of the OAuth specification, but the following illustrates how Spring Social supports additional parameters.</para>
+		<para>In order to display a mobile formatted web page for Facebook authorization, you must <link xlink:href="http://developers.facebook.com/docs/guides/mobile/#web">pass an additional parameter</link> in the request. This parameter is not part of the OAuth specification, but the following illustrates how Spring Social supports additional parameters.</para>
 
 		<programlisting language="java"><![CDATA[
 MultiValueMap<String, String> additionalParameters = new LinkedMultiValueMap<String, String>();
