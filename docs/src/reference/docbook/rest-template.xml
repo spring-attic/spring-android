@@ -455,12 +455,16 @@ String result = restTemplate.getForObject(url, String.class, "SpringSource");]]>
 
 		<title>Using Gzip Compression</title>
 
-		<para>The following example shows how to add the gzip <literal>Accept-Encoding</literal> header to the request.</para>
+		<para>Gzip compression can significantly reduce the size of the response data being returned in a REST request. Gzip must be supported by the web server to which the request is being made.  By setting the content coding type of the <literal>Accept-Encoding</literal> header to <literal>gzip</literal>, you are requesting that the server respond using gzip compression.  If gzip is available, or enabled on the server, then it should return a compressed response.  RestTemplate checks the <literal>Content-Encoding</literal> header in the response to determine if, in fact, the response is gzip compressed.  At this time, RestTemplate only supports the gzip content coding type in the <literal>Content-Encoding</literal> header.  If the response data is determined to be gzip compressed, then a <link xlink:href="http://developer.android.com/reference/java/util/zip/GZIPInputStream.html">GZIPInputStream</link> is used to decompress it.</para>
+		
+		<para>The following example shows how to request a gzip compressed response from the server.</para>
 
 		<programlisting language="java"><![CDATA[
 HttpHeaders requestHeaders = new HttpHeaders();
 requestHeaders.setAcceptEncoding(Collections.singletonList(ContentCodingType.GZIP));
+
 HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+
 RestTemplate restTemplate = new RestTemplate();
 ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);]]>
 		</programlisting>

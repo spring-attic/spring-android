@@ -1,7 +1,7 @@
 Spring Android
 ================================
 
-1.0.0.M4 (2011.07.19)
+1.0.0.M4 (2011.07.21)
 
 Minimum Requirements:
 * This release is now being built against Android 2.1 update 1 (API Level 7).

@@ -114,11 +114,6 @@
     <version>${spring-social-version}</version>
     <exclusions>
         <exclusion>
-            <!-- Exclude in favor of Spring Android RestTemplate -->
-            <artifactId>spring-social-web</artifactId>
-            <groupId>org.springframework.social</groupId>
-        </exclusion>
-        <exclusion>
             <!-- Provided by Android -->
             <artifactId>commons-logging</artifactId>
             <groupId>commons-logging</groupId>
@@ -135,19 +130,10 @@
     <artifactId>spring-social-facebook</artifactId>
     <version>${spring-social-version}</version>
     <exclusions>
-        <!-- Exclude in favor of Spring Android RestTemplate -->
-        <exclusion>
-            <artifactId>spring-social-web</artifactId>
-            <groupId>org.springframework.social</groupId>
-        </exclusion>
         <!-- Provided by Android -->
         <exclusion>
             <artifactId>commons-logging</artifactId>
             <groupId>commons-logging</groupId>
-        </exclusion>
-        <exclusion>
-            <artifactId>spring-webmvc</artifactId>
-            <groupId>org.springframework</groupId>
         </exclusion>
     </exclusions>
 </dependency>]]>
