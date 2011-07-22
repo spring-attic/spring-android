@@ -26,20 +26,23 @@ import java.util.Locale;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.social.NotAuthorizedException;
 
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 /**
  * @author Craig Walls
+ * @author Roy Clarkson
  */
 public class UserTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
-	public void testGetUserProfile_authenticatedUser() {
+	public void testGetUserProfile_currentUser() {
 		mockServer.expect(requestTo("https://graph.facebook.com/me"))
 				.andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
-				.andRespond(withResponse(new ClassPathResource("testdata/full-profile.json", getClass()), responseHeaders));
+				.andRespond(withResponse(jsonResource("testdata/full-profile"), responseHeaders));
 
 		FacebookProfile profile = facebook.userOperations().getUserProfile();
 		assertBasicProfileData(profile);
@@ -97,13 +100,24 @@ public class UserTemplateTest extends AbstractFacebookApiTest {
 		assertWorkHistory(profile.getWork());
 		assertEducationHistory(profile.getEducation());
 	}
+	
+	@SmallTest
+	public void testGetUserProfile_currentUser_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.userOperations().getUserProfile();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
 
 	@MediumTest
 	public void testGetUserProfile_specificUserByUserId() {
 		mockServer.expect(requestTo("https://graph.facebook.com/123456789"))
 				.andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
-				.andRespond(withResponse(new ClassPathResource("testdata/minimal-profile.json", getClass()), responseHeaders));
+				.andRespond(withResponse(jsonResource("testdata/minimal-profile"), responseHeaders));
 
 		FacebookProfile profile = facebook.userOperations().getUserProfile("123456789");
 		assertBasicProfileData(profile);
@@ -121,6 +135,17 @@ public class UserTemplateTest extends AbstractFacebookApiTest {
 		mockServer.verify();
 	}
 	
+	@SmallTest
+	public void testGetUserProfileImage_currentUser_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.userOperations().getUserProfileImage();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	@MediumTest
 	public void testGetUserProfileImage_specificUserByUserId() {
 		responseHeaders.setContentType(MediaType.IMAGE_JPEG);
@@ -133,6 +158,81 @@ public class UserTemplateTest extends AbstractFacebookApiTest {
 		mockServer.verify();
 	}
 	
+	@MediumTest
+	public void testGetUserProfileImage_specificUserAndType() {
+		responseHeaders.setContentType(MediaType.IMAGE_JPEG);
+		mockServer.expect(requestTo("https://graph.facebook.com/1234567/picture?type=large"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(new ClassPathResource("testdata/tinyrod.jpg", getClass()), responseHeaders));
+		facebook.userOperations().getUserProfileImage("1234567", ImageType.LARGE);
+		// TODO: Fix mock server handle binary data so we can test contents (or at least size) of image data.
+		mockServer.verify();
+	}
+	
+	@SmallTest
+	public void testGetUserProfileImage_currentUser_specificType_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.userOperations().getUserProfileImage(ImageType.NORMAL);
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	@MediumTest
+	public void testGetUserPermissions() {
+		mockServer.expect(requestTo("https://graph.facebook.com/me/permissions"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/user-permissions"), responseHeaders));
+		List<String> permissions = facebook.userOperations().getUserPermissions();
+		assertEquals(4, permissions.size());
+		assertTrue(permissions.contains("status_update"));
+		assertTrue(permissions.contains("offline_access"));
+		assertTrue(permissions.contains("read_stream"));
+		assertTrue(permissions.contains("publish_stream"));
+	}
+	
+	@SmallTest
+	public void testGetUserPermissions_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.userOperations().getUserPermissions();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);	
+	}
+	
+	@MediumTest
+	public void testSearch() {
+		mockServer.expect(requestTo("https://graph.facebook.com/search?q=Michael+Scott&type=user"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/user-references"), responseHeaders));
+		List<Reference> results = facebook.userOperations().search("Michael Scott");
+		assertEquals(3, results.size());
+		assertEquals("100000737708615", results.get(0).getId());
+		assertEquals("Michael Scott", results.get(0).getName());
+		assertEquals("100000354483321", results.get(1).getId());
+		assertEquals("Michael Scott", results.get(1).getName());
+		assertEquals("1184963857", results.get(2).getId());
+		assertEquals("Michael Scott", results.get(2).getName());
+	}
+	
+	@SmallTest
+	public void testSearch_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.userOperations().search("Michael Scott");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	private void assertBasicProfileData(FacebookProfile profile) {
 		assertEquals("123456789", profile.getId());
 		assertEquals("Craig", profile.getFirstName());
@@ -149,11 +249,18 @@ public class UserTemplateTest extends AbstractFacebookApiTest {
 		assertEquals("New Mexico", educationHistory.get(0).getSchool().getName());
 		assertEquals("117348274968344", educationHistory.get(0).getYear().getId());
 		assertEquals("1994", educationHistory.get(0).getYear().getName());
+		List<Reference> concentration = educationHistory.get(0).getConcentration();
+		assertEquals(2, concentration.size());
+		assertEquals("192578844099494", concentration.get(0).getId());
+		assertEquals("Computer Science", concentration.get(0).getName());
+		assertEquals("146136662113078", concentration.get(1).getId());
+		assertEquals("Mathematics", concentration.get(1).getName());
 		assertEquals("High School", educationHistory.get(1).getType());
 		assertEquals("115157218496067", educationHistory.get(1).getSchool().getId());
 		assertEquals("Jal High School", educationHistory.get(1).getSchool().getName());
 		assertEquals("127132740657422", educationHistory.get(1).getYear().getId());
 		assertEquals("1989", educationHistory.get(1).getYear().getName());
+		assertNull(educationHistory.get(1).getConcentration());
 	}
 
 	private void assertWorkHistory(List<WorkEntry> workHistory) {

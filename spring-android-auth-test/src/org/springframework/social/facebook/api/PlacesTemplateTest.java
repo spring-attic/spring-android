@@ -25,9 +25,10 @@ import static org.springframework.social.test.client.ResponseCreators.withRespon
 
 import java.util.List;
 
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.social.NotAuthorizedException;
 
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 public class PlacesTemplateTest extends AbstractFacebookApiTest {
 
@@ -36,9 +37,20 @@ public class PlacesTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/me/checkins"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/checkins.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/checkins"), responseHeaders));
 		List<Checkin> checkins = facebook.placesOperations().getCheckins();
 		assertCheckins(checkins);
+	}
+	
+	@SmallTest
+	public void testGetCheckins_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.placesOperations().getCheckins();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 
 	@MediumTest
@@ -46,7 +58,7 @@ public class PlacesTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/987654321/checkins"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/checkins.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/checkins"), responseHeaders));
 		List<Checkin> checkins = facebook.placesOperations().getCheckins("987654321");
 		assertCheckins(checkins);
 	}
@@ -56,11 +68,22 @@ public class PlacesTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/10150431253050580"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/checkin.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/checkin"), responseHeaders));
 		Checkin checkin = facebook.placesOperations().getCheckin("10150431253050580");
 		assertSingleCheckin(checkin);		
 	}
 	
+	@SmallTest
+	public void testGetCheckin_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.placesOperations().getCheckin("987654321");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+		
 	@MediumTest
 	public void testCheckin() {
 		mockServer.expect(requestTo("https://graph.facebook.com/me/checkins"))
@@ -69,6 +92,17 @@ public class PlacesTemplateTest extends AbstractFacebookApiTest {
 			.andExpect(body("place=123456789&coordinates=%7B%22latitude%22%3A%2232.943860253093%22%2C%22longitude%22%3A%22-96.648515652755%22%7D"))
 			.andRespond(withResponse("{\"id\":\"10150431253050580\"}", responseHeaders));
 		assertEquals("10150431253050580", facebook.placesOperations().checkin("123456789", 32.943860253093, -96.648515652755));
+	}
+	
+	@SmallTest
+	public void testCheckin_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.placesOperations().checkin("123456789", 32.943860253093, -96.648515652755);
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 	
 	@MediumTest
@@ -80,6 +114,17 @@ public class PlacesTemplateTest extends AbstractFacebookApiTest {
 			.andRespond(withResponse("{\"id\":\"10150431253050580\"}", responseHeaders));
 		assertEquals("10150431253050580", facebook.placesOperations().checkin("123456789", 32.943860253093, -96.648515652755, "My favorite place"));
 	}
+	
+	@SmallTest
+	public void testCheckin_withMessage_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.placesOperations().checkin("123456789", 32.943860253093, -96.648515652755, "My favorite place");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
 
 	@MediumTest
 	public void testCheckin_withMessageAndTags() {
@@ -90,6 +135,58 @@ public class PlacesTemplateTest extends AbstractFacebookApiTest {
 			.andRespond(withResponse("{\"id\":\"10150431253050580\"}", responseHeaders));
 		assertEquals("10150431253050580", 
 				facebook.placesOperations().checkin("123456789", 32.943860253093, -96.648515652755, "My favorite place", "24680", "13579"));
+	}
+	
+	@SmallTest
+	public void testCheckin_withMessageAndTags_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.placesOperations().checkin("123456789", 32.943860253093, -96.648515652755, "My favorite place", "24680", "13579");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+	
+	@MediumTest
+	public void testSearch() {
+		mockServer.expect(requestTo("https://graph.facebook.com/search?q=coffee&type=place&center=33.050278%2C-96.745833&distance=5280"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/places-list"), responseHeaders));
+		List<Page> places = facebook.placesOperations().search("coffee", 33.050278, -96.745833, 5280);
+		assertEquals(2, places.size());
+		assertEquals("117723491586638", places.get(0).getId());
+		assertEquals("True Brew Coffee & Espresso Service", places.get(0).getName());
+		assertEquals("Local business", places.get(0).getCategory());
+		assertEquals("542 Haggard St", places.get(0).getLocation().getStreet());
+		assertEquals("Plano", places.get(0).getLocation().getCity());
+		assertEquals("TX", places.get(0).getLocation().getState());
+		assertEquals("United States", places.get(0).getLocation().getCountry());
+		assertEquals("75074-5529", places.get(0).getLocation().getZip());
+		assertEquals(33.026239, places.get(0).getLocation().getLatitude(), 0.00001);
+		assertEquals(-96.707089, places.get(0).getLocation().getLongitude(), 0.00001);
+		assertEquals("169020919798274", places.get(1).getId());
+		assertEquals("Starbucks Coffee", places.get(1).getName());
+		assertEquals("Local business", places.get(1).getCategory());
+		assertNull(places.get(1).getLocation().getStreet());
+		assertEquals("Plano", places.get(1).getLocation().getCity());
+		assertEquals("TX", places.get(1).getLocation().getState());
+		assertEquals("United States", places.get(1).getLocation().getCountry());
+		assertNull(places.get(1).getLocation().getZip());
+		assertEquals(33.027734, places.get(1).getLocation().getLatitude(), 0.00001);
+		assertEquals(-96.795133, places.get(1).getLocation().getLongitude(), 0.00001);		
+	}
+
+	@SmallTest
+	public void testSearch_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.placesOperations().search("coffee", 33.050278, -96.745833, 5280);
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 	
 	private void assertSingleCheckin(Checkin checkin) {

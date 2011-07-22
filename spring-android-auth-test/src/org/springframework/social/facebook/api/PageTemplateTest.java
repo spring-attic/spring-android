@@ -23,12 +23,14 @@ import static org.springframework.social.test.client.RequestMatchers.method;
 import static org.springframework.social.test.client.RequestMatchers.requestTo;
 import static org.springframework.social.test.client.ResponseCreators.withResponse;
 
+import java.util.List;
+
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.social.NotAuthorizedException;
 
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 /**
  * @author Craig Walls
@@ -41,8 +43,8 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/140804655931206"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/organization-page.json", getClass()), responseHeaders));
-
+			.andRespond(withResponse(jsonResource("testdata/organization-page"), responseHeaders));
+	
 		Page page = facebook.pageOperations().getPage("140804655931206");
 		assertEquals("140804655931206", page.getId());
 		assertEquals("SpringSource", page.getName());
@@ -58,7 +60,7 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/21278871488"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/product-page.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/product-page"), responseHeaders));
 
 		Page page = facebook.pageOperations().getPage("21278871488");
 		assertEquals("21278871488", page.getId());
@@ -75,7 +77,7 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/150263434985489"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/place-page.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/place-page"), responseHeaders));
 
 		Page page = facebook.pageOperations().getPage("150263434985489");
 		assertEquals("150263434985489", page.getId());
@@ -99,7 +101,7 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/140372495981006"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/application-page.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/application-page"), responseHeaders));
 
 		Page page = facebook.pageOperations().getPage("140372495981006");
 		assertEquals("140372495981006", page.getId());
@@ -113,6 +115,7 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 		expectFetchAccounts();
 		assertFalse(facebook.pageOperations().isPageAdmin("2468013579"));
 		assertTrue(facebook.pageOperations().isPageAdmin("987654321"));
+		assertTrue(facebook.pageOperations().isPageAdmin("1212121212"));
 	}
 	
 
@@ -125,6 +128,21 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 			success = true;
 		}
 		assertTrue("Expected NotAuthorizedException", success);
+	}
+	
+	@SmallTest
+	public void testGetAccounts() {
+		expectFetchAccounts();
+		List<Account> accounts = facebook.pageOperations().getAccounts();
+		assertEquals(2, accounts.size());
+		assertEquals("987654321", accounts.get(0).getId());
+		assertEquals("Test Page", accounts.get(0).getName());
+		assertEquals("Page", accounts.get(0).getCategory());
+		assertEquals("pageAccessToken", accounts.get(0).getAccessToken());
+		assertEquals("1212121212", accounts.get(1).getId());
+		assertEquals("Test Page 2", accounts.get(1).getName());
+		assertEquals("Page", accounts.get(1).getCategory());
+		assertEquals("page2AccessToken", accounts.get(1).getAccessToken());
 	}
 
 	@MediumTest
@@ -255,7 +273,7 @@ public class PageTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/me/accounts"))
 				.andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
-                .andRespond(withResponse(new ClassPathResource("testdata/accounts.json", getClass()), responseHeaders));
+                .andRespond(withResponse(jsonResource("testdata/accounts"), responseHeaders));
 	}
 
 	private Resource getUploadResource(final String filename, String content) {

@@ -26,7 +26,6 @@ import static org.springframework.social.test.client.ResponseCreators.withRespon
 
 import java.util.List;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.social.DuplicateStatusException;
 import org.springframework.social.NotAuthorizedException;

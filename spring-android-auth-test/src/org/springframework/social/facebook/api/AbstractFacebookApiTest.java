@@ -23,14 +23,16 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.test.client.MockRestServiceServer;
 
 public class AbstractFacebookApiTest extends TestCase {
-	
 	protected static final String ACCESS_TOKEN = "someAccessToken";
+
 	protected FacebookTemplate facebook;
 	protected FacebookTemplate unauthorizedFacebook;
 	protected MockRestServiceServer mockServer;
@@ -43,6 +45,7 @@ public class AbstractFacebookApiTest extends TestCase {
 		mockServer = MockRestServiceServer.createServer(facebook.getRestTemplate());
 		responseHeaders = new HttpHeaders();
 		responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+		
 		unauthorizedFacebook = new FacebookTemplate();
 		MockRestServiceServer.createServer(unauthorizedFacebook.getRestTemplate());
 	}
@@ -56,7 +59,9 @@ public class AbstractFacebookApiTest extends TestCase {
 	}
 
 
-	private static final DateFormat FB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH);
+	protected Resource jsonResource(String filename) {
+		return new ClassPathResource(filename + ".json", getClass());
+	}
 
 	protected Date toDate(String dateString) {
 		try {
@@ -65,5 +70,7 @@ public class AbstractFacebookApiTest extends TestCase {
 			return null;
 		}
 	}
+
+	private static final DateFormat FB_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ENGLISH);
 
 }

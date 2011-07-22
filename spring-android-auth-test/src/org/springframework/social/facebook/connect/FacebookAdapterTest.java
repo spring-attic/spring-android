@@ -41,24 +41,24 @@ public class FacebookAdapterTest extends AndroidTestCase {
 
 	private FacebookAdapter apiAdapter;
 	
-	private Facebook api;
+	private Facebook facebook;
 	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		this.apiAdapter = new FacebookAdapter();
-		this.api = new FacebookMock();
+		this.facebook = new FacebookMock();
 	}
 	
 	@Override
 	public void tearDown() {
 		apiAdapter = null;
-		api = null;
+		facebook = null;
 	}
 	
 	@SmallTest
 	public void testFetchProfile() {
-		UserProfile profile = apiAdapter.fetchUserProfile(api);
+		UserProfile profile = apiAdapter.fetchUserProfile(facebook);
 		assertEquals("Craig Walls", profile.getName());
 		assertEquals("Craig", profile.getFirstName());
 		assertEquals("Walls", profile.getLastName());
@@ -81,16 +81,15 @@ public class FacebookAdapterTest extends AndroidTestCase {
 				MultiValueMap<String, String> queryParameters) {
 			return null;
 		}
-
+		
 		@Override
-		public <T> T fetchConnections(String objectId, String connectionType,
-				Class<T> type, String... fields) {
+		public <T> List<T> fetchConnections(String objectId, String connectionType, Class<T> type, String... fields) {
 			return null;
 		}
 
 		@Override
-		public <T> T fetchConnections(String objectId, String connectionType,
-				Class<T> type, MultiValueMap<String, String> queryParameters) {
+		public <T> List<T> fetchConnections(String objectId, String connectionType, Class<T> type,
+				MultiValueMap<String, String> queryParameters) {
 			return null;
 		}
 

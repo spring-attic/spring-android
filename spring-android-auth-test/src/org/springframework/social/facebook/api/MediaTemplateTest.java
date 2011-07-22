@@ -16,6 +16,7 @@
 package org.springframework.social.facebook.api;
 
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.social.test.client.RequestMatchers.header;
 import static org.springframework.social.test.client.RequestMatchers.method;
 import static org.springframework.social.test.client.RequestMatchers.requestTo;
@@ -23,9 +24,12 @@ import static org.springframework.social.test.client.ResponseCreators.withRespon
 
 import java.util.List;
 
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.social.NotAuthorizedException;
 
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 public class MediaTemplateTest extends AbstractFacebookApiTest {
 	
@@ -34,37 +38,70 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/me/albums"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/albums.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/albums"), responseHeaders));
 		List<Album> albums = facebook.mediaOperations().getAlbums();
 		assertAlbums(albums);
 	}
-	
+
+	@SmallTest
+	public void testGetAlbums_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().getAlbums();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	@MediumTest
 	public void testGetAlbums_forSpecificUser() {
 		mockServer.expect(requestTo("https://graph.facebook.com/192837465/albums"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/albums.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/albums"), responseHeaders));
 		List<Album> albums = facebook.mediaOperations().getAlbums("192837465");
 		assertAlbums(albums);
 	}
 	
+	@SmallTest
+	public void testGetAlbums_forSpecificUser_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().getAlbums("192837465");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	@MediumTest
 	public void testGetAlbum() {
 		mockServer.expect(requestTo("https://graph.facebook.com/10151447271460580"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/album.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/album"), responseHeaders));
 		Album album = facebook.mediaOperations().getAlbum("10151447271460580");
 		assertSingleAlbum(album);
 	}
-	
+
+	@SmallTest
+	public void testGetAlbum_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().getAlbum("192837465");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	@MediumTest
 	public void testGetPhotos() {
 		mockServer.expect(requestTo("https://graph.facebook.com/10151447271460580/photos"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/photos.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/photos"), responseHeaders));
 	
 		List<Photo> photos = facebook.mediaOperations().getPhotos("10151447271460580");
 		assertEquals(2, photos.size());
@@ -93,13 +130,127 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 		assertEquals(toDate("2011-03-24T21:37:43+0000"), photos.get(0).getUpdatedTime());
 	}
 
+	@SmallTest
+	public void testGetPhotos_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().getPhotos("192837465");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	@MediumTest
 	public void testGetPhoto() {
 		mockServer.expect(requestTo("https://graph.facebook.com/10150447271355581"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/photo.json", getClass()), responseHeaders));
-		assertSinglePhoto(facebook.mediaOperations().getPhoto("10150447271355581"));
+			.andRespond(withResponse(jsonResource("testdata/photo"), responseHeaders));
+		assertSinglePhoto(facebook.mediaOperations().getPhoto("10150447271355581"));		
+	}
+	
+	@SmallTest
+	public void testGetPhoto_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().getPhoto("192837465");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	@MediumTest
+	public void testPostPhoto_noCaption() {
+		mockServer.expect(requestTo("https://graph.facebook.com/me/photos"))
+			.andExpect(method(POST))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse("{\"id\":\"12345\"}", responseHeaders));
+		// TODO: Match body content to ensure fields and photo are included
+		Resource photo = getUploadResource("photo.jpg", "PHOTO DATA");
+		String photoId = facebook.mediaOperations().postPhoto(photo);
+		assertEquals("12345", photoId);
+	}
+
+	@SmallTest
+	public void testPostPhoto_noCaption_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().postPhoto(null); // shouldn't matter that it's null
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	@MediumTest
+	public void testPostPhoto_withCaption() {
+		mockServer.expect(requestTo("https://graph.facebook.com/me/photos"))
+			.andExpect(method(POST))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse("{\"id\":\"12345\"}", responseHeaders));
+		// TODO: Match body content to ensure fields and photo are included
+		Resource photo = getUploadResource("photo.jpg", "PHOTO DATA");
+		String photoId = facebook.mediaOperations().postPhoto(photo, "Some caption");
+		assertEquals("12345", photoId);
+	}
+
+	@SmallTest
+	public void testPostPhoto_withCaption_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().postPhoto(null, "Some caption"); // shouldn't matter that it's null
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	@MediumTest
+	public void testPostPhoto_ToAlbumNoCaption() {
+		mockServer.expect(requestTo("https://graph.facebook.com/192837465/photos"))
+			.andExpect(method(POST))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse("{\"id\":\"12345\"}", responseHeaders));
+		// TODO: Match body content to ensure fields and photo are included
+		Resource photo = getUploadResource("photo.jpg", "PHOTO DATA");
+		String photoId = facebook.mediaOperations().postPhoto("192837465", photo);
+		assertEquals("12345", photoId);
+	}
+
+	@SmallTest
+	public void testPostPhoto_ToAlbumNoCaption_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().postPhoto("12345678", null); // shouldn't matter that it's null
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	@MediumTest
+	public void testPostPhoto_ToAlbumWithCaption() {
+		mockServer.expect(requestTo("https://graph.facebook.com/192837465/photos"))
+			.andExpect(method(POST))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse("{\"id\":\"12345\"}", responseHeaders));
+		// TODO: Match body content to ensure fields and photo are included
+		Resource photo = getUploadResource("photo.jpg", "PHOTO DATA");
+		String photoId = facebook.mediaOperations().postPhoto("192837465", photo, "Some caption");
+		assertEquals("12345", photoId);
+	}
+
+	@SmallTest
+	public void testPostPhoto_ToAlbumWithCaption_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().postPhoto("12345678", null, "Some Caption"); // shouldn't matter that it's null
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 
 	@MediumTest
@@ -107,9 +258,20 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/me/videos"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/videos.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/videos"), responseHeaders));
 		List<Video> videos = facebook.mediaOperations().getVideos();
 		assertVideos(videos);
+	}
+
+	@SmallTest
+	public void testGetVideos_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().getVideos();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 
 	@MediumTest
@@ -117,34 +279,96 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 		mockServer.expect(requestTo("https://graph.facebook.com/100001387295207/videos"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/videos.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/videos"), responseHeaders));
 		List<Video> videos = facebook.mediaOperations().getVideos("100001387295207");
 		assertVideos(videos);
 	}
-
-	private void assertVideos(List<Video> videos) {
-		assertEquals(2, videos.size());
-		Video video = videos.get(0);
-		assertEquals("161503963905846", video.getId());
-		assertEquals("100001387295207", video.getFrom().getId());
-		assertEquals("Art Names", video.getFrom().getName());
-		assertEquals("http://vthumb.ak.fbcdn.net/hvthumb-ak-ash2/50903_161504077239168_161503963905846_21174_1003_t.jpg", video.getPicture());
-		assertEquals("<object width=\"400\" height=\"250\" ><param name=\"allowfullscreen\" value=\"true\" /><param name=\"movie\" value=\"http://www.facebook.com/v/161503963905846\" /><embed src=\"http://www.facebook.com/v/161503963905846\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"400\" height=\"250\"></embed></object>", video.getEmbedHtml());
-		assertEquals("http://b.static.ak.fbcdn.net/rsrc.php/v1/yD/r/DggDhA4z4tO.gif", video.getIcon());
-		assertEquals("http://video.ak.fbcdn.net/cfs-ak-snc6/82226/704/161503963905846_41386.mp4?oh=131db79e0842f1c57940aa274b82d8fe&oe=4D95D900&__gda__=1301666048_11e66cf124ce537194b3f7b6ab86b579", video.getSource());
-		assertEquals(toDate("2011-03-29T20:45:20+0000"), video.getCreatedTime());
-		assertEquals(toDate("2011-03-29T20:45:20+0000"), video.getUpdatedTime());
-		assertSingleVideo(videos.get(1));
-	}
 	
+	@SmallTest
+	public void testGetVideos_forSpecificOwner_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().getVideos("11223344");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
 	@MediumTest
 	public void testGetVideo() {
 		mockServer.expect(requestTo("https://graph.facebook.com/161500020572907"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
-			.andRespond(withResponse(new ClassPathResource("testdata/video.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("testdata/video"), responseHeaders));
 		Video video = facebook.mediaOperations().getVideo("161500020572907");
 		assertSingleVideo(video);
+	}
+
+	@SmallTest
+	public void testGetVideo_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().getVideo("11223344");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	@MediumTest
+	public void testPostVideo_noTitleOrDescription() {
+		mockServer.expect(requestTo("https://graph-video.facebook.com/me/videos"))
+			.andExpect(method(POST))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse("{\"id\":\"12345\"}", responseHeaders));
+		// TODO: Match body content to ensure fields and photo are included
+		Resource video = getUploadResource("video.mov", "VIDEO DATA");
+		String photoId = facebook.mediaOperations().postVideo(video);
+		assertEquals("12345", photoId);
+	}
+
+	@SmallTest
+	public void testPostVideo_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().postVideo(null);
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	@MediumTest
+	public void testPostVideo_withTitleOrDescription() {
+		mockServer.expect(requestTo("https://graph-video.facebook.com/me/videos"))
+			.andExpect(method(POST))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse("{\"id\":\"12345\"}", responseHeaders));
+		// TODO: Match body content to ensure fields and photo are included
+		Resource video = getUploadResource("video.mov", "VIDEO DATA");
+		String photoId = facebook.mediaOperations().postVideo(video, "title", "description");
+		assertEquals("12345", photoId);
+	}
+
+	@SmallTest
+	public void testPostVideo_withTitleOrDescription_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedFacebook.mediaOperations().postVideo(null, "title", "description");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	private Resource getUploadResource(final String filename, String content) {
+		Resource video = new ByteArrayResource(content.getBytes()) {
+			public String getFilename() throws IllegalStateException {
+				return filename;
+			};
+		};
+		return video;
 	}
 
 	private void assertSingleVideo(Video video) {
@@ -194,7 +418,6 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 		assertEquals(toDate("2011-03-24T21:36:06+0000"), photo.getCreatedTime());
 		assertEquals(toDate("2011-03-24T21:37:43+0000"), photo.getUpdatedTime());
 	}
-	
 
 	private void assertAlbums(List<Album> albums) {
 		assertEquals(3, albums.size());
@@ -239,6 +462,21 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 		assertEquals(1, album.getCount());
 		assertEquals(toDate("2011-03-24T21:36:04+0000"), album.getCreatedTime());
 		assertEquals(toDate("2011-03-24T22:00:12+0000"), album.getUpdatedTime());
+	}
+
+	private void assertVideos(List<Video> videos) {
+		assertEquals(2, videos.size());
+		Video video = videos.get(0);
+		assertEquals("161503963905846", video.getId());
+		assertEquals("100001387295207", video.getFrom().getId());
+		assertEquals("Art Names", video.getFrom().getName());
+		assertEquals("http://vthumb.ak.fbcdn.net/hvthumb-ak-ash2/50903_161504077239168_161503963905846_21174_1003_t.jpg", video.getPicture());
+		assertEquals("<object width=\"400\" height=\"250\" ><param name=\"allowfullscreen\" value=\"true\" /><param name=\"movie\" value=\"http://www.facebook.com/v/161503963905846\" /><embed src=\"http://www.facebook.com/v/161503963905846\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" width=\"400\" height=\"250\"></embed></object>", video.getEmbedHtml());
+		assertEquals("http://b.static.ak.fbcdn.net/rsrc.php/v1/yD/r/DggDhA4z4tO.gif", video.getIcon());
+		assertEquals("http://video.ak.fbcdn.net/cfs-ak-snc6/82226/704/161503963905846_41386.mp4?oh=131db79e0842f1c57940aa274b82d8fe&oe=4D95D900&__gda__=1301666048_11e66cf124ce537194b3f7b6ab86b579", video.getSource());
+		assertEquals(toDate("2011-03-29T20:45:20+0000"), video.getCreatedTime());
+		assertEquals(toDate("2011-03-29T20:45:20+0000"), video.getUpdatedTime());
+		assertSingleVideo(videos.get(1));
 	}
 
 }
