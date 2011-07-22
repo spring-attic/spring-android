@@ -209,6 +209,11 @@ public class TwitterAdapterTest extends AndroidTestCase {
 		public List<TwitterProfile> searchForUsers(String query) {
 			return null;
 		}
+		
+		@Override
+		public List<TwitterProfile> searchForUsers(String arg0, int arg1, int arg2) {
+			return null;
+		}
 
 		@Override
 		public List<SuggestionCategory> getSuggestionCategories() {

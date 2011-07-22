@@ -19,6 +19,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.social.test.client.MockRestServiceServer;
@@ -53,6 +55,10 @@ public abstract class AbstractTwitterApiTest extends TestCase {
 		mockServer = null;
 		responseHeaders = null;
 		unauthorizedTwitter = null;
+	}
+
+	protected Resource jsonResource(String filename) {
+		return new ClassPathResource(filename + ".json", getClass());
 	}
 
 	protected void assertSingleTweet(Tweet tweet) {

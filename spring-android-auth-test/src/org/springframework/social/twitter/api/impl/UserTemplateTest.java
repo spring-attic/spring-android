@@ -24,10 +24,12 @@ import java.util.List;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.social.NotAuthorizedException;
 import org.springframework.social.twitter.api.SuggestionCategory;
 import org.springframework.social.twitter.api.TwitterProfile;
 
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 /**
  * @author Craig Walls
@@ -39,8 +41,19 @@ public class UserTemplateTest extends AbstractTwitterApiTest {
 		responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 		mockServer.expect(requestTo("https://api.twitter.com/1/account/verify_credentials.json"))
 				.andExpect(method(GET))
-				.andRespond(withResponse(new ClassPathResource("verify-credentials.json", getClass()), responseHeaders));
+				.andRespond(withResponse(jsonResource("twitter-profile"), responseHeaders));
 		assertEquals(161064614, twitter.userOperations().getProfileId());
+	}
+	
+	@SmallTest
+	public void testGetProfileId_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.userOperations().getProfileId();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 
 	@MediumTest
@@ -48,15 +61,26 @@ public class UserTemplateTest extends AbstractTwitterApiTest {
 		responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 		mockServer.expect(requestTo("https://api.twitter.com/1/account/verify_credentials.json"))
 				.andExpect(method(GET))
-				.andRespond(withResponse(new ClassPathResource("verify-credentials.json", getClass()), responseHeaders));
+				.andRespond(withResponse(jsonResource("twitter-profile"), responseHeaders));
 		assertEquals("artnames", twitter.userOperations().getScreenName());
+	}
+	
+	@SmallTest
+	public void testGetScreenName_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.userOperations().getScreenName();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 
 	@MediumTest
 	public void testGetUserProfile() throws Exception {
 		mockServer.expect(requestTo("https://api.twitter.com/1/account/verify_credentials.json"))
 				.andExpect(method(GET))
-				.andRespond(withResponse(new ClassPathResource("verify-credentials.json", getClass()), responseHeaders));
+				.andRespond(withResponse(jsonResource("twitter-profile"), responseHeaders));
 
 		TwitterProfile profile = twitter.userOperations().getUserProfile();
 		assertEquals(161064614, profile.getId());
@@ -66,22 +90,57 @@ public class UserTemplateTest extends AbstractTwitterApiTest {
 		assertEquals("Denton, TX", profile.getLocation());
 		assertEquals("http://www.springsource.org", profile.getUrl());
 		assertEquals("http://a1.twimg.com/sticky/default_profile_images/default_profile_4_normal.png", profile.getProfileImageUrl());
+		assertTrue(profile.isNotificationsEnabled());
+		assertFalse(profile.isVerified());
+		assertTrue(profile.isGeoEnabled());
+		assertTrue(profile.isContributorsEnabled());
+		assertTrue(profile.isTranslator());
+		assertTrue(profile.isFollowing());
+		assertTrue(profile.isFollowRequestSent());
+		assertTrue(profile.isProtected());
+		assertEquals("en", profile.getLanguage());
+		assertEquals(125, profile.getStatusesCount());
+		assertEquals(1001, profile.getListedCount());
+		assertEquals(14, profile.getFollowersCount());
+		assertEquals(194, profile.getFriendsCount());
+		assertEquals(4, profile.getFavoritesCount());
+		assertEquals("Mountain Time (US & Canada)", profile.getTimeZone());
+		assertEquals(-25200, profile.getUtcOffset());
+		assertTrue(profile.useBackgroundImage());
+		assertEquals("C0DEED", profile.getSidebarBorderColor());
+		assertEquals("DDEEF6", profile.getSidebarFillColor());
+		assertEquals("C0DEED", profile.getBackgroundColor());
+		assertEquals("http://a3.twimg.com/a/1301419075/images/themes/theme1/bg.png", profile.getBackgroundImageUrl());
+		assertFalse(profile.isBackgroundImageTiled());
+		assertEquals("333333", profile.getTextColor());
+		assertEquals("0084B4", profile.getLinkColor());
+	}
+	
+	@SmallTest
+	public void testGetUserProfile_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.userOperations().getUserProfile();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 	
 	@MediumTest
 	public void testGetUserProfile_userId() throws Exception {
 		mockServer.expect(requestTo("https://api.twitter.com/1/users/show.json?user_id=12345"))
 				.andExpect(method(GET))
-				.andRespond(withResponse(new ClassPathResource("twitter-profile.json", getClass()), responseHeaders));
-
+				.andRespond(withResponse(jsonResource("twitter-profile"), responseHeaders));
+		
 		TwitterProfile profile = twitter.userOperations().getUserProfile(12345);
-		assertEquals(12345, profile.getId());
-		assertEquals("habuma", profile.getScreenName());
-		assertEquals("Craig Walls", profile.getName());
-		assertEquals("Spring Guy", profile.getDescription());
-		assertEquals("Plano, TX", profile.getLocation());
+		assertEquals(161064614, profile.getId());
+		assertEquals("artnames", profile.getScreenName());
+		assertEquals("Art Names", profile.getName());
+		assertEquals("I'm just a normal kinda guy", profile.getDescription());
+		assertEquals("Denton, TX", profile.getLocation());
 		assertEquals("http://www.springsource.org", profile.getUrl());
-		assertEquals("http://a3.twimg.com/profile_images/1205746571/me2_300.jpg", profile.getProfileImageUrl());
+		assertEquals("http://a1.twimg.com/sticky/default_profile_images/default_profile_4_normal.png", profile.getProfileImageUrl());
 	}
 	
 	@MediumTest
@@ -108,13 +167,35 @@ public class UserTemplateTest extends AbstractTwitterApiTest {
 	
 	@MediumTest
 	public void testSearchForUsers() {
-		mockServer.expect(requestTo("https://api.twitter.com/1/users/search.json?q=some+query"))
+		mockServer.expect(requestTo("https://api.twitter.com/1/users/search.json?page=1&per_page=20&q=some+query"))
 			.andExpect(method(GET))
-			.andRespond(withResponse(new ClassPathResource("list-of-profiles.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("list-of-profiles"), responseHeaders));
 		List<TwitterProfile> users = twitter.userOperations().searchForUsers("some query");
 		assertEquals(2, users.size());
 		assertEquals("royclarkson", users.get(0).getScreenName());
 		assertEquals("kdonald", users.get(1).getScreenName());
+	}
+	
+	@MediumTest
+	public void testSearchForUsers_paged() {
+		mockServer.expect(requestTo("https://api.twitter.com/1/users/search.json?page=3&per_page=35&q=some+query"))
+			.andExpect(method(GET))
+			.andRespond(withResponse(jsonResource("list-of-profiles"), responseHeaders));
+		List<TwitterProfile> users = twitter.userOperations().searchForUsers("some query", 3, 35);
+		assertEquals(2, users.size());
+		assertEquals("royclarkson", users.get(0).getScreenName());
+		assertEquals("kdonald", users.get(1).getScreenName());
+	}
+	
+	@SmallTest
+	public void testSearchForUsers_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.userOperations().searchForUsers("some query");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 	
 	@MediumTest

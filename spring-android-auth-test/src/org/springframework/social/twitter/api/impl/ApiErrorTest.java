@@ -43,7 +43,7 @@ public class ApiErrorTest extends AbstractTwitterApiTest {
 //				.andExpect(method(POST))
 //				.andExpect(body("status=Some+message"))
 //				.andRespond(withResponse("", responseHeaders, HttpStatus.UNAUTHORIZED, ""));
-//			twitter.timelineOperations().updateStatus("Some message");
+//		twitter.timelineOperations().updateStatus("Some message");		
 //		} catch(NotAuthorizedException e) {
 //			result = true;
 //		}
@@ -51,7 +51,7 @@ public class ApiErrorTest extends AbstractTwitterApiTest {
 //	}
 	
 	@MediumTest
-	public void missingAccessToken() {
+	public void testMissingAccessToken() {
 		boolean success = false;
 		try {
 			mockServer.expect(requestTo("https://api.twitter.com/1/account/verify_credentials.json"))
@@ -65,7 +65,7 @@ public class ApiErrorTest extends AbstractTwitterApiTest {
 	}
 	
 	@MediumTest
-	public void badAccessToken() { // token is fabricated or fails signature validation
+	public void testBadAccessToken() { // token is fabricated or fails signature validation
 		boolean success = false;
 		try {
 			mockServer.expect(requestTo("https://api.twitter.com/1/account/verify_credentials.json"))
@@ -79,7 +79,7 @@ public class ApiErrorTest extends AbstractTwitterApiTest {
 	}
 	
 	@MediumTest
-	public void revokedToken() {
+	public void testRevokedToken() {
 		boolean success = false;
 		try {
 			mockServer.expect(requestTo("https://api.twitter.com/1/account/verify_credentials.json"))
@@ -110,7 +110,7 @@ public class ApiErrorTest extends AbstractTwitterApiTest {
 	public void testTwitterIsBroken() {
 		boolean success = false;
 		try {
-			mockServer.expect(requestTo("https://api.twitter.com/1/statuses/home_timeline.json"))
+			mockServer.expect(requestTo("https://api.twitter.com/1/statuses/home_timeline.json?page=1&count=20"))
 				.andExpect(method(GET))
 				.andRespond(withResponse("Non-JSON body", responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR, ""));
 			twitter.timelineOperations().getHomeTimeline();
@@ -125,7 +125,7 @@ public class ApiErrorTest extends AbstractTwitterApiTest {
 	public void testTwitterIsDownOrBeingUpgraded() {
 		boolean success = false;
 		try {
-			mockServer.expect(requestTo("https://api.twitter.com/1/statuses/home_timeline.json"))
+			mockServer.expect(requestTo("https://api.twitter.com/1/statuses/home_timeline.json?page=1&count=20"))
 				.andExpect(method(GET))
 				.andRespond(withResponse("Non-JSON body", responseHeaders, HttpStatus.BAD_GATEWAY, ""));
 			twitter.timelineOperations().getHomeTimeline();
@@ -140,11 +140,10 @@ public class ApiErrorTest extends AbstractTwitterApiTest {
 	public void testTwitterIsOverloaded() {
 		boolean success = false;
 		try {
-			mockServer.expect(requestTo("https://api.twitter.com/1/statuses/home_timeline.json"))
+			mockServer.expect(requestTo("https://api.twitter.com/1/statuses/home_timeline.json?page=1&count=20"))
 				.andExpect(method(GET))
 				.andRespond(withResponse("Non-JSON body", responseHeaders, HttpStatus.SERVICE_UNAVAILABLE, ""));
 			twitter.timelineOperations().getHomeTimeline();
-			fail();
 		} catch (ServerOverloadedException e) {
 			success = true;
 			assertEquals("Twitter is overloaded with requests. Try again later.", e.getMessage());
@@ -156,7 +155,7 @@ public class ApiErrorTest extends AbstractTwitterApiTest {
 	public void testNonJSONErrorResponse() {
 		boolean success = false;
 		try { 
-			mockServer.expect(requestTo("https://api.twitter.com/1/statuses/home_timeline.json"))
+			mockServer.expect(requestTo("https://api.twitter.com/1/statuses/home_timeline.json?page=1&count=20"))
 				.andExpect(method(GET))
 				.andRespond(withResponse("<h1>HTML response</h1>", responseHeaders, HttpStatus.BAD_REQUEST, ""));
 			twitter.timelineOperations().getHomeTimeline();

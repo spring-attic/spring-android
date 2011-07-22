@@ -26,9 +26,11 @@ import java.util.List;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.social.NotAuthorizedException;
 import org.springframework.social.twitter.api.TwitterProfile;
 
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 
 /**
@@ -41,10 +43,21 @@ public class BlockTemplateTest extends AbstractTwitterApiTest {
 		mockServer.expect(requestTo("https://api.twitter.com/1/blocks/create.json"))
 			.andExpect(method(POST))
 			.andExpect(body("user_id=12345"))
-			.andRespond(withResponse(new ClassPathResource("twitter-profile.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("twitter-profile"), responseHeaders));
 		TwitterProfile blockedUser = twitter.blockOperations().block(12345);
 		assertTwitterProfile(blockedUser);
 		mockServer.verify();
+	}
+	
+	@SmallTest
+	public void block_userId_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.blockOperations().block(12345);
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 
 	@MediumTest
@@ -56,7 +69,18 @@ public class BlockTemplateTest extends AbstractTwitterApiTest {
 		TwitterProfile blockedUser = twitter.blockOperations().block("habuma");
 		assertTwitterProfile(blockedUser);
 		mockServer.verify();
-	}	
+	}
+	
+	@SmallTest
+	public void block_screenName_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.blockOperations().block("habuma");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
 	
 	@MediumTest
 	public void testUnblock_userId() {
@@ -68,6 +92,17 @@ public class BlockTemplateTest extends AbstractTwitterApiTest {
 		assertTwitterProfile(blockedUser);
 		mockServer.verify();
 	}
+	
+	@SmallTest
+	public void unblock_userId_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.blockOperations().unblock(12345);
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
 
 	@MediumTest
 	public void testUnblock_screenName() {
@@ -78,16 +113,38 @@ public class BlockTemplateTest extends AbstractTwitterApiTest {
 		TwitterProfile blockedUser = twitter.blockOperations().unblock("habuma");
 		assertTwitterProfile(blockedUser);
 		mockServer.verify();
-	}	
+	}
+	
+	@SmallTest
+	public void unblock_screenName_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.blockOperations().unblock("habuma");
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
 	
 	@MediumTest
 	public void testGetBlockedUsers() {
-		mockServer.expect(requestTo("https://api.twitter.com/1/blocks/blocking.json"))
+		mockServer.expect(requestTo("https://api.twitter.com/1/blocks/blocking.json?page=1&per_page=20"))
 			.andExpect(method(GET))
-			.andRespond(withResponse(new ClassPathResource("list-of-profiles.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("list-of-profiles"), responseHeaders));
 		List<TwitterProfile> blockedUsers = twitter.blockOperations().getBlockedUsers();
 		assertEquals(2, blockedUsers.size());
 		mockServer.verify();
+	}
+	
+	@SmallTest
+	public void getBlockedUsers_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.blockOperations().getBlockedUsers();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 	
 	@MediumTest
@@ -98,6 +155,17 @@ public class BlockTemplateTest extends AbstractTwitterApiTest {
 		List<Long> blockedUsers = twitter.blockOperations().getBlockedUserIds();
 		assertEquals(4, blockedUsers.size());
 		mockServer.verify();
+	}
+	
+	@SmallTest
+	public void getBlockedUserIds_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.blockOperations().getBlockedUserIds();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
 	}
 	
 	@MediumTest
@@ -135,13 +203,13 @@ public class BlockTemplateTest extends AbstractTwitterApiTest {
 	// private helpers
 	
 	private void assertTwitterProfile(TwitterProfile blockedUser) {
-		assertEquals(12345, blockedUser.getId());
-		assertEquals("habuma", blockedUser.getScreenName());
-		assertEquals("Craig Walls", blockedUser.getName());
-		assertEquals("Spring Guy", blockedUser.getDescription());
-		assertEquals("Plano, TX", blockedUser.getLocation());
+		assertEquals(161064614, blockedUser.getId());
+		assertEquals("artnames", blockedUser.getScreenName());
+		assertEquals("Art Names", blockedUser.getName());
+		assertEquals("I'm just a normal kinda guy", blockedUser.getDescription());
+		assertEquals("Denton, TX", blockedUser.getLocation());
 		assertEquals("http://www.springsource.org", blockedUser.getUrl());
-		assertEquals("http://a3.twimg.com/profile_images/1205746571/me2_300.jpg", blockedUser.getProfileImageUrl());
-	}	
+		assertEquals("http://a1.twimg.com/sticky/default_profile_images/default_profile_4_normal.png", blockedUser.getProfileImageUrl());
+	}
 
 }
