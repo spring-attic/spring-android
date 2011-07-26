@@ -103,7 +103,7 @@ configure(javaprojects) {
     springSecurityVersion = '3.1.0.RC2.crypto'
     androidVersion = '2.1_r1'
     commonsHttpclientVersion = '3.1'
-    jacksonVersion = '1.8.3'
+    jacksonVersion = '1.8.4'
 	gsonVersion = '1.7.1'
     simpleXmlVersion = '2.6'
     androidRomeVersion = '1.0.0-r2'
