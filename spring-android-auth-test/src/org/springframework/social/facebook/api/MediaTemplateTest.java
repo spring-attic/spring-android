@@ -35,11 +35,21 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetAlbums() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/albums"))
+		mockServer.expect(requestTo("https://graph.facebook.com/me/albums?offset=0&limit=25"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
 			.andRespond(withResponse(jsonResource("testdata/albums"), responseHeaders));
 		List<Album> albums = facebook.mediaOperations().getAlbums();
+		assertAlbums(albums);
+	}
+	
+	@MediumTest
+	public void testGetAlbums_withOffsetAndLimit() {
+		mockServer.expect(requestTo("https://graph.facebook.com/me/albums?offset=15&limit=5"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/albums"), responseHeaders));
+		List<Album> albums = facebook.mediaOperations().getAlbums(15, 5);
 		assertAlbums(albums);
 	}
 
@@ -56,11 +66,21 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 
 	@MediumTest
 	public void testGetAlbums_forSpecificUser() {
-		mockServer.expect(requestTo("https://graph.facebook.com/192837465/albums"))
+		mockServer.expect(requestTo("https://graph.facebook.com/192837465/albums?offset=0&limit=25"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
 			.andRespond(withResponse(jsonResource("testdata/albums"), responseHeaders));
 		List<Album> albums = facebook.mediaOperations().getAlbums("192837465");
+		assertAlbums(albums);
+	}
+	
+	@MediumTest
+	public void testGetAlbums_forSpecificUser_withOffsetAndLimit() {
+		mockServer.expect(requestTo("https://graph.facebook.com/192837465/albums?offset=15&limit=5"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/albums"), responseHeaders));
+		List<Album> albums = facebook.mediaOperations().getAlbums("192837465", 15, 5);
 		assertAlbums(albums);
 	}
 	
@@ -98,36 +118,24 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 
 	@MediumTest
 	public void testGetPhotos() {
-		mockServer.expect(requestTo("https://graph.facebook.com/10151447271460580/photos"))
+		mockServer.expect(requestTo("https://graph.facebook.com/10151447271460580/photos?offset=0&limit=25"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
 			.andRespond(withResponse(jsonResource("testdata/photos"), responseHeaders));
 	
 		List<Photo> photos = facebook.mediaOperations().getPhotos("10151447271460580");
-		assertEquals(2, photos.size());
-		assertSinglePhoto(photos.get(1));
-		assertEquals("10150447271355580", photos.get(0).getId());
-		assertEquals("738140579", photos.get(0).getFrom().getId());
-		assertEquals("Craig Walls", photos.get(0).getFrom().getName());
-		assertNull(photos.get(0).getName());
-		assertNull(photos.get(0).getTags());
-		assertEquals("http://a5.sphotos.ak.fbcdn.net/hphotos-ak-snc6/200110_10150447271355580_738140579_17698198_7684114_n.jpg", photos.get(0).getSourceImage().getSource());
-		assertEquals(400, photos.get(0).getSourceImage().getWidth());
-		assertEquals(300, photos.get(0).getSourceImage().getHeight());
-		assertEquals("http://photos-e.ak.fbcdn.net/hphotos-ak-snc6/200110_10150447271355580_738140579_17698198_7684114_s.jpg", photos.get(0).getSmallImage().getSource());
-		assertEquals(130, photos.get(0).getSmallImage().getWidth());
-		assertEquals(97, photos.get(0).getSmallImage().getHeight());
-		assertEquals("http://photos-e.ak.fbcdn.net/hphotos-ak-snc6/200110_10150447271355580_738140579_17698198_7684114_a.jpg", photos.get(0).getAlbumImage().getSource());
-		assertEquals(180, photos.get(0).getAlbumImage().getWidth());
-		assertEquals(135, photos.get(0).getAlbumImage().getHeight());
-		assertEquals("http://photos-e.ak.fbcdn.net/hphotos-ak-snc6/200110_10150447271355580_738140579_17698198_7684114_t.jpg", photos.get(0).getTinyImage().getSource());
-		assertEquals(75, photos.get(0).getTinyImage().getWidth());
-		assertEquals(56, photos.get(0).getTinyImage().getHeight());
-		assertEquals("http://www.facebook.com/photo.php?pid=17698198&id=738140578", photos.get(0).getLink());
-		assertEquals("http://static.ak.fbcdn.net/rsrc.php/v1/yz/r/StEh3RhPvjk.gif", photos.get(0).getIcon());
-		assertEquals(1, (int) photos.get(0).getPosition());
-		assertEquals(toDate("2011-03-24T21:36:06+0000"), photos.get(0).getCreatedTime());
-		assertEquals(toDate("2011-03-24T21:37:43+0000"), photos.get(0).getUpdatedTime());
+		assertPhotos(photos);
+	}
+
+	@MediumTest
+	public void testGetPhotos_withOffsetAndLimit() {
+		mockServer.expect(requestTo("https://graph.facebook.com/10151447271460580/photos?offset=40&limit=20"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/photos"), responseHeaders));
+	
+		List<Photo> photos = facebook.mediaOperations().getPhotos("10151447271460580", 40, 20);
+		assertPhotos(photos);
 	}
 
 	@SmallTest
@@ -255,11 +263,21 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 
 	@MediumTest
 	public void testGetVideos() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/videos"))
+		mockServer.expect(requestTo("https://graph.facebook.com/me/videos?offset=0&limit=25"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
 			.andRespond(withResponse(jsonResource("testdata/videos"), responseHeaders));
 		List<Video> videos = facebook.mediaOperations().getVideos();
+		assertVideos(videos);
+	}
+
+	@MediumTest
+	public void testGetVideos_withOffsetAndLimit() {
+		mockServer.expect(requestTo("https://graph.facebook.com/me/videos?offset=48&limit=12"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/videos"), responseHeaders));
+		List<Video> videos = facebook.mediaOperations().getVideos(48, 12);
 		assertVideos(videos);
 	}
 
@@ -276,11 +294,21 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 
 	@MediumTest
 	public void testGetVideos_forSpecificOwner() {
-		mockServer.expect(requestTo("https://graph.facebook.com/100001387295207/videos"))
+		mockServer.expect(requestTo("https://graph.facebook.com/100001387295207/videos?offset=0&limit=25"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
 			.andRespond(withResponse(jsonResource("testdata/videos"), responseHeaders));
 		List<Video> videos = facebook.mediaOperations().getVideos("100001387295207");
+		assertVideos(videos);
+	}
+
+	@MediumTest
+	public void testGetVideos_forSpecificOwner_withOffsetAndLimit() {
+		mockServer.expect(requestTo("https://graph.facebook.com/100001387295207/videos?offset=48&limit=12"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/videos"), responseHeaders));
+		List<Video> videos = facebook.mediaOperations().getVideos("100001387295207", 48, 12);
 		assertVideos(videos);
 	}
 	
@@ -369,6 +397,33 @@ public class MediaTemplateTest extends AbstractFacebookApiTest {
 			};
 		};
 		return video;
+	}
+	
+	private void assertPhotos(List<Photo> photos) {
+		assertEquals(2, photos.size());
+		assertSinglePhoto(photos.get(1));
+		assertEquals("10150447271355580", photos.get(0).getId());
+		assertEquals("738140579", photos.get(0).getFrom().getId());
+		assertEquals("Craig Walls", photos.get(0).getFrom().getName());
+		assertNull(photos.get(0).getName());
+		assertNull(photos.get(0).getTags());
+		assertEquals("http://a5.sphotos.ak.fbcdn.net/hphotos-ak-snc6/200110_10150447271355580_738140579_17698198_7684114_n.jpg", photos.get(0).getSourceImage().getSource());
+		assertEquals(400, photos.get(0).getSourceImage().getWidth());
+		assertEquals(300, photos.get(0).getSourceImage().getHeight());
+		assertEquals("http://photos-e.ak.fbcdn.net/hphotos-ak-snc6/200110_10150447271355580_738140579_17698198_7684114_s.jpg", photos.get(0).getSmallImage().getSource());
+		assertEquals(130, photos.get(0).getSmallImage().getWidth());
+		assertEquals(97, photos.get(0).getSmallImage().getHeight());
+		assertEquals("http://photos-e.ak.fbcdn.net/hphotos-ak-snc6/200110_10150447271355580_738140579_17698198_7684114_a.jpg", photos.get(0).getAlbumImage().getSource());
+		assertEquals(180, photos.get(0).getAlbumImage().getWidth());
+		assertEquals(135, photos.get(0).getAlbumImage().getHeight());
+		assertEquals("http://photos-e.ak.fbcdn.net/hphotos-ak-snc6/200110_10150447271355580_738140579_17698198_7684114_t.jpg", photos.get(0).getTinyImage().getSource());
+		assertEquals(75, photos.get(0).getTinyImage().getWidth());
+		assertEquals(56, photos.get(0).getTinyImage().getHeight());
+		assertEquals("http://www.facebook.com/photo.php?pid=17698198&id=738140578", photos.get(0).getLink());
+		assertEquals("http://static.ak.fbcdn.net/rsrc.php/v1/yz/r/StEh3RhPvjk.gif", photos.get(0).getIcon());
+		assertEquals(1, (int) photos.get(0).getPosition());
+		assertEquals(toDate("2011-03-24T21:36:06+0000"), photos.get(0).getCreatedTime());
+		assertEquals(toDate("2011-03-24T21:37:43+0000"), photos.get(0).getUpdatedTime());
 	}
 
 	private void assertSingleVideo(Video video) {

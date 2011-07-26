@@ -27,10 +27,12 @@ import java.util.List;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.social.NotAuthorizedException;
 import org.springframework.social.twitter.api.TwitterProfile;
 import org.springframework.social.twitter.api.UserList;
 
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 /**
  * @author Craig Walls
@@ -39,15 +41,34 @@ public class ListsTemplateTest extends AbstractTwitterApiTest {
 	
 	@MediumTest
 	public void testGetLists_currentUser() {
-		mockServer.expect(requestTo("https://api.twitter.com/1/lists.json"))
+		mockServer.expect(requestTo("https://api.twitter.com/1/lists.json?cursor=-1"))
 			.andExpect(method(GET))
-			.andRespond(withResponse(new ClassPathResource("list-of-lists.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("list-of-lists"), responseHeaders));
 		assertListOfLists(twitter.listOperations().getLists());
 	}
 
 	@MediumTest
+	public void testGetListsInCursor_currentUser() {
+		mockServer.expect(requestTo("https://api.twitter.com/1/lists.json?cursor=11223344"))
+			.andExpect(method(GET))
+			.andRespond(withResponse(jsonResource("list-of-lists"), responseHeaders));
+		assertListOfLists(twitter.listOperations().getListsInCursor(11223344));
+	}
+	
+	@SmallTest
+	public void testGetLists_currentUser_unauthorized() {
+		boolean success = false;
+		try {
+			unauthorizedTwitter.listOperations().getLists();
+		} catch (NotAuthorizedException e) {
+			success = true;
+		}
+		assertTrue("Expected NotAuthorizedException", success);
+	}
+
+	@MediumTest
 	public void testGetLists_byId() {
-		mockServer.expect(requestTo("https://api.twitter.com/1/lists.json?user_id=161064614"))
+		mockServer.expect(requestTo("https://api.twitter.com/1/lists.json?user_id=161064614&cursor=-1"))
 			.andExpect(method(GET))
 			.andRespond(withResponse(new ClassPathResource("list-of-lists.json", getClass()), responseHeaders));
 		assertListOfLists(twitter.listOperations().getLists(161064614));
@@ -55,10 +76,18 @@ public class ListsTemplateTest extends AbstractTwitterApiTest {
 
 	@MediumTest
 	public void testGetLists_byScreenName() {
-		mockServer.expect(requestTo("https://api.twitter.com/1/lists.json?screen_name=habuma"))
+		mockServer.expect(requestTo("https://api.twitter.com/1/lists.json?screen_name=habuma&cursor=-1"))
 			.andExpect(method(GET))
-			.andRespond(withResponse(new ClassPathResource("list-of-lists.json", getClass()), responseHeaders));
+			.andRespond(withResponse(jsonResource("list-of-lists"), responseHeaders));
 		assertListOfLists(twitter.listOperations().getLists("habuma"));
+	}
+
+	@MediumTest
+	public void testGetListsInCursor_byScreenName() {
+		mockServer.expect(requestTo("https://api.twitter.com/1/lists.json?screen_name=habuma&cursor=11335577"))
+			.andExpect(method(GET))
+			.andRespond(withResponse(jsonResource("list-of-lists"), responseHeaders));
+		assertListOfLists(twitter.listOperations().getListsInCursor("habuma", 11335577));
 	}
 
 	@MediumTest

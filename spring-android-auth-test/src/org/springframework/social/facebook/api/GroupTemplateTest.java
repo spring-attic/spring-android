@@ -90,13 +90,27 @@ public class GroupTemplateTest extends AbstractFacebookApiTest {
 		assertMembers(members);
 	}
 
-	@SmallTest
+	@MediumTest
 	public void testSearch() {
-		mockServer.expect(requestTo("https://graph.facebook.com/search?q=Spring+User+Group&type=group&fields=owner%2Cname%2Cdescription%2Cprivacy%2Cicon%2Cupdated_time%2Cemail%2Cversion"))
+		mockServer.expect(requestTo("https://graph.facebook.com/search?q=Spring+User+Group&type=group&fields=owner%2Cname%2Cdescription%2Cprivacy%2Cicon%2Cupdated_time%2Cemail%2Cversion&offset=0&limit=25"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
 			.andRespond(withResponse(jsonResource("testdata/group-list"), responseHeaders));
 		List<Group> results = facebook.groupOperations().search("Spring User Group");
+		assertGroupSearchResults(results);
+	}
+
+	@MediumTest
+	public void testSearch_withOffsetAndLimit() {
+		mockServer.expect(requestTo("https://graph.facebook.com/search?q=Spring+User+Group&type=group&fields=owner%2Cname%2Cdescription%2Cprivacy%2Cicon%2Cupdated_time%2Cemail%2Cversion&offset=45&limit=15"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/group-list"), responseHeaders));
+		List<Group> results = facebook.groupOperations().search("Spring User Group", 45, 15);
+		assertGroupSearchResults(results);
+	}
+
+	private void assertGroupSearchResults(List<Group> results) {
 		assertEquals(3, results.size());
 		assertEquals("108286519250791", results.get(0).getId());
 		assertEquals("Spring User Group - Mauritius", results.get(0).getName());
@@ -125,8 +139,7 @@ public class GroupTemplateTest extends AbstractFacebookApiTest {
 		assertEquals("http://b.static.ak.fbcdn.net/rsrc.php/v1/y_/r/CbwcMZjMUbR.png", results.get(2).getIcon());
 		assertEquals(Group.Privacy.OPEN, results.get(2).getPrivacy());
 		assertEquals(toDate("2010-04-01T01:16:44+0000"), results.get(2).getUpdatedTime());
-	}	
-	
+	}		
 	private void assertMembers(List<FacebookProfile> members) {
 		// TODO assert member details		
 	}

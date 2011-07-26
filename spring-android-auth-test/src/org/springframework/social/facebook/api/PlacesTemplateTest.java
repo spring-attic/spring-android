@@ -34,11 +34,21 @@ public class PlacesTemplateTest extends AbstractFacebookApiTest {
 
 	@MediumTest
 	public void testGetCheckins() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/checkins"))
+		mockServer.expect(requestTo("https://graph.facebook.com/me/checkins?offset=0&limit=25"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
 			.andRespond(withResponse(jsonResource("testdata/checkins"), responseHeaders));
 		List<Checkin> checkins = facebook.placesOperations().getCheckins();
+		assertCheckins(checkins);
+	}
+	
+	@MediumTest
+	public void testGetCheckins_withOffsetAndLimit() {
+		mockServer.expect(requestTo("https://graph.facebook.com/me/checkins?offset=50&limit=10"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/checkins"), responseHeaders));
+		List<Checkin> checkins = facebook.placesOperations().getCheckins(50, 10);
 		assertCheckins(checkins);
 	}
 	
@@ -55,11 +65,21 @@ public class PlacesTemplateTest extends AbstractFacebookApiTest {
 
 	@MediumTest
 	public void testGetCheckins_forSpecificUser() {
-		mockServer.expect(requestTo("https://graph.facebook.com/987654321/checkins"))
+		mockServer.expect(requestTo("https://graph.facebook.com/987654321/checkins?offset=0&limit=25"))
 			.andExpect(method(GET))
 			.andExpect(header("Authorization", "OAuth someAccessToken"))
 			.andRespond(withResponse(jsonResource("testdata/checkins"), responseHeaders));
 		List<Checkin> checkins = facebook.placesOperations().getCheckins("987654321");
+		assertCheckins(checkins);
+	}
+	
+	@MediumTest
+	public void getCheckins_forSpecificUser_withOffsetAndLimit() {
+		mockServer.expect(requestTo("https://graph.facebook.com/987654321/checkins?offset=50&limit=10"))
+			.andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/checkins"), responseHeaders));
+		List<Checkin> checkins = facebook.placesOperations().getCheckins("987654321", 50, 10);
 		assertCheckins(checkins);
 	}
 	

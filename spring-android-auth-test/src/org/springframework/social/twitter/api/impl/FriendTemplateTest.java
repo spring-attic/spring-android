@@ -502,43 +502,6 @@ public class FriendTemplateTest extends AbstractTwitterApiTest {
 		assertTrue(twitter.friendOperations().friendshipExists("kdonald", "tinyrod"));
 		assertFalse(twitter.friendOperations().friendshipExists("royclarkson", "charliesheen"));
 	}
-
-	@MediumTest
-	public void testGetIncomingFriendships() {
-		mockServer.expect(requestTo("https://api.twitter.com/1/friendships/incoming.json"))
-			.andExpect(method(GET))
-			.andRespond(withResponse(jsonResource("incoming-or-outgoing-friendships"), responseHeaders));
-	
-		List<Long> friendships = twitter.friendOperations().getIncomingFriendships();
-		assertEquals(3, friendships.size());
-		assertEquals(12345, (long) friendships.get(0));
-		assertEquals(23456, (long) friendships.get(1));
-		assertEquals(34567, (long) friendships.get(2));
-	}
-	
-	@SmallTest
-	public void testGetIncomingFriendships_unauthorized() {
-		boolean success = false;
-		try {
-			unauthorizedTwitter.friendOperations().getIncomingFriendships();
-		} catch (NotAuthorizedException e) {
-			success = true;
-		}
-		assertTrue("Expected NotAuthorizedException", success);
-	}
-
-	@MediumTest
-	public void testGetOutgoingFriendships() {
-		mockServer.expect(requestTo("https://api.twitter.com/1/friendships/outgoing.json"))
-			.andExpect(method(GET))
-			.andRespond(withResponse(jsonResource("incoming-or-outgoing-friendships"), responseHeaders));
-	
-		List<Long> friendships = twitter.friendOperations().getOutgoingFriendships();
-		assertEquals(3, friendships.size());
-		assertEquals(12345, (long) friendships.get(0));
-		assertEquals(23456, (long) friendships.get(1));
-		assertEquals(34567, (long) friendships.get(2));
-	}
 	
 	@SmallTest
 	public void getOutgoingFriendships_unauthorized() {
