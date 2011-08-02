@@ -190,7 +190,7 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
 			SQLiteDatabase db = repositoryHelper.getWritableDatabase();
 			
 			// generate rank
-			final String sql = "select ifnull(max(rank) + 1, 1) as rank from UserConnection where userId = ? and providerId = ?";
+			final String sql = "select coalesce(max(rank) + 1, 1) as rank from UserConnection where userId = ? and providerId = ?";
 			final String[] selectionArgs = {userId, data.getProviderId()};
 			Cursor c = db.rawQuery(sql, selectionArgs);
 			c.moveToFirst();

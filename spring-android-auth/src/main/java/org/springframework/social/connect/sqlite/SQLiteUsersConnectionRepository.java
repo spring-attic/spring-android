@@ -16,6 +16,7 @@
 package org.springframework.social.connect.sqlite;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -63,27 +64,29 @@ public class SQLiteUsersConnectionRepository implements UsersConnectionRepositor
 		this.connectionSignUp = connectionSignUp;
 	}
 	
-	public String findUserIdWithConnection(Connection<?> connection) {
-		final String sql = "select userId from UserConnection where providerId = ? and providerUserId = ?";
+	public List<String> findUserIdsWithConnection(Connection<?> connection) {
 		ConnectionKey key = connection.getKey();
-		final String[] selectionArgs = {key.getProviderId(), key.getProviderUserId()};		
+		final String sql = "select userId from UserConnection where providerId = ? and providerUserId = ?";
+		final String[] selectionArgs = {key.getProviderId(), key.getProviderUserId()};
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-		Cursor c = db.rawQuery(sql, selectionArgs);		
-		String userId = null;
-		if (c.getCount() == 0) {
+		Cursor c = db.rawQuery(sql, selectionArgs);
+		List<String> localUserIds = new ArrayList<String>();
+		c.moveToFirst();
+		for (int i = 0; i < c.getCount(); i++) {
+			localUserIds.add(c.getString(c.getColumnIndex("userId")));
+			c.moveToNext();
+		}
+		c.close();
+		db.close();
+
+		if (localUserIds.size() == 0) {
 			if (connectionSignUp != null) {
 				String newUserId = connectionSignUp.execute(connection);
 				createConnectionRepository(newUserId).addConnection(connection);
-				return newUserId;
+				return Arrays.asList(newUserId);
 			}
 		}
-		if (c.getCount() == 1) {
-			c.moveToFirst();
-			userId = c.getString(c.getColumnIndex("userId"));
-		} 
-		c.close();
-		db.close();		
-		return userId;
+		return localUserIds;
 	}
 
 	public Set<String> findUserIdsConnectedTo(String providerId, Set<String> providerUserIds) {
@@ -121,4 +124,5 @@ public class SQLiteUsersConnectionRepository implements UsersConnectionRepositor
 		}
 		return new SQLiteConnectionRepository(userId, repositoryHelper, connectionFactoryLocator, textEncryptor);
 	}
+
 }
