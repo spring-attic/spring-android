@@ -109,23 +109,26 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	}
 
 	@MediumTest
-	public void testFindUserIdConnectedTo() {
+	public void testFindUserWithConnection() {
 		insertFacebookConnection();
-		String userId = usersConnectionRepository.findUserIdWithConnection(connectionRepository.findPrimaryConnection(TestFacebookApi.class));
-		assertEquals("1", userId);
+		List<String> userIds = usersConnectionRepository.findUserIdsWithConnection(connectionRepository.getPrimaryConnection(TestFacebookApi.class));
+		assertEquals("1", userIds.get(0));
 	}
 	
 	@MediumTest
-	public void testFindUserIdConnectedToNoSuchConnection() {
+	public void testFindUserIdWithConnectionNoSuchConnection() {
 		Connection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("12345"));
-		assertNull(usersConnectionRepository.findUserIdWithConnection(connection));
+		assertEquals(0, usersConnectionRepository.findUserIdsWithConnection(connection).size());
 	}
 	
 	@MediumTest
 	public void testFindUserIdWithConnectionMultipleConnectionsToSameProviderUser() {
 		insertFacebookConnection();
 		insertFacebookConnectionSameFacebookUser();
-		assertNull(usersConnectionRepository.findUserIdWithConnection(connectionRepository.findPrimaryConnection(TestFacebookApi.class)));
+		List<String> localUserIds = usersConnectionRepository.findUserIdsWithConnection(connectionRepository.getPrimaryConnection(TestFacebookApi.class));
+		assertEquals(2, localUserIds.size());
+		assertEquals("1", localUserIds.get(0));
+		assertEquals("2", localUserIds.get(1));
 	}
 	
 	@MediumTest
