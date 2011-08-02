@@ -286,28 +286,36 @@ public class SQLiteConnectionRepository implements ConnectionRepository {
 	
 	private Connection<?> queryForConnection(final String sql, final String[] selectionArgs) {
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-        Cursor c = db.rawQuery(sql, selectionArgs);
-        Connection<?> connection = null;
-        if (c.getCount() > 0) {
-			c.moveToFirst();
-			connection = mapConnectionRow(c);
-        }
-		c.close();
-		db.close();		
+		Cursor c = null;
+		Connection<?> connection = null;
+		try {
+	        c = db.rawQuery(sql, selectionArgs);	        
+	        if (c.getCount() > 0) {
+				c.moveToFirst();
+				connection = mapConnectionRow(c);
+	        }
+		} finally {
+			c.close();
+			db.close();
+		}
 		return connection;
 	}
 	
 	private List<Connection<?>> queryForConnections(final String sql, final String[] selectionArgs) {
 		SQLiteDatabase db = repositoryHelper.getReadableDatabase();
-        Cursor c = db.rawQuery(sql, selectionArgs);		
+		Cursor c = null;
 		List<Connection<?>> connections = new ArrayList<Connection<?>>();
-		c.moveToFirst();
-		for (int i = 0; i < c.getCount(); i++) {
-			connections.add(mapConnectionRow(c));
-			c.moveToNext();
+		try {
+	        c = db.rawQuery(sql, selectionArgs);
+			c.moveToFirst();
+			for (int i = 0; i < c.getCount(); i++) {
+				connections.add(mapConnectionRow(c));
+				c.moveToNext();
+			}
+		} finally {
+			c.close();
+			db.close();
 		}
-		c.close();
-		db.close();
 		return connections;
 	}
 	
