@@ -504,7 +504,7 @@ public class FriendTemplateTest extends AbstractTwitterApiTest {
 	}
 	
 	@SmallTest
-	public void getOutgoingFriendships_unauthorized() {
+	public void testGetOutgoingFriendships_unauthorized() {
 		boolean success = false;
 		try {
 			unauthorizedTwitter.friendOperations().getOutgoingFriendships();

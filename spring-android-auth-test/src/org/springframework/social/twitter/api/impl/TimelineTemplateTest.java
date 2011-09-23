@@ -26,6 +26,8 @@ import static org.springframework.social.test.client.ResponseCreators.withRespon
 
 import java.util.List;
 
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.social.DuplicateStatusException;
 import org.springframework.social.NotAuthorizedException;
@@ -459,10 +461,9 @@ public class TimelineTemplateTest extends AbstractTwitterApiTest {
 		mockServer.expect(requestTo("https://api.twitter.com/1/statuses/update.json"))
 				.andExpect(method(POST))
 				.andExpect(body("status=Test+Message"))
-				.andRespond(withResponse("{}", responseHeaders));
-
-		twitter.timelineOperations().updateStatus("Test Message");
-
+				.andRespond(withResponse(jsonResource("status"), responseHeaders));
+		Tweet tweet = twitter.timelineOperations().updateStatus("Test Message");
+		assertSingleTweet(tweet);
 		mockServer.verify();
 	}
 
@@ -478,16 +479,56 @@ public class TimelineTemplateTest extends AbstractTwitterApiTest {
 	}
 	
 	@SmallTest
+	public void testUpdateStatus_withImage() {
+		mockServer.expect(requestTo("https://upload.twitter.com/1/statuses/update_with_media.json"))
+				.andExpect(method(POST))
+				.andRespond(withResponse(jsonResource("status"), responseHeaders));
+		// TODO: Match body content to ensure fields and photo are included
+		Resource photo = getUploadResource("photo.jpg", "PHOTO DATA");
+		Tweet tweet = twitter.timelineOperations().updateStatus("Test Message", photo);
+		assertSingleTweet(tweet);
+		mockServer.verify();
+	}
+	
+	@SmallTest
 	public void testUpdateStatus_withLocation() {
 		mockServer.expect(requestTo("https://api.twitter.com/1/statuses/update.json"))
 				.andExpect(method(POST))
 				.andExpect(body("status=Test+Message&lat=123.1&long=-111.2"))
-				.andRespond(withResponse("{}", responseHeaders));
-
+				.andRespond(withResponse(jsonResource("status"), responseHeaders));
+		
 		StatusDetails details = new StatusDetails();
 		details.setLocation(123.1f, -111.2f);
-		twitter.timelineOperations().updateStatus("Test Message", details);
+		Tweet tweet = twitter.timelineOperations().updateStatus("Test Message", details);
+		assertSingleTweet(tweet);
+		mockServer.verify();
+	}
+	
+	@SmallTest
+	public void testUpdateStatus_withInReplyToStatus() {
+		mockServer.expect(requestTo("https://api.twitter.com/1/statuses/update.json"))
+				.andExpect(method(POST))
+				.andExpect(body("status=Test+Message+in+reply+to+%40someone&in_reply_to_status_id=123456"))
+				.andRespond(withResponse(jsonResource("status"), responseHeaders));
 
+		StatusDetails details = new StatusDetails();
+		details.setInReplyToStatusId(123456);
+		Tweet tweet = twitter.timelineOperations().updateStatus("Test Message in reply to @someone", details);
+		assertSingleTweet(tweet);
+		mockServer.verify();
+	}
+	
+	@SmallTest
+	public void testUpdateStatus_withImageAndLocation() {
+		mockServer.expect(requestTo("https://upload.twitter.com/1/statuses/update_with_media.json"))
+				.andExpect(method(POST))
+				.andRespond(withResponse(jsonResource("status"), responseHeaders));
+		// TODO: Match body content to ensure fields and photo are included
+		Resource photo = getUploadResource("photo.jpg", "PHOTO DATA");
+		StatusDetails details = new StatusDetails();
+		details.setLocation(123.1f, -111.2f);
+		Tweet tweet = twitter.timelineOperations().updateStatus("Test Message", photo, details);
+		assertSingleTweet(tweet);
 		mockServer.verify();
 	}
 	
@@ -759,7 +800,7 @@ public class TimelineTemplateTest extends AbstractTwitterApiTest {
 	}
 	
 	@SmallTest
-	public void testrRemoveFromFavorites_unauthorized() {
+	public void testRemoveFromFavorites_unauthorized() {
 		boolean success = false;
 		try {
 			unauthorizedTwitter.timelineOperations().removeFromFavorites(12345L);
@@ -769,4 +810,14 @@ public class TimelineTemplateTest extends AbstractTwitterApiTest {
 		assertTrue("Expected NotAuthorizedException", success);
 	}
 	
+	
+	private Resource getUploadResource(final String filename, String content) {
+		Resource resource = new ByteArrayResource(content.getBytes()) {
+			public String getFilename() throws IllegalStateException {
+				return filename;
+			};
+		};
+		return resource;
+	}
+
 }

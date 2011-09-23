@@ -2,6 +2,7 @@
 	{
 		"id" : "12345",
 		"text" : "Tweet 1",
+		"in_reply_to_status_id" : 123123123123,
 		"user" : {
 			"id" : "112233",
 			"screen_name" : "habuma",

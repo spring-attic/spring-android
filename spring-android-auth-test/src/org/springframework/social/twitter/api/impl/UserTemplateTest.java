@@ -20,11 +20,14 @@ import static org.springframework.social.test.client.RequestMatchers.method;
 import static org.springframework.social.test.client.RequestMatchers.requestTo;
 import static org.springframework.social.test.client.ResponseCreators.withResponse;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.social.NotAuthorizedException;
+import org.springframework.social.twitter.api.ImageSize;
 import org.springframework.social.twitter.api.SuggestionCategory;
 import org.springframework.social.twitter.api.TwitterProfile;
 
@@ -144,6 +147,38 @@ public class UserTemplateTest extends AbstractTwitterApiTest {
 	}
 	
 	@MediumTest
+	public void testGetUserProfileImage() throws Exception {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(MediaType.IMAGE_JPEG);
+		mockServer.expect(requestTo("https://api.twitter.com/1/users/profile_image/tinyrod?size=normal"))
+			.andExpect(method(GET))
+			.andRespond(withResponse(new ClassPathResource("tinyrod.jpg", getClass()), responseHeaders));
+		
+		twitter.userOperations().getUserProfileImage("tinyrod");
+		// TODO: Fix ResponseCreators to handle binary data so that we can assert the contents/size of the image bytes. 
+	}
+
+	@MediumTest
+	public void testGetUserProfileImage_mini() throws Exception {
+		getUserProfileImageBySize(ImageSize.MINI);
+	}
+
+	@MediumTest
+	public void testGetUserProfileImage_normal() throws Exception {
+		getUserProfileImageBySize(ImageSize.NORMAL);
+	}
+
+	@MediumTest
+	public void testGetUserProfileImage_original() throws Exception {
+		getUserProfileImageBySize(ImageSize.ORIGINAL);
+	}
+
+	@MediumTest
+	public void testGetUserProfileImage_bigger() throws Exception {
+		getUserProfileImageBySize(ImageSize.BIGGER);
+	}
+	
+	@MediumTest
 	public void testGetUsers_byUserId() {
 		mockServer.expect(requestTo("https://api.twitter.com/1/users/lookup.json?user_id=14846645%2C14718006"))
 			.andExpect(method(GET))
@@ -229,5 +264,15 @@ public class UserTemplateTest extends AbstractTwitterApiTest {
 		assertEquals(2, users.size());
 		assertEquals("royclarkson", users.get(0).getScreenName());
 		assertEquals("kdonald", users.get(1).getScreenName());
+	}
+	
+	private void getUserProfileImageBySize(ImageSize imageSize) throws IOException {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(MediaType.IMAGE_JPEG);
+		mockServer.expect(requestTo("https://api.twitter.com/1/users/profile_image/habuma?size=" + imageSize.name().toLowerCase()))
+			.andExpect(method(GET))
+			.andRespond(withResponse(new ClassPathResource("tinyrod.jpg", getClass()), responseHeaders));
+		twitter.userOperations().getUserProfileImage("habuma", imageSize);
+		// TODO: Fix ResponseCreators to handle binary data so that we can assert the contents/size of the image bytes. 
 	}
 }
