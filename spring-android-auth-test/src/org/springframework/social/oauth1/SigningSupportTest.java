@@ -76,6 +76,19 @@ public class SigningSupportTest extends AndroidTestCase {
 		String authorizationHeader = signingUtils.spring30buildAuthorizationHeaderValue(request, "c2&a3=2+q".getBytes(), new OAuth1Credentials("9djdj82h48djs9d2", "consumer_secret", "kkk9d7dh3k39sjv7", "token_secret"));
 		assertAuthorizationHeader(authorizationHeader, "qz6HT3AG1Z9J%2BP99O4HeMtClGeY%3D");
 	}
+	
+	@SmallTest
+	public void testBuildAuthorizationHeaderValue_oauthEncodedSecrets() throws Exception {
+		SigningSupport signingUtils = new SigningSupport();
+		signingUtils.setTimestampGenerator(new MockTimestampGenerator(123456789, 987654321));
+		URI uri = URIBuilder.fromUri("http://example.com/request").queryParam("b5", "=%3D").queryParam("a3", "a").queryParam("c@", "")
+			.queryParam("a2", "r b").build();
+		HttpRequest request = new SimpleClientHttpRequestFactory().createRequest(uri, HttpMethod.POST);
+		request.getHeaders().setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		String authorizationHeader = signingUtils.buildAuthorizationHeaderValue(request, "c2&a3=2+q".getBytes(), new OAuth1Credentials("9djdj82h48djs9d2", "con+sumer=secret", "kkk9d7dh3k39sjv7", "token+secret="));
+		assertAuthorizationHeader(authorizationHeader, "7VuTmiewi5yudNuXhlZvT1UI53w%3D");
+	}
+
 
 	private void assertAuthorizationHeader(String authorizationHeader, String expectedSignature) {
 		String[] headerElements = authorizationHeader.split(", ");
