@@ -24,8 +24,8 @@
 		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3 -->
 		<easymock.version>2.5.2</easymock.version>
 		<spring-android-version>1.0.0.BUILD-SNAPSHOT</spring-android-version>
-		<spring-security-version>3.1.0.RC2.crypto</spring-security-version>
-		<spring-social-version>1.0.0.RC2</spring-social-version>
+		<spring-security-version>3.1.0.RC3</spring-security-version>
+		<spring-social-version>1.0.0.RELEASE</spring-social-version>
 		<spring-social-linkedin-version>1.0.0.BUILD-SNAPSHOT</spring-social-linkedin-version>
 		<spring-social-gowall-version>1.0.0.BUILD-SNAPSHOT</spring-social-gowall-version>
 		<spring-social-github-version>1.0.0.BUILD-SNAPSHOT</spring-social-github-version>
