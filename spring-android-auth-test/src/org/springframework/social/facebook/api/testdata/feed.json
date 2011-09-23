@@ -77,6 +77,9 @@
                 "name":"Spring Social Showcase",
                 "id":"162886103757745"
             },
+            "likes" : {
+                "count" : 19
+            },
             "created_time": "2011-07-11T22:04:33+0000",
             "updated_time": "2011-07-11T22:04:33+0000"
         },

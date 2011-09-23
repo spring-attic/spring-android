@@ -422,11 +422,7 @@ public class FeedTemplateTest extends AbstractFacebookApiTest {
 		assertEquals("Hello world!", feedEntry.getMessage());
 		assertEquals("100001387295207", feedEntry.getFrom().getId());
 		assertEquals("Art Names", feedEntry.getFrom().getName());
-		assertEquals(2, feedEntry.getLikes().size());
-		assertEquals("1533260333", feedEntry.getLikes().get(0).getId());
-		assertEquals("Roy Clarkson", feedEntry.getLikes().get(0).getName());
-		assertEquals("1322692345", feedEntry.getLikes().get(1).getId());
-		assertEquals("Jim Smith", feedEntry.getLikes().get(1).getName());
+		assertEquals(2, feedEntry.getLikeCount());
 		assertEquals(2, feedEntry.getComments().size());
 		assertNull(feedEntry.getComments().get(1).getLikes());
 		assertEquals(3, feedEntry.getComments().get(1).getLikesCount());
@@ -729,9 +725,7 @@ public class FeedTemplateTest extends AbstractFacebookApiTest {
 		assertEquals("When beetles fight these battles in a bottle with their paddles\nand the bottle's on a poodle and the poodle's eating noodles...\n...they call this a muddle puddle tweetle poodle beetle noodle\nbottle paddle battle.\"\n\u2014 Dr. Seuss (Fox in Socks)", posts.get(1).getMessage());
 		assertEquals(toDate("2011-05-13T01:41:50+0000"), posts.get(1).getCreatedTime());
 		assertEquals(toDate("2011-05-13T01:41:50+0000"), posts.get(1).getUpdatedTime());
-		assertEquals(1, posts.get(1).getLikes().size());
-		assertEquals("100000695403650", posts.get(1).getLikes().get(0).getId());
-		assertEquals("Courtney Briscoe", posts.get(1).getLikes().get(0).getName());
+		assertEquals(12, posts.get(1).getLikeCount());
 		assertTrue(posts.get(2) instanceof StatusPost);
 		assertEquals("100000132946459_227565820591181", posts.get(2).getId());
 		assertEquals("100000132946459", posts.get(2).getFrom().getId());

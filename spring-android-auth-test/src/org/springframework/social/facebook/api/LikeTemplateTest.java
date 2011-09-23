@@ -94,18 +94,33 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetLikes() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/likes")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/12345678/likes")).andExpect(method(GET))
+			.andExpect(header("Authorization", "OAuth someAccessToken"))
+			.andRespond(withResponse(jsonResource("testdata/user-references"), responseHeaders));
+		List<Reference> likes = facebook.likeOperations().getLikes("12345678");
+		assertEquals(3, likes.size());
+		assertEquals("Michael Scott", likes.get(0).getName());
+		assertEquals("100000737708615", likes.get(0).getId());
+		assertEquals("Michael Scott", likes.get(1).getName());
+		assertEquals("100000354483321", likes.get(1).getId());
+		assertEquals("Michael Scott", likes.get(2).getName());
+		assertEquals("1184963857", likes.get(2).getId());
+	}
+	
+	@MediumTest
+	public void testGetPagesLiked() {
+		mockServer.expect(requestTo("https://graph.facebook.com/me/likes?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getLikes();
+		List<Page> likes = facebook.likeOperations().getPagesLiked();
 		assertLikes(likes);
 	}
 
 	@SmallTest
-	public void testGetLikes_unauthorized() {
+	public void testGetPagesLikes_unauthorized() {
 		boolean success = false;
 		try {
-			unauthorizedFacebook.likeOperations().getLikes();
+			unauthorizedFacebook.likeOperations().getPagesLiked();
 		} catch (NotAuthorizedException e) {
 			success = true;
 		}
@@ -113,11 +128,11 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	}
 	
 	@MediumTest
-	public void testGetLikes_forSpecificUser() {
-		mockServer.expect(requestTo("https://graph.facebook.com/123456789/likes")).andExpect(method(GET))
+	public void testGetPagesLiked_forSpecificUser() {
+		mockServer.expect(requestTo("https://graph.facebook.com/123456789/likes?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getLikes("123456789");
+		List<Page> likes = facebook.likeOperations().getPagesLiked("123456789");
 		assertLikes(likes);
 	}
 	
@@ -125,7 +140,7 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	public void testGetLikes_forSpecificUser_unauthorized() {
 		boolean success = false;
 		try {
-			unauthorizedFacebook.likeOperations().getLikes("123456789");
+			unauthorizedFacebook.likeOperations().getPagesLiked("123456789");
 		} catch (NotAuthorizedException e) {
 			success = true;
 		}
@@ -134,10 +149,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetBooks() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/books")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/me/books?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getBooks();
+		List<Page> likes = facebook.likeOperations().getBooks();
 		assertLikes(likes);
 	}
 
@@ -154,10 +169,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetBooks_forSpecificUser() {
-		mockServer.expect(requestTo("https://graph.facebook.com/123456789/books")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/123456789/books?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getBooks("123456789");
+		List<Page> likes = facebook.likeOperations().getBooks("123456789");
 		assertLikes(likes);
 	}	
 	
@@ -174,10 +189,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetMovies() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/movies")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/me/movies?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getMovies();
+		List<Page> likes = facebook.likeOperations().getMovies();
 		assertLikes(likes);
 	}
 	
@@ -194,10 +209,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 
 	@MediumTest
 	public void testGetMovies_forSpecificUser() {
-		mockServer.expect(requestTo("https://graph.facebook.com/123456789/movies")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/123456789/movies?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getMovies("123456789");
+		List<Page> likes = facebook.likeOperations().getMovies("123456789");
 		assertLikes(likes);
 	}
 	
@@ -214,10 +229,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetMusic() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/music")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/me/music?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getMusic();
+		List<Page> likes = facebook.likeOperations().getMusic();
 		assertLikes(likes);
 	}
 
@@ -234,10 +249,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetMusic_forSpecificUser() {
-		mockServer.expect(requestTo("https://graph.facebook.com/123456789/music")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/123456789/music?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getMusic("123456789");
+		List<Page> likes = facebook.likeOperations().getMusic("123456789");
 		assertLikes(likes);
 	}
 
@@ -254,10 +269,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetTelevision() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/television")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/me/television?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getTelevision();
+		List<Page> likes = facebook.likeOperations().getTelevision();
 		assertLikes(likes);
 	}
 
@@ -274,10 +289,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetTelevision_forSpecificUser() {
-		mockServer.expect(requestTo("https://graph.facebook.com/123456789/television")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/123456789/television?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getTelevision("123456789");
+		List<Page> likes = facebook.likeOperations().getTelevision("123456789");
 		assertLikes(likes);
 	}
 		
@@ -294,10 +309,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetActivities() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/activities")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/me/activities?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getActivities();
+		List<Page> likes = facebook.likeOperations().getActivities();
 		assertLikes(likes);
 	}
 
@@ -314,10 +329,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 	
 	@MediumTest
 	public void testGetActivities_forSpecificUser() {
-		mockServer.expect(requestTo("https://graph.facebook.com/123456789/activities")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/123456789/activities?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getActivities("123456789");
+		List<Page> likes = facebook.likeOperations().getActivities("123456789");
 		assertLikes(likes);
 	}
 	
@@ -334,10 +349,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 
 	@MediumTest
 	public void testGetInterests() {
-		mockServer.expect(requestTo("https://graph.facebook.com/me/interests")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/me/interests?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getInterests();
+		List<Page> likes = facebook.likeOperations().getInterests();
 		assertLikes(likes);
 	}
 
@@ -354,10 +369,10 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 
 	@MediumTest
 	public void testGetInterests_forSpecificUser() {
-		mockServer.expect(requestTo("https://graph.facebook.com/123456789/interests")).andExpect(method(GET))
+		mockServer.expect(requestTo("https://graph.facebook.com/123456789/interests?fields=id%2Cname%2Ccategory%2Cdescription%2Clocation%2Cwebsite%2Cpicture%2Cphone%2Caffiliation%2Ccompany_overview%2Clikes%2Ccheckins")).andExpect(method(GET))
 				.andExpect(header("Authorization", "OAuth someAccessToken"))
 				.andRespond(withResponse(jsonResource("testdata/user-likes"), responseHeaders));
-		List<UserLike> likes = facebook.likeOperations().getInterests("123456789");
+		List<Page> likes = facebook.likeOperations().getInterests("123456789");
 		assertLikes(likes);
 	}
 	
@@ -372,17 +387,17 @@ public class LikeTemplateTest extends AbstractFacebookApiTest {
 		assertTrue("Expected NotAuthorizedException", success);
 	}
 	
-	private void assertLikes(List<UserLike> likes) {
+	private void assertLikes(List<Page> likes) {
 		assertEquals(3, likes.size());
-		UserLike like1 = likes.get(0);
+		Page like1 = likes.get(0);
 		assertEquals("113294925350820", like1.getId());
 		assertEquals("Pirates of the Caribbean", like1.getName());
 		assertEquals("Movie", like1.getCategory());
-		UserLike like2 = likes.get(1);
+		Page like2 = likes.get(1);
 		assertEquals("38073733123", like2.getId());
 		assertEquals("Dublin Dr Pepper", like2.getName());
 		assertEquals("Company", like2.getCategory());
-		UserLike like3 = likes.get(2);
+		Page like3 = likes.get(2);
 		assertEquals("10264922373", like3.getId());
 		assertEquals("Freebirds World Burrito", like3.getName());
 		assertEquals("Restaurant/cafe", like3.getCategory());
