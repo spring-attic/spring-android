@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.transform.Source;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -40,7 +42,6 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.feed.SyndFeedHttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
@@ -132,9 +133,6 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", RestTemplate.class.getClassLoader()) &&
 					ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", RestTemplate.class.getClassLoader());
 	
-	private static final boolean gsonPresent = 
-			ClassUtils.isPresent("com.google.gson.Gson", RestTemplate.class.getClassLoader());
-
 	private static boolean romePresent =
 			ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed", RestTemplate.class.getClassLoader());
 
@@ -164,11 +162,8 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			this.messageConverters.add(new SimpleXmlHttpMessageConverter());
 		}
 		
-		// Jackson takes precedence over Gson
 		if (jacksonPresent) {
 			this.messageConverters.add(new MappingJacksonHttpMessageConverter());
-		} else if (gsonPresent) {
-			this.messageConverters.add(new GsonHttpMessageConverter());
 		}
 		
 		if (romePresent) {
