@@ -15,38 +15,38 @@
 
 	<properties>
 		<android-platform>7</android-platform>
-		<android-emulator>7</android-emulator>
-		<maven-android-plugin-version>2.8.4</maven-android-plugin-version>
+		<android-maven-plugin-version>3.0.0-alpha-13</android-maven-plugin-version>
 		<maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
 		<java-version>1.6</java-version>
-		<com.google.android.version>2.1_r1</com.google.android.version>
+		<android-version>2.1_r1</android-version>
 		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3 -->
-		<org.springframework.android.version>1.0.0.BUILD-SNAPSHOT</org.springframework.android.version>
+		<spring-android-version>1.0.0.BUILD-SNAPSHOT</spring-android-version>
+        <easymock-version>2.5.2</easymock-version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
-			<version>${com.google.android.version}</version>
+			<version>${android-version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android-test</artifactId>
-			<version>${com.google.android.version}</version>
+			<version>${android-version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-core</artifactId>
-			<version>${org.springframework.android.version}</version>
+			<version>${spring-android-version}</version>
 		</dependency>
 		<dependency>
 			<!-- easymock 3.x does NOT work on Android -->
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
-			<version>2.5.2</version>
+			<version>${easymock-version}</version>
 		</dependency>
 	</dependencies>
 
@@ -56,8 +56,8 @@
 		<plugins>
 			<plugin>
 				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>maven-android-plugin</artifactId>
-				<version>${maven-android-plugin-version}</version>
+				<artifactId>android-maven-plugin</artifactId>
+				<version>${android-maven-plugin-version}</version>
 				<configuration>
 					<sdk>
 						<platform>${android-platform}</platform>
