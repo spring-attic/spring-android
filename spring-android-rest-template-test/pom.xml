@@ -102,6 +102,12 @@
 					<sdk>
 						<platform>${android-platform}</platform>
 					</sdk>
+                    <dex>
+                        <jvmArguments>
+                            <jvmArgument>-Xms256m</jvmArgument>
+                            <jvmArgument>-Xmx512m</jvmArgument>
+                        </jvmArguments>
+                    </dex>
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 				</configuration>
