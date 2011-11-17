@@ -17,7 +17,6 @@
 package org.springframework.http.converter;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.springframework.core.io.AssetResource;
 import org.springframework.core.io.Resource;

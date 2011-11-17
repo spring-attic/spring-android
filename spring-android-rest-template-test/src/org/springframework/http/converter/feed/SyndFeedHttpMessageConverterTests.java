@@ -17,7 +17,6 @@
 package org.springframework.http.converter.feed;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 

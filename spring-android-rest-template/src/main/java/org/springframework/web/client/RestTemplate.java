@@ -152,7 +152,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		
 		// if javax.xml.transform is not available, fall back to standard Form message converter
 		if (javaxXmlTransformPresent) {
-			this.messageConverters.add(new SourceHttpMessageConverter());
+			this.messageConverters.add(new SourceHttpMessageConverter<Source>());
 			this.messageConverters.add(new XmlAwareFormHttpMessageConverter());
 		} else {
 			this.messageConverters.add(new FormHttpMessageConverter());
