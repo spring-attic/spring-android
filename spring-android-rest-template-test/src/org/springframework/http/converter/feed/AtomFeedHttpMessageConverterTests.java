@@ -22,13 +22,14 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.springframework.core.io.AssetResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
 import org.springframework.http.MockHttpOutputMessage;
 import org.xml.sax.SAXException;
 
+import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Entry;
@@ -37,7 +38,7 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Fee
 /** 
  * @author Roy Clarkson 
  */
-public class AtomFeedHttpMessageConverterTests extends TestCase {
+public class AtomFeedHttpMessageConverterTests extends AndroidTestCase {
 
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
 	
@@ -66,10 +67,11 @@ public class AtomFeedHttpMessageConverterTests extends TestCase {
 		assertTrue(converter.canWrite(Feed.class, new MediaType("application", "atom+xml", UTF_8)));
 	}
 
-	@SmallTest
+	@MediumTest
 	public void testRead() throws IOException {
-		InputStream is = getClass().getResourceAsStream("atom.xml");
-		MockHttpInputMessage inputMessage = new MockHttpInputMessage(is);
+        AssetResource resource = new AssetResource(getContext().getAssets(), "atom.xml");
+        InputStream inputStream = resource.getInputStream();
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(inputStream);
 		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", UTF_8));
 		Feed result = converter.read(Feed.class, inputMessage);
 		assertEquals("title", result.getTitle());
@@ -107,6 +109,7 @@ public class AtomFeedHttpMessageConverterTests extends TestCase {
 		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
 		converter.write(feed, null, outputMessage);
 
+		//TODO: verify output
 		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
 				"<feed xmlns=\"http://www.w3.org/2005/Atom\">" + "<title>title</title>" +
 				"<entry><id>id1</id><title>title1</title></entry>" +

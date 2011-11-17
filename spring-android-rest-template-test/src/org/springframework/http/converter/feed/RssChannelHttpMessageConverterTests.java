@@ -22,13 +22,14 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.springframework.core.io.AssetResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
 import org.springframework.http.MockHttpOutputMessage;
 import org.xml.sax.SAXException;
 
+import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel;
@@ -38,7 +39,7 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Item
  * @author Arjen Poutsma
  * @author Roy Clarkson 
  * */
-public class RssChannelHttpMessageConverterTests extends TestCase {
+public class RssChannelHttpMessageConverterTests extends AndroidTestCase {
 
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
 	
@@ -63,10 +64,11 @@ public class RssChannelHttpMessageConverterTests extends TestCase {
 		assertTrue(converter.canWrite(Channel.class, new MediaType("application", "rss+xml", Charset.forName("UTF-8"))));
 	}
 
-	@SmallTest
+	@MediumTest
 	public void testRead() throws IOException {
-		InputStream is = getClass().getResourceAsStream("rss.xml");
-		MockHttpInputMessage inputMessage = new MockHttpInputMessage(is);
+        AssetResource resource = new AssetResource(getContext().getAssets(), "rss.xml");
+        InputStream inputStream = resource.getInputStream();
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(inputStream);
 		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", UTF_8));
 		Channel result = converter.read(Channel.class, inputMessage);
 		assertEquals("title", result.getTitle());
@@ -106,6 +108,8 @@ public class RssChannelHttpMessageConverterTests extends TestCase {
 
 		assertEquals("Invalid content-type", new MediaType("application", "rss+xml", UTF_8),
 				outputMessage.getHeaders().getContentType());
+		
+		//TODO: verify output
 		String expected = "<rss version=\"2.0\">" +
 				"<channel><title>title</title><link>http://example.com</link><description>description</description>" +
 				"<item><title>title1</title></item>" +

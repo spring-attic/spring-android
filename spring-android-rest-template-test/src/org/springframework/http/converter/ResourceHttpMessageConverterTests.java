@@ -17,16 +17,16 @@
 package org.springframework.http.converter;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-import junit.framework.TestCase;
-
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.AssetResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
 import org.springframework.http.MockHttpOutputMessage;
 import org.springframework.util.FileCopyUtils;
 
+import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -34,7 +34,7 @@ import android.test.suitebuilder.annotation.SmallTest;
  * @author Arjen Poutsma
  * @author Roy Clarkson
  */
-public class ResourceHttpMessageConverterTests extends TestCase {
+public class ResourceHttpMessageConverterTests extends AndroidTestCase {
 
 	private ResourceHttpMessageConverter converter;
 
@@ -62,20 +62,20 @@ public class ResourceHttpMessageConverterTests extends TestCase {
 
 	@MediumTest
 	public void testRead() throws IOException {
-		byte[] body = FileCopyUtils.copyToByteArray(getClass().getResourceAsStream("logo.jpg"));
+	    Resource asset = new AssetResource(getContext().getAssets(), "logo.jpg");
+		byte[] body = FileCopyUtils.copyToByteArray(asset.getInputStream());
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body);
 		inputMessage.getHeaders().setContentType(MediaType.IMAGE_JPEG);
 		converter.read(Resource.class, inputMessage);
 	}
 
-	// TODO: resources on Android are different. determine better way to test this
-//	@MediumTest
-//	public void testWrite() throws IOException {
-//		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
-//		Resource body = new ClassPathResource("logo.jpg", getClass());
-//		converter.write(body, null, outputMessage);
-//		assertEquals("Invalid content-type", MediaType.APPLICATION_OCTET_STREAM, outputMessage.getHeaders().getContentType());
-//		assertEquals("Invalid content-length", body.getFile().length(), outputMessage.getHeaders().getContentLength());
-//	}
+	@MediumTest
+	public void testWrite() throws IOException {
+		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
+		Resource asset = new AssetResource(getContext().getAssets(), "logo.jpg");
+		converter.write(asset, null, outputMessage);
+		assertEquals("Invalid content-type", MediaType.APPLICATION_OCTET_STREAM, outputMessage.getHeaders().getContentType());
+		assertEquals("Invalid content-length", asset.contentLength(), outputMessage.getHeaders().getContentLength());
+	}
 
 }
