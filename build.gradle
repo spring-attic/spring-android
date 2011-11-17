@@ -134,6 +134,12 @@ configure(javaprojects) {
 // -----------------------------------------------------------------------------
 project('spring-android-core') {
     description = "Spring Android Core"
+
+    dependencies {
+        compile ("com.google.android:android:$androidVersion") { 
+            provided = true 
+        }
+    }
 }
 
 project('spring-android-auth') {

@@ -23,17 +23,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
-import junit.framework.TestCase;
-
 import org.springframework.util.FileCopyUtils;
 
+import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 
 /**
  * @author Juergen Hoeller
  * @author Roy Clarkson
  */
-public class ResourceTests extends TestCase {
+public class ResourceTests extends AndroidTestCase {
 
 	@MediumTest
 	public void testByteArrayResource() throws IOException {
@@ -212,6 +211,18 @@ public class ResourceTests extends TestCase {
 		catch (IllegalStateException ex) {
 			assertTrue(ex.getMessage().indexOf(name) != -1);
 		}
+	}
+	
+	@MediumTest
+	public void testAssetResource() throws IOException {
+	    Resource resource = new AssetResource(getContext().getAssets(), "logo.jpg");
+	    assertTrue(resource.exists());
+	    assertTrue(resource.contentLength() > 0);
+	    InputStream inputStream = resource.getInputStream();
+	    assertNotNull(inputStream);
+	    
+	    Resource resource2 = new AssetResource(getContext().getAssets(), "fail.jpg");
+	    assertFalse(resource2.exists());
 	}
 
 }

@@ -108,7 +108,7 @@ public abstract class AbstractResource implements Resource {
 	}
 
 	/**
-	 * This implementation checks the timestamp of the underlying File,
+	 * This implementation checks the length of the underlying File, 
 	 * if available.
 	 * @see #getFile()
 	 */
