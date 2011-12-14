@@ -25,7 +25,7 @@
         <spring-security-version>3.1.0.RELEASE</spring-security-version>
         <spring-social-version>1.0.0.RELEASE</spring-social-version>
         <spring-social-linkedin-version>1.0.0.BUILD-SNAPSHOT</spring-social-linkedin-version>
-        <spring-social-gowall-version>1.0.0.BUILD-SNAPSHOT</spring-social-gowall-version>
+        <spring-social-gowalla-version>1.0.0.BUILD-SNAPSHOT</spring-social-gowalla-version>
         <spring-social-github-version>1.0.0.BUILD-SNAPSHOT</spring-social-github-version>
     </properties>
 
@@ -137,7 +137,7 @@
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-gowalla</artifactId>
-            <version>${spring-social-gowall-version}</version>
+            <version>${spring-social-gowalla-version}</version>
             <exclusions>
                 <!-- Commons Logging is provided by Android -->
                 <exclusion>
