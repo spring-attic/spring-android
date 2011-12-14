@@ -104,7 +104,7 @@ configure(javaprojects) {
     androidVersion = '2.1_r1'
     commonsHttpclientVersion = '3.1'
     jacksonVersion = '1.9.2'
-	gsonVersion = '1.7.2'
+	gsonVersion = '2.0'
     simpleXmlVersion = '2.6.2'
     androidRomeVersion = '1.0.0-r2'
     javaxServletApiVersion = '2.5'
