@@ -63,6 +63,8 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 
 	private static final String ALLOW = "Allow";
 
+	private static final String AUTHORIZATION = "Authorization";
+
 	private static final String CACHE_CONTROL = "Cache-Control";
 
 	private static final String CONTENT_DISPOSITION = "Content-Disposition";
@@ -88,6 +90,8 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 	private static final String LOCATION = "Location";
 
 	private static final String PRAGMA = "Pragma";
+
+	private static final String USER_AGENT = "User-Agent";
 
 
 	private static final String[] DATE_FORMATS = new String[] {
@@ -239,6 +243,22 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 		else {
 			return EnumSet.noneOf(HttpMethod.class);
 		}
+	}
+
+	/**
+	 * Sets a value for the {@code Authorization} header.
+	 * @param httpAuthentication an http-based authentication representation
+	 */
+	public void setAuthorization(HttpAuthentication httpAuthentication) {
+		set(AUTHORIZATION, httpAuthentication.getHeaderValue());
+	}
+
+	/**
+	 * Returns the value of the {@code Authorization} header.
+	 * @return the Authorization header value
+	 */
+	public String getAuthorization() {
+		return getFirst(AUTHORIZATION);
 	}
 
 	/**
@@ -495,6 +515,22 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 	 */
 	public String getPragma() {
 		return getFirst(PRAGMA);
+	}
+
+	/**
+	 * Sets the (new) value of the {@code User-Agent} header.
+	 * @param userAgent the value of the header
+	 */
+	public void setUserAgent(String userAgent) {
+		set(USER_AGENT, userAgent);
+	}
+
+	/**
+	 * Returns the value of the {@code User-Agent} header.
+	 * @return the value of the header
+	 */
+	public String getUserAgent() {
+		return getFirst(USER_AGENT);
 	}
 
 	// Utility methods
