@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class CommonsClientHttpRequestFactory implements ClientHttpRequestFactory
 	 * {@link HttpClient} that uses a default {@link MultiThreadedHttpConnectionManager}.
 	 */
 	public CommonsClientHttpRequestFactory() {
-		httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+		this.httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
 		this.setReadTimeout(DEFAULT_READ_TIMEOUT_MILLISECONDS);
 	}
 
@@ -88,17 +88,28 @@ public class CommonsClientHttpRequestFactory implements ClientHttpRequestFactory
 		return this.httpClient;
 	}
 
-	/**
-	 * Set the socket read timeout for the underlying HttpClient. A value of 0 means <em>never</em> timeout.
-	 * @param timeout the timeout value in milliseconds
-	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setSoTimeout(int)
-	 */
-	public void setReadTimeout(int timeout) {
-		if (timeout < 0) {
-			throw new IllegalArgumentException("timeout must be a non-negative value");
-		}
-		getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(timeout);
-	}
+    /**
+     * Set the connection timeout for the underlying HttpClient.
+     * A timeout value of 0 specifies an infinite timeout.
+     * @param timeout the timeout value in milliseconds
+     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setConnectionTimeout(int)
+     */
+    public void setConnectTimeout(int timeout) {
+        Assert.isTrue(timeout >= 0, "Timeout must be a non-negative value");
+        this.httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(timeout);
+    }
+
+    /**
+     * Set the socket read timeout for the underlying HttpClient.
+     * A timeout value of 0 specifies an infinite timeout.
+     * @param timeout the timeout value in milliseconds
+     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setSoTimeout(int)
+     */
+    public void setReadTimeout(int timeout) {
+        Assert.isTrue(timeout >= 0, "Timeout must be a non-negative value");
+        getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(timeout);
+    }
+
 
 
 	public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {

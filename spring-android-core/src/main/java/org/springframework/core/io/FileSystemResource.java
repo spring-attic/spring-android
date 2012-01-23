@@ -18,8 +18,10 @@ package org.springframework.core.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 
@@ -34,7 +36,7 @@ import org.springframework.util.StringUtils;
  * @since 1.0
  * @see java.io.File
  */
-public class FileSystemResource extends AbstractResource {
+public class FileSystemResource extends AbstractResource implements WritableResource {
 
 	private final File file;
 
@@ -164,6 +166,27 @@ public class FileSystemResource extends AbstractResource {
 	public String getDescription() {
 		return "file [" + this.file.getAbsolutePath() + "]";
 	}
+
+
+    // implementation of WritableResource
+
+    /**
+     * This implementation checks whether the underlying file is marked as writable
+     * (and corresponds to an actual file with content, not to a directory).
+     * @see java.io.File#canWrite()
+     * @see java.io.File#isDirectory()
+     */
+    public boolean isWritable() {
+        return (this.file.canWrite() && !this.file.isDirectory());
+    }
+
+    /**
+     * This implementation opens a FileOutputStream for the underlying file.
+     * @see java.io.FileOutputStream
+     */
+    public OutputStream getOutputStream() throws IOException {
+        return new FileOutputStream(this.file);
+    }
 
 
 	/**

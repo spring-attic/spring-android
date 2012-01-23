@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,29 +31,32 @@ import org.springframework.util.FileCopyUtils;
  * @author Arjen Poutsma
  * @since 1.0
  */
-class BufferingClientHttpRequest extends AbstractBufferingClientHttpRequest {
+final class BufferingClientHttpRequestWrapper extends AbstractBufferingClientHttpRequest {
 
-	private final ClientHttpRequest request;
+    private final ClientHttpRequest request;
 
-	BufferingClientHttpRequest(ClientHttpRequest request) {
-		Assert.notNull(request, "'request' must not be null");
-		this.request = request;
-	}
 
-	public HttpMethod getMethod() {
-		return request.getMethod();
-	}
+    BufferingClientHttpRequestWrapper(ClientHttpRequest request) {
+        Assert.notNull(request, "'request' must not be null");
+        this.request = request;
+    }
 
-	public URI getURI() {
-		return request.getURI();
-	}
 
-	@Override
-	protected ClientHttpResponse executeInternal(HttpHeaders headers, byte[] bufferedOutput) throws IOException {
-		request.getHeaders().putAll(headers);
-		OutputStream body = request.getBody();
-		FileCopyUtils.copy(bufferedOutput, body);
-		ClientHttpResponse response = request.execute();
-		return new BufferingClientHttpResponse(response);
-	}
+    public HttpMethod getMethod() {
+        return this.request.getMethod();
+    }
+
+    public URI getURI() {
+        return this.request.getURI();
+    }
+
+    @Override
+    protected ClientHttpResponse executeInternal(HttpHeaders headers, byte[] bufferedOutput) throws IOException {
+        this.request.getHeaders().putAll(headers);
+        OutputStream body = this.request.getBody();
+        FileCopyUtils.copy(bufferedOutput, body);
+        ClientHttpResponse response = this.request.execute();
+        return new BufferingClientHttpResponseWrapper(response);
+    }
+
 }

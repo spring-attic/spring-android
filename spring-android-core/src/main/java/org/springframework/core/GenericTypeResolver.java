@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,6 +103,35 @@ public abstract class GenericTypeResolver {
 		return (rawType instanceof Class ? (Class<?>) rawType : method.getReturnType());
 	}
 
+    /**
+     * Resolve the single type argument of the given generic interface against the given
+     * target method which is assumed to return the given interface or an implementation
+     * of it.
+     * @param method the target method to check the return type of
+     * @param genericIfc the generic interface or superclass to resolve the type argument from
+     * @return the resolved parameter type of the method return type, or <code>null</code>
+     * if not resolvable or if the single argument is of type {@link WildcardType}.
+     */
+    public static Class<?> resolveReturnTypeArgument(Method method, Class<?> genericIfc) {
+        Assert.notNull(method, "method must not be null");
+        Type returnType = method.getReturnType();
+        Type genericReturnType = method.getGenericReturnType();
+        if (returnType.equals(genericIfc)) {
+            if (genericReturnType instanceof ParameterizedType) {
+                ParameterizedType targetType = (ParameterizedType) genericReturnType;
+                Type[] actualTypeArguments = targetType.getActualTypeArguments();
+                Type typeArg = actualTypeArguments[0];
+                if (!(typeArg instanceof WildcardType)) {
+                    return (Class<?>) typeArg;
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        return GenericTypeResolver.resolveTypeArgument((Class<?>) returnType, genericIfc);
+    }
+
 	/**
 	 * Resolve the single type argument of the given generic interface against
 	 * the given target class which is assumed to implement the generic interface
@@ -175,7 +205,7 @@ public abstract class GenericTypeResolver {
 				return doResolveTypeArguments(ownerClass, (Class<?>) rawType, genericIfc);
 			}
 		}
-		else if (genericIfc.isAssignableFrom((Class<?>) ifc)) {
+		else if (ifc != null && genericIfc.isAssignableFrom((Class<?>) ifc)) {
 			return doResolveTypeArguments(ownerClass, (Class<?>) ifc, genericIfc);
 		}
 		return null;

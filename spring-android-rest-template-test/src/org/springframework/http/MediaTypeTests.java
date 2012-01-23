@@ -149,6 +149,16 @@ public class MediaTypeTests extends TestCase {
 		assertTrue("Expected IllegalArgumentException", success);
 	}
 
+    public void testParseMediaTypeTypeRange() {
+        boolean success = false;
+        try {
+            MediaType.parseMediaType("*/json");
+        } catch (IllegalArgumentException e) {
+            success = true;
+        }
+        assertTrue("Expected IllegalArgumentException", success);
+    }
+
 	@SmallTest
 	public void testParseMediaTypeIllegalType() {
 		boolean success = false;

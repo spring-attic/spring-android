@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,8 +82,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 
 
 	/**
-	 * {@inheritDoc}
-	 * <p>This implementation checks if the given class is {@linkplain #supports(Class) supported},
+	 * This implementation checks if the given class is {@linkplain #supports(Class) supported},
 	 * and if the {@linkplain #getSupportedMediaTypes() supported media types}
 	 * {@linkplain MediaType#includes(MediaType) include} the given media type.
 	 */
@@ -94,9 +93,10 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	/**
 	 * Returns true if any of the {@linkplain #setSupportedMediaTypes(List) supported media types}
 	 * include the given media type.
-	 * @param mediaType the media type to read, can be {@code null} if not specified. Typically the value of a
-	 *                  {@code Content-Type} header.
-	 * @return true if the supported media types include the media type, or if the media type is {@code null}
+	 * @param mediaType the media type to read, can be {@code null} if not specified. 
+	 * Typically the value of a {@code Content-Type} header.
+	 * @return true if the supported media types include the media type, 
+	 * or if the media type is {@code null}
 	 */
 	protected boolean canRead(MediaType mediaType) {
 		if (mediaType == null) {
@@ -111,8 +111,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>This implementation checks if the given class is {@linkplain #supports(Class) supported},
+	 * This implementation checks if the given class is {@linkplain #supports(Class) supported},
 	 * and if the {@linkplain #getSupportedMediaTypes() supported media types}
 	 * {@linkplain MediaType#includes(MediaType) include} the given media type.
 	 */
@@ -123,9 +122,10 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	/**
 	 * Returns true if the given media type includes any of the
 	 * {@linkplain #setSupportedMediaTypes(List) supported media types}.
-	 * @param mediaType the media type to write, can be {@code null} if not specified. Typically the value of an
-	 * 		  			{@code Accept} header.
-	 * @return true if the supported media types are compatible with the media type, or if the media type is {@code null}
+	 * @param mediaType the media type to write, can be {@code null} if not specified. 
+	 * Typically the value of an {@code Accept} header.
+	 * @return true if the supported media types are compatible with the media type, 
+	 * or if the media type is {@code null}
 	 */
 	protected boolean canWrite(MediaType mediaType) {
 		if (mediaType == null || MediaType.ALL.equals(mediaType)) {
@@ -140,8 +140,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>This implementation simple delegates to {@link #readInternal(Class, HttpInputMessage)}.
+	 * This implementation simple delegates to {@link #readInternal(Class, HttpInputMessage)}.
 	 * Future implementations might add some default behavior, however.
 	 */
 	public final T read(Class<? extends T> clazz, HttpInputMessage inputMessage) throws IOException {
@@ -149,8 +148,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>This implementation delegates to {@link #getDefaultContentType(Object)} if a content
+	 * This implementation delegates to {@link #getDefaultContentType(Object)} if a content
 	 * type was not provided, calls {@link #getContentLength}, and sets the corresponding headers
 	 * on the output message. It then calls {@link #writeInternal}.
 	 */
@@ -167,7 +165,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 			}
 		}
 		if (headers.getContentLength() == -1) {
-			Long contentLength = getContentLength(t, contentType);
+			Long contentLength = getContentLength(t, headers.getContentType());
 			if (contentLength != null) {
 				headers.setContentLength(contentLength);
 			}
@@ -185,7 +183,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	 * @param t the type to return the content type for
 	 * @return the content type, or <code>null</code> if not known
 	 */
-	protected MediaType getDefaultContentType(T t) {
+	protected MediaType getDefaultContentType(T t) throws IOException {
 		List<MediaType> mediaTypes = getSupportedMediaTypes();
 		return (!mediaTypes.isEmpty() ? mediaTypes.get(0) : null);
 	}
@@ -197,7 +195,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	 * @param t the type to return the content length for
 	 * @return the content length, or {@code null} if not known
 	 */
-	protected Long getContentLength(T t, MediaType contentType) {
+	protected Long getContentLength(T t, MediaType contentType) throws IOException {
 		return null;
 	}
 

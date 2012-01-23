@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package org.springframework.http.client;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
@@ -29,7 +31,7 @@ import org.springframework.util.Assert;
  */
 public class InterceptingClientHttpRequestFactory extends AbstractClientHttpRequestFactoryWrapper {
 
-	private final ClientHttpRequestInterceptor[] interceptors;
+	private final List<ClientHttpRequestInterceptor> interceptors;
 
 	/**
 	 * Creates a new instance of the {@code InterceptingClientHttpRequestFactory} with the given parameters.
@@ -38,10 +40,10 @@ public class InterceptingClientHttpRequestFactory extends AbstractClientHttpRequ
 	 * @param interceptors the interceptors that are to be applied. Can be {@code null}.
 	 */
 	public InterceptingClientHttpRequestFactory(ClientHttpRequestFactory requestFactory,
-			ClientHttpRequestInterceptor[] interceptors) {
+			List<ClientHttpRequestInterceptor> interceptors) {
 		super(requestFactory);
 		Assert.notNull(requestFactory, "'requestFactory' must not be null");
-		this.interceptors = interceptors != null ? interceptors : new ClientHttpRequestInterceptor[0];
+		this.interceptors = interceptors != null ? interceptors : Collections.<ClientHttpRequestInterceptor>emptyList();
 	}
 
 	@Override

@@ -35,6 +35,8 @@ import java.net.URL;
  * @see #getURL()
  * @see #getURI()
  * @see #getFile()
+ * @see WritableResource
+ * @See ContextResource
  * @see FileSystemResource
  * @see ClassPathResource
  * @see UrlResource
@@ -59,6 +61,7 @@ public interface Resource extends InputStreamSource {
 	 * note that actual content reading may still fail when attempted.
 	 * However, a value of <code>false</code> is a definitive indication
 	 * that the resource content cannot be read.
+	 * @see #getInputStream()
 	 */
 	boolean isReadable();
 

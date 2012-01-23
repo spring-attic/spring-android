@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ public abstract class AbstractClientHttpRequestFactoryWrapper implements ClientH
 
 	/**
 	 * Creates a {@code AbstractClientHttpRequestFactoryWrapper} wrapping the given request factory.
-	 *
 	 * @param requestFactory the request factory to be wrapped
 	 */
 	protected AbstractClientHttpRequestFactoryWrapper(ClientHttpRequestFactory requestFactory) {
@@ -42,29 +41,26 @@ public abstract class AbstractClientHttpRequestFactoryWrapper implements ClientH
 		this.requestFactory = requestFactory;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>This implementation simply calls {@link #createRequest(URI, HttpMethod, ClientHttpRequestFactory)} with the
-	 * wrapped request factory provided to the {@linkplain #AbstractClientHttpRequestFactoryWrapper(ClientHttpRequestFactory)
-	 * constructor}.
-	 */
+    /**
+     * This implementation simply calls {@link #createRequest(URI, HttpMethod, ClientHttpRequestFactory)}
+     * with the wrapped request factory provided to the
+     * {@linkplain #AbstractClientHttpRequestFactoryWrapper(ClientHttpRequestFactory) constructor}.
+     */
 	public final ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
 		return createRequest(uri, httpMethod, requestFactory);
 	}
 
-	/**
-	 * Create a new {@link ClientHttpRequest} for the specified URI and HTTP method by using the passed on request factory.
-	 * <p>Called from {@link #createRequest(URI, HttpMethod)}.
-	 *
-	 * @param uri the URI to create a request for
-	 * @param httpMethod the HTTP method to execute
-	 * @param requestFactory the wrapped request factory
-	 * @return the created request
-	 * @throws IOException in case of I/O errors
-	 */
-	protected abstract ClientHttpRequest createRequest(URI uri,
-													   HttpMethod httpMethod,
-													   ClientHttpRequestFactory requestFactory) throws IOException;
+    /**
+     * Create a new {@link ClientHttpRequest} for the specified URI and HTTP method by using the
+     * passed-on request factory.
+     * <p>Called from {@link #createRequest(URI, HttpMethod)}.
+     * @param uri the URI to create a request for
+     * @param httpMethod the HTTP method to execute
+     * @param requestFactory the wrapped request factory
+     * @return the created request
+     * @throws IOException in case of I/O errors
+     */
+    protected abstract ClientHttpRequest createRequest(
+            URI uri, HttpMethod httpMethod, ClientHttpRequestFactory requestFactory) throws IOException;
 
 }

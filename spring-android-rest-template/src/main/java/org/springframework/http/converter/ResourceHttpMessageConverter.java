@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,8 @@ public class ResourceHttpMessageConverter extends AbstractHttpMessageConverter<R
 	public ResourceHttpMessageConverter() {
 		super(MediaType.ALL);
 	}
+	
+	
 	@Override
 	protected boolean supports(Class<?> clazz) {
 		return Resource.class.isAssignableFrom(clazz);
@@ -48,6 +50,7 @@ public class ResourceHttpMessageConverter extends AbstractHttpMessageConverter<R
 	@Override
 	protected Resource readInternal(Class<? extends Resource> clazz, HttpInputMessage inputMessage)
 			throws IOException, HttpMessageNotReadableException {
+	    
 		byte[] body = FileCopyUtils.copyToByteArray(inputMessage.getBody());
 		return new ByteArrayResource(body);
 	}
@@ -58,18 +61,14 @@ public class ResourceHttpMessageConverter extends AbstractHttpMessageConverter<R
 	}
 
 	@Override
-	protected Long getContentLength(Resource resource, MediaType contentType) {
-		try {
-			return resource.contentLength();
-		}
-		catch (IOException e) {
-			return null;
-		}
+	protected Long getContentLength(Resource resource, MediaType contentType) throws IOException {
+		return resource.contentLength();
 	}
 
 	@Override
 	protected void writeInternal(Resource resource, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException {
+	    
 		FileCopyUtils.copy(resource.getInputStream(), outputMessage.getBody());
 		outputMessage.getBody().flush();
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
@@ -47,17 +48,20 @@ final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpR
 
     private final HttpUriRequest httpRequest;
 
-    public HttpComponentsClientHttpRequest(HttpClient httpClient, HttpUriRequest httpRequest) {
+    private final HttpContext httpContext;
+
+    public HttpComponentsClientHttpRequest(HttpClient httpClient, HttpUriRequest httpRequest, HttpContext httpContext) {
         this.httpClient = httpClient;
         this.httpRequest = httpRequest;
+        this.httpContext = httpContext;
     }
 
     public HttpMethod getMethod() {
-        return HttpMethod.valueOf(httpRequest.getMethod());
+        return HttpMethod.valueOf(this.httpRequest.getMethod());
     }
     
 	public URI getURI() {
-		return httpRequest.getURI();
+		return this.httpRequest.getURI();
 	}
 
     @Override
@@ -67,16 +71,16 @@ final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpR
             if (!headerName.equalsIgnoreCase(HTTP.CONTENT_LEN) && 
             		!headerName.equalsIgnoreCase(HTTP.TRANSFER_ENCODING)) {
                 for (String headerValue : entry.getValue()) {
-                    httpRequest.addHeader(headerName, headerValue);
+                    this.httpRequest.addHeader(headerName, headerValue);
                 }
             }
         }
-        if (httpRequest instanceof HttpEntityEnclosingRequest) {
-            HttpEntityEnclosingRequest entityEnclosingReq = (HttpEntityEnclosingRequest) httpRequest;
+        if (this.httpRequest instanceof HttpEntityEnclosingRequest) {
+            HttpEntityEnclosingRequest entityEnclosingReq = (HttpEntityEnclosingRequest) this.httpRequest;
             HttpEntity requestEntity = new ByteArrayEntity(bufferedOutput);
             entityEnclosingReq.setEntity(requestEntity);
         }
-        HttpResponse httpResponse = httpClient.execute(httpRequest);
+        HttpResponse httpResponse = httpClient.execute(this.httpRequest, this.httpContext);
         return new HttpComponentsClientHttpResponse(httpResponse);
     }
 
