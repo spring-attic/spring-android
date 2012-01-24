@@ -58,8 +58,10 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 	private static final String ACCEPT = "Accept";
 
 	private static final String ACCEPT_CHARSET = "Accept-Charset";
-	
+
 	private static final String ACCEPT_ENCODING = "Accept-Encoding";
+
+	private static final String ACCEPT_LANGUAGE = "Accept-Language";
 
 	private static final String ALLOW = "Allow";
 
@@ -215,6 +217,22 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 	public List<ContentCodingType> getAcceptEncoding() {
 		String value = getFirst(ACCEPT_ENCODING);
 		return (value != null ? ContentCodingType.parseCodingTypes(value) : Collections.<ContentCodingType>emptyList());
+	}
+
+	/**
+	 * Set the accept language, as specified by the {@code Accept-Language} header.
+	 * @param acceptLanguage the accept language
+	 */
+	public void setAcceptLanguage(String acceptLanguage) {
+		set(ACCEPT_LANGUAGE, acceptLanguage);
+	}
+
+	/**
+	 * Return the accept language, as specified by the {@code Accept-Language} header.
+	 * @return the accept language
+	 */
+	public String getAcceptLanguage() {
+		return getFirst(ACCEPT_LANGUAGE);
 	}
 
 	/**
