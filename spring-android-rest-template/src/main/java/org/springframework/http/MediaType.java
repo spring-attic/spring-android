@@ -191,7 +191,7 @@ public class MediaType implements Comparable<MediaType> {
 		APPLICATION_WILDCARD_XML = new MediaType("application", "*+xml");
 		IMAGE_GIF = new MediaType("image", "gif");
 		IMAGE_JPEG = new MediaType("image", "jpeg");
-		IMAGE_PNG = new MediaType("image", "jpeg");
+		IMAGE_PNG = new MediaType("image", "png");
 		MULTIPART_FORM_DATA = new MediaType("multipart", "form-data");
 		TEXT_HTML = new MediaType("text", "html");
 		TEXT_PLAIN = new MediaType("text", "plain");
