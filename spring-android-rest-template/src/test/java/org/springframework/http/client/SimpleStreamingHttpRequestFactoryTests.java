@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,59 @@
 
 package org.springframework.http.client;
 
-import static org.junit.Assert.assertEquals;
-
+import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.Collections;
 import java.util.Random;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 
-public class StreamingSimpleHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
+import static org.junit.Assert.assertEquals;
+
+public class SimpleStreamingHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
 
 	@Override
 	protected ClientHttpRequestFactory createRequestFactory() {
 		SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
 		factory.setBufferRequestBody(false);
 		return factory;
+	}
+
+	// SPR-8809
+	@Test
+	public void interceptor() throws Exception {
+		final String headerName = "MyHeader";
+		final String headerValue = "MyValue";
+		ClientHttpRequestInterceptor interceptor = new ClientHttpRequestInterceptor() {
+			public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+					throws IOException {
+				request.getHeaders().add(headerName, headerValue);
+				return execution.execute(request, body);
+			}
+		};
+		InterceptingClientHttpRequestFactory factory = new InterceptingClientHttpRequestFactory(createRequestFactory(),
+				Collections.singletonList(interceptor));
+
+		ClientHttpResponse response = null;
+		try {
+			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.GET);
+			response = request.execute();
+			assertEquals("Invalid response status", HttpStatus.OK, response.getStatusCode());
+			HttpHeaders responseHeaders = response.getHeaders();
+			assertEquals("Custom header invalid", headerValue, responseHeaders.getFirst(headerName));
+		}
+		finally {
+			if (response != null) {
+				response.close();
+			}
+		}
 	}
 
 	@Test
@@ -48,7 +83,7 @@ public class StreamingSimpleHttpRequestFactoryTests extends AbstractHttpRequestF
 			final int contentLength = ITERATIONS * BUF_SIZE;
 //			request.getHeaders().setContentLength(contentLength);
 			OutputStream body = request.getBody();
-			for (int i=0; i < ITERATIONS; i++) {
+			for (int i = 0; i < ITERATIONS; i++) {
 				byte[] buffer = new byte[BUF_SIZE];
 				rnd.nextBytes(buffer);
 				body.write(buffer);

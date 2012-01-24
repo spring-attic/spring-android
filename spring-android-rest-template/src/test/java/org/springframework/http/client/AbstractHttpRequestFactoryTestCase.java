@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,12 @@
 
 package org.springframework.http.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
-
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -35,6 +30,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.FileCopyUtils;
+
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -42,9 +41,9 @@ import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.FileCopyUtils;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractHttpRequestFactoryTestCase {
 
@@ -69,7 +68,6 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 		jettyContext.addServlet(new ServletHolder(new MethodServlet("OPTIONS")), "/methods/options");
 		jettyContext.addServlet(new ServletHolder(new PostServlet()), "/methods/post");
 		jettyContext.addServlet(new ServletHolder(new MethodServlet("PUT")), "/methods/put");
-		jettyContext.addServlet(new ServletHolder(new RedirectServlet("/status/ok")), "/redirect");
 		jettyServer.start();
 	}
 
@@ -110,12 +108,17 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 		request.getHeaders().setContentLength(body.length);
 		FileCopyUtils.copy(body, request.getBody());
 		ClientHttpResponse response = request.execute();
-		assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
-		assertTrue("Header not found", response.getHeaders().containsKey(headerName));
-		assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2),
-				response.getHeaders().get(headerName));
-		byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
-		assertTrue("Invalid body", Arrays.equals(body, result));
+		try {
+			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
+			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2),
+					response.getHeaders().get(headerName));
+			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
+			assertTrue("Invalid body", Arrays.equals(body, result));
+		}
+		finally {
+			response.close();
+		}
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -126,7 +129,8 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 		ClientHttpResponse response = request.execute();
 		try {
 			FileCopyUtils.copy(body, request.getBody());
-		} finally {
+		}
+		finally {
 			response.close();
 		}
 	}
@@ -140,7 +144,8 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 		ClientHttpResponse response = request.execute();
 		try {
 			request.getHeaders().add("MyHeader", "value");
-		} finally {
+		}
+		finally {
 			response.close();
 		}
 	}
@@ -162,45 +167,19 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 			response = request.execute();
 			assertEquals("Invalid response status", HttpStatus.OK, response.getStatusCode());
 			assertEquals("Invalid method", path.toUpperCase(Locale.ENGLISH), request.getMethod().name());
-		} finally {
+		}
+		finally {
 			if (response != null) {
 				response.close();
 			}
 		}
 	}
 
-	@Test
-	public void redirect() throws Exception {
-		ClientHttpResponse response = null;
-		try {
-			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/redirect"), HttpMethod.PUT);
-			response = request.execute();
-			// assertEquals("Invalid Location value", new URI(baseUrl + "/status/ok"),
-			// 		response.getHeaders().getLocation());
-
-		} finally {
-			if (response != null) {
-				response.close();
-				response = null;
-			}
-		}
-		try {
-			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/redirect"), HttpMethod.GET);
-			response = request.execute();
-			assertNull("Invalid Location value", response.getHeaders().getLocation());
-
-		} finally {
-			if (response != null) {
-				response.close();
-			}
-		}
-	}
-
-	/** Servlet that sets a given status code. */
+	/**
+	 * Servlet that sets a given status code.
+	 */
 	private static class StatusServlet extends GenericServlet {
 
-		private static final long serialVersionUID = 1L;
-		
 		private final int sc;
 
 		private StatusServlet(int sc) {
@@ -214,8 +193,6 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	}
 
 	private static class MethodServlet extends GenericServlet {
-		
-		private static final long serialVersionUID = 1L;
 
 		private final String method;
 
@@ -233,8 +210,6 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	}
 
 	private static class PostServlet extends MethodServlet {
-
-		private static final long serialVersionUID = 1L;
 
 		private PostServlet() {
 			super("POST");
@@ -258,54 +233,22 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	}
 
 	private static class EchoServlet extends HttpServlet {
-		
-		private static final long serialVersionUID = 1L;
 
-		@Override
-		protected void doPut(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			echo(request, response);
-		}
-
-		@Override
-		protected void doPost(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
-			echo(request, response);
+        @Override
+        protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			echo(req, resp);
 		}
 
 		private void echo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 			response.setStatus(HttpServletResponse.SC_OK);
-			for (Enumeration<?> e1 = request.getHeaderNames(); e1.hasMoreElements();) {
+			for (Enumeration e1 = request.getHeaderNames(); e1.hasMoreElements();) {
 				String headerName = (String) e1.nextElement();
-				for (Enumeration<?> e2 = request.getHeaders(headerName); e2.hasMoreElements();) {
+				for (Enumeration e2 = request.getHeaders(headerName); e2.hasMoreElements();) {
 					String headerValue = (String) e2.nextElement();
 					response.addHeader(headerName, headerValue);
 				}
 			}
 			FileCopyUtils.copy(request.getInputStream(), response.getOutputStream());
-		}
-	}
-
-	private static class RedirectServlet extends GenericServlet {
-		
-		private static final long serialVersionUID = 1L;
-
-		private final String location;
-
-		private RedirectServlet(String location) {
-			this.location = location;
-		}
-
-		@Override
-		public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-			HttpServletRequest request = (HttpServletRequest) req;
-			HttpServletResponse response = (HttpServletResponse) res;
-			response.setStatus(HttpServletResponse.SC_SEE_OTHER);
-			StringBuilder builder = new StringBuilder();
-			builder.append(request.getScheme()).append("://");
-			builder.append(request.getServerName()).append(':').append(request.getServerPort());
-			builder.append(location);
-			response.addHeader("Location", builder.toString());
 		}
 	}
 

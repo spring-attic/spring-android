@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@ import org.springframework.util.Assert;
  */
 public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 
+    private final HttpHeaders headers = new HttpHeaders();
+
 	private boolean executed = false;
 
-	private final HttpHeaders headers = new HttpHeaders();
-
 	public final HttpHeaders getHeaders() {
-		return executed ? HttpHeaders.readOnlyHttpHeaders(headers) : this.headers;
+		return (this.executed ? HttpHeaders.readOnlyHttpHeaders(headers) : this.headers);
 	}
 
 	public final OutputStream getBody() throws IOException {
@@ -54,14 +54,6 @@ public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 		return body;
 	}
 
-	/**
-	 * Abstract template method that returns the body.
-	 *
-	 * @param headers the HTTP headers
-	 * @return the body output stream
-	 */
-	protected abstract OutputStream getBodyInternal(HttpHeaders headers) throws IOException;
-
 	public final ClientHttpResponse execute() throws IOException {
 		checkExecuted();
 		ClientHttpResponse result = executeInternal(this.headers);
@@ -73,9 +65,15 @@ public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 		Assert.state(!this.executed, "ClientHttpRequest already executed");
 	}
 
+    /**
+     * Abstract template method that returns the body.
+     * @param headers the HTTP headers
+     * @return the body output stream
+     */
+    protected abstract OutputStream getBodyInternal(HttpHeaders headers) throws IOException;
+
 	/**
 	 * Abstract template method that writes the given headers and content to the HTTP request.
-	 *
 	 * @param headers the HTTP headers
 	 * @return the response object for the executed request
 	 */

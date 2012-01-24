@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,10 +122,6 @@ public class UriUtilsTests extends TestCase {
 				UriUtils.encodeUri(
 						"http://arjen:foobar@java.sun.com:80/javase/6/docs/api/java/util/BitSet.html?foo=bar#and(java.util.BitSet)",
 						ENC));
-		assertEquals("Invalid encoded URI", "mailto:java-net@java.sun.com",
-				UriUtils.encodeUri("mailto:java-net@java.sun.com", ENC));
-		assertEquals("Invalid encoded URI", "news:comp.lang.java", UriUtils.encodeUri("news:comp.lang.java", ENC));
-		assertEquals("Invalid encoded URI", "urn:isbn:096139210x", UriUtils.encodeUri("urn:isbn:096139210x", ENC));
 		assertEquals("Invalid encoded URI", "http://java.sun.com/j2se/1.3/",
 				UriUtils.encodeUri("http://java.sun.com/j2se/1.3/", ENC));
 		assertEquals("Invalid encoded URI", "docs/guide/collections/designfaq.html#28",

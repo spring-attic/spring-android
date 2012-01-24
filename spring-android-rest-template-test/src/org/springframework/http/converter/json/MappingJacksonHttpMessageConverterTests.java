@@ -25,6 +25,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.codehaus.jackson.map.type.TypeFactory;
 import org.codehaus.jackson.type.JavaType;
 import org.springframework.android.test.Assert;
 import org.springframework.http.MediaType;
@@ -87,7 +88,7 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 			@Override
 			protected JavaType getJavaType(Class<?> clazz) {
 				if (List.class.isAssignableFrom(clazz)) {
-					return getTypeFactory().constructCollectionType(ArrayList.class, MyBean.class);
+				    return TypeFactory.collectionType(ArrayList.class, MyBean.class);
 				}
 				else {
 					return super.getJavaType(clazz);
@@ -177,6 +178,19 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 		assertTrue("expected HttpMessageNotReadableException", success);
 	}
 
+    @SmallTest
+    public void readValidJsonWithUnknownProperty() throws IOException {
+        boolean success = false;
+        try {
+            String body = "{\"string\":\"string\",\"unknownProperty\":\"value\"}";
+            MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
+            inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
+            converter.read(MyBean.class, inputMessage);
+        } catch (HttpMessageNotReadableException e) {
+            success = true;
+        }
+        assertTrue("expected HttpMessageNotReadableException", success);
+    }
 
 
 	public static class MyBean {

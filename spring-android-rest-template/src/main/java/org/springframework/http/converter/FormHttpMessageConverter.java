@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,6 +87,7 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 
 	private List<HttpMessageConverter<?>> partConverters = new ArrayList<HttpMessageConverter<?>>();
 
+	
 	public FormHttpMessageConverter() {
 		this.supportedMediaTypes.add(MediaType.APPLICATION_FORM_URLENCODED);
 		this.supportedMediaTypes.add(MediaType.MULTIPART_FORM_DATA);
@@ -99,20 +100,20 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 	}
 
 	/**
-	 * Add a message body converter. Such a converters is used to convert objects to MIME parts.
-	 */
-	public final void addPartConverter(HttpMessageConverter<?> partConverter) {
-		Assert.notNull(partConverter, "'partConverter' must not be NULL");
-		this.partConverters.add(partConverter);
-	}
-
-	/**
 	 * Set the message body converters to use. These converters are used to convert objects to MIME parts.
 	 */
 	public final void setPartConverters(List<HttpMessageConverter<?>> partConverters) {
 		Assert.notEmpty(partConverters, "'partConverters' must not be empty");
 		this.partConverters = partConverters;
 	}
+	
+    /**
+     * Add a message body converter. Such a converters is used to convert objects to MIME parts.
+     */
+    public final void addPartConverter(HttpMessageConverter<?> partConverter) {
+        Assert.notNull(partConverter, "'partConverter' must not be NULL");
+        this.partConverters.add(partConverter);
+    }
 
 	/**
 	 * Sets the character set used for writing form data.
@@ -161,7 +162,7 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 	}
 
 	public List<MediaType> getSupportedMediaTypes() {
-		return Collections.unmodifiableList(supportedMediaTypes);
+		return Collections.unmodifiableList(this.supportedMediaTypes);
 	}
 
 	public MultiValueMap<String, String> read(Class<? extends MultiValueMap<String, ?>> clazz,
@@ -325,8 +326,9 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 	}
 
 	/**
-	 * Generate a multipart boundary. <p>Default implementation returns a random boundary. Can be overridden in
-	 * subclasses.
+	 * Generate a multipart boundary. 
+	 * <p>Default implementation returns a random boundary. 
+	 * Can be overridden in subclasses.
 	 */
 	protected byte[] generateMultipartBoundary() {
 		byte[] boundary = new byte[rnd.nextInt(11) + 30];
@@ -337,9 +339,10 @@ public class FormHttpMessageConverter implements HttpMessageConverter<MultiValue
 	}
 
 	/**
-	 * Return the filename of the given multipart part. This value will be used for the {@code Content-Disposition} header.
-	 * <p>Default implementation returns {@link Resource#getFilename()} if the part is a {@code Resource}, and {@code null}
-	 * in other cases. Can be overridden in subclasses.
+	 * Return the filename of the given multipart part. This value will be used for the 
+	 * {@code Content-Disposition} header.
+	 * <p>Default implementation returns {@link Resource#getFilename()} if the part is a 
+	 * {@code Resource}, and {@code null} in other cases. Can be overridden in subclasses.
 	 *
 	 * @param part the part to determine the file name for
 	 * @return the filename, or {@code null} if not known

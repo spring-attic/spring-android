@@ -16,30 +16,29 @@
 
 package org.springframework.http.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.support.HttpRequestWrapper;
 
-/**
- * @author Arjen Poutsma
- */
-public class InterceptingClientHttpRequestFactoryTest {
+import static org.junit.Assert.*;
+
+/** @author Arjen Poutsma */
+public class InterceptingClientHttpRequestFactoryTests {
 
 	private InterceptingClientHttpRequestFactory requestFactory;
 
@@ -60,39 +59,39 @@ public class InterceptingClientHttpRequestFactoryTest {
 
 	@Test
 	public void basic() throws Exception {
-		NoOpInterceptor interceptor1 = new NoOpInterceptor();
-		NoOpInterceptor interceptor2 = new NoOpInterceptor();
-		NoOpInterceptor interceptor3 = new NoOpInterceptor();
-		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock,
-				new ClientHttpRequestInterceptor[]{interceptor1, interceptor2, interceptor3});
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+		interceptors.add(new NoOpInterceptor());
+		interceptors.add(new NoOpInterceptor());
+		interceptors.add(new NoOpInterceptor());
+		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock, interceptors);
 
 		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
 		ClientHttpResponse response = request.execute();
 
-		assertTrue(interceptor1.invoked);
-		assertTrue(interceptor2.invoked);
-		assertTrue(interceptor3.invoked);
+		assertTrue(((NoOpInterceptor) interceptors.get(0)).invoked);
+		assertTrue(((NoOpInterceptor) interceptors.get(1)).invoked);
+		assertTrue(((NoOpInterceptor) interceptors.get(2)).invoked);
 		assertTrue(requestMock.executed);
 		assertSame(responseMock, response);
 	}
 
 	@Test
 	public void noExecution() throws Exception {
-		ClientHttpRequestInterceptor interceptor1 = new ClientHttpRequestInterceptor() {
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
+		interceptors.add(new ClientHttpRequestInterceptor() {
 			public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
 					throws IOException {
 				return responseMock;
 			}
-		};
+		});
 
-		NoOpInterceptor interceptor2 = new NoOpInterceptor();
-		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock,
-				new ClientHttpRequestInterceptor[]{interceptor1, interceptor2});
+		interceptors.add(new NoOpInterceptor());
+		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock, interceptors);
 
 		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
 		ClientHttpResponse response = request.execute();
 
-		assertFalse(interceptor2.invoked);
+		assertFalse(((NoOpInterceptor) interceptors.get(1)).invoked);
 		assertFalse(requestMock.executed);
 		assertSame(responseMock, response);
 	}
@@ -124,8 +123,8 @@ public class InterceptingClientHttpRequestFactoryTest {
 			}
 		};
 
-		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock,
-				new ClientHttpRequestInterceptor[]{interceptor});
+		requestFactory =
+				new InterceptingClientHttpRequestFactory(requestFactoryMock, Collections.singletonList(interceptor));
 
 		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
 		request.execute();
@@ -156,8 +155,8 @@ public class InterceptingClientHttpRequestFactoryTest {
 			}
 		};
 
-		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock,
-				new ClientHttpRequestInterceptor[]{interceptor});
+		requestFactory =
+				new InterceptingClientHttpRequestFactory(requestFactoryMock, Collections.singletonList(interceptor));
 
 		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
 		request.execute();
@@ -188,8 +187,8 @@ public class InterceptingClientHttpRequestFactoryTest {
 			}
 		};
 
-		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock,
-				new ClientHttpRequestInterceptor[]{interceptor});
+		requestFactory =
+				new InterceptingClientHttpRequestFactory(requestFactoryMock, Collections.singletonList(interceptor));
 
 		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
 		request.execute();
@@ -206,8 +205,8 @@ public class InterceptingClientHttpRequestFactoryTest {
 			}
 		};
 
-		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock,
-				new ClientHttpRequestInterceptor[]{interceptor});
+		requestFactory =
+				new InterceptingClientHttpRequestFactory(requestFactoryMock, Collections.singletonList(interceptor));
 
 		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
 		request.execute();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,17 +46,17 @@ final class HttpComponentsClientHttpResponse extends AbstractClientHttpResponse 
     }
 
     public HttpStatus getStatusCode() throws IOException {
-        return HttpStatus.valueOf(httpResponse.getStatusLine().getStatusCode());
+        return HttpStatus.valueOf(this.httpResponse.getStatusLine().getStatusCode());
     }
 
     public String getStatusText() throws IOException {
-        return httpResponse.getStatusLine().getReasonPhrase();
+        return this.httpResponse.getStatusLine().getReasonPhrase();
     }
 
     public HttpHeaders getHeaders() {
-        if (headers == null) {
-            headers = new HttpHeaders();
-            for (Header header : httpResponse.getAllHeaders()) {
+        if (this.headers == null) {
+            this.headers = new HttpHeaders();
+            for (Header header : this.httpResponse.getAllHeaders()) {
                 headers.add(header.getName(), header.getValue());
             }
         }
@@ -64,12 +64,12 @@ final class HttpComponentsClientHttpResponse extends AbstractClientHttpResponse 
     }
 
     public InputStream getBodyInternal() throws IOException {
-        HttpEntity entity = httpResponse.getEntity();
+        HttpEntity entity = this.httpResponse.getEntity();
         return entity != null ? entity.getContent() : null;
     }
 
     public void close() {
-        HttpEntity entity = httpResponse.getEntity();
+        HttpEntity entity = this.httpResponse.getEntity();
         if (entity != null) {
             try {
                 // This will cause the underlying connection

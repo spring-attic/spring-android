@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2010 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package org.springframework.web.client;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -31,6 +32,7 @@ import android.util.Log;
  * into a type <code>T</code>.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @see RestTemplate
  * @since 1.0
  */
@@ -55,9 +57,15 @@ public class HttpMessageConverterExtractor<T> implements ResponseExtractor<T> {
 
 	@SuppressWarnings("unchecked")
 	public T extractData(ClientHttpResponse response) throws IOException {
+        if (!hasMessageBody(response)) {
+            return null;
+        }	    
 		MediaType contentType = response.getHeaders().getContentType();
 		if (contentType == null) {
-			throw new RestClientException("Cannot extract response: no Content-Type found");
+		    if (Log.isLoggable(TAG, Log.DEBUG)) {
+		        Log.d(TAG, "No Content-Type header found, defaulting to application/octet-stream");
+		    }
+            contentType = MediaType.APPLICATION_OCTET_STREAM;
 		}
 		for (HttpMessageConverter messageConverter : messageConverters) {
 			if (messageConverter.canRead(responseType, contentType)) {
@@ -72,5 +80,23 @@ public class HttpMessageConverterExtractor<T> implements ResponseExtractor<T> {
 				"Could not extract response: no suitable HttpMessageConverter found for response type [" +
 						this.responseType.getName() + "] and content type [" + contentType + "]");
 	}
+
+    /**
+     * Indicates whether the given response has a message body.
+     * <p>Default implementation returns {@code false} for a response status of {@code 204} or {@code 304}, or a
+     * {@code Content-Length} of {@code 0}.
+     *
+     * @param response the response to check for a message body
+     * @return {@code true} if the response has a body, {@code false} otherwise
+     * @throws IOException in case of I/O errors
+     */
+    protected boolean hasMessageBody(ClientHttpResponse response) throws IOException {
+        HttpStatus responseStatus = response.getStatusCode();
+        if (responseStatus == HttpStatus.NO_CONTENT || responseStatus == HttpStatus.NOT_MODIFIED) {
+            return false;
+        }
+        long contentLength = response.getHeaders().getContentLength();
+        return contentLength != 0;
+    }
 
 }

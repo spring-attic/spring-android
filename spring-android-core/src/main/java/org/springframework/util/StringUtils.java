@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,8 @@ import java.util.TreeSet;
  * @author Rob Harrop
  * @author Rick Evans
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 16 April 2001
+ * @see org.apache.commons.lang.StringUtils
  */
 public abstract class StringUtils {
 
@@ -664,16 +665,11 @@ public abstract class StringUtils {
 	 * @return a corresponding <code>Locale</code> instance
 	 */
 	public static Locale parseLocaleString(String localeString) {
-		for (int i = 0; i < localeString.length(); i++) {
-			char ch = localeString.charAt(i);
-			if (ch != '_' && ch != ' ' && !Character.isLetterOrDigit(ch)) {
-				throw new IllegalArgumentException(
-						"Locale value \"" + localeString + "\" contains invalid characters");
-			}
-		}
 		String[] parts = tokenizeToStringArray(localeString, "_ ", false, false);
 		String language = (parts.length > 0 ? parts[0] : "");
 		String country = (parts.length > 1 ? parts[1] : "");
+		validateLocalePart(language);
+		validateLocalePart(country);
 		String variant = "";
 		if (parts.length >= 2) {
 			// There is definitely a variant, and it is everything after the country
@@ -686,6 +682,16 @@ public abstract class StringUtils {
 			}
 		}
 		return (language.length() > 0 ? new Locale(language, country, variant) : null);
+	}
+
+	private static void validateLocalePart(String localePart) {
+		for (int i = 0; i < localePart.length(); i++) {
+			char ch = localePart.charAt(i);
+			if (ch != '_' && ch != ' ' && !Character.isLetterOrDigit(ch)) {
+				throw new IllegalArgumentException(
+						"Locale part \"" + localePart + "\" contains invalid characters");
+			}
+		}
 	}
 
 	/**

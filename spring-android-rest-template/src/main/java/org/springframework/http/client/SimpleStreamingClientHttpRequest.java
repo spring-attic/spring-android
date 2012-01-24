@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,10 @@ import org.springframework.http.HttpMethod;
  * Created via the {@link SimpleClientHttpRequestFactory}.
  *
  * @author Arjen Poutsma
- * @since 1.0
+ * @since 3.0
  * @see SimpleClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  */
-public class StreamingSimpleClientHttpRequest extends AbstractClientHttpRequest {
+final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 
 	private final HttpURLConnection connection;
 
@@ -44,7 +44,8 @@ public class StreamingSimpleClientHttpRequest extends AbstractClientHttpRequest 
 
 	private OutputStream body;
 
-	StreamingSimpleClientHttpRequest(HttpURLConnection connection, int chunkSize) {
+
+	SimpleStreamingClientHttpRequest(HttpURLConnection connection, int chunkSize) {
 		this.connection = connection;
 		this.chunkSize = chunkSize;
 	}
@@ -64,38 +65,47 @@ public class StreamingSimpleClientHttpRequest extends AbstractClientHttpRequest 
 
 	@Override
 	protected OutputStream getBodyInternal(HttpHeaders headers) throws IOException {
-		if (body == null) {
+		if (this.body == null) {
 			int contentLength = (int) headers.getContentLength();
 			if (contentLength >= 0) {
 				this.connection.setFixedLengthStreamingMode(contentLength);
 			}
 			else {
-				this.connection.setChunkedStreamingMode(chunkSize);
+				this.connection.setChunkedStreamingMode(this.chunkSize);
 			}
-			for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-				String headerName = entry.getKey();
-				for (String headerValue : entry.getValue()) {
-					this.connection.addRequestProperty(headerName, headerValue);
-				}
-			}
-			this.connection.connect();
+            writeHeaders(headers);
+            this.connection.connect();
 			this.body = this.connection.getOutputStream();
 		}
-		return new NonClosingOutputStream(body);
+		return new NonClosingOutputStream(this.body);
 	}
 
-	@Override
+    private void writeHeaders(HttpHeaders headers) {
+        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+            String headerName = entry.getKey();
+            for (String headerValue : entry.getValue()) {
+                this.connection.addRequestProperty(headerName, headerValue);
+            }
+        }
+    }
+
+    @Override
 	protected ClientHttpResponse executeInternal(HttpHeaders headers) throws IOException {
-		try {
-			if (body != null) {
-				body.close();
-			}
-		}
-		catch (IOException ex) {
-			// ignore
-		}
-		return new SimpleClientHttpResponse(this.connection);
-	}
+        try {
+            if (this.body != null) {
+                this.body.close();
+            }
+            else {
+                writeHeaders(headers);
+                this.connection.connect();
+            }
+        }
+        catch (IOException ex) {
+            // ignore
+        }
+        return new SimpleClientHttpResponse(this.connection);
+    }
+
 
 	private static class NonClosingOutputStream extends FilterOutputStream {
 
@@ -107,6 +117,5 @@ public class StreamingSimpleClientHttpRequest extends AbstractClientHttpRequest 
 		public void close() throws IOException {
 		}
 	}
-
 
 }
