@@ -55,29 +55,59 @@ public class MediaType implements Comparable<MediaType> {
 	public static final MediaType ALL;
 
 	/**
+     * A String equivalent of {@link MediaType#ALL}.
+     */
+    public static final String ALL_VALUE = "*/*";
+
+	/**
 	 *  Public constant media type for {@code application/atom+xml}.
 	 */
 	public final static MediaType APPLICATION_ATOM_XML;
+
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_ATOM_XML}.
+     */
+    public final static String APPLICATION_ATOM_XML_VALUE = "application/atom+xml";
 
 	/**
 	 *  Public constant media type for {@code application/rss+xml}.
 	 */
 	public final static MediaType APPLICATION_RSS_XML;
 
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_RSS_XML}.
+     */
+    public final static String APPLICATION_RSS_XML_VALUE = "application/rss+xml";
+
 	/**
 	 * Public constant media type for {@code application/x-www-form-urlencoded}.
 	 *  */
 	public final static MediaType APPLICATION_FORM_URLENCODED;
+
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_FORM_URLENCODED}.
+     */
+    public final static String APPLICATION_FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
 
 	/**
 	 * Public constant media type for {@code application/json}.
 	 * */
 	public final static MediaType APPLICATION_JSON;
 
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_JSON}.
+     */
+    public final static String APPLICATION_JSON_VALUE = "application/json";
+
 	/**
 	 * Public constant media type for {@code application/octet-stream}.
 	 *  */
 	public final static MediaType APPLICATION_OCTET_STREAM;
+
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_OCTET_STREAM}.
+     */
+    public final static String APPLICATION_OCTET_STREAM_VALUE = "application/octet-stream";
 
 	/**
 	 * Public constant media type for {@code application/xhtml+xml}.
@@ -85,49 +115,99 @@ public class MediaType implements Comparable<MediaType> {
 	public final static MediaType APPLICATION_XHTML_XML;
 
     /**
+     * A String equivalent of {@link MediaType#APPLICATION_XHTML_XML}.
+     */
+    public final static String APPLICATION_XHTML_XML_VALUE = "application/xhtml+xml";
+
+    /**
      * Public constant media type for {@code application/xml}.
      */
     public final static MediaType APPLICATION_XML;
+
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_XML}.
+     */
+    public final static String APPLICATION_XML_VALUE = "application/xml";
 
     /**
      * Public constant media type for {@code application/*+xml}.
      */
     public final static MediaType APPLICATION_WILDCARD_XML;
 
+    /**
+     * A String equivalent of {@link MediaType#APPLICATION_WILDCARD_XML}.
+     */
+    public final static String APPLICATION_WILDCARD_XML_VALUE = "application/*+xml";
+
 	/**
 	 * Public constant media type for {@code image/gif}.
 	 */
 	public final static MediaType IMAGE_GIF;
+
+    /**
+     * A String equivalent of {@link MediaType#IMAGE_GIF}.
+     */
+    public final static String IMAGE_GIF_VALUE = "image/gif";
 
 	/**
 	 * Public constant media type for {@code image/jpeg}.
 	 */
 	public final static MediaType IMAGE_JPEG;
 
+    /**
+     * A String equivalent of {@link MediaType#IMAGE_JPEG}.
+     */
+    public final static String IMAGE_JPEG_VALUE = "image/jpeg";
+
 	/**
 	 * Public constant media type for {@code image/png}.
 	 */
 	public final static MediaType IMAGE_PNG;
+
+    /**
+     * A String equivalent of {@link MediaType#IMAGE_PNG}.
+     */
+    public final static String IMAGE_PNG_VALUE = "image/png";
 
 	/**
 	 * Public constant media type for {@code multipart/form-data}.
 	 */
 	public final static MediaType MULTIPART_FORM_DATA;
 
+    /**
+     * A String equivalent of {@link MediaType#MULTIPART_FORM_DATA}.
+     */
+    public final static String MULTIPART_FORM_DATA_VALUE = "multipart/form-data";
+
 	/**
 	 * Public constant media type for {@code text/html}.
 	 */
 	public final static MediaType TEXT_HTML;
+
+    /**
+     * A String equivalent of {@link MediaType#TEXT_HTML}.
+     */
+    public final static String TEXT_HTML_VALUE = "text/html";
 
 	/**
 	 * Public constant media type for {@code text/plain}.
 	 */
 	public final static MediaType TEXT_PLAIN;
 
+    /**
+     * A String equivalent of {@link MediaType#TEXT_PLAIN}.
+     */
+    public final static String TEXT_PLAIN_VALUE = "text/plain";
+
 	/**
 	 * Public constant media type for {@code text/xml}.
 	 */
 	public final static MediaType TEXT_XML;
+
+    /**
+     * A String equivalent of {@link MediaType#TEXT_XML}.
+     */
+    public final static String TEXT_XML_VALUE = "text/xml";
 
 
 	private static final BitSet TOKEN;
@@ -180,22 +260,22 @@ public class MediaType implements Comparable<MediaType> {
 		TOKEN.andNot(ctl);
 		TOKEN.andNot(separators);
 
-		ALL = new MediaType("*", "*");
-		APPLICATION_ATOM_XML = new MediaType("application", "atom+xml");
-		APPLICATION_RSS_XML = new MediaType("application", "rss+xml");
-		APPLICATION_FORM_URLENCODED = new MediaType("application", "x-www-form-urlencoded");
-		APPLICATION_JSON = new MediaType("application", "json");
-		APPLICATION_OCTET_STREAM = new MediaType("application", "octet-stream");
-		APPLICATION_XHTML_XML = new MediaType("application", "xhtml+xml");
-		APPLICATION_XML = new MediaType("application", "xml");
-		APPLICATION_WILDCARD_XML = new MediaType("application", "*+xml");
-		IMAGE_GIF = new MediaType("image", "gif");
-		IMAGE_JPEG = new MediaType("image", "jpeg");
-		IMAGE_PNG = new MediaType("image", "png");
-		MULTIPART_FORM_DATA = new MediaType("multipart", "form-data");
-		TEXT_HTML = new MediaType("text", "html");
-		TEXT_PLAIN = new MediaType("text", "plain");
-		TEXT_XML = new MediaType("text", "xml");
+		ALL = MediaType.valueOf(ALL_VALUE);
+		APPLICATION_ATOM_XML = MediaType.valueOf(APPLICATION_ATOM_XML_VALUE);
+		APPLICATION_RSS_XML = MediaType.valueOf(APPLICATION_RSS_XML_VALUE);
+		APPLICATION_FORM_URLENCODED = MediaType.valueOf(APPLICATION_FORM_URLENCODED_VALUE);
+		APPLICATION_JSON = MediaType.valueOf(APPLICATION_JSON_VALUE);
+		APPLICATION_OCTET_STREAM = MediaType.valueOf(APPLICATION_OCTET_STREAM_VALUE);
+		APPLICATION_XHTML_XML = MediaType.valueOf(APPLICATION_XHTML_XML_VALUE);
+		APPLICATION_XML = MediaType.valueOf(APPLICATION_XML_VALUE);
+		APPLICATION_WILDCARD_XML = MediaType.valueOf(APPLICATION_WILDCARD_XML_VALUE);
+		IMAGE_GIF = MediaType.valueOf(IMAGE_GIF_VALUE);
+		IMAGE_JPEG = MediaType.valueOf(IMAGE_JPEG_VALUE);
+		IMAGE_PNG = MediaType.valueOf(IMAGE_PNG_VALUE);
+		MULTIPART_FORM_DATA = MediaType.valueOf(MULTIPART_FORM_DATA_VALUE);
+		TEXT_HTML = MediaType.valueOf(TEXT_HTML_VALUE);
+		TEXT_PLAIN = MediaType.valueOf(TEXT_PLAIN_VALUE);
+		TEXT_XML = MediaType.valueOf(TEXT_XML_VALUE);
 	}
 
 
@@ -587,6 +667,9 @@ public class MediaType implements Comparable<MediaType> {
 		}
 		String type = fullType.substring(0, subIndex);
 		String subtype = fullType.substring(subIndex + 1, fullType.length());
+        if (WILDCARD_TYPE.equals(type) && !WILDCARD_TYPE.equals(subtype)) {
+            throw new IllegalArgumentException("A wildcard type is legal only in '*/*' (all media types).");
+        }
 
 		Map<String, String> parameters = null;
 		if (parts.length > 1) {
