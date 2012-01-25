@@ -260,22 +260,22 @@ public class MediaType implements Comparable<MediaType> {
 		TOKEN.andNot(ctl);
 		TOKEN.andNot(separators);
 
-		ALL = new MediaType(ALL_VALUE);
-		APPLICATION_ATOM_XML = new MediaType(APPLICATION_ATOM_XML_VALUE);
-		APPLICATION_RSS_XML = new MediaType(APPLICATION_RSS_XML_VALUE);
-		APPLICATION_FORM_URLENCODED = new MediaType(APPLICATION_FORM_URLENCODED_VALUE);
-		APPLICATION_JSON = new MediaType(APPLICATION_JSON_VALUE);
-		APPLICATION_OCTET_STREAM = new MediaType(APPLICATION_OCTET_STREAM_VALUE);
-		APPLICATION_XHTML_XML = new MediaType(APPLICATION_XHTML_XML_VALUE);
-		APPLICATION_XML = new MediaType(APPLICATION_XML_VALUE);
-		APPLICATION_WILDCARD_XML = new MediaType(APPLICATION_WILDCARD_XML_VALUE);
-		IMAGE_GIF = new MediaType(IMAGE_GIF_VALUE);
-		IMAGE_JPEG = new MediaType(IMAGE_JPEG_VALUE);
-		IMAGE_PNG = new MediaType(IMAGE_PNG_VALUE);
-		MULTIPART_FORM_DATA = new MediaType(MULTIPART_FORM_DATA_VALUE);
-		TEXT_HTML = new MediaType(TEXT_HTML_VALUE);
-		TEXT_PLAIN = new MediaType(TEXT_PLAIN_VALUE);
-		TEXT_XML = new MediaType(TEXT_XML_VALUE);
+		ALL = MediaType.valueOf(ALL_VALUE);
+		APPLICATION_ATOM_XML = MediaType.valueOf(APPLICATION_ATOM_XML_VALUE);
+		APPLICATION_RSS_XML = MediaType.valueOf(APPLICATION_RSS_XML_VALUE);
+		APPLICATION_FORM_URLENCODED = MediaType.valueOf(APPLICATION_FORM_URLENCODED_VALUE);
+		APPLICATION_JSON = MediaType.valueOf(APPLICATION_JSON_VALUE);
+		APPLICATION_OCTET_STREAM = MediaType.valueOf(APPLICATION_OCTET_STREAM_VALUE);
+		APPLICATION_XHTML_XML = MediaType.valueOf(APPLICATION_XHTML_XML_VALUE);
+		APPLICATION_XML = MediaType.valueOf(APPLICATION_XML_VALUE);
+		APPLICATION_WILDCARD_XML = MediaType.valueOf(APPLICATION_WILDCARD_XML_VALUE);
+		IMAGE_GIF = MediaType.valueOf(IMAGE_GIF_VALUE);
+		IMAGE_JPEG = MediaType.valueOf(IMAGE_JPEG_VALUE);
+		IMAGE_PNG = MediaType.valueOf(IMAGE_PNG_VALUE);
+		MULTIPART_FORM_DATA = MediaType.valueOf(MULTIPART_FORM_DATA_VALUE);
+		TEXT_HTML = MediaType.valueOf(TEXT_HTML_VALUE);
+		TEXT_PLAIN = MediaType.valueOf(TEXT_PLAIN_VALUE);
+		TEXT_XML = MediaType.valueOf(TEXT_XML_VALUE);
 	}
 
 
@@ -667,6 +667,9 @@ public class MediaType implements Comparable<MediaType> {
 		}
 		String type = fullType.substring(0, subIndex);
 		String subtype = fullType.substring(subIndex + 1, fullType.length());
+        if (WILDCARD_TYPE.equals(type) && !WILDCARD_TYPE.equals(subtype)) {
+            throw new IllegalArgumentException("A wildcard type is legal only in '*/*' (all media types).");
+        }
 
 		Map<String, String> parameters = null;
 		if (parts.length > 1) {
