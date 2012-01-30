@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Assert;
 
+import android.os.Build;
 import android.util.Log;
 
 /**
@@ -43,8 +45,17 @@ public abstract class HttpAccessor {
 	
 	private static final String TAG = HttpAccessor.class.getSimpleName();
 	
-	private ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+	private ClientHttpRequestFactory requestFactory;
 
+
+    protected HttpAccessor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            this.requestFactory = new SimpleClientHttpRequestFactory();
+        } else {
+            this.requestFactory = new HttpComponentsClientHttpRequestFactory();
+        }
+    }
+    
 
 	/**
 	 * Set the request factory that this accessor uses for obtaining {@link ClientHttpRequest HttpRequests}.
