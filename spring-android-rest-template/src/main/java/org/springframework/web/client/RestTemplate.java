@@ -51,7 +51,6 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.util.UriTemplate;
 import org.springframework.web.util.UriUtils;
 
-import android.os.Build;
 import android.util.Log;
 
 /**
@@ -123,8 +122,8 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	
 	private static final String TAG = "RestTemplate";
 
-	private static final boolean javaxXmlTransformPresent = 
-			(Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) >= 8);
+    private static final boolean javaxXmlTransformPresent = 
+            ClassUtils.isPresent("javax.xml.transform.Source", RestTemplate.class.getClassLoader());
 
 	private static final boolean simpleXmlPresent =
 			ClassUtils.isPresent("org.simpleframework.xml.Serializer", RestTemplate.class.getClassLoader());
