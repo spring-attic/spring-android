@@ -28,15 +28,20 @@ import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
+import android.os.Build;
+
 /**
  * {@link ClientHttpRequest} implementation that uses standard J2SE facilities to execute streaming requests.
  * Created via the {@link SimpleClientHttpRequestFactory}.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 1.0
  * @see SimpleClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  */
 final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
+
+    private static final Boolean olderThanFroyo = (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO);
 
 	private final HttpURLConnection connection;
 
@@ -48,6 +53,11 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 	SimpleStreamingClientHttpRequest(HttpURLConnection connection, int chunkSize) {
 		this.connection = connection;
 		this.chunkSize = chunkSize;
+
+        // Bugs with reusing connections in Android versions older than Froyo (2.2)
+        if (olderThanFroyo) {
+            System.setProperty("http.keepAlive", "false");
+        }
 	}
 
 	public HttpMethod getMethod() {
@@ -84,7 +94,10 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
         for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
             String headerName = entry.getKey();
             for (String headerValue : entry.getValue()) {
-                this.connection.addRequestProperty(headerName, headerValue);
+                // Bugs with reusing connections in Android versions older than Froyo (2.2)
+                if (!(olderThanFroyo && headerName.equals("Connection") && headerValue.equals("Keep-Alive"))) {
+                    this.connection.addRequestProperty(headerName, headerValue);
+                }
             }
         }
     }
