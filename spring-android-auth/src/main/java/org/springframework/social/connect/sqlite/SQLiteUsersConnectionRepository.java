@@ -79,9 +79,9 @@ public class SQLiteUsersConnectionRepository implements UsersConnectionRepositor
 		c.close();
 		db.close();
 
-		if (localUserIds.size() == 0) {
-			if (connectionSignUp != null) {
-				String newUserId = connectionSignUp.execute(connection);
+		if (localUserIds.size() == 0 && connectionSignUp != null) {
+		    String newUserId = connectionSignUp.execute(connection);
+		    if (newUserId != null) {
 				createConnectionRepository(newUserId).addConnection(connection);
 				return Arrays.asList(newUserId);
 			}
