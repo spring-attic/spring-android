@@ -50,7 +50,6 @@ import java.util.TreeSet;
  * @author Rick Evans
  * @author Arjen Poutsma
  * @since 16 April 2001
- * @see org.apache.commons.lang.StringUtils
  */
 public abstract class StringUtils {
 

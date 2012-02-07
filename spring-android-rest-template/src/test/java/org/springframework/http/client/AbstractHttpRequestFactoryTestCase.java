@@ -180,7 +180,9 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	 */
 	private static class StatusServlet extends GenericServlet {
 
-		private final int sc;
+        private static final long serialVersionUID = 1L;
+
+        private final int sc;
 
 		private StatusServlet(int sc) {
 			this.sc = sc;
@@ -194,7 +196,9 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	private static class MethodServlet extends GenericServlet {
 
-		private final String method;
+        private static final long serialVersionUID = 1L;
+
+        private final String method;
 
 		private MethodServlet(String method) {
 			this.method = method;
@@ -211,7 +215,9 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	private static class PostServlet extends MethodServlet {
 
-		private PostServlet() {
+        private static final long serialVersionUID = 1L;
+
+        private PostServlet() {
 			super("POST");
 		}
 
@@ -234,6 +240,8 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	private static class EchoServlet extends HttpServlet {
 
+        private static final long serialVersionUID = 1L;
+
         @Override
         protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 			echo(req, resp);
@@ -241,9 +249,9 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 		private void echo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 			response.setStatus(HttpServletResponse.SC_OK);
-			for (Enumeration e1 = request.getHeaderNames(); e1.hasMoreElements();) {
+			for (Enumeration<?> e1 = request.getHeaderNames(); e1.hasMoreElements();) {
 				String headerName = (String) e1.nextElement();
-				for (Enumeration e2 = request.getHeaders(headerName); e2.hasMoreElements();) {
+				for (Enumeration<?> e2 = request.getHeaders(headerName); e2.hasMoreElements();) {
 					String headerValue = (String) e2.nextElement();
 					response.addHeader(headerName, headerValue);
 				}
