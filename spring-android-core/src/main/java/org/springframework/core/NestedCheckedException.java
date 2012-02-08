@@ -97,7 +97,6 @@ public abstract class NestedCheckedException extends Exception {
 	 * <p>Differs from {@link #getRootCause()} in that it falls back
 	 * to the present exception if there is no root cause.
 	 * @return the most specific cause (never <code>null</code>)
-	 * @since 2.0.3
 	 */
 	public Throwable getMostSpecificCause() {
 		Throwable rootCause = getRootCause();

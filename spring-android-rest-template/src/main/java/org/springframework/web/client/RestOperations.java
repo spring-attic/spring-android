@@ -78,7 +78,6 @@ public interface RestOperations {
 	 * @param responseType the type of the return value
 	 * @param uriVariables the variables to expand the template
 	 * @return the entity
-	 * @since 3.0.2
 	 */
 	<T> ResponseEntity<T> getForEntity(String url, Class<T> responseType, Object... uriVariables) throws RestClientException;
 
@@ -90,7 +89,6 @@ public interface RestOperations {
 	 * @param responseType the type of the return value
 	 * @param uriVariables the map containing variables for the URI template
 	 * @return the converted object
-	 * @since 3.0.2
 	 */
 	<T> ResponseEntity<T> getForEntity(String url, Class<T> responseType, Map<String, ?> uriVariables) throws RestClientException;
 
@@ -100,7 +98,6 @@ public interface RestOperations {
 	 * @param url the URL
 	 * @param responseType the type of the return value
 	 * @return the converted object
-	 * @since 3.0.2
 	 */
 	<T> ResponseEntity<T> getForEntity(URI url, Class<T> responseType) throws RestClientException;
 
@@ -229,7 +226,6 @@ public interface RestOperations {
 	 * @param uriVariables the variables to expand the template
 	 * @return the converted object
 	 * @see HttpEntity
-	 * @since 3.0.2
 	 */
 	<T> ResponseEntity<T> postForEntity(String url, Object request, Class<T> responseType, Object... uriVariables)
 			throws RestClientException;
@@ -245,7 +241,6 @@ public interface RestOperations {
 	 * @param uriVariables the variables to expand the template
 	 * @return the converted object
 	 * @see HttpEntity
-	 * @since 3.0.2
 	 */
 	<T> ResponseEntity<T> postForEntity(String url, Object request, Class<T> responseType, Map<String, ?> uriVariables)
 			throws RestClientException;
@@ -259,7 +254,6 @@ public interface RestOperations {
 	 * @param request the Object to be POSTed, may be <code>null</code>
 	 * @return the converted object
 	 * @see HttpEntity
-	 * @since 3.0.2
 	 */
 	<T> ResponseEntity<T> postForEntity(URI url, Object request, Class<T> responseType) throws RestClientException;
 
@@ -363,7 +357,6 @@ public interface RestOperations {
 	 * @param responseType the type of the return value
 	 * @param uriVariables the variables to expand in the template
 	 * @return the response as entity
-	 * @since 3.0.2
 	 */
 	<T> ResponseEntity<T> exchange(String url, HttpMethod method, HttpEntity<?> requestEntity,
 			Class<T> responseType, Object... uriVariables) throws RestClientException;
@@ -378,7 +371,6 @@ public interface RestOperations {
 	 * @param responseType the type of the return value
 	 * @param uriVariables the variables to expand in the template
 	 * @return the response as entity
-	 * @since 3.0.2
 	 */
 	<T> ResponseEntity<T> exchange(String url, HttpMethod method, HttpEntity<?> requestEntity,
 			Class<T> responseType, Map<String, ?> uriVariables) throws RestClientException;
@@ -391,7 +383,6 @@ public interface RestOperations {
 	 * @param requestEntity the entity (headers and/or body) to write to the request, may be {@code null}
 	 * @param responseType the type of the return value
 	 * @return the response as entity
-	 * @since 3.0.2
 	 */
 	<T> ResponseEntity<T> exchange(URI url, HttpMethod method, HttpEntity<?> requestEntity,
 			Class<T> responseType) throws RestClientException;

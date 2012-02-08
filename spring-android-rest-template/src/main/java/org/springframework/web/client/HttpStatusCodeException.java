@@ -69,7 +69,6 @@ public abstract class HttpStatusCodeException extends RestClientException {
 	 * @param statusText	  the status text
 	 * @param responseBody	the response body content, may be {@code null}
 	 * @param responseCharset the response body charset, may be {@code null}
-	 * @since 3.0.5
 	 */
 	protected HttpStatusCodeException(HttpStatus statusCode,
 			String statusText,
@@ -98,8 +97,6 @@ public abstract class HttpStatusCodeException extends RestClientException {
 
 	/**
 	 * Returns the response body as a byte array.
-	 *
-	 * @since 3.0.5
 	 */
 	public byte[] getResponseBodyAsByteArray() {
 		return responseBody;
@@ -107,8 +104,6 @@ public abstract class HttpStatusCodeException extends RestClientException {
 
 	/**
 	 * Returns the response body as a string.
-	 *
-	 * @since 3.0.5
 	 */
 	public String getResponseBodyAsString() {
 		try {

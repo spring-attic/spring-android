@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
  * </ul>
  *
  * @author Arjen Poutsma
- * @since 3.0
+ * @since 1.0
  * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>
  */
 public abstract class UriUtils {
