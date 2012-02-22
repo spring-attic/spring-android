@@ -33,10 +33,6 @@ public abstract class AbstractClientHttpResponse implements ClientHttpResponse {
 
 	public InputStream getBody() throws IOException {
 		InputStream body = getBodyInternal();
-        if (body == null) {
-        	return null;
-        }
-        
 		List<ContentCodingType> contentCodingTypes = this.getHeaders().getContentEncoding();
 		for (ContentCodingType contentCodingType : contentCodingTypes) {
 			if (contentCodingType.equals(ContentCodingType.GZIP)) {

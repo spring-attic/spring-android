@@ -28,54 +28,53 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.FileCopyUtils;
 
 /**
- * {@link ClientHttpRequest} implementation that uses standard J2SE facilities to execute buffered requests.
- * Created via the {@link SimpleClientHttpRequestFactory}.
- *
+ * {@link ClientHttpRequest} implementation that uses standard J2SE facilities to execute buffered requests. Created via
+ * the {@link SimpleClientHttpRequestFactory}.
+ * 
  * @author Arjen Poutsma
  * @since 1.0
  * @see SimpleClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  */
 final class SimpleBufferingClientHttpRequest extends AbstractBufferingClientHttpRequest {
 
-    private final HttpURLConnection connection;
+	private final HttpURLConnection connection;
 
 
-    SimpleBufferingClientHttpRequest(HttpURLConnection connection) {
-        this.connection = connection;
-    }
+	SimpleBufferingClientHttpRequest(HttpURLConnection connection) {
+		this.connection = connection;
+	}
 
 
-    public HttpMethod getMethod() {
-        return HttpMethod.valueOf(this.connection.getRequestMethod());
-    }
+	public HttpMethod getMethod() {
+		return HttpMethod.valueOf(this.connection.getRequestMethod());
+	}
 
-    public URI getURI() {
-        try {
-            return this.connection.getURL().toURI();
-        }
-        catch (URISyntaxException ex) {
-            throw new IllegalStateException("Could not get HttpURLConnection URI: " + ex.getMessage(), ex);
-        }
-    }
+	public URI getURI() {
+		try {
+			return this.connection.getURL().toURI();
+		} catch (URISyntaxException ex) {
+			throw new IllegalStateException("Could not get HttpURLConnection URI: " + ex.getMessage(), ex);
+		}
+	}
 
-    @Override
-    protected ClientHttpResponse executeInternal(HttpHeaders headers, byte[] bufferedOutput) throws IOException {
-        for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-            String headerName = entry.getKey();
-            for (String headerValue : entry.getValue()) {
-                this.connection.addRequestProperty(headerName, headerValue);
-            }
-        }
+	@Override
+	protected ClientHttpResponse executeInternal(HttpHeaders headers, byte[] bufferedOutput) throws IOException {
+		for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+			String headerName = entry.getKey();
+			for (String headerValue : entry.getValue()) {
+				this.connection.addRequestProperty(headerName, headerValue);
+			}
+		}
 
-        if (this.connection.getDoOutput()) {
-            this.connection.setFixedLengthStreamingMode(bufferedOutput.length);
-        }
-        this.connection.connect();
-        if (this.connection.getDoOutput()) {
-            FileCopyUtils.copy(bufferedOutput, this.connection.getOutputStream());
-        }
+		if (this.connection.getDoOutput()) {
+			this.connection.setFixedLengthStreamingMode(bufferedOutput.length);
+		}
+		this.connection.connect();
+		if (this.connection.getDoOutput()) {
+			FileCopyUtils.copy(bufferedOutput, this.connection.getOutputStream());
+		}
 
-        return new SimpleClientHttpResponse(this.connection);
-    }
+		return new SimpleClientHttpResponse(this.connection);
+	}
 
 }
