@@ -45,11 +45,31 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	 *  Public constant encoding type for {@code *}.
 	 */
 	public final static ContentCodingType ALL;
+	
+    /**
+     * A String equivalent of {@link ContentCodingType#ALL}.
+     */
+    public static final String ALL_VALUE = "*";
+
+	/**
+     *  Public constant encoding type for {@code identity}.
+     */
+	public final static ContentCodingType IDENTITY;
+	
+    /**
+     * A String equivalent of {@link ContentCodingType#IDENTITY}.
+     */
+	public final static String IDENTITY_VALUE = "identity";
 
 	/**
 	 *  Public constant encoding type for {@code gzip}.
 	 */
 	public final static ContentCodingType GZIP;
+	
+    /**
+     * A String equivalent of {@link ContentCodingType#GZIP}.
+     */
+	public final static String GZIP_VALUE = "gzip";
 	
 	
 	private static final BitSet TOKEN;
@@ -97,8 +117,9 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 		TOKEN.andNot(ctl);
 		TOKEN.andNot(separators);
 		
-		ALL = new ContentCodingType("*");
-		GZIP = new ContentCodingType("gzip");
+		ALL = ContentCodingType.valueOf(ALL_VALUE);
+		IDENTITY = ContentCodingType.valueOf(IDENTITY_VALUE);
+		GZIP = ContentCodingType.valueOf(GZIP_VALUE);
 	}
 
 
