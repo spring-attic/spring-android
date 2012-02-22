@@ -665,6 +665,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		}
 
 		@Override
+		@SuppressWarnings("deprecation")
 		protected URI encodeUri(String uri) {
 			try {
 				String encoded = UriUtils.encodeHttpUrl(uri, "UTF-8");
