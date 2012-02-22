@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
+
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -30,22 +31,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import junit.framework.TestCase;
+
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.Context;
+import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
+import android.test.suitebuilder.annotation.MediumTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-public abstract class AbstractHttpRequestFactoryTestCase {
+public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
 	protected ClientHttpRequestFactory factory;
 
@@ -53,40 +50,51 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	private static Server jettyServer;
 
-	@BeforeClass
-	public static void startJettyServer() throws Exception {
-		int port = FreePortScanner.getFreePort();
-		jettyServer = new Server(port);
-		baseUrl = "http://localhost:" + port;
-		Context jettyContext = new Context(jettyServer, "/");
-		jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/echo");
-		jettyContext.addServlet(new ServletHolder(new StatusServlet(200)), "/status/ok");
-		jettyContext.addServlet(new ServletHolder(new StatusServlet(404)), "/status/notfound");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("DELETE")), "/methods/delete");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("GET")), "/methods/get");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("HEAD")), "/methods/head");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("OPTIONS")), "/methods/options");
-		jettyContext.addServlet(new ServletHolder(new PostServlet()), "/methods/post");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("PUT")), "/methods/put");
-		jettyServer.start();
+	@Override
+	protected void setUp() throws Exception {
+		setUpJetty();
+		this.factory = createRequestFactory();
+		super.setUp();
 	}
 
-	@Before
-	public final void createFactory() {
-		factory = createRequestFactory();
+	@Override
+	protected void tearDown() throws Exception {
+		this.factory = null;
+		super.tearDown();
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		if (jettyServer != null) {
+			jettyServer.stop();
+		}
+		super.finalize();
+	}
+
+	private void setUpJetty() throws Exception {
+		if (jettyServer == null) {
+			int port = 8080;
+			jettyServer = new Server(port);
+			baseUrl = "http://localhost:" + port;
+			Context jettyContext = new Context(jettyServer, "/");
+			jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/echo");
+			jettyContext.addServlet(new ServletHolder(new StatusServlet(200)), "/status/ok");
+			jettyContext.addServlet(new ServletHolder(new StatusServlet(404)), "/status/notfound");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("DELETE")), "/methods/delete");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("GET")), "/methods/get");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("HEAD")), "/methods/head");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("OPTIONS")), "/methods/options");
+			jettyContext.addServlet(new ServletHolder(new PostServlet()), "/methods/post");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("PUT")), "/methods/put");
+			jettyServer.start();
+		}
 	}
 
 	protected abstract ClientHttpRequestFactory createRequestFactory();
 
-	@AfterClass
-	public static void stopJettyServer() throws Exception {
-		if (jettyServer != null) {
-			jettyServer.stop();
-		}
-	}
 
-	@Test
-	public void status() throws Exception {
+	@MediumTest
+	public void testStatus() throws Exception {
 		URI uri = new URI(baseUrl + "/status/notfound");
 		ClientHttpRequest request = factory.createRequest(uri, HttpMethod.GET);
 		assertEquals("Invalid HTTP method", HttpMethod.GET, request.getMethod());
@@ -95,8 +103,8 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 		assertEquals("Invalid status code", HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
 
-	@Test
-	public void echo() throws Exception {
+	@MediumTest
+	public void testEcho() throws Exception {
 		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.PUT);
 		assertEquals("Invalid HTTP method", HttpMethod.PUT, request.getMethod());
 		String headerName = "MyHeader";
@@ -109,49 +117,58 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 		FileCopyUtils.copy(body, request.getBody());
 		ClientHttpResponse response = request.execute();
 		try {
+			assertNotNull(response.getStatusText());
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
-			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2),
-					response.getHeaders().get(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders().get(headerName));
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
-		}
-		finally {
+		} finally {
 			response.close();
 		}
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void multipleWrites() throws Exception {
-		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
-		byte[] body = "Hello World".getBytes("UTF-8");
-		FileCopyUtils.copy(body, request.getBody());
-		ClientHttpResponse response = request.execute();
+	@MediumTest
+	public void testMultipleWrites() throws Exception {
+		boolean success = false;
 		try {
+			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
+			byte[] body = "Hello World".getBytes("UTF-8");
 			FileCopyUtils.copy(body, request.getBody());
+			ClientHttpResponse response = request.execute();
+			try {
+				FileCopyUtils.copy(body, request.getBody());
+			} finally {
+				response.close();
+			}
+		} catch (IllegalStateException e) {
+			success = true;
 		}
-		finally {
-			response.close();
-		}
+		assertTrue("Expected IllegalStateException", success);
 	}
 
-	@Test(expected = UnsupportedOperationException.class)
-	public void headersAfterExecute() throws Exception {
-		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
-		request.getHeaders().add("MyHeader", "value");
-		byte[] body = "Hello World".getBytes("UTF-8");
-		FileCopyUtils.copy(body, request.getBody());
-		ClientHttpResponse response = request.execute();
+	@MediumTest
+	public void testHeadersAfterExecute() throws Exception {
+		boolean success = false;
 		try {
+			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
 			request.getHeaders().add("MyHeader", "value");
+			byte[] body = "Hello World".getBytes("UTF-8");
+			FileCopyUtils.copy(body, request.getBody());
+			ClientHttpResponse response = request.execute();
+			try {
+				request.getHeaders().add("MyHeader", "value");
+			} finally {
+				response.close();
+			}
+		} catch (UnsupportedOperationException e) {
+			success = true;
 		}
-		finally {
-			response.close();
-		}
+		assertTrue("Expected UnsupportedOperationException", success);
 	}
 
-	@Test
-	public void httpMethods() throws Exception {
+	@MediumTest
+	public void testHttpMethods() throws Exception {
 		assertHttpMethod("get", HttpMethod.GET);
 		assertHttpMethod("head", HttpMethod.HEAD);
 		assertHttpMethod("post", HttpMethod.POST);
@@ -167,8 +184,7 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 			response = request.execute();
 			assertEquals("Invalid response status", HttpStatus.OK, response.getStatusCode());
 			assertEquals("Invalid method", path.toUpperCase(Locale.ENGLISH), request.getMethod().name());
-		}
-		finally {
+		} finally {
 			if (response != null) {
 				response.close();
 			}
@@ -180,9 +196,9 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 	 */
 	private static class StatusServlet extends GenericServlet {
 
-        private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-        private final int sc;
+		private final int sc;
 
 		private StatusServlet(int sc) {
 			this.sc = sc;
@@ -196,9 +212,9 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	private static class MethodServlet extends GenericServlet {
 
-        private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-        private final String method;
+		private final String method;
 
 		private MethodServlet(String method) {
 			this.method = method;
@@ -215,9 +231,9 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	private static class PostServlet extends MethodServlet {
 
-        private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-        private PostServlet() {
+		private PostServlet() {
 			super("POST");
 		}
 
@@ -240,10 +256,10 @@ public abstract class AbstractHttpRequestFactoryTestCase {
 
 	private static class EchoServlet extends HttpServlet {
 
-        private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-        @Override
-        protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		@Override
+		protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 			echo(req, resp);
 		}
 

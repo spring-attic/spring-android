@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,19 @@
 
 package org.springframework.http.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.net.URI;
 import java.util.Arrays;
 
-import org.junit.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
 
-public class BufferingClientHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
+import android.test.suitebuilder.annotation.MediumTest;
 
-	@Override
-	protected ClientHttpRequestFactory createRequestFactory() {
-		return new BufferingClientHttpRequestFactory(new HttpComponentsClientHttpRequestFactory());
-	}
+public abstract class BufferingAbstractClientHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
 
-	@Test
-	public void repeatableRead() throws Exception {
+	@MediumTest
+	public void testRepeatableRead() throws Exception {
 		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.PUT);
 		assertEquals("Invalid HTTP method", HttpMethod.PUT, request.getMethod());
 		String headerName = "MyHeader";
@@ -54,17 +47,14 @@ public class BufferingClientHttpRequestFactoryTests extends AbstractHttpRequestF
 			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
 			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
 
-			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2),
-					response.getHeaders().get(headerName));
-			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2),
-					response.getHeaders().get(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders().get(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders().get(headerName));
 
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
 			FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
-		}
-		finally {
+		} finally {
 			response.close();
 		}
 	}
