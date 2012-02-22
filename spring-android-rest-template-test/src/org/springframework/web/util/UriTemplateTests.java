@@ -34,43 +34,43 @@ import android.test.suitebuilder.annotation.SmallTest;
 public class UriTemplateTests extends TestCase {
 
 	@SmallTest
-	public void getVariableNames() throws Exception {
+	public void testGetVariableNames() throws Exception {
 		UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
 		List<String> variableNames = template.getVariableNames();
 		assertEquals("Invalid variable names", Arrays.asList("hotel", "booking"), variableNames);
 	}
 
 	@SmallTest
-	public void expandVarArgs() throws Exception {
+	public void testExpandVarArgs() throws Exception {
 		UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
 		URI result = template.expand("1", "42");
 		assertEquals("Invalid expanded template", new URI("http://example.com/hotels/1/bookings/42"), result);
 	}
 
 	@SmallTest
-	public void expandVarArgsNotEnoughVariables() throws Exception {
-	    boolean success = false;
-	    try {
-    		UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
-    		template.expand("1");
-	    } catch (IllegalArgumentException e) {
-	        success = true;
-	    }
-	    assertTrue("expected IllegalArgumentException", success);
+	public void testExpandVarArgsNotEnoughVariables() throws Exception {
+		boolean success = false;
+		try {
+			UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
+			template.expand("1");
+		} catch (IllegalArgumentException e) {
+			success = true;
+		}
+		assertTrue("expected IllegalArgumentException", success);
 	}
 
-    @SmallTest
-    public void expandMap() throws Exception {
-        Map<String, String> uriVariables = new HashMap<String, String>(2);
-        uriVariables.put("booking", "42");
-        uriVariables.put("hotel", "1");
-        UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
-        URI result = template.expand(uriVariables);
-        assertEquals("Invalid expanded template", new URI("http://example.com/hotels/1/bookings/42"), result);
-    }
+	@SmallTest
+	public void testExpandMap() throws Exception {
+		Map<String, String> uriVariables = new HashMap<String, String>(2);
+		uriVariables.put("booking", "42");
+		uriVariables.put("hotel", "1");
+		UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
+		URI result = template.expand(uriVariables);
+		assertEquals("Invalid expanded template", new URI("http://example.com/hotels/1/bookings/42"), result);
+	}
 
 	@SmallTest
-	public void expandMapDuplicateVariables() throws Exception {
+	public void testExpandMapDuplicateVariables() throws Exception {
 		UriTemplate template = new UriTemplate("/order/{c}/{c}/{c}");
 		assertEquals("Invalid variable names", Arrays.asList("c", "c", "c"), template.getVariableNames());
 		URI result = template.expand(Collections.singletonMap("c", "cheeseburger"));
@@ -78,7 +78,7 @@ public class UriTemplateTests extends TestCase {
 	}
 
 	@SmallTest
-	public void expandMapNonString() throws Exception {
+	public void testExpandMapNonString() throws Exception {
 		Map<String, Integer> uriVariables = new HashMap<String, Integer>(2);
 		uriVariables.put("booking", 42);
 		uriVariables.put("hotel", 1);
@@ -86,40 +86,40 @@ public class UriTemplateTests extends TestCase {
 		URI result = template.expand(uriVariables);
 		assertEquals("Invalid expanded template", new URI("http://example.com/hotels/1/bookings/42"), result);
 	}
-    
-    @SmallTest
-    public void expandMapEncoded() throws Exception {
-        Map<String, String> uriVariables = Collections.singletonMap("hotel", "Z\u00fcrich");
-        UriTemplate template = new UriTemplate("http://example.com/hotel list/{hotel}");
-        URI result = template.expand(uriVariables);
-        assertEquals("Invalid expanded template", new URI("http://example.com/hotel%20list/Z%C3%BCrich"), result);
-    }
 
 	@SmallTest
-	public void expandEncoded() throws Exception {
+	public void testExpandMapEncoded() throws Exception {
+		Map<String, String> uriVariables = Collections.singletonMap("hotel", "Z\u00fcrich");
+		UriTemplate template = new UriTemplate("http://example.com/hotel list/{hotel}");
+		URI result = template.expand(uriVariables);
+		assertEquals("Invalid expanded template", new URI("http://example.com/hotel%20list/Z%C3%BCrich"), result);
+	}
+
+	@SmallTest
+	public void testExpandEncoded() throws Exception {
 		UriTemplate template = new UriTemplate("http://example.com/hotel list/{hotel}");
 		URI result = template.expand("Z\u00fcrich");
 		assertEquals("Invalid expanded template", new URI("http://example.com/hotel%20list/Z%C3%BCrich"), result);
 	}
 
 	@SmallTest
-	public void matches() throws Exception {
+	public void testMatches() throws Exception {
 		UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
 		assertTrue("UriTemplate does not match", template.matches("http://example.com/hotels/1/bookings/42"));
 		assertFalse("UriTemplate matches", template.matches("http://example.com/hotels/bookings"));
 		assertFalse("UriTemplate matches", template.matches(""));
 		assertFalse("UriTemplate matches", template.matches(null));
 	}
-	
+
 	@SmallTest
-	public void matchesCustomRegex() throws Exception {
+	public void testMatchesCustomRegex() throws Exception {
 		UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel:\\d+}");
 		assertTrue("UriTemplate does not match", template.matches("http://example.com/hotels/42"));
 		assertFalse("UriTemplate matches", template.matches("http://example.com/hotels/foo"));
 	}
 
 	@SmallTest
-	public void match() throws Exception {
+	public void testMatch() throws Exception {
 		Map<String, String> expected = new HashMap<String, String>(2);
 		expected.put("booking", "42");
 		expected.put("hotel", "1");
@@ -130,7 +130,7 @@ public class UriTemplateTests extends TestCase {
 	}
 
 	@SmallTest
-	public void matchCustomRegex() throws Exception {
+	public void testMatchCustomRegex() throws Exception {
 		Map<String, String> expected = new HashMap<String, String>(2);
 		expected.put("booking", "42");
 		expected.put("hotel", "1");
@@ -141,7 +141,7 @@ public class UriTemplateTests extends TestCase {
 	}
 
 	@SmallTest
-	public void matchDuplicate() throws Exception {
+	public void testMatchDuplicate() throws Exception {
 		UriTemplate template = new UriTemplate("/order/{c}/{c}/{c}");
 		Map<String, String> result = template.match("/order/cheeseburger/cheeseburger/cheeseburger");
 		Map<String, String> expected = Collections.singletonMap("c", "cheeseburger");
@@ -149,7 +149,7 @@ public class UriTemplateTests extends TestCase {
 	}
 
 	@SmallTest
-	public void matchMultipleInOneSegment() throws Exception {
+	public void testMatchMultipleInOneSegment() throws Exception {
 		UriTemplate template = new UriTemplate("/{foo}-{bar}");
 		Map<String, String> result = template.match("/12-34");
 		Map<String, String> expected = new HashMap<String, String>(2);
@@ -159,13 +159,13 @@ public class UriTemplateTests extends TestCase {
 	}
 
 	@SmallTest
-	public void queryVariables() throws Exception {
+	public void testQueryVariables() throws Exception {
 		UriTemplate template = new UriTemplate("/search?q={query}");
 		assertTrue(template.matches("/search?q=foo"));
 	}
 
 	@SmallTest
-	public void fragments() throws Exception {
+	public void testFragments() throws Exception {
 		UriTemplate template = new UriTemplate("/search#{fragment}");
 		assertTrue(template.matches("/search#foo"));
 
@@ -174,14 +174,14 @@ public class UriTemplateTests extends TestCase {
 	}
 
 	@SmallTest
-	public void expandWithDollar() {
+	public void testExpandWithDollar() {
 		UriTemplate template = new UriTemplate("/{a}");
 		URI uri = template.expand("$replacement");
 		assertEquals("/$replacement", uri.toString());
 	}
 
 	@SmallTest
-	public void expandWithAtSign() {
+	public void testExpandWithAtSign() {
 		UriTemplate template = new UriTemplate("http://localhost/query={query}");
 		URI uri = template.expand("foo@bar");
 		assertEquals("http://localhost/query=foo@bar", uri.toString());

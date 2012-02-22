@@ -66,8 +66,8 @@ public class RssChannelHttpMessageConverterTests extends AndroidTestCase {
 
 	@MediumTest
 	public void testRead() throws IOException {
-        AssetResource resource = new AssetResource(getContext().getAssets(), "rss.xml");
-        InputStream inputStream = resource.getInputStream();
+		AssetResource resource = new AssetResource(getContext().getAssets(), "rss.xml");
+		InputStream inputStream = resource.getInputStream();
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(inputStream);
 		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", UTF_8));
 		Channel result = converter.read(Channel.class, inputMessage);

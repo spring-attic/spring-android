@@ -48,7 +48,7 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 		super.setUp();
 		converter = new MappingJacksonHttpMessageConverter();
 	}
-	
+
 	@Override
 	public void tearDown() {
 		converter = null;
@@ -68,17 +68,16 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 
 	@SmallTest
 	public void testReadTyped() throws IOException {
-		String body =
-				"{\"bytes\":\"AQI=\",\"array\":[\"Foo\",\"Bar\"],\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}";
+		String body = "{\"bytes\":\"AQI=\",\"array\":[\"Foo\",\"Bar\"],\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}";
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
 		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
 		MyBean result = (MyBean) converter.read(MyBean.class, inputMessage);
 		assertEquals("Foo", result.getString());
 		assertEquals(42, result.getNumber());
 		assertEquals(42F, result.getFraction(), 0F);
-		Assert.assertArrayEquals(new String[]{"Foo", "Bar"}, result.getArray());
+		Assert.assertArrayEquals(new String[] { "Foo", "Bar" }, result.getArray());
 		assertTrue(result.isBool());
-		Assert.assertArrayEquals(new byte[]{0x1, 0x2}, result.getBytes());
+		Assert.assertArrayEquals(new byte[] { 0x1, 0x2 }, result.getBytes());
 	}
 
 	@SmallTest
@@ -88,15 +87,13 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 			@Override
 			protected JavaType getJavaType(Class<?> clazz) {
 				if (List.class.isAssignableFrom(clazz)) {
-				    return TypeFactory.collectionType(ArrayList.class, MyBean.class);
-				}
-				else {
+					return TypeFactory.collectionType(ArrayList.class, MyBean.class);
+				} else {
 					return super.getJavaType(clazz);
 				}
 			}
 		};
-		String body =
-				"[{\"bytes\":\"AQI=\",\"array\":[\"Foo\",\"Bar\"],\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}]";
+		String body = "[{\"bytes\":\"AQI=\",\"array\":[\"Foo\",\"Bar\"],\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}]";
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
 		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
 
@@ -106,16 +103,15 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 		assertEquals("Foo", result.getString());
 		assertEquals(42, result.getNumber());
 		assertEquals(42F, result.getFraction(), 0F);
-		Assert.assertArrayEquals(new String[]{"Foo", "Bar"}, result.getArray());
+		Assert.assertArrayEquals(new String[] { "Foo", "Bar" }, result.getArray());
 		assertTrue(result.isBool());
-		Assert.assertArrayEquals(new byte[]{0x1, 0x2}, result.getBytes());
+		Assert.assertArrayEquals(new byte[] { 0x1, 0x2 }, result.getBytes());
 	}
 
 	@SmallTest
 	@SuppressWarnings("unchecked")
 	public void testReadUntyped() throws IOException {
-		String body =
-				"{\"bytes\":\"AQI=\",\"array\":[\"Foo\",\"Bar\"],\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}";
+		String body = "{\"bytes\":\"AQI=\",\"array\":[\"Foo\",\"Bar\"],\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}";
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
 		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
 		HashMap<String, Object> result = (HashMap<String, Object>) converter.read(HashMap.class, inputMessage);
@@ -137,9 +133,9 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 		body.setString("Foo");
 		body.setNumber(42);
 		body.setFraction(42F);
-		body.setArray(new String[]{"Foo", "Bar"});
+		body.setArray(new String[] { "Foo", "Bar" });
 		body.setBool(true);
-		body.setBytes(new byte[]{0x1, 0x2});
+		body.setBytes(new byte[] { 0x1, 0x2 });
 		converter.write(body, null, outputMessage);
 		Charset utf8 = Charset.forName("UTF-8");
 		String result = outputMessage.getBodyAsString(utf8);
@@ -149,8 +145,7 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 		assertTrue(result.contains("\"array\":[\"Foo\",\"Bar\"]"));
 		assertTrue(result.contains("\"bool\":true"));
 		assertTrue(result.contains("\"bytes\":\"AQI=\""));
-		assertEquals("Invalid content-type", new MediaType("application", "json", utf8),
-				outputMessage.getHeaders().getContentType());
+		assertEquals("Invalid content-type", new MediaType("application", "json", utf8), outputMessage.getHeaders().getContentType());
 	}
 
 	@SmallTest
@@ -178,19 +173,19 @@ public class MappingJacksonHttpMessageConverterTests extends TestCase {
 		assertTrue("expected HttpMessageNotReadableException", success);
 	}
 
-    @SmallTest
-    public void readValidJsonWithUnknownProperty() throws IOException {
-        boolean success = false;
-        try {
-            String body = "{\"string\":\"string\",\"unknownProperty\":\"value\"}";
-            MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
-            inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
-            converter.read(MyBean.class, inputMessage);
-        } catch (HttpMessageNotReadableException e) {
-            success = true;
-        }
-        assertTrue("expected HttpMessageNotReadableException", success);
-    }
+	@SmallTest
+	public void readValidJsonWithUnknownProperty() throws IOException {
+		boolean success = false;
+		try {
+			String body = "{\"string\":\"string\",\"unknownProperty\":\"value\"}";
+			MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
+			inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
+			converter.read(MyBean.class, inputMessage);
+		} catch (HttpMessageNotReadableException e) {
+			success = true;
+		}
+		assertTrue("expected HttpMessageNotReadableException", success);
+	}
 
 
 	public static class MyBean {

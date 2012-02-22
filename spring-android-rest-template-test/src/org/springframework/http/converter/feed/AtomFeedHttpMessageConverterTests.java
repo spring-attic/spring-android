@@ -69,8 +69,8 @@ public class AtomFeedHttpMessageConverterTests extends AndroidTestCase {
 
 	@MediumTest
 	public void testRead() throws IOException {
-        AssetResource resource = new AssetResource(getContext().getAssets(), "atom.xml");
-        InputStream inputStream = resource.getInputStream();
+		AssetResource resource = new AssetResource(getContext().getAssets(), "atom.xml");
+		InputStream inputStream = resource.getInputStream();
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(inputStream);
 		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", UTF_8));
 		Feed result = converter.read(Feed.class, inputMessage);

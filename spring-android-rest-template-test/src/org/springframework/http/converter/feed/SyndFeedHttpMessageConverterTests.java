@@ -90,7 +90,7 @@ public class SyndFeedHttpMessageConverterTests extends AndroidTestCase {
 	
 	@MediumTest
 	public void testReadAtom() throws IOException {
-	    Resource asset = new AssetResource(getContext().getAssets(), "atom.xml");
+		Resource asset = new AssetResource(getContext().getAssets(), "atom.xml");
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(asset.getInputStream());
 		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", UTF_8));
 		SyndFeed feed = converter.read(SyndFeed.class, inputMessage);

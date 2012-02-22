@@ -92,20 +92,19 @@ public class StringHttpMessageConverterTests extends TestCase {
 		assertFalse("Invalid accept-charset", outputMessage.getHeaders().getAcceptCharset().isEmpty());
 	}
 
-    @SmallTest
-    public void writeOverrideRequestedContentType() throws IOException {
-        Charset utf8 = Charset.forName("UTF-8");
-        MediaType requestedContentType = new MediaType("text", "html");
-        MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
-        MediaType contentType = new MediaType("text", "plain", utf8);
-        outputMessage.getHeaders().setContentType(contentType);
-        String body = "H\u00e9llo W\u00f6rld";
-        converter.write(body, requestedContentType, outputMessage);
-        assertEquals("Invalid result", body, outputMessage.getBodyAsString(utf8));
-        assertEquals("Invalid content-type", contentType, outputMessage.getHeaders().getContentType());
-        assertEquals("Invalid content-length", body.getBytes(utf8).length,
-                outputMessage.getHeaders().getContentLength());
-        assertFalse("Invalid accept-charset", outputMessage.getHeaders().getAcceptCharset().isEmpty());
-    }
+	@SmallTest
+	public void writeOverrideRequestedContentType() throws IOException {
+		Charset utf8 = Charset.forName("UTF-8");
+		MediaType requestedContentType = new MediaType("text", "html");
+		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
+		MediaType contentType = new MediaType("text", "plain", utf8);
+		outputMessage.getHeaders().setContentType(contentType);
+		String body = "H\u00e9llo W\u00f6rld";
+		converter.write(body, requestedContentType, outputMessage);
+		assertEquals("Invalid result", body, outputMessage.getBodyAsString(utf8));
+		assertEquals("Invalid content-type", contentType, outputMessage.getHeaders().getContentType());
+		assertEquals("Invalid content-length", body.getBytes(utf8).length, outputMessage.getHeaders().getContentLength());
+		assertFalse("Invalid accept-charset", outputMessage.getHeaders().getAcceptCharset().isEmpty());
+	}
 
 }

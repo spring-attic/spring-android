@@ -248,7 +248,7 @@ public class MediaTypeTests extends TestCase {
 	}
 
 	@SmallTest
-	public void testPparseMediaTypeQuotedParameterValue() {
+	public void testParseMediaTypeQuotedParameterValue() {
 		MediaType.parseMediaType("audio/*;attr=\"v>alue\"");
 	}
 
@@ -264,7 +264,7 @@ public class MediaTypeTests extends TestCase {
 	}
 
 	@SmallTest
-	public void testPparseCharset() throws Exception {
+	public void testParseCharset() throws Exception {
 		String s = "text/html; charset=iso-8859-1";
 		MediaType mediaType = MediaType.parseMediaType(s);
 		assertEquals("Invalid type", "text", mediaType.getType());
@@ -273,7 +273,7 @@ public class MediaTypeTests extends TestCase {
 	}
 
 	@SmallTest
-	public void testPparseQuotedCharset() {
+	public void testParseQuotedCharset() {
 		String s = "application/xml;charset=\"utf-8\"";
 		MediaType mediaType = MediaType.parseMediaType(s);
 		assertEquals("Invalid type", "application", mediaType.getType());
@@ -282,7 +282,7 @@ public class MediaTypeTests extends TestCase {
 	}
 
 	@SmallTest
-	public void testPparseURLConnectionMediaType() throws Exception {
+	public void testParseURLConnectionMediaType() throws Exception {
 		String s = "*; q=.2";
 		MediaType mediaType = MediaType.parseMediaType(s);
 		assertEquals("Invalid type", "*", mediaType.getType());
@@ -589,52 +589,52 @@ public class MediaTypeTests extends TestCase {
 		assertFalse("text/* concrete", new MediaType("text", "*").isConcrete());
 	}
 
-    @SmallTest
-    public void testConstants() {
-        MediaType mediaType = MediaType.ALL;
-        assertEquals(mediaType.toString(), MediaType.ALL_VALUE);
+	@SmallTest
+	public void testConstants() {
+		MediaType mediaType = MediaType.ALL;
+		assertEquals(mediaType.toString(), MediaType.ALL_VALUE);
 
-        mediaType = MediaType.APPLICATION_ATOM_XML;
-        assertEquals(mediaType.toString(), MediaType.APPLICATION_ATOM_XML_VALUE);
+		mediaType = MediaType.APPLICATION_ATOM_XML;
+		assertEquals(mediaType.toString(), MediaType.APPLICATION_ATOM_XML_VALUE);
 
-        mediaType = MediaType.APPLICATION_RSS_XML;
-        assertEquals(mediaType.toString(), MediaType.APPLICATION_RSS_XML_VALUE);
+		mediaType = MediaType.APPLICATION_RSS_XML;
+		assertEquals(mediaType.toString(), MediaType.APPLICATION_RSS_XML_VALUE);
 
-        mediaType = MediaType.APPLICATION_FORM_URLENCODED;
-        assertEquals(mediaType.toString(), MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+		mediaType = MediaType.APPLICATION_FORM_URLENCODED;
+		assertEquals(mediaType.toString(), MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
-        mediaType = MediaType.APPLICATION_OCTET_STREAM;
-        assertEquals(mediaType.toString(), MediaType.APPLICATION_OCTET_STREAM_VALUE);
+		mediaType = MediaType.APPLICATION_OCTET_STREAM;
+		assertEquals(mediaType.toString(), MediaType.APPLICATION_OCTET_STREAM_VALUE);
 
-        mediaType = MediaType.APPLICATION_XHTML_XML;
-        assertEquals(mediaType.toString(), MediaType.APPLICATION_XHTML_XML_VALUE);
+		mediaType = MediaType.APPLICATION_XHTML_XML;
+		assertEquals(mediaType.toString(), MediaType.APPLICATION_XHTML_XML_VALUE);
 
-        mediaType = MediaType.APPLICATION_XML;
-        assertEquals(mediaType.toString(), MediaType.APPLICATION_XML_VALUE);
+		mediaType = MediaType.APPLICATION_XML;
+		assertEquals(mediaType.toString(), MediaType.APPLICATION_XML_VALUE);
 
-        mediaType = MediaType.APPLICATION_WILDCARD_XML;
-        assertEquals(mediaType.toString(), MediaType.APPLICATION_WILDCARD_XML_VALUE);
+		mediaType = MediaType.APPLICATION_WILDCARD_XML;
+		assertEquals(mediaType.toString(), MediaType.APPLICATION_WILDCARD_XML_VALUE);
 
-        mediaType = MediaType.IMAGE_GIF;
-        assertEquals(mediaType.toString(), MediaType.IMAGE_GIF_VALUE);
+		mediaType = MediaType.IMAGE_GIF;
+		assertEquals(mediaType.toString(), MediaType.IMAGE_GIF_VALUE);
 
-        mediaType = MediaType.IMAGE_JPEG;
-        assertEquals(mediaType.toString(), MediaType.IMAGE_JPEG_VALUE);
+		mediaType = MediaType.IMAGE_JPEG;
+		assertEquals(mediaType.toString(), MediaType.IMAGE_JPEG_VALUE);
 
-        mediaType = MediaType.IMAGE_PNG;
-        assertEquals(mediaType.toString(), MediaType.IMAGE_PNG_VALUE);
+		mediaType = MediaType.IMAGE_PNG;
+		assertEquals(mediaType.toString(), MediaType.IMAGE_PNG_VALUE);
 
-        mediaType = MediaType.MULTIPART_FORM_DATA;
-        assertEquals(mediaType.toString(), MediaType.MULTIPART_FORM_DATA_VALUE);
+		mediaType = MediaType.MULTIPART_FORM_DATA;
+		assertEquals(mediaType.toString(), MediaType.MULTIPART_FORM_DATA_VALUE);
 
-        mediaType = MediaType.TEXT_HTML;
-        assertEquals(mediaType.toString(), MediaType.TEXT_HTML_VALUE);
+		mediaType = MediaType.TEXT_HTML;
+		assertEquals(mediaType.toString(), MediaType.TEXT_HTML_VALUE);
 
-        mediaType = MediaType.TEXT_PLAIN;
-        assertEquals(mediaType.toString(), MediaType.TEXT_PLAIN_VALUE);
+		mediaType = MediaType.TEXT_PLAIN;
+		assertEquals(mediaType.toString(), MediaType.TEXT_PLAIN_VALUE);
 
-        mediaType = MediaType.TEXT_XML;
-        assertEquals(mediaType.toString(), MediaType.TEXT_XML_VALUE);
-    }
+		mediaType = MediaType.TEXT_XML;
+		assertEquals(mediaType.toString(), MediaType.TEXT_XML_VALUE);
+	}
 
 }
