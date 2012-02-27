@@ -425,9 +425,18 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			resp.setStatus(HttpServletResponse.SC_OK);
 			if (containsHeader(req, "Content-Encoding", "gzip")) {
 				GZIPInputStream gzipInputStream = new GZIPInputStream(req.getInputStream());
-				byte[] decompressedBody = FileCopyUtils.copyToByteArray(gzipInputStream);
+				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+				int byteCount = 0;
+				byte[] buffer = new byte[4096];
+				int bytesRead = -1;
+				while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
+					byteArrayOutputStream.write(buffer, 0, bytesRead);
+					byteCount += bytesRead;
+				}
+				byteArrayOutputStream.flush();
 				gzipInputStream.close();
-				assertTrue("Invalid body", Arrays.equals(decompressedBody, body));
+				assertEquals("Content length does not match", body.length, byteCount);
+				assertTrue("Invalid body", Arrays.equals(byteArrayOutputStream.toByteArray(), body));
 			} else {
 				byte[] decompressedBody = FileCopyUtils.copyToByteArray(req.getInputStream());
 				assertTrue("Invalid body", Arrays.equals(decompressedBody, body));
