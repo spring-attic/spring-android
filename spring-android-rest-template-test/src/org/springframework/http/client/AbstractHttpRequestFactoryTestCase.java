@@ -23,6 +23,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.GenericServlet;
@@ -83,7 +84,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			baseUrl = "http://localhost:" + port;
 			Context jettyContext = new Context(jettyServer, "/");
 			jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/echo");
-			jettyContext.addServlet(new ServletHolder(new GzipGetServlet()), "/gzip");
+			jettyContext.addServlet(new ServletHolder(new GzipServlet()), "/gzip");
 			jettyContext.addServlet(new ServletHolder(new StatusServlet(200)), "/status/ok");
 			jettyContext.addServlet(new ServletHolder(new StatusServlet(404)), "/status/notfound");
 			jettyContext.addServlet(new ServletHolder(new MethodServlet("DELETE")), "/methods/delete");
@@ -275,6 +276,22 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			response.close();
 		}
 	}
+	
+	@MediumTest
+	public void testPostContentEncodingGzip() throws Exception {
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/gzip"), HttpMethod.POST);
+		assertEquals("Invalid HTTP method", HttpMethod.POST, request.getMethod());
+		request.getHeaders().add("Content-Encoding", "gzip");
+		byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip ".getBytes("UTF-8");
+		FileCopyUtils.copy(body, request.getBody());
+		ClientHttpResponse response = request.execute();
+		try {
+			assertNotNull(response.getStatusText());
+			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
+		} finally {
+			response.close();
+		}
+	}
 
 	private void assertHttpMethod(String path, HttpMethod method) throws Exception {
 		ClientHttpResponse response = null;
@@ -380,7 +397,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		}
 	}
 
-	private static class GzipGetServlet extends HttpServlet {
+	private static class GzipServlet extends HttpServlet {
 
 		private static final long serialVersionUID = 1L;
 
@@ -388,7 +405,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip ".getBytes("UTF-8");
 			resp.setStatus(HttpServletResponse.SC_OK);
-			if (gzipRequested(req)) {
+			if (containsHeader(req, "Accept-Encoding", "gzip")) {
 				resp.addHeader("Content-Encoding", "gzip");
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(body.length);
 				GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
@@ -401,13 +418,28 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 				resp.addHeader("Content-Length", String.valueOf(body.length));
 			}
 		}
+		
+		@Override
+		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip ".getBytes("UTF-8");
+			resp.setStatus(HttpServletResponse.SC_OK);
+			if (containsHeader(req, "Content-Encoding", "gzip")) {
+				GZIPInputStream gzipInputStream = new GZIPInputStream(req.getInputStream());
+				byte[] decompressedBody = FileCopyUtils.copyToByteArray(gzipInputStream);
+				gzipInputStream.close();
+				assertTrue("Invalid body", Arrays.equals(decompressedBody, body));
+			} else {
+				byte[] decompressedBody = FileCopyUtils.copyToByteArray(req.getInputStream());
+				assertTrue("Invalid body", Arrays.equals(decompressedBody, body));
+			}
+		}
 
-		private boolean gzipRequested(HttpServletRequest req) {
+		private boolean containsHeader(HttpServletRequest req, String name, String value) {
 			for (Enumeration<?> e1 = req.getHeaderNames(); e1.hasMoreElements();) {
 				String headerName = (String) e1.nextElement();
 				for (Enumeration<?> e2 = req.getHeaders(headerName); e2.hasMoreElements();) {
 					String headerValue = (String) e2.nextElement();
-					if (headerName.equals("Accept-Encoding") && headerValue.equals("gzip")) {
+					if (headerName.equals(name) && headerValue.equals(value)) {
 						return true;
 					}
 				}
