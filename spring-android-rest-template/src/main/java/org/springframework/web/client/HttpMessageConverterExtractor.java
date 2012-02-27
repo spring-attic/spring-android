@@ -57,15 +57,15 @@ public class HttpMessageConverterExtractor<T> implements ResponseExtractor<T> {
 
 	@SuppressWarnings("unchecked")
 	public T extractData(ClientHttpResponse response) throws IOException {
-        if (!hasMessageBody(response)) {
-            return null;
-        }	    
+		if (!hasMessageBody(response)) {
+			return null;
+		}
 		MediaType contentType = response.getHeaders().getContentType();
 		if (contentType == null) {
-		    if (Log.isLoggable(TAG, Log.DEBUG)) {
-		        Log.d(TAG, "No Content-Type header found, defaulting to application/octet-stream");
-		    }
-            contentType = MediaType.APPLICATION_OCTET_STREAM;
+			if (Log.isLoggable(TAG, Log.DEBUG)) {
+				Log.d(TAG, "No Content-Type header found, defaulting to application/octet-stream");
+			}
+			contentType = MediaType.APPLICATION_OCTET_STREAM;
 		}
 		for (HttpMessageConverter messageConverter : messageConverters) {
 			if (messageConverter.canRead(responseType, contentType)) {
@@ -81,22 +81,23 @@ public class HttpMessageConverterExtractor<T> implements ResponseExtractor<T> {
 						this.responseType.getName() + "] and content type [" + contentType + "]");
 	}
 
-    /**
-     * Indicates whether the given response has a message body.
-     * <p>Default implementation returns {@code false} for a response status of {@code 204} or {@code 304}, or a
-     * {@code Content-Length} of {@code 0}.
-     *
-     * @param response the response to check for a message body
-     * @return {@code true} if the response has a body, {@code false} otherwise
-     * @throws IOException in case of I/O errors
-     */
-    protected boolean hasMessageBody(ClientHttpResponse response) throws IOException {
-        HttpStatus responseStatus = response.getStatusCode();
-        if (responseStatus == HttpStatus.NO_CONTENT || responseStatus == HttpStatus.NOT_MODIFIED) {
-            return false;
-        }
-        long contentLength = response.getHeaders().getContentLength();
-        return contentLength != 0;
-    }
+	/**
+	 * Indicates whether the given response has a message body.
+	 * <p>
+	 * Default implementation returns {@code false} for a response status of {@code 204} or {@code 304}, or a
+	 * {@code Content-Length} of {@code 0}.
+	 * 
+	 * @param response the response to check for a message body
+	 * @return {@code true} if the response has a body, {@code false} otherwise
+	 * @throws IOException in case of I/O errors
+	 */
+	protected boolean hasMessageBody(ClientHttpResponse response) throws IOException {
+		HttpStatus responseStatus = response.getStatusCode();
+		if (responseStatus == HttpStatus.NO_CONTENT || responseStatus == HttpStatus.NOT_MODIFIED) {
+			return false;
+		}
+		long contentLength = response.getHeaders().getContentLength();
+		return contentLength != 0;
+	}
 
 }

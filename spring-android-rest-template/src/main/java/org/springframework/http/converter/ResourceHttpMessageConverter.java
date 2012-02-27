@@ -27,10 +27,11 @@ import org.springframework.util.FileCopyUtils;
 
 /**
  * Implementation of {@link HttpMessageConverter} that can read and write {@link Resource Resources}.
- *
- * <p>By default, this converter can read all media types. {@code application/octet-stream} is used
- * to determine the {@code Content-Type} of written resources.
- *
+ * 
+ * <p>
+ * By default, this converter can read all media types. {@code application/octet-stream} is used to determine the
+ * {@code Content-Type} of written resources.
+ * 
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
@@ -40,17 +41,17 @@ public class ResourceHttpMessageConverter extends AbstractHttpMessageConverter<R
 	public ResourceHttpMessageConverter() {
 		super(MediaType.ALL);
 	}
-	
-	
+
+
 	@Override
 	protected boolean supports(Class<?> clazz) {
 		return Resource.class.isAssignableFrom(clazz);
 	}
 
 	@Override
-	protected Resource readInternal(Class<? extends Resource> clazz, HttpInputMessage inputMessage)
+	protected Resource readInternal(Class<? extends Resource> clazz, HttpInputMessage inputMessage) 
 			throws IOException, HttpMessageNotReadableException {
-	    
+
 		byte[] body = FileCopyUtils.copyToByteArray(inputMessage.getBody());
 		return new ByteArrayResource(body);
 	}
@@ -66,9 +67,9 @@ public class ResourceHttpMessageConverter extends AbstractHttpMessageConverter<R
 	}
 
 	@Override
-	protected void writeInternal(Resource resource, HttpOutputMessage outputMessage)
+	protected void writeInternal(Resource resource, HttpOutputMessage outputMessage) 
 			throws IOException, HttpMessageNotWritableException {
-	    
+
 		FileCopyUtils.copy(resource.getInputStream(), outputMessage.getBody());
 		outputMessage.getBody().flush();
 	}

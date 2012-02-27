@@ -35,12 +35,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
 
 /**
- * {@link org.springframework.http.client.ClientHttpRequestFactory} implementation that uses
- * <a href="http://jakarta.apache.org/commons/httpclient">Jakarta Commons HttpClient</a> to create requests.
- *
- * <p>Allows to use a pre-configured {@link HttpClient} instance -
- * potentially with authentication, HTTP connection pooling, etc.
- *
+ * {@link org.springframework.http.client.ClientHttpRequestFactory} implementation that uses <a
+ * href="http://jakarta.apache.org/commons/httpclient">Jakarta Commons HttpClient</a> to create requests.
+ * 
+ * <p>
+ * Allows to use a pre-configured {@link HttpClient} instance - potentially with authentication, HTTP connection
+ * pooling, etc.
+ * 
  * @author Arjen Poutsma
  * @since 1.0
  * @see org.springframework.http.client.SimpleClientHttpRequestFactory
@@ -55,8 +56,8 @@ public class CommonsClientHttpRequestFactory implements ClientHttpRequestFactory
 
 
 	/**
-	 * Create a new instance of the <code>CommonsHttpRequestFactory</code> with a default
-	 * {@link HttpClient} that uses a default {@link MultiThreadedHttpConnectionManager}.
+	 * Create a new instance of the <code>CommonsHttpRequestFactory</code> with a default {@link HttpClient} that uses a
+	 * default {@link MultiThreadedHttpConnectionManager}.
 	 */
 	public CommonsClientHttpRequestFactory() {
 		this.httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
@@ -64,8 +65,7 @@ public class CommonsClientHttpRequestFactory implements ClientHttpRequestFactory
 	}
 
 	/**
-	 * Create a new instance of the <code>CommonsHttpRequestFactory</code> with the given
-	 * {@link HttpClient} instance.
+	 * Create a new instance of the <code>CommonsHttpRequestFactory</code> with the given {@link HttpClient} instance.
 	 * @param httpClient the HttpClient instance to use for this factory
 	 */
 	public CommonsClientHttpRequestFactory(HttpClient httpClient) {
@@ -88,28 +88,25 @@ public class CommonsClientHttpRequestFactory implements ClientHttpRequestFactory
 		return this.httpClient;
 	}
 
-    /**
-     * Set the connection timeout for the underlying HttpClient.
-     * A timeout value of 0 specifies an infinite timeout.
-     * @param timeout the timeout value in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setConnectionTimeout(int)
-     */
-    public void setConnectTimeout(int timeout) {
-        Assert.isTrue(timeout >= 0, "Timeout must be a non-negative value");
-        this.httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(timeout);
-    }
+	/**
+	 * Set the connection timeout for the underlying HttpClient. A timeout value of 0 specifies an infinite timeout.
+	 * @param timeout the timeout value in milliseconds
+	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setConnectionTimeout(int)
+	 */
+	public void setConnectTimeout(int timeout) {
+		Assert.isTrue(timeout >= 0, "Timeout must be a non-negative value");
+		this.httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(timeout);
+	}
 
-    /**
-     * Set the socket read timeout for the underlying HttpClient.
-     * A timeout value of 0 specifies an infinite timeout.
-     * @param timeout the timeout value in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setSoTimeout(int)
-     */
-    public void setReadTimeout(int timeout) {
-        Assert.isTrue(timeout >= 0, "Timeout must be a non-negative value");
-        getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(timeout);
-    }
-
+	/**
+	 * Set the socket read timeout for the underlying HttpClient. A timeout value of 0 specifies an infinite timeout.
+	 * @param timeout the timeout value in milliseconds
+	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setSoTimeout(int)
+	 */
+	public void setReadTimeout(int timeout) {
+		Assert.isTrue(timeout >= 0, "Timeout must be a non-negative value");
+		getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(timeout);
+	}
 
 
 	public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
@@ -119,8 +116,7 @@ public class CommonsClientHttpRequestFactory implements ClientHttpRequestFactory
 	}
 
 	/**
-	 * Create a Commons HttpMethodBase object for the given HTTP method
-	 * and URI specification.
+	 * Create a Commons HttpMethodBase object for the given HTTP method and URI specification.
 	 * @param httpMethod the HTTP method
 	 * @param uri the URI
 	 * @return the Commons HttpMethodBase object
@@ -147,17 +143,17 @@ public class CommonsClientHttpRequestFactory implements ClientHttpRequestFactory
 	}
 
 	/**
-	 * Template method that allows for manipulating the {@link org.apache.commons.httpclient.HttpMethodBase}
-	 * before it is returned as part of a {@link CommonsClientHttpRequest}.
-	 * <p>The default implementation is empty.
+	 * Template method that allows for manipulating the {@link org.apache.commons.httpclient.HttpMethodBase} before it
+	 * is returned as part of a {@link CommonsClientHttpRequest}.
+	 * <p>
+	 * The default implementation is empty.
 	 * @param httpMethod the Commons HTTP method object to process
 	 */
 	protected void postProcessCommonsHttpMethod(HttpMethodBase httpMethod) {
 	}
 
 	/**
-	 * Shutdown hook that closes the underlying {@link HttpConnectionManager}'s
-	 * connection pool, if any.
+	 * Shutdown hook that closes the underlying {@link HttpConnectionManager}'s connection pool, if any.
 	 */
 	public void destroy() {
 		HttpConnectionManager connectionManager = getHttpClient().getHttpConnectionManager();

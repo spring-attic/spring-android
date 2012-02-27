@@ -40,9 +40,9 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.io.WireFeedOu
 
 /**
  * Abstract base class for Atom and RSS Feed message converters that uses 
- * <a href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>,
+ * <a href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>, 
  * which is a repackaging of java.net's <a href="https://rome.dev.java.net/">ROME</a>.
- *
+ * 
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
@@ -56,17 +56,16 @@ public abstract class AbstractWireFeedHttpMessageConverter<T extends WireFeed> e
 
 	protected AbstractWireFeedHttpMessageConverter(MediaType supportedMediaType) {
 		super(supportedMediaType);
-		
+
 		// Workaround to get ROME working with Android 2.1 and earlier
-        if (Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) < 8) {
-        	Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-        }
+		if (Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) < 8) {
+			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected T readInternal(Class<? extends T> clazz, HttpInputMessage inputMessage)
-			throws IOException, HttpMessageNotReadableException {
+	protected T readInternal(Class<? extends T> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
 		WireFeedInput feedInput = new WireFeedInput();
 		MediaType contentType = inputMessage.getHeaders().getContentType();
 		Charset charset;
@@ -78,15 +77,13 @@ public abstract class AbstractWireFeedHttpMessageConverter<T extends WireFeed> e
 		try {
 			Reader reader = new InputStreamReader(inputMessage.getBody(), charset);
 			return (T) feedInput.build(reader);
-		}
-		catch (FeedException ex) {
+		} catch (FeedException ex) {
 			throw new HttpMessageNotReadableException("Could not read WireFeed: " + ex.getMessage(), ex);
 		}
 	}
 
 	@Override
-	protected void writeInternal(T wireFeed, HttpOutputMessage outputMessage)
-			throws IOException, HttpMessageNotWritableException {
+	protected void writeInternal(T wireFeed, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
 		String wireFeedEncoding = wireFeed.getEncoding();
 		if (!StringUtils.hasLength(wireFeedEncoding)) {
 			wireFeedEncoding = DEFAULT_CHARSET.name();
@@ -103,8 +100,7 @@ public abstract class AbstractWireFeedHttpMessageConverter<T extends WireFeed> e
 		try {
 			Writer writer = new OutputStreamWriter(outputMessage.getBody(), wireFeedEncoding);
 			feedOutput.output(wireFeed, writer);
-		}
-		catch (FeedException ex) {
+		} catch (FeedException ex) {
 			throw new HttpMessageNotWritableException("Could not write WiredFeed: " + ex.getMessage(), ex);
 		}
 	}

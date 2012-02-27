@@ -35,62 +35,62 @@ import org.springframework.util.StringUtils;
 
 /**
  * Represents a Compression Type, as defined in the HTTP specification.
- *
+ * 
  * @author Roy Clarkson
  * @since 1.0
  */
 public class ContentCodingType implements Comparable<ContentCodingType> {
-	
-	/**
-	 *  Public constant encoding type for {@code *}.
-	 */
-	public final static ContentCodingType ALL;
-	
-    /**
-     * A String equivalent of {@link ContentCodingType#ALL}.
-     */
-    public static final String ALL_VALUE = "*";
 
 	/**
-     *  Public constant encoding type for {@code identity}.
-     */
+	 * Public constant encoding type for {@code *}.
+	 */
+	public final static ContentCodingType ALL;
+
+	/**
+	 * A String equivalent of {@link ContentCodingType#ALL}.
+	 */
+	public static final String ALL_VALUE = "*";
+
+	/**
+	 * Public constant encoding type for {@code identity}.
+	 */
 	public final static ContentCodingType IDENTITY;
-	
-    /**
-     * A String equivalent of {@link ContentCodingType#IDENTITY}.
-     */
+
+	/**
+	 * A String equivalent of {@link ContentCodingType#IDENTITY}.
+	 */
 	public final static String IDENTITY_VALUE = "identity";
 
 	/**
-	 *  Public constant encoding type for {@code gzip}.
+	 * Public constant encoding type for {@code gzip}.
 	 */
 	public final static ContentCodingType GZIP;
-	
-    /**
-     * A String equivalent of {@link ContentCodingType#GZIP}.
-     */
+
+	/**
+	 * A String equivalent of {@link ContentCodingType#GZIP}.
+	 */
 	public final static String GZIP_VALUE = "gzip";
-	
-	
+
+
 	private static final BitSet TOKEN;
-	
+
 	private static final String WILDCARD_TYPE = "*";
-	
+
 	private static final String PARAM_QUALITY_FACTOR = "q";
-	
+
 	private final String type;
-	
+
 	private final Map<String, String> parameters;
 
 	static {
-		
+
 		// variable names refer to RFC 2616, section 2.2
 		BitSet ctl = new BitSet(128);
-		for (int i=0; i <= 31; i++) {
+		for (int i = 0; i <= 31; i++) {
 			ctl.set(i);
 		}
 		ctl.set(127);
-		
+
 		BitSet separators = new BitSet(128);
 		separators.set('(');
 		separators.set(')');
@@ -111,12 +111,12 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 		separators.set('}');
 		separators.set(' ');
 		separators.set('\t');
-		
+
 		TOKEN = new BitSet(128);
 		TOKEN.set(0, 128);
 		TOKEN.andNot(ctl);
 		TOKEN.andNot(separators);
-		
+
 		ALL = ContentCodingType.valueOf(ALL_VALUE);
 		IDENTITY = ContentCodingType.valueOf(IDENTITY_VALUE);
 		GZIP = ContentCodingType.valueOf(GZIP_VALUE);
@@ -128,12 +128,12 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	 * @param type the type
 	 */
 	public ContentCodingType(String type) {
-		this(type, Collections.<String, String>emptyMap());
+		this(type, Collections.<String, String> emptyMap());
 	}
-	
+
 	/**
 	 * Create a new {@code ContentCodingType} for the given type and quality value.
-	 *
+	 * 
 	 * @param type the primary type
 	 * @param qualityValue the quality value
 	 * @throws IllegalArgumentException if any of the parameters contain illegal characters
@@ -141,7 +141,7 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	public ContentCodingType(String type, double qualityValue) {
 		this(type, Collections.singletonMap(PARAM_QUALITY_FACTOR, Double.toString(qualityValue)));
 	}
-	
+
 	/**
 	 * Create a new {@code ContentCodingType} for the given type, and parameters.
 	 * @param type the primary type
@@ -161,19 +161,18 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 				m.put(attribute, unquote(value));
 			}
 			this.parameters = Collections.unmodifiableMap(m);
-		}
-		else {
+		} else {
 			this.parameters = Collections.emptyMap();
 		}
 	}
-	
+
 	/**
 	 * Checks the given token string for illegal characters, as defined in RFC 2616, section 2.2.
 	 * @throws IllegalArgumentException in case of illegal characters
 	 * @see <a href="http://tools.ietf.org/html/rfc2616#section-2.2">HTTP 1.1, section 2.2</a>
 	 */
 	private void checkToken(String s) {
-		for (int i=0; i < s.length(); i++ ) {
+		for (int i = 0; i < s.length(); i++) {
 			char ch = s.charAt(i);
 			if (!TOKEN.get(ch)) {
 				throw new IllegalArgumentException("Invalid token character '" + ch + "' in token \"" + s + "\"");
@@ -188,15 +187,14 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 		if (PARAM_QUALITY_FACTOR.equals(attribute)) {
 			value = unquote(value);
 			double d = Double.parseDouble(value);
-			Assert.isTrue(d >= 0D && d <= 1D,
-					"Invalid quality value \"" + value + "\": should be between 0.0 and 1.0");
+			Assert.isTrue(d >= 0D && d <= 1D, "Invalid quality value \"" + value + "\": should be between 0.0 and 1.0");
 		} else if (!isQuotedString(value)) {
 			checkToken(value);
 		}
 	}
 
 	private boolean isQuotedString(String s) {
-		return s.length() > 1 && s.startsWith("\"") && s.endsWith("\"") ;
+		return s.length() > 1 && s.startsWith("\"") && s.endsWith("\"");
 	}
 
 	private String unquote(String s) {
@@ -212,7 +210,7 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	public String getType() {
 		return this.type;
 	}
-	
+
 	/**
 	 * Indicates whether the {@linkplain #getType() type} is the wildcard character <code>&#42;</code> or not.
 	 */
@@ -221,8 +219,7 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	}
 
 	/**
-	 * Return the quality value, as indicated by a <code>q</code> parameter, if any.
-	 * Defaults to <code>1.0</code>.
+	 * Return the quality value, as indicated by a <code>q</code> parameter, if any. Defaults to <code>1.0</code>.
 	 * @return the quality factory
 	 */
 	public double getQualityValue() {
@@ -238,10 +235,11 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	public String getParameter(String name) {
 		return this.parameters.get(name);
 	}
-	
+
 	/**
 	 * Indicate whether this {@code ContentCodingType} includes the given coding type.
-	 * <p>For instance, {@code *} includes {@code gzip} and {@code deflate}
+	 * <p>
+	 * For instance, {@code *} includes {@code gzip} and {@code deflate}
 	 * @param other the reference coding type with which to compare
 	 * @return <code>true</code> if this coding type includes the given coding type; <code>false</code> otherwise
 	 */
@@ -257,13 +255,15 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Indicate whether this {@code ContentCodingType} is compatible with the given coding type.
-	 * <p>For instance, {@code *} is compatible with {@code gzip}, {@code deflate}, and vice versa.
-	 * In effect, this method is similar to {@link #includes(ContentCodingType)}, except that it <b>is</b> symmetric.
+	 * <p>
+	 * For instance, {@code *} is compatible with {@code gzip}, {@code deflate}, and vice versa. In effect, this method
+	 * is similar to {@link #includes(ContentCodingType)}, except that it <b>is</b> symmetric.
 	 * @param other the reference coding type with which to compare
-	 * @return <code>true</code> if this coding type is compatible with the given coding type; <code>false</code> otherwise
+	 * @return <code>true</code> if this coding type is compatible with the given coding type; <code>false</code>
+	 *         otherwise
 	 */
 	public boolean isCompatibleWith(ContentCodingType other) {
 		if (other == null) {
@@ -276,7 +276,7 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Compares this {@code ContentCodingType} to another alphabetically.
 	 * @param other content coding type to compare to
@@ -357,9 +357,8 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	}
 
 	/**
-	 * Parse the given String value into a {@code ContentCodingType} object,
-	 * with this method name following the 'valueOf' naming convention
-	 * (as supported by {@link org.springframework.core.convert.ConversionService}.
+	 * Parse the given String value into a {@code ContentCodingType} object, with this method name following the
+	 * 'valueOf' naming convention (as supported by {@link org.springframework.core.convert.ConversionService}.
 	 * @see #parseCodingType(String)
 	 */
 	public static ContentCodingType valueOf(String value) {
@@ -397,7 +396,8 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 
 	/**
 	 * Parse the given, comma-separated string into a list of {@code ContentCodingType} objects.
-	 * <p>This method can be used to parse an Accept-Encoding.
+	 * <p>
+	 * This method can be used to parse an Accept-Encoding.
 	 * @param codingTypes the string to parse
 	 * @return the list of content coding types
 	 * @throws IllegalArgumentException if the string cannot be parsed
@@ -435,14 +435,15 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 
 	/**
 	 * Sorts the given list of {@code ContentCodingType} objects by quality value.
-	 * <p>Given two content coding types:
+	 * <p>
+	 * Given two content coding types:
 	 * <ol>
-	 *   <li>if the two coding types have different {@linkplain #getQualityValue() quality value}, then the coding type
-	 *   with the highest quality value is ordered before the other.</li>
-	 *   <li>if either coding type has a {@linkplain #isWildcardType() wildcard type}, then the coding type without the
-	 *   wildcard is ordered before the other.</li>
-	 *   <li>if the two coding types have different {@linkplain #getType() types}, then they are considered equal and
-	 *   remain their current order.</li>
+	 * <li>if the two coding types have different {@linkplain #getQualityValue() quality value}, then the coding type
+	 * with the highest quality value is ordered before the other.</li>
+	 * <li>if either coding type has a {@linkplain #isWildcardType() wildcard type}, then the coding type without the
+	 * wildcard is ordered before the other.</li>
+	 * <li>if the two coding types have different {@linkplain #getType() types}, then they are considered equal and
+	 * remain their current order.</li>
 	 * </ol>
 	 * @param codingTypes the list of coding types to be sorted
 	 * @see #getQualityValue()
@@ -465,7 +466,7 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 			double quality2 = codingType2.getQualityValue();
 			int qualityComparison = Double.compare(quality2, quality1);
 			if (qualityComparison != 0) {
-				return qualityComparison;  // deflate;q=0.7 < deflate;q=0.3
+				return qualityComparison; // deflate;q=0.7 < deflate;q=0.3
 			} else if (codingType1.isWildcardType() && !codingType2.isWildcardType()) { // * < deflate
 				return 1;
 			} else if (codingType2.isWildcardType() && !codingType1.isWildcardType()) { // deflate > *

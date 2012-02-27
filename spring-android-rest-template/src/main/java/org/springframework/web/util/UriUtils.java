@@ -50,10 +50,10 @@ public abstract class UriUtils {
 	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
 	 */
 	public static String encodeUri(String uri, String encoding) throws UnsupportedEncodingException {
-        UriComponents uriComponents = UriComponentsBuilder.fromUriString(uri).build();
-        UriComponents encoded = uriComponents.encode(encoding);
-        return encoded.toUriString();
-    }
+		UriComponents uriComponents = UriComponentsBuilder.fromUriString(uri).build();
+		UriComponents encoded = uriComponents.encode(encoding);
+		return encoded.toUriString();
+	}
 
 	/**
 	 * Encodes the given HTTP URI into an encoded String. All various URI components are
@@ -67,9 +67,9 @@ public abstract class UriUtils {
 	 * @throws UnsupportedEncodingException when the given encoding parameter is not supported
 	 */
 	public static String encodeHttpUrl(String httpUrl, String encoding) throws UnsupportedEncodingException {
-        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(httpUrl).build();
-        UriComponents encoded = uriComponents.encode(encoding);
-        return encoded.toUriString();
+		UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(httpUrl).build();
+		UriComponents encoded = uriComponents.encode(encoding);
+		return encoded.toUriString();
 	}
 
 	/**
@@ -100,7 +100,7 @@ public abstract class UriUtils {
 
 		UriComponents encoded = builder.build().encode(encoding);
 
-        return encoded.toUriString();
+		return encoded.toUriString();
 	}
 
 

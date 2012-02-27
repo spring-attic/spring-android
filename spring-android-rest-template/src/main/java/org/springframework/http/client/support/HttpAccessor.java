@@ -30,32 +30,32 @@ import android.os.Build;
 import android.util.Log;
 
 /**
- * Base class for {@link org.springframework.web.client.RestTemplate}
- * and other HTTP accessing gateway helpers, defining common properties
- * such as the {@link ClientHttpRequestFactory} to operate on.
- *
- * <p>Not intended to be used directly. See {@link org.springframework.web.client.RestTemplate}.
- *
+ * Base class for {@link org.springframework.web.client.RestTemplate} and other HTTP accessing gateway helpers, defining
+ * common properties such as the {@link ClientHttpRequestFactory} to operate on.
+ * 
+ * <p>
+ * Not intended to be used directly. See {@link org.springframework.web.client.RestTemplate}.
+ * 
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
  * @see org.springframework.web.client.RestTemplate
  */
 public abstract class HttpAccessor {
-	
+
 	private static final String TAG = HttpAccessor.class.getSimpleName();
-	
+
 	private ClientHttpRequestFactory requestFactory;
 
 
-    protected HttpAccessor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            this.requestFactory = new SimpleClientHttpRequestFactory();
-        } else {
-            this.requestFactory = new HttpComponentsClientHttpRequestFactory();
-        }
-    }
-    
+	protected HttpAccessor() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			this.requestFactory = new SimpleClientHttpRequestFactory();
+		} else {
+			this.requestFactory = new HttpComponentsClientHttpRequestFactory();
+		}
+	}
+
 
 	/**
 	 * Set the request factory that this accessor uses for obtaining {@link ClientHttpRequest HttpRequests}.

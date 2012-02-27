@@ -80,18 +80,18 @@ public class DefaultResponseErrorHandler implements ResponseErrorHandler {
 				throw new RestClientException("Unknown status code [" + statusCode + "]");
 		}
 	}
-	
-    private byte[] getResponseBody(ClientHttpResponse response) {
-        try {
-            InputStream responseBody = response.getBody();
-            if (responseBody != null) {
-                return FileCopyUtils.copyToByteArray(responseBody);
-            }
-        } catch (IOException ex) {
-            // ignore
-        }
-        return new byte[0];
-    }
+
+	private byte[] getResponseBody(ClientHttpResponse response) {
+		try {
+			InputStream responseBody = response.getBody();
+			if (responseBody != null) {
+				return FileCopyUtils.copyToByteArray(responseBody);
+			}
+		} catch (IOException ex) {
+			// ignore
+		}
+		return new byte[0];
+	}
 
 }
 

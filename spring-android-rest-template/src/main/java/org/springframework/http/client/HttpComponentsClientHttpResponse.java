@@ -25,11 +25,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 /**
- * {@link org.springframework.http.client.ClientHttpResponse} implementation that uses
- * Apache HttpClient 4.0 to execute requests.
- *
- * <p>Created via the {@link HttpComponentsClientHttpRequest}.
- *
+ * {@link org.springframework.http.client.ClientHttpResponse} implementation that uses Apache HttpClient 4.0 to execute
+ * requests.
+ * 
+ * <p>
+ * Created via the {@link HttpComponentsClientHttpRequest}.
+ * 
  * @author Oleg Kalnichevski
  * @author Roy Clarkson
  * @since 1.0
@@ -37,48 +38,48 @@ import org.springframework.http.HttpStatus;
  */
 final class HttpComponentsClientHttpResponse extends AbstractClientHttpResponse {
 
-    private final HttpResponse httpResponse;
+	private final HttpResponse httpResponse;
 
-    private HttpHeaders headers;
+	private HttpHeaders headers;
 
-    HttpComponentsClientHttpResponse(HttpResponse httpResponse) {
-        this.httpResponse = httpResponse;
-    }
+	HttpComponentsClientHttpResponse(HttpResponse httpResponse) {
+		this.httpResponse = httpResponse;
+	}
 
-    public HttpStatus getStatusCode() throws IOException {
-        return HttpStatus.valueOf(this.httpResponse.getStatusLine().getStatusCode());
-    }
+	public HttpStatus getStatusCode() throws IOException {
+		return HttpStatus.valueOf(this.httpResponse.getStatusLine().getStatusCode());
+	}
 
-    public String getStatusText() throws IOException {
-        return this.httpResponse.getStatusLine().getReasonPhrase();
-    }
+	public String getStatusText() throws IOException {
+		return this.httpResponse.getStatusLine().getReasonPhrase();
+	}
 
-    public HttpHeaders getHeaders() {
-        if (this.headers == null) {
-            this.headers = new HttpHeaders();
-            for (Header header : this.httpResponse.getAllHeaders()) {
-                headers.add(header.getName(), header.getValue());
-            }
-        }
-        return headers;
-    }
+	public HttpHeaders getHeaders() {
+		if (this.headers == null) {
+			this.headers = new HttpHeaders();
+			for (Header header : this.httpResponse.getAllHeaders()) {
+				headers.add(header.getName(), header.getValue());
+			}
+		}
+		return headers;
+	}
 
-    public InputStream getBodyInternal() throws IOException {
-        HttpEntity entity = this.httpResponse.getEntity();
-        return entity != null ? entity.getContent() : null;
-    }
+	public InputStream getBodyInternal() throws IOException {
+		HttpEntity entity = this.httpResponse.getEntity();
+		return entity != null ? entity.getContent() : null;
+	}
 
-    public void close() {
-        HttpEntity entity = this.httpResponse.getEntity();
-        if (entity != null) {
-            try {
-                // This will cause the underlying connection
-                // to be released back to the connection manager
-                entity.consumeContent();
-            } catch (IOException ignore) {
-                // Connection will be released automatically
-            }
-        }
-    }
+	public void close() {
+		HttpEntity entity = this.httpResponse.getEntity();
+		if (entity != null) {
+			try {
+				// This will cause the underlying connection
+				// to be released back to the connection manager
+				entity.consumeContent();
+			} catch (IOException ignore) {
+				// Connection will be released automatically
+			}
+		}
+	}
 
 }

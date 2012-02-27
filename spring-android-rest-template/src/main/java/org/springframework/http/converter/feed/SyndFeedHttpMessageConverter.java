@@ -39,16 +39,16 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedIn
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedOutput;
 
 /**
- * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} 
- * that can read and write RSS and ATOM feeds. Specifically, this converter can 
- * handle {@link SyndFeed} objects, from the 
- * <a href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>,
- * which is a repackaging of java.net's <a href="https://rome.dev.java.net/">ROME</a>. 
- *
- * <p>By default, this converter reads and writes the media types ({@code application/rss+xml} 
- * and {@code application/atom+xml}). This can be overridden by setting the 
- * {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
- *
+ * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} that can read and write RSS and
+ * ATOM feeds. Specifically, this converter can handle {@link SyndFeed} objects, from the <a
+ * href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>, which is a repackaging of
+ * java.net's <a href="https://rome.dev.java.net/">ROME</a>.
+ * 
+ * <p>
+ * By default, this converter reads and writes the media types ({@code application/rss+xml} and
+ * {@code application/atom+xml}). This can be overridden by setting the {@link #setSupportedMediaTypes(java.util.List)
+ * supportedMediaTypes} property.
+ * 
  * @author Roy Clarkson
  * @since 1.0
  * @see SyndFeed
@@ -58,26 +58,25 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
 	/**
-	 * Constructor that sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes}
-	 * to {@code application/rss+xml} and {@code application/atom+xml}.
+	 * Constructor that sets the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} to
+	 * {@code application/rss+xml} and {@code application/atom+xml}.
 	 */
 	public SyndFeedHttpMessageConverter() {
 		super(MediaType.APPLICATION_RSS_XML, MediaType.APPLICATION_ATOM_XML);
-		
+
 		// Workaround to get ROME working with Android 2.1 and earlier
-        if (Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) < 8) {
-        	Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-        }
+		if (Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) < 8) {
+			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+		}
 	}
-	
+
 	@Override
 	protected boolean supports(Class<?> clazz) {
 		return SyndFeed.class.isAssignableFrom(clazz);
 	}
 
 	@Override
-	protected SyndFeed readInternal(Class<? extends SyndFeed> clazz, HttpInputMessage inputMessage)
-			throws IOException, HttpMessageNotReadableException {
+	protected SyndFeed readInternal(Class<? extends SyndFeed> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
 		SyndFeedInput feedInput = new SyndFeedInput();
 		MediaType contentType = inputMessage.getHeaders().getContentType();
 		Charset charset;
@@ -89,15 +88,13 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 		try {
 			Reader reader = new InputStreamReader(inputMessage.getBody(), charset);
 			return feedInput.build(reader);
-		}
-		catch (FeedException ex) {
+		} catch (FeedException ex) {
 			throw new HttpMessageNotReadableException("Could not read SyndFeed: " + ex.getMessage(), ex);
 		}
 	}
 
 	@Override
-	protected void writeInternal(SyndFeed syndFeed, HttpOutputMessage outputMessage)
-			throws IOException, HttpMessageNotWritableException {
+	protected void writeInternal(SyndFeed syndFeed, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
 		String syndFeedEncoding = syndFeed.getEncoding();
 		if (!StringUtils.hasLength(syndFeedEncoding)) {
 			syndFeedEncoding = DEFAULT_CHARSET.name();
@@ -114,8 +111,7 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 		try {
 			Writer writer = new OutputStreamWriter(outputMessage.getBody(), syndFeedEncoding);
 			feedOutput.output(syndFeed, writer);
-		}
-		catch (FeedException ex) {
+		} catch (FeedException ex) {
 			throw new HttpMessageNotWritableException("Could not write SyndFeed: " + ex.getMessage(), ex);
 		}
 	}

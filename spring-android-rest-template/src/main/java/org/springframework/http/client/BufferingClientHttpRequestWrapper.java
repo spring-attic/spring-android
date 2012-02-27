@@ -27,36 +27,37 @@ import org.springframework.util.FileCopyUtils;
 
 /**
  * Simple implementation of {@link ClientHttpRequest} that wraps another request.
- *
+ * 
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 1.0
  */
 final class BufferingClientHttpRequestWrapper extends AbstractBufferingClientHttpRequest {
 
-    private final ClientHttpRequest request;
+	private final ClientHttpRequest request;
 
 
-    BufferingClientHttpRequestWrapper(ClientHttpRequest request) {
-        Assert.notNull(request, "'request' must not be null");
-        this.request = request;
-    }
+	BufferingClientHttpRequestWrapper(ClientHttpRequest request) {
+		Assert.notNull(request, "'request' must not be null");
+		this.request = request;
+	}
 
 
-    public HttpMethod getMethod() {
-        return this.request.getMethod();
-    }
+	public HttpMethod getMethod() {
+		return this.request.getMethod();
+	}
 
-    public URI getURI() {
-        return this.request.getURI();
-    }
+	public URI getURI() {
+		return this.request.getURI();
+	}
 
-    @Override
-    protected ClientHttpResponse executeInternal(HttpHeaders headers, byte[] bufferedOutput) throws IOException {
-        OutputStream body = this.request.getBody();
-        this.request.getHeaders().putAll(headers);
-        FileCopyUtils.copy(bufferedOutput, body);
-        ClientHttpResponse response = this.request.execute();
-        return new BufferingClientHttpResponseWrapper(response);
-    }
+	@Override
+	protected ClientHttpResponse executeInternal(HttpHeaders headers, byte[] bufferedOutput) throws IOException {
+		OutputStream body = this.request.getBody();
+		this.request.getHeaders().putAll(headers);
+		FileCopyUtils.copy(bufferedOutput, body);
+		ClientHttpResponse response = this.request.execute();
+		return new BufferingClientHttpResponseWrapper(response);
+	}
 
 }

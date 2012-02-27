@@ -68,15 +68,6 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		super.tearDown();
 	}
 
-	// @Override
-	// protected void finalize() throws Throwable {
-	// if (jettyServer != null) {
-	// jettyServer.stop();
-	// jettyServer = null;
-	// }
-	// super.finalize();
-	// }
-
 	private void setUpJetty() throws Exception {
 		if (jettyServer == null) {
 			int port = 8080;

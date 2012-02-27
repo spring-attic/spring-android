@@ -31,11 +31,12 @@ import org.springframework.util.FileCopyUtils;
 
 /**
  * Implementation of {@link HttpMessageConverter} that can read and write strings.
- *
- * <p>By default, this converter supports all media types (<code>&#42;&#47;&#42;</code>), and writes with a {@code
- * Content-Type} of {@code text/plain}. This can be overridden by setting the {@link
- * #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
- *
+ * 
+ * <p>
+ * By default, this converter supports all media types (<code>&#42;&#47;&#42;</code>), and writes with a
+ * {@code Content-Type} of {@code text/plain}. This can be overridden by setting the
+ * {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
+ * 
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
@@ -55,7 +56,8 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 
 	/**
 	 * Indicates whether the {@code Accept-Charset} should be written to any outgoing request.
-	 * <p>Default is {@code true}.
+	 * <p>
+	 * Default is {@code true}.
 	 */
 	public void setWriteAcceptCharset(boolean writeAcceptCharset) {
 		this.writeAcceptCharset = writeAcceptCharset;
@@ -77,8 +79,7 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 		Charset charset = getContentTypeCharset(contentType);
 		try {
 			return (long) s.getBytes(charset.name()).length;
-		}
-		catch (UnsupportedEncodingException ex) {
+		} catch (UnsupportedEncodingException ex) {
 			// should not occur
 			throw new InternalError(ex.getMessage());
 		}
@@ -95,9 +96,10 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 
 	/**
 	 * Return the list of supported {@link Charset}.
-	 *
-	 * <p>By default, returns {@link Charset#availableCharsets()}. Can be overridden in subclasses.
-	 *
+	 * 
+	 * <p>
+	 * By default, returns {@link Charset#availableCharsets()}. Can be overridden in subclasses.
+	 * 
 	 * @return the list of accepted charsets
 	 */
 	protected List<Charset> getAcceptedCharsets() {
@@ -107,8 +109,7 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 	private Charset getContentTypeCharset(MediaType contentType) {
 		if (contentType != null && contentType.getCharSet() != null) {
 			return contentType.getCharSet();
-		}
-		else {
+		} else {
 			return DEFAULT_CHARSET;
 		}
 	}

@@ -27,14 +27,14 @@ import org.springframework.util.Assert;
 
 /**
  * Abstract base for {@link ClientHttpRequest} that makes sure that headers and body are not written multiple times.
- *
+ * 
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
  */
 public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 
-    private final HttpHeaders headers = new HttpHeaders();
+	private final HttpHeaders headers = new HttpHeaders();
 
 	private boolean executed = false;
 
@@ -65,12 +65,12 @@ public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 		Assert.state(!this.executed, "ClientHttpRequest already executed");
 	}
 
-    /**
-     * Abstract template method that returns the body.
-     * @param headers the HTTP headers
-     * @return the body output stream
-     */
-    protected abstract OutputStream getBodyInternal(HttpHeaders headers) throws IOException;
+	/**
+	 * Abstract template method that returns the body.
+	 * @param headers the HTTP headers
+	 * @return the body output stream
+	 */
+	protected abstract OutputStream getBodyInternal(HttpHeaders headers) throws IOException;
 
 	/**
 	 * Abstract template method that writes the given headers and content to the HTTP request.

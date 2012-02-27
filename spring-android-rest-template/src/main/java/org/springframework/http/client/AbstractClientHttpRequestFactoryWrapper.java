@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
 
 /**
  * Abstract base class for {@link ClientHttpRequestFactory} implementations that decorate another request factory.
- *
+ * 
  * @author Arjen Poutsma
  * @since 1.0
  */
@@ -41,26 +41,26 @@ public abstract class AbstractClientHttpRequestFactoryWrapper implements ClientH
 		this.requestFactory = requestFactory;
 	}
 
-    /**
-     * This implementation simply calls {@link #createRequest(URI, HttpMethod, ClientHttpRequestFactory)}
-     * with the wrapped request factory provided to the
-     * {@linkplain #AbstractClientHttpRequestFactoryWrapper(ClientHttpRequestFactory) constructor}.
-     */
+	/**
+	 * This implementation simply calls {@link #createRequest(URI, HttpMethod, ClientHttpRequestFactory)} with the
+	 * wrapped request factory provided to the
+	 * {@linkplain #AbstractClientHttpRequestFactoryWrapper(ClientHttpRequestFactory) constructor}.
+	 */
 	public final ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
 		return createRequest(uri, httpMethod, requestFactory);
 	}
 
-    /**
-     * Create a new {@link ClientHttpRequest} for the specified URI and HTTP method by using the
-     * passed-on request factory.
-     * <p>Called from {@link #createRequest(URI, HttpMethod)}.
-     * @param uri the URI to create a request for
-     * @param httpMethod the HTTP method to execute
-     * @param requestFactory the wrapped request factory
-     * @return the created request
-     * @throws IOException in case of I/O errors
-     */
-    protected abstract ClientHttpRequest createRequest(
-            URI uri, HttpMethod httpMethod, ClientHttpRequestFactory requestFactory) throws IOException;
+	/**
+	 * Create a new {@link ClientHttpRequest} for the specified URI and HTTP method by using the passed-on request
+	 * factory.
+	 * <p>
+	 * Called from {@link #createRequest(URI, HttpMethod)}.
+	 * @param uri the URI to create a request for
+	 * @param httpMethod the HTTP method to execute
+	 * @param requestFactory the wrapped request factory
+	 * @return the created request
+	 * @throws IOException in case of I/O errors
+	 */
+	protected abstract ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod, ClientHttpRequestFactory requestFactory) throws IOException;
 
 }

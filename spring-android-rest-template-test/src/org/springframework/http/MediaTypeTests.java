@@ -149,15 +149,15 @@ public class MediaTypeTests extends TestCase {
 		assertTrue("Expected IllegalArgumentException", success);
 	}
 
-    public void testParseMediaTypeTypeRange() {
-        boolean success = false;
-        try {
-            MediaType.parseMediaType("*/json");
-        } catch (IllegalArgumentException e) {
-            success = true;
-        }
-        assertTrue("Expected IllegalArgumentException", success);
-    }
+	public void testParseMediaTypeTypeRange() {
+		boolean success = false;
+		try {
+			MediaType.parseMediaType("*/json");
+		} catch (IllegalArgumentException e) {
+			success = true;
+		}
+		assertTrue("Expected IllegalArgumentException", success);
+	}
 
 	@SmallTest
 	public void testParseMediaTypeIllegalType() {
@@ -574,13 +574,6 @@ public class MediaTypeTests extends TestCase {
 		}
 	}
 
-//	@SmallTest
-//	public void testWithConversionService() {
-//		ConversionService conversionService = new DefaultConversionService();
-//		assertTrue(conversionService.canConvert(String.class, MediaType.class));
-//		MediaType mediaType = MediaType.parseMediaType("application/xml");
-//		assertEquals(mediaType, conversionService.convert("application/xml", MediaType.class));
-//	}
 	
 	@SmallTest
 	public void testIsConcrete() {

@@ -122,8 +122,8 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	
 	private static final String TAG = "RestTemplate";
 
-    private static final boolean javaxXmlTransformPresent = 
-            ClassUtils.isPresent("javax.xml.transform.Source", RestTemplate.class.getClassLoader());
+	private static final boolean javaxXmlTransformPresent = 
+			ClassUtils.isPresent("javax.xml.transform.Source", RestTemplate.class.getClassLoader());
 
 	private static final boolean simpleXmlPresent =
 			ClassUtils.isPresent("org.simpleframework.xml.Serializer", RestTemplate.class.getClassLoader());
