@@ -31,9 +31,9 @@ import java.util.TimeZone;
 import junit.framework.TestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-/** 
+/**
  * @author Arjen Poutsma
- * @author Roy Clarkson 
+ * @author Roy Clarkson
  */
 public class HttpHeadersTests extends TestCase {
 
@@ -72,8 +72,7 @@ public class HttpHeadersTests extends TestCase {
 	@SmallTest
 	public void testAcceptCharsetWildcard() {
 		headers.set("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-		assertEquals("Invalid Accept header", Arrays.asList(Charset.forName("ISO-8859-1"), Charset.forName("UTF-8")),
-				headers.getAcceptCharset());
+		assertEquals("Invalid Accept header", Arrays.asList(Charset.forName("ISO-8859-1"), Charset.forName("UTF-8")), headers.getAcceptCharset());
 	}
 
 	@SmallTest
@@ -127,7 +126,7 @@ public class HttpHeadersTests extends TestCase {
 		} catch (IllegalArgumentException e) {
 			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException",  success);
+		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
@@ -187,8 +186,7 @@ public class HttpHeadersTests extends TestCase {
 			headers.setDate(date);
 			assertEquals("Invalid Date header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00", headers.getFirst("date"));
 			assertEquals("Invalid Date header", date, headers.getDate());
-		}
-		finally {
+		} finally {
 			Locale.setDefault(defaultLocale);
 		}
 	}
@@ -200,8 +198,7 @@ public class HttpHeadersTests extends TestCase {
 		long date = calendar.getTimeInMillis();
 		headers.setLastModified(date);
 		assertEquals("Invalid Last-Modified header", date, headers.getLastModified());
-		assertEquals("Invalid Last-Modified header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00",
-				headers.getFirst("last-modified"));
+		assertEquals("Invalid Last-Modified header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00", headers.getFirst("last-modified"));
 	}
 
 	@SmallTest
@@ -221,8 +218,7 @@ public class HttpHeadersTests extends TestCase {
 		long date = calendar.getTimeInMillis();
 		headers.setIfModifiedSince(date);
 		assertEquals("Invalid If-Modified-Since header", date, headers.getIfNotModifiedSince());
-		assertEquals("Invalid If-Modified-Since header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00",
-				headers.getFirst("if-modified-since"));
+		assertEquals("Invalid If-Modified-Since header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00", headers.getFirst("if-modified-since"));
 	}
 
 	@SmallTest
@@ -244,12 +240,52 @@ public class HttpHeadersTests extends TestCase {
 	@SmallTest
 	public void testContentDisposition() {
 		headers.setContentDispositionFormData("name", null);
-		assertEquals("Invalid Content-Disposition header", "form-data; name=\"name\"",
-				headers.getFirst("Content-Disposition"));
+		assertEquals("Invalid Content-Disposition header", "form-data; name=\"name\"", headers.getFirst("Content-Disposition"));
 
 		headers.setContentDispositionFormData("name", "filename");
-		assertEquals("Invalid Content-Disposition header", "form-data; name=\"name\"; filename=\"filename\"",
-				headers.getFirst("Content-Disposition"));
+		assertEquals("Invalid Content-Disposition header", "form-data; name=\"name\"; filename=\"filename\"", headers.getFirst("Content-Disposition"));
+	}
+
+	@SmallTest
+	public void testAcceptEncodingList() {
+		ContentCodingType encodingType1 = new ContentCodingType("*");
+		ContentCodingType encodingType2 = new ContentCodingType("gzip", 0.7);
+		ContentCodingType encodingType3 = new ContentCodingType("identity", 0.5);
+		List<ContentCodingType> encodingTypes = new ArrayList<ContentCodingType>(3);
+		encodingTypes.add(encodingType1);
+		encodingTypes.add(encodingType2);
+		encodingTypes.add(encodingType3);
+		headers.setAcceptEncoding(encodingTypes);
+		assertEquals("Invalid Accept-Encoding header", encodingTypes, headers.getAcceptEncoding());
+		assertEquals("Invalid Accept-Encoding header", "*, gzip;q=0.7, identity;q=0.5", headers.getFirst("Accept-Encoding"));
+	}
+
+	@SmallTest
+	public void testAcceptEncodingSingle() {
+		ContentCodingType encodingType = new ContentCodingType("gzip");
+		headers.setAcceptEncoding(encodingType);
+		assertEquals("Invalid Accept-Encoding header", encodingType, headers.getAcceptEncoding().get(0));
+		assertEquals("Invalid Accept-Encoding header", "gzip", headers.getFirst("Accept-Encoding"));
+	}
+
+	@SmallTest
+	public void testContentEncodingList() {
+		ContentCodingType encodingType1 = new ContentCodingType("gzip");
+		ContentCodingType encodingType2 = new ContentCodingType("identity");
+		List<ContentCodingType> encodingTypes = new ArrayList<ContentCodingType>(2);
+		encodingTypes.add(encodingType1);
+		encodingTypes.add(encodingType2);
+		headers.setContentEncoding(encodingTypes);
+		assertEquals("Invalid Content-Encoding header", encodingTypes, headers.getContentEncoding());
+		assertEquals("Invalid Content-Encoding header", "gzip, identity", headers.getFirst("Content-Encoding"));
+	}
+
+	@SmallTest
+	public void testContentEncodingSingle() {
+		ContentCodingType encodingType = new ContentCodingType("gzip");
+		headers.setContentEncoding(encodingType);
+		assertEquals("Invalid Content-Encoding header", encodingType, headers.getContentEncoding().get(0));
+		assertEquals("Invalid Content-Encoding header", "gzip", headers.getFirst("Content-Encoding"));
 	}
 
 

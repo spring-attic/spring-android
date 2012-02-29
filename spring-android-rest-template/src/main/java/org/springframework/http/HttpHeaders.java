@@ -203,10 +203,20 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 	
 	/**
 	 * Set the list of acceptable {@linkplain ContentCodingType coding types}, as specified by the {@code Accept-Encoding} header.
+	 * @see #setAcceptEncoding(ContentCodingType)
 	 * @param acceptableEncodingTypes the acceptable content coding types
 	 */
 	public void setAcceptEncoding(List<ContentCodingType> acceptableEncodingTypes) {
 		set(ACCEPT_ENCODING, ContentCodingType.toString(acceptableEncodingTypes));
+	}
+	
+	/**
+	 * Set the acceptable {@linkplain ContentCodingType coding type}, as specified by the {@code Accept-Encoding} header.
+	 * @see #setAcceptEncoding(List)
+	 * @param acceptableEncodingType the acceptable content coding type
+	 */
+	public void setAcceptEncoding(ContentCodingType acceptableEncodingType) {
+		setAcceptEncoding(Collections.singletonList(acceptableEncodingType));
 	}
 
 	/**
@@ -313,10 +323,20 @@ public class HttpHeaders implements MultiValueMap<String, String> {
 
 	/**
 	 * Set the list of {@linkplain ContentCodingType content coding types}, as specified by the {@code Content-Encoding} header.
+	 * @see #setContentEncoding(ContentCodingType)
 	 * @param contentEncodingTypes the content coding types
 	 */
 	public void setContentEncoding(List<ContentCodingType> contentEncodingTypes) {
 		set(CONTENT_ENCODING, ContentCodingType.toString(contentEncodingTypes));
+	}
+
+	/**
+	 * Set the {@linkplain ContentCodingType content coding type}, as specified by the {@code Content-Encoding} header.
+	 * @see #setContentEncoding(List)
+	 * @param contentEncodingType the content coding type
+	 */
+	public void setContentEncoding(ContentCodingType contentEncodingType) {
+		setContentEncoding(Collections.singletonList(contentEncodingType));
 	}
 
 	/**
