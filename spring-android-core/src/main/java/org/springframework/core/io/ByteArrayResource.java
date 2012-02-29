@@ -22,14 +22,13 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 /**
- * {@link Resource} implementation for a given byte array.
- * Creates a ByteArrayInputStreams for the given byte array.
- *
- * <p>Useful for loading content from any given byte array,
- * without having to resort to a single-use {@link InputStreamResource}.
- * Particularly useful for creating mail attachments from local content,
- * where JavaMail needs to be able to read the stream multiple times.
- *
+ * {@link Resource} implementation for a given byte array. Creates a ByteArrayInputStreams for the given byte array.
+ * 
+ * <p>
+ * Useful for loading content from any given byte array, without having to resort to a single-use
+ * {@link InputStreamResource}. Particularly useful for creating mail attachments from local content, where JavaMail
+ * needs to be able to read the stream multiple times.
+ * 
  * @author Juergen Hoeller
  * @since 1.0
  * @see java.io.ByteArrayInputStream
@@ -80,17 +79,16 @@ public class ByteArrayResource extends AbstractResource {
 		return true;
 	}
 
-    /**
-     * This implementation returns the length of the underlying byte array.
-     */
-    @Override
-    public long contentLength() {
-        return this.byteArray.length;
-    }
+	/**
+	 * This implementation returns the length of the underlying byte array.
+	 */
+	@Override
+	public long contentLength() {
+		return this.byteArray.length;
+	}
 
 	/**
-	 * This implementation returns a ByteArrayInputStream for the
-	 * underlying byte array.
+	 * This implementation returns a ByteArrayInputStream for the underlying byte array.
 	 * @see java.io.ByteArrayInputStream
 	 */
 	public InputStream getInputStream() throws IOException {
@@ -111,13 +109,11 @@ public class ByteArrayResource extends AbstractResource {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return (obj == this ||
-		    (obj instanceof ByteArrayResource && Arrays.equals(((ByteArrayResource) obj).byteArray, this.byteArray)));
+		return (obj == this || (obj instanceof ByteArrayResource && Arrays.equals(((ByteArrayResource) obj).byteArray, this.byteArray)));
 	}
 
 	/**
-	 * This implementation returns the hash code based on the
-	 * underlying byte array.
+	 * This implementation returns the hash code based on the underlying byte array.
 	 */
 	@Override
 	public int hashCode() {

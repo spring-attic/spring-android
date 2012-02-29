@@ -39,49 +39,49 @@ import org.springframework.security.crypto.keygen.BytesKeyGenerator;
  */
 final class AndroidAesBytesEncryptor implements BytesEncryptor {
 
-    private final SecretKey secretKey;
+	private final SecretKey secretKey;
 
-    private final Cipher encryptor;
+	private final Cipher encryptor;
 
-    private final Cipher decryptor;
+	private final Cipher decryptor;
 
-    private final BytesKeyGenerator ivGenerator;
+	private final BytesKeyGenerator ivGenerator;
 
-    public AndroidAesBytesEncryptor(String password, CharSequence salt, BytesKeyGenerator ivGenerator) {
-    	PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray(), Hex.decode(salt), 1024, 256);
-        SecretKey secretKey = newSecretKey("PBEWITHSHA256AND256BITAES-CBC-BC", keySpec);
-        this.secretKey = new SecretKeySpec(secretKey.getEncoded(), "AES");
-        encryptor = newCipher(AES_ALGORITHM);
-        decryptor = newCipher(AES_ALGORITHM);
-        this.ivGenerator = ivGenerator;
-    }
+	public AndroidAesBytesEncryptor(String password, CharSequence salt, BytesKeyGenerator ivGenerator) {
+		PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray(), Hex.decode(salt), 1024, 256);
+		SecretKey secretKey = newSecretKey("PBEWITHSHA256AND256BITAES-CBC-BC", keySpec);
+		this.secretKey = new SecretKeySpec(secretKey.getEncoded(), "AES");
+		encryptor = newCipher(AES_ALGORITHM);
+		decryptor = newCipher(AES_ALGORITHM);
+		this.ivGenerator = ivGenerator;
+	}
 
-    public byte[] encrypt(byte[] bytes) {
-        synchronized (encryptor) {
-            byte[] iv = ivGenerator.generateKey();
-            initCipher(encryptor, Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
-            byte[] encrypted = doFinal(encryptor, bytes);
-            return concatenate(iv, encrypted);
-        }
-    }
+	public byte[] encrypt(byte[] bytes) {
+		synchronized (encryptor) {
+			byte[] iv = ivGenerator.generateKey();
+			initCipher(encryptor, Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(iv));
+			byte[] encrypted = doFinal(encryptor, bytes);
+			return concatenate(iv, encrypted);
+		}
+	}
 
-    public byte[] decrypt(byte[] encryptedBytes) {
-        synchronized (decryptor) {
-            byte[] iv = ivPart(encryptedBytes);
-            initCipher(decryptor, Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
-            return doFinal(decryptor, cipherPart(encryptedBytes, iv));
-        }
-    }
+	public byte[] decrypt(byte[] encryptedBytes) {
+		synchronized (decryptor) {
+			byte[] iv = ivPart(encryptedBytes);
+			initCipher(decryptor, Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(iv));
+			return doFinal(decryptor, cipherPart(encryptedBytes, iv));
+		}
+	}
 
-    // internal helpers
+	// internal helpers
 
-    private byte[] ivPart(byte[] encrypted) {
-        return subArray(encrypted, 0, ivGenerator.getKeyLength());
-    }
+	private byte[] ivPart(byte[] encrypted) {
+		return subArray(encrypted, 0, ivGenerator.getKeyLength());
+	}
 
-    private byte[] cipherPart(byte[] encrypted, byte[] iv) {
-        return subArray(encrypted, iv.length, encrypted.length);
-    }
+	private byte[] cipherPart(byte[] encrypted, byte[] iv) {
+		return subArray(encrypted, iv.length, encrypted.length);
+	}
 
-    private static final String AES_ALGORITHM = "AES/CBC/PKCS5Padding";
+	private static final String AES_ALGORITHM = "AES/CBC/PKCS5Padding";
 }

@@ -22,68 +22,68 @@ import java.security.SecureRandom;
 import org.springframework.security.crypto.keygen.BytesKeyGenerator;
 
 /**
- * A KeyGenerator that uses SecureRandom to generate byte array-based keys.
- * Defaults to 8 byte keys produced by the SHA1PRNG algorithm developed by the BouncyCastle Provider.
+ * A KeyGenerator that uses SecureRandom to generate byte array-based keys. Defaults to 8 byte keys produced by the
+ * SHA1PRNG algorithm developed by the BouncyCastle Provider.
  * 
  * @author Keith Donald
  * @author Roy Clarkson
  */
 final class AndroidSecureRandomBytesKeyGenerator implements BytesKeyGenerator {
 
-    private final SecureRandom random;
+	private final SecureRandom random;
 
-    private final int keyLength;
+	private final int keyLength;
 
-    /**
-     * Creates a secure random key generator using the defaults.
-     */
-    public AndroidSecureRandomBytesKeyGenerator() {
-        this(DEFAULT_ALGORITHM, DEFAULT_PROVIDER, DEFAULT_KEY_LENGTH);
-    }
+	/**
+	 * Creates a secure random key generator using the defaults.
+	 */
+	public AndroidSecureRandomBytesKeyGenerator() {
+		this(DEFAULT_ALGORITHM, DEFAULT_PROVIDER, DEFAULT_KEY_LENGTH);
+	}
 
-    /**
-     * Creates a secure random key generator with a custom key length.
-     */
-    public AndroidSecureRandomBytesKeyGenerator(int keyLength) {
-        this(DEFAULT_ALGORITHM, DEFAULT_PROVIDER, keyLength);
-    }
+	/**
+	 * Creates a secure random key generator with a custom key length.
+	 */
+	public AndroidSecureRandomBytesKeyGenerator(int keyLength) {
+		this(DEFAULT_ALGORITHM, DEFAULT_PROVIDER, keyLength);
+	}
 
-    public int getKeyLength() {
-        return keyLength;
-    }
+	public int getKeyLength() {
+		return keyLength;
+	}
 
-    public byte[] generateKey() {
-        byte[] bytes = new byte[keyLength];
-        random.nextBytes(bytes);
-        return bytes;
-    }
+	public byte[] generateKey() {
+		byte[] bytes = new byte[keyLength];
+		random.nextBytes(bytes);
+		return bytes;
+	}
 
-    // internal helpers
+	// internal helpers
 
-    /**
-     * Creates a secure random key generator that is fully customized.
-     */
-    private AndroidSecureRandomBytesKeyGenerator(String algorithm, String provider, int keyLength) {
-        this.random = createSecureRandom(algorithm, provider, keyLength);
-        this.keyLength = keyLength;
-    }
+	/**
+	 * Creates a secure random key generator that is fully customized.
+	 */
+	private AndroidSecureRandomBytesKeyGenerator(String algorithm, String provider, int keyLength) {
+		this.random = createSecureRandom(algorithm, provider, keyLength);
+		this.keyLength = keyLength;
+	}
 
-    private SecureRandom createSecureRandom(String algorithm, String provider, int keyLength) {
-        try {
-            SecureRandom random = SecureRandom.getInstance(algorithm, provider);
-            random.setSeed(random.generateSeed(keyLength));
-            return random;
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException("Not a supported SecureRandom key generation algorithm", e);
-        } catch (NoSuchProviderException e) {
-            throw new IllegalArgumentException("Not a supported SecureRandom key provider", e);
-        }
-    }
+	private SecureRandom createSecureRandom(String algorithm, String provider, int keyLength) {
+		try {
+			SecureRandom random = SecureRandom.getInstance(algorithm, provider);
+			random.setSeed(random.generateSeed(keyLength));
+			return random;
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalArgumentException("Not a supported SecureRandom key generation algorithm", e);
+		} catch (NoSuchProviderException e) {
+			throw new IllegalArgumentException("Not a supported SecureRandom key provider", e);
+		}
+	}
 
-    private static final String DEFAULT_ALGORITHM = "SHA1PRNG";
+	private static final String DEFAULT_ALGORITHM = "SHA1PRNG";
 
-    private static final String DEFAULT_PROVIDER = "Crypto";
+	private static final String DEFAULT_PROVIDER = "Crypto";
 
-    private static final int DEFAULT_KEY_LENGTH = 8;
+	private static final int DEFAULT_KEY_LENGTH = 8;
 
 }

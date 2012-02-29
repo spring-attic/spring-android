@@ -22,14 +22,16 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * {@link LinkedHashMap} variant that stores String keys in a case-insensitive
- * manner, for example for key-based access in a results table.
- *
- * <p>Preserves the original order as well as the original casing of keys,
- * while allowing for contains, get and remove calls with any case of key.
- *
- * <p>Does <i>not</i> support <code>null</code> keys.
- *
+ * {@link LinkedHashMap} variant that stores String keys in a case-insensitive manner, for example for key-based access
+ * in a results table.
+ * 
+ * <p>
+ * Preserves the original order as well as the original casing of keys, while allowing for contains, get and remove
+ * calls with any case of key.
+ * 
+ * <p>
+ * Does <i>not</i> support <code>null</code> keys.
+ * 
  * @author Juergen Hoeller
  * @author Roy Clarkson
  * @since 1.0
@@ -52,8 +54,7 @@ public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
 	}
 
 	/**
-	 * Create a new LinkedCaseInsensitiveMap that stores lower-case keys
-	 * according to the given Locale.
+	 * Create a new LinkedCaseInsensitiveMap that stores lower-case keys according to the given Locale.
 	 * @param locale the Locale to use for lower-case conversion
 	 * @see java.lang.String#toLowerCase(java.util.Locale)
 	 */
@@ -64,9 +65,8 @@ public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
 	}
 
 	/**
-	 * Create a new LinkedCaseInsensitiveMap that wraps a {@link LinkedHashMap}
-	 * with the given initial capacity and stores lower-case keys according
-	 * to the default Locale.
+	 * Create a new LinkedCaseInsensitiveMap that wraps a {@link LinkedHashMap} with the given initial capacity and
+	 * stores lower-case keys according to the default Locale.
 	 * @param initialCapacity the initial capacity
 	 * @see java.lang.String#toLowerCase()
 	 */
@@ -75,9 +75,8 @@ public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
 	}
 
 	/**
-	 * Create a new LinkedCaseInsensitiveMap that wraps a {@link LinkedHashMap}
-	 * with the given initial capacity and stores lower-case keys according
-	 * to the given Locale.
+	 * Create a new LinkedCaseInsensitiveMap that wraps a {@link LinkedHashMap} with the given initial capacity and
+	 * stores lower-case keys according to the given Locale.
 	 * @param initialCapacity the initial capacity
 	 * @param locale the Locale to use for lower-case conversion
 	 * @see java.lang.String#toLowerCase(java.util.Locale)
@@ -95,15 +94,15 @@ public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
 		return super.put(key, value);
 	}
 
-    @Override
-    public void putAll(Map<? extends String, ? extends V> map) {
-        if (map.isEmpty()) {
-            return;
-        }
-        for (Map.Entry<? extends String, ? extends V> entry : map.entrySet()) {
-            put(entry.getKey(), entry.getValue());
-        }
-    }
+	@Override
+	public void putAll(Map<? extends String, ? extends V> map) {
+		if (map.isEmpty()) {
+			return;
+		}
+		for (Map.Entry<? extends String, ? extends V> entry : map.entrySet()) {
+			put(entry.getKey(), entry.getValue());
+		}
+	}
 
 	@Override
 	public boolean containsKey(Object key) {
@@ -114,18 +113,16 @@ public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
 	public V get(Object key) {
 		if (key instanceof String) {
 			return super.get(this.caseInsensitiveKeys.get(convertKey((String) key)));
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
 	@Override
 	public V remove(Object key) {
-		if (key instanceof String ) {
+		if (key instanceof String) {
 			return super.remove(this.caseInsensitiveKeys.remove(convertKey((String) key)));
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -139,8 +136,8 @@ public class LinkedCaseInsensitiveMap<V> extends LinkedHashMap<String, V> {
 
 	/**
 	 * Convert the given key to a case-insensitive key.
-	 * <p>The default implementation converts the key
-	 * to lower-case according to this Map's Locale.
+	 * <p>
+	 * The default implementation converts the key to lower-case according to this Map's Locale.
 	 * @param key the user-specified key
 	 * @return the key to use for storing
 	 * @see java.lang.String#toLowerCase(java.util.Locale)

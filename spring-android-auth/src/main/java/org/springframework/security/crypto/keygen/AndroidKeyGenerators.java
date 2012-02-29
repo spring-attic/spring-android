@@ -21,46 +21,46 @@ import org.springframework.security.crypto.keygen.BytesKeyGenerator;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 
 /**
- * Factory for commonly used key generators.
- * Public API for constructing a {@link BytesKeyGenerator} or {@link StringKeyGenerator}.
+ * Factory for commonly used key generators. Public API for constructing a {@link BytesKeyGenerator} or
+ * {@link StringKeyGenerator}.
  * 
  * @author Keith Donald
  */
 public class AndroidKeyGenerators {
 
-    /**
-     * Create a {@link BytesKeyGenerator} that uses a {@link SecureRandom} to generate keys of 8 bytes in length.
-     */
-    public static BytesKeyGenerator secureRandom() {
-        return new AndroidSecureRandomBytesKeyGenerator();
-    }
+	/**
+	 * Create a {@link BytesKeyGenerator} that uses a {@link SecureRandom} to generate keys of 8 bytes in length.
+	 */
+	public static BytesKeyGenerator secureRandom() {
+		return new AndroidSecureRandomBytesKeyGenerator();
+	}
 
-    /**
-     * Create a {@link BytesKeyGenerator} that uses a {@link SecureRandom} to generate keys of a custom length.
-     * @param keyLength the key length in bytes, e.g. 16, for a 16 byte key.
-     */
-    public static BytesKeyGenerator secureRandom(int keyLength) {
-        return new AndroidSecureRandomBytesKeyGenerator(keyLength);
-    }
+	/**
+	 * Create a {@link BytesKeyGenerator} that uses a {@link SecureRandom} to generate keys of a custom length.
+	 * @param keyLength the key length in bytes, e.g. 16, for a 16 byte key.
+	 */
+	public static BytesKeyGenerator secureRandom(int keyLength) {
+		return new AndroidSecureRandomBytesKeyGenerator(keyLength);
+	}
 
-    /**
-     * Create a {@link BytesKeyGenerator} that returns a single, shared {@link SecureRandom} key of a custom length.
-     * @param keyLength the key length in bytes, e.g. 16, for a 16 byte key.
-     */
-    public static BytesKeyGenerator shared(int keyLength) {
-        return new SharedKeyGenerator(secureRandom(16).generateKey());
-    }
+	/**
+	 * Create a {@link BytesKeyGenerator} that returns a single, shared {@link SecureRandom} key of a custom length.
+	 * @param keyLength the key length in bytes, e.g. 16, for a 16 byte key.
+	 */
+	public static BytesKeyGenerator shared(int keyLength) {
+		return new SharedKeyGenerator(secureRandom(16).generateKey());
+	}
 
-    /**
-     * Creates a {@link StringKeyGenerator} that hex-encodes {@link SecureRandom} keys of 8 bytes in length.
-     * The hex-encoded string is keyLength * 2 characters in length.
-     */
-    public static StringKeyGenerator string() {
-        return new HexEncodingStringKeyGenerator(secureRandom());
-    }
+	/**
+	 * Creates a {@link StringKeyGenerator} that hex-encodes {@link SecureRandom} keys of 8 bytes in length. The
+	 * hex-encoded string is keyLength * 2 characters in length.
+	 */
+	public static StringKeyGenerator string() {
+		return new HexEncodingStringKeyGenerator(secureRandom());
+	}
 
-    // internal helpers
+	// internal helpers
 
-    private AndroidKeyGenerators() {
-    }
+	private AndroidKeyGenerators() {
+	}
 }
