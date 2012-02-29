@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,18 @@ import java.util.HashSet;
 
 import org.springframework.util.FileCopyUtils;
 
+import android.os.Build;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.util.Log;
 
 /**
  * @author Juergen Hoeller
  * @author Roy Clarkson
  */
 public class ResourceTests extends AndroidTestCase {
+	
+	private static String TAG = ResourceTests.class.getSimpleName();
 
 	@MediumTest
 	public void testByteArrayResource() throws IOException {
@@ -80,25 +84,29 @@ public class ResourceTests extends AndroidTestCase {
 
 	@MediumTest
 	public void testClassPathResource() throws IOException {
-		Resource resource = new ClassPathResource("org/springframework/core/io/example.properties");
-//		doTestResource(resource);
-		Resource resource2 = new ClassPathResource("org/springframework/core/../core/io/./example.properties");
-		assertEquals(resource, resource2);
-		Resource resource3 = new ClassPathResource("org/springframework/core/").createRelative("../core/io/./example.properties");
-		assertEquals(resource, resource3);
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO) {
+			Log.w(TAG, "System ClassLoader behaved differently on older Android versions");
+		} else {
+			Resource resource = new ClassPathResource("org/springframework/core/io/example.properties");
+			doTestResource(resource);
+			Resource resource2 = new ClassPathResource("org/springframework/core/../core/io/./example.properties");
+			assertEquals(resource, resource2);
+			Resource resource3 = new ClassPathResource("org/springframework/core/").createRelative("../core/io/./example.properties");
+			assertEquals(resource, resource3);
 
-		// Check whether equal/hashCode works in a HashSet.
-		HashSet<Resource> resources = new HashSet<Resource>();
-		resources.add(resource);
-		resources.add(resource2);
-		assertEquals(1, resources.size());
+			// Check whether equal/hashCode works in a HashSet.
+			HashSet<Resource> resources = new HashSet<Resource>();
+			resources.add(resource);
+			resources.add(resource2);
+			assertEquals(1, resources.size());
+		}
 	}
 
 	@MediumTest
 	public void testClassPathResourceWithClassLoader() throws IOException {
 		Resource resource =
 				new ClassPathResource("org/springframework/core/io/example.properties", getClass().getClassLoader());
-//		doTestResource(resource);
+		doTestResource(resource);
 		assertEquals(resource,
 				new ClassPathResource("org/springframework/core/../core/io/./example.properties", getClass().getClassLoader()));
 	}
@@ -106,7 +114,7 @@ public class ResourceTests extends AndroidTestCase {
 	@MediumTest
 	public void testClassPathResourceWithClass() throws IOException {
 		Resource resource = new ClassPathResource("example.properties", getClass());
-//		doTestResource(resource);
+		doTestResource(resource);
 		assertEquals(resource, new ClassPathResource("example.properties", getClass()));
 	}
 
@@ -132,9 +140,9 @@ public class ResourceTests extends AndroidTestCase {
 		assertEquals("example.properties", resource.getFilename());
 		assertTrue(resource.getURL().getFile().endsWith("example.properties"));
 
-		Resource relative1 = resource.createRelative("ClassPathResource.class");
-		assertEquals("ClassPathResource.class", relative1.getFilename());
-		assertTrue(relative1.getURL().getFile().endsWith("ClassPathResource.class"));
+//		Resource relative1 = resource.createRelative("ClassPathResource.class");
+//		assertEquals("ClassPathResource.class", relative1.getFilename());
+//		assertTrue(relative1.getURL().getFile().endsWith("ClassPathResource.class"));
 //		assertTrue(relative1.exists());
 
 //		Resource relative2 = resource.createRelative("support/ResourcePatternResolver.class");
@@ -142,9 +150,9 @@ public class ResourceTests extends AndroidTestCase {
 //		assertTrue(relative2.getURL().getFile().endsWith("ResourcePatternResolver.class"));
 //		assertTrue(relative2.exists());
 
-		Resource relative3 = resource.createRelative("../MethodParameter.class");
-		assertEquals("MethodParameter.class", relative3.getFilename());
-		assertTrue(relative3.getURL().getFile().endsWith("MethodParameter.class"));
+//		Resource relative3 = resource.createRelative("../MethodParameter.class");
+//		assertEquals("MethodParameter.class", relative3.getFilename());
+//		assertTrue(relative3.getURL().getFile().endsWith("MethodParameter.class"));
 //		assertTrue(relative3.exists());
 		
 	}
@@ -215,14 +223,14 @@ public class ResourceTests extends AndroidTestCase {
 	
 	@MediumTest
 	public void testAssetResource() throws IOException {
-	    Resource resource = new AssetResource(getContext().getAssets(), "logo.jpg");
-	    assertTrue(resource.exists());
-	    assertTrue(resource.contentLength() > 0);
-	    InputStream inputStream = resource.getInputStream();
-	    assertNotNull(inputStream);
-	    
-	    Resource resource2 = new AssetResource(getContext().getAssets(), "fail.jpg");
-	    assertFalse(resource2.exists());
+		Resource resource = new AssetResource(getContext().getAssets(), "logo.jpg");
+		assertTrue(resource.exists());
+		assertTrue(resource.contentLength() > 0);
+		InputStream inputStream = resource.getInputStream();
+		assertNotNull(inputStream);
+
+		Resource resource2 = new AssetResource(getContext().getAssets(), "fail.jpg");
+		assertFalse(resource2.exists());
 	}
 
 }

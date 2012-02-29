@@ -1,134 +1,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <groupId>org.springframework.android</groupId>
-    <artifactId>spring-android-core-test</artifactId>
-    <version>1.0.0.BUILD-SNAPSHOT</version>
-    <packaging>apk</packaging>
-    <name>spring-android-core-test</name>
-    <url>http://www.springsource.org</url>
-    <organization>
-        <name>SpringSource</name>
-        <url>http://www.springsource.org</url>
-    </organization>
+	<parent>
+		<groupId>org.springframework.android</groupId>
+		<artifactId>spring-android-test</artifactId>
+		<version>1.0.0.BUILD-SNAPSHOT</version>
+	</parent>
 
-    <properties>
-        <android-platform>15</android-platform>
-        <android-maven-plugin-version>3.0.2</android-maven-plugin-version>
-        <maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
-        <java-version>1.6</java-version>
-        <android-version>4.0.1.2</android-version>
-        <!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3, 4.0.1.2 -->
-        <spring-android-version>1.0.0.BUILD-SNAPSHOT</spring-android-version>
-        <easymock-version>2.5.2</easymock-version>
-    </properties>
+	<modelVersion>4.0.0</modelVersion>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android</artifactId>
-            <version>${android-version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android-test</artifactId>
-            <version>${android-version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.android</groupId>
-            <artifactId>spring-android-core</artifactId>
-            <version>${spring-android-version}</version>
-        </dependency>
-        <dependency>
-            <!-- easymock 3.x does NOT work on Android -->
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>${easymock-version}</version>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <sourceDirectory>src</sourceDirectory>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                <artifactId>android-maven-plugin</artifactId>
-                <version>${android-maven-plugin-version}</version>
-                <configuration>
-                    <sdk>
-                        <platform>${android-platform}</platform>
-                    </sdk>
-                    <deleteConflictingFiles>true</deleteConflictingFiles>
-                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
-                </configuration>
-                <extensions>true</extensions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin-version}</version>
-                <configuration>
-                    <source>${java-version}</source>
-                    <target>${java-version}</target>
-                </configuration>
-            </plugin>
-        </plugins>
-        <pluginManagement>
-            <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                                        <artifactId>android-maven-plugin</artifactId>
-                                        <versionRange>[3.0.2,)</versionRange>
-                                        <goals>
-                                            <goal>proguard</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
-    <repositories>
-        <!-- For testing against latest Spring snapshots -->
-        <repository>
-            <id>org.springframework.maven.snapshot</id>
-            <name>Spring Maven Snapshot Repository</name>
-            <url>http://maven.springframework.org/snapshot</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <!-- For developing against latest Spring milestones -->
-        <repository>
-            <id>org.springframework.maven.milestone</id>
-            <name>Spring Maven Milestone Repository</name>
-            <url>http://maven.springframework.org/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+	<artifactId>spring-android-core-test</artifactId>
+	<packaging>apk</packaging>
+	<name>spring-android-core-test</name>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.android</groupId>
+			<artifactId>spring-android-core</artifactId>
+			<version>${spring-android-version}</version>
+		</dependency>
+	</dependencies>
 
 </project>

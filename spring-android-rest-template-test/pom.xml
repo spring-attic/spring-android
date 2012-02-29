@@ -1,47 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<parent>
+		<groupId>org.springframework.android</groupId>
+		<artifactId>spring-android-test</artifactId>
+		<version>1.0.0.BUILD-SNAPSHOT</version>
+	</parent>
+	
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.springframework.android</groupId>
-	<artifactId>spring-android-rest-test</artifactId>
-	<version>1.0.0</version>
+	<artifactId>spring-android-rest-template-test</artifactId>
 	<packaging>apk</packaging>
-	<name>spring-android-rest-test</name>
-	<url>http://www.springsource.org</url>
-	<organization>
-		<name>SpringSource</name>
-		<url>http://www.springsource.org</url>
-	</organization>
+	<name>spring-android-rest-template-test</name>
 
 	<properties>
-		<android-platform>15</android-platform>
-		<android-maven-plugin-version>3.0.2</android-maven-plugin-version>
-		<maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
-		<java-version>1.6</java-version>
-		<android-version>4.0.1.2</android-version>
-		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3, 4.0.1.2 -->
-		<spring-android-version>1.0.0.BUILD-SNAPSHOT</spring-android-version>
-		<gson-version>2.0</gson-version>
+		<commons-httpclient-version>3.1</commons-httpclient-version>
 		<jackson-version>1.9.2</jackson-version>
+		<gson-version>2.0</gson-version>
 		<simple-version>2.6.2</simple-version>
 		<android-rome-feed-reader-version>1.0.0-r2</android-rome-feed-reader-version>
-		<easymock-version>2.5.2</easymock-version>
 		<jetty-version>6.1.9</jetty-version>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android</artifactId>
-			<version>${android-version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android-test</artifactId>
-			<version>${android-version}</version>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-rest-template</artifactId>
@@ -50,7 +31,7 @@
 		<dependency>
 			<groupId>commons-httpclient</groupId>
 			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
+			<version>${commons-httpclient-version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>commons-logging</artifactId>
@@ -99,80 +80,11 @@
 			<version>${android-rome-feed-reader-version}</version>
 		</dependency>
 		<dependency>
-			<!-- easymock 3.x does NOT work on Android -->
-			<groupId>org.easymock</groupId>
-			<artifactId>easymock</artifactId>
-			<version>${easymock-version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>
 			<version>${jetty-version}</version>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<finalName>${project.artifactId}</finalName>
-		<plugins>
-			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>android-maven-plugin</artifactId>
-				<version>${android-maven-plugin-version}</version>
-				<configuration>
-					<sdk>
-						<platform>${android-platform}</platform>
-					</sdk>
-					<dex>
-						<jvmArguments>
-							<jvmArgument>-Xms256m</jvmArgument>
-							<jvmArgument>-Xmx512m</jvmArgument>
-						</jvmArguments>
-					</dex>
-					<deleteConflictingFiles>true</deleteConflictingFiles>
-					<undeployBeforeDeploy>true</undeployBeforeDeploy>
-				</configuration>
-				<extensions>true</extensions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-plugin-version}</version>
-				<configuration>
-					<source>${java-version}</source>
-					<target>${java-version}</target>
-				</configuration>
-			</plugin>
-		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-										<artifactId>android-maven-plugin</artifactId>
-										<versionRange>[3.0.2,)</versionRange>
-										<goals>
-											<goal>proguard</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
 
 	<repositories>
 		<!-- For developing with Android ROME Feed Reader -->
@@ -180,27 +92,6 @@
 			<id>android-rome-feed-reader-repository</id>
 			<name>Android ROME Feed Reader Repository</name>
 			<url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
-		</repository>
-		<!-- For testing against latest Spring snapshots -->
-		<repository>
-			<id>org.springframework.maven.snapshot</id>
-			<name>Spring Maven Snapshot Repository</name>
-			<url>http://maven.springframework.org/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<!-- For developing against latest Spring milestones -->
-		<repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Maven Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
 		</repository>
 	</repositories>
 
