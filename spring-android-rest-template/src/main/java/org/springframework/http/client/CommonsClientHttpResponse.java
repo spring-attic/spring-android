@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,11 +67,13 @@ final class CommonsClientHttpResponse extends AbstractClientHttpResponse {
 		return this.headers;
 	}
 
-	public InputStream getBodyInternal() throws IOException {
+	@Override
+	protected InputStream getBodyInternal() throws IOException {
 		return this.httpMethod.getResponseBodyAsStream();
 	}
 
-	public void close() {
+	@Override
+	protected void closeInternal() {
 		this.httpMethod.releaseConnection();
 	}
 

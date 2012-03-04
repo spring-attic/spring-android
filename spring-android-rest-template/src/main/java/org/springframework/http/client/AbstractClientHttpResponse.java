@@ -25,28 +25,61 @@ import org.springframework.http.ContentCodingType;
 
 /**
  * Abstract base for {@link ClientHttpResponse}.
- *
+ * 
  * @author Roy Clarkson
  * @since 1.0
  */
 public abstract class AbstractClientHttpResponse implements ClientHttpResponse {
 
+	private InputStream compressedBody;
+
+
 	public InputStream getBody() throws IOException {
 		InputStream body = getBodyInternal();
-		List<ContentCodingType> contentCodingTypes = this.getHeaders().getContentEncoding();
-		for (ContentCodingType contentCodingType : contentCodingTypes) {
-			if (contentCodingType.equals(ContentCodingType.GZIP)) {
-				return new GZIPInputStream(body);
-			}
+		if (shouldCompress()) {
+			return getCompressedBody(body);
 		}
 		return body;
 	}
 	
+	public void close() {
+		if (this.compressedBody != null) {
+			try {
+				this.compressedBody.close();
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+		closeInternal();
+	}
+
+	private boolean shouldCompress() {
+		List<ContentCodingType> contentCodingTypes = this.getHeaders().getContentEncoding();
+		for (ContentCodingType contentCodingType : contentCodingTypes) {
+			if (contentCodingType.equals(ContentCodingType.GZIP)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private InputStream getCompressedBody(InputStream body) throws IOException {
+		if (this.compressedBody == null) {
+			this.compressedBody = new GZIPInputStream(body);
+		}
+		return this.compressedBody;
+	}
+
 	/**
 	 * Abstract template method that returns the body.
-	 *
-	 * @return the body output stream
+	 * @return the body input stream
 	 */
 	protected abstract InputStream getBodyInternal() throws IOException;
+
+	/**
+	 * Abstract template method that closes the response.
+	 */
+	protected abstract void closeInternal();
+
 
 }

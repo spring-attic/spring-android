@@ -64,12 +64,14 @@ final class HttpComponentsClientHttpResponse extends AbstractClientHttpResponse 
 		return headers;
 	}
 
-	public InputStream getBodyInternal() throws IOException {
+	@Override
+	protected InputStream getBodyInternal() throws IOException {
 		HttpEntity entity = this.httpResponse.getEntity();
 		return entity != null ? entity.getContent() : null;
 	}
 
-	public void close() {
+	@Override
+	protected void closeInternal() {
 		HttpEntity entity = this.httpResponse.getEntity();
 		if (entity != null) {
 			try {

@@ -170,6 +170,26 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 	}
 
 	@MediumTest
+	public void testMultipleWritesContentEncodingGzip() throws Exception {
+		boolean success = false;
+		try {
+			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
+			request.getHeaders().add("Content-Encoding", "gzip");
+			byte[] body = "Hello World".getBytes("UTF-8");
+			FileCopyUtils.copy(body, request.getBody());
+			ClientHttpResponse response = request.execute();
+			try {
+				FileCopyUtils.copy(body, request.getBody());
+			} finally {
+				response.close();
+			}
+		} catch (IllegalStateException e) {
+			success = true;
+		}
+		assertTrue("Expected IllegalStateException", success);
+	}
+
+	@MediumTest
 	public void testHeadersAfterExecute() throws Exception {
 		boolean success = false;
 		try {

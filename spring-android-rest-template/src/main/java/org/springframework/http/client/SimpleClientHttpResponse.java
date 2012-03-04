@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import org.springframework.util.StringUtils;
  * {@link SimpleStreamingClientHttpRequest#execute()}.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 1.0
  */
 final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
@@ -73,12 +74,14 @@ final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 		return this.headers;
 	}
 
-	public InputStream getBodyInternal() throws IOException {
+	@Override
+	protected InputStream getBodyInternal() throws IOException {
 		InputStream errorStream = this.connection.getErrorStream();
 		return (errorStream != null ? errorStream : this.connection.getInputStream());
 	}
 
-	public void close() {
+	@Override
+	protected void closeInternal() {
 		this.connection.disconnect();
 	}
 

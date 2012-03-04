@@ -38,31 +38,31 @@ public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 
 	private boolean executed = false;
 
+	private OutputStream compressedBody;
+
+
 	public final HttpHeaders getHeaders() {
-		return (this.executed ? HttpHeaders.readOnlyHttpHeaders(headers) : this.headers);
+		return (this.executed ? HttpHeaders.readOnlyHttpHeaders(this.headers) : this.headers);
 	}
 
 	public final OutputStream getBody() throws IOException {
 		checkExecuted();
 		OutputStream body = getBodyInternal(this.headers);
-		List<ContentCodingType> contentCodingTypes = this.getHeaders().getContentEncoding();
-		for (ContentCodingType contentCodingType : contentCodingTypes) {
-			if (contentCodingType.equals(ContentCodingType.GZIP)) {
-				return new GZIPOutputStream(body);
-			}
+		if (shouldCompress()) {
+			return getCompressedBody(body);
+		} else {
+			return body;
 		}
-		return body;
 	}
 
 	public final ClientHttpResponse execute() throws IOException {
 		checkExecuted();
+		if (this.compressedBody != null) {
+			this.compressedBody.close();
+		}
 		ClientHttpResponse result = executeInternal(this.headers);
 		this.executed = true;
 		return result;
-	}
-
-	private void checkExecuted() {
-		Assert.state(!this.executed, "ClientHttpRequest already executed");
 	}
 
 	/**
@@ -79,5 +79,26 @@ public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 	 */
 	protected abstract ClientHttpResponse executeInternal(HttpHeaders headers) throws IOException;
 
+
+	private void checkExecuted() {
+		Assert.state(!this.executed, "ClientHttpRequest already executed");
+	}
+
+	private boolean shouldCompress() {
+		List<ContentCodingType> contentCodingTypes = headers.getContentEncoding();
+		for (ContentCodingType contentCodingType : contentCodingTypes) {
+			if (contentCodingType.equals(ContentCodingType.GZIP)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private OutputStream getCompressedBody(OutputStream body) throws IOException {
+		if (this.compressedBody == null) {
+			this.compressedBody = new GZIPOutputStream(body);
+		}
+		return this.compressedBody;
+	}
 
 }
