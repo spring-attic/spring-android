@@ -1,6 +1,30 @@
 Spring for Android
 ================================
 
+1.0.0.RC1 (2012.03.05)
+
+Minimum Requirements
+* Minimum requirements remain Android 2.1 (API Level 7). Earlier versions have not
+  tested on this release.
+
+New Features
+* Support for Spring Social 1.0.2.RELEASE in Spring for Android Auth
+* Support for Spring Security 3.1.0.RELEASE in Spring for Android Auth
+* Updated RestTemplate to be compatible with Spring Framework 3.1.0.RELASE
+* Added support for Basic Authentication
+* Added AssetResource for accessing static resources stored in the assets 
+  directory of an Android project
+* Removed automatic loading of GsonHttpMessageConverter due to incompatibilities 
+  with preinstalled versions of Gson on some devices.
+* Improved gzip support
+* Now defaulting to standard J2SE facilities (HttpURLConnection) in Gingerbread
+  and newer, as recommended by Google
+* Disabled connection reuse on Eclair and older versions when using 
+  HttpURLConnection, because of a defect in connection pooling on those versions
+  of Android
+* Several bug fixes and improvements
+
+
 1.0.0.M4 (2011.07.21)
 
 Minimum Requirements:

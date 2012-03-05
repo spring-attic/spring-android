@@ -1,4 +1,4 @@
-Spring for Android 1.0.0.M4 (July 21, 2011)
+Spring for Android 1.0.0.RC1 (Mar 5, 2012)
 -----------------------------------------------------------
 The Spring for Android project provides support for developing Android based applications.
 
