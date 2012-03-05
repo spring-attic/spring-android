@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="spring-android-maven" xmlns:xlink="http://www.w3.org/1999/xlink">
+
   <title>Spring for Android and Maven</title>
 
   <section id="maven-example-introduction">
+  
 	<title>Introduction</title>
-	<para>
-		An alternative to downloading the individual library JARs yourself is to use Maven for dependency management.
-		The <link xlink:href="http://code.google.com/p/maven-android-plugin">Maven Android Plugin</link> allows 
-		developers to utilize Maven's dependency management capabilities within an Android application. Additionally, 
-		the <link xlink:href="http://code.google.com/a/eclipselabs.org/p/m2eclipse-android-integration/">Maven Integration
-		for Android Development Tools</link> bridges the Maven Android Plugin and the 
-		<link xlink:href="http://developer.android.com/sdk/eclipse-adt.html">Android Development Tools (ADT)</link> to
-		allow the use of dependency management within Eclipse.
-	</para>
+	
+	<para>An alternative to downloading the individual library JARs yourself is to use Maven for dependency management. The <link xlink:href="http://code.google.com/p/maven-android-plugin">Android Maven Plugin</link> allows developers to utilize Maven's dependency management capabilities within an Android application. Additionally, the <link xlink:href="http://rgladwell.github.com/m2e-android/">Android Configurator for M2E</link> bridges the Maven Android Plugin and the <link xlink:href="http://developer.android.com/sdk/eclipse-adt.html">Android Development Tools (ADT)</link> to allow the use of dependency management within Eclipse.</para>
+	
   </section>
+  
   <section id="maven-example-pom">
+  
 	<title>Example POM</title>
-	<para>
-		The following 
-		<link xlink:href="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html">Maven POM file</link> 
-		from the Spring for Android Showcase sample application, illustrates how to configure the 
-		<link xlink:href="http://code.google.com/p/maven-android-plugin">Maven Android Plugin</link> and associated 
-		dependencies for use with Spring for Android and Spring Social.
-	</para>
+	
+	<para>The following <link xlink:href="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html">Maven POM file</link> from the Spring for Android Showcase sample application, illustrates how to configure the <link xlink:href="http://code.google.com/p/maven-android-plugin">Maven Android Plugin</link> and associated dependencies for use with Spring for Android and Spring Social.</para>
+	
 	<programlisting language="xml"><![CDATA[
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.springframework.android</groupId>
@@ -33,26 +27,27 @@
     <version>1.0.0.BUILD-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>spring-android-showcase-client</name>
-    <url>http://www.springsource.org</url> 
+    <url>http://www.springsource.org</url>
     <organization>
         <name>SpringSource</name>
         <url>http://www.springsource.org</url>
     </organization>
 
-    <properties> 
-        <android-platform>7</android-platform>
-        <android-emulator>7</android-emulator>
-        <maven-android-plugin-version>2.8.4</maven-android-plugin-version>
+    <properties>
+        <android-platform>15</android-platform>
+        <android-maven-plugin-version>3.1.1</android-maven-plugin-version>
         <maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
-        <maven-eclipse-plugin-version>2.8</maven-eclipse-plugin-version>
-        <android-version>2.1_r1</android-version>
-        <!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3 -->
         <java-version>1.6</java-version>
-        <spring-android-version>1.0.0.M4</spring-android-version>
-        <spring-social-version>1.0.0.RC1</spring-social-version>
-        <jackson-version>1.8.3</jackson-version>
-        <gson-version>1.7.1</gson-version>
-        <simple-version>2.6</simple-version>
+        <maven-eclipse-plugin-version>2.8</maven-eclipse-plugin-version>
+        <android-version>4.0.1.2</android-version>
+        <!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3, 4.0.1.2 -->
+        <spring-android-version>1.0.0.BUILD-SNAPSHOT</spring-android-version>
+        <spring-social-version>1.0.2.RELEASE</spring-social-version>
+        <spring-social-facebook-version>1.0.1.RELEASE</spring-social-facebook-version>
+        <spring-security-crypto-version>3.1.0.RELEASE</spring-security-crypto-version>
+        <jackson-version>1.9.5</jackson-version>
+        <gson-version>2.1</gson-version>
+        <simple-version>2.6.2</simple-version>
     </properties>
 
     <dependencies>
@@ -75,7 +70,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
-            <version>3.1.0.RC2.crypto</version>
+            <version>${spring-security-crypto-version}</version>
             <exclusions>
                 <!-- Exclude in favor of Spring for Android Core -->
                 <exclusion>
@@ -116,7 +111,7 @@
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-facebook</artifactId>
-            <version>${spring-social-version}</version>
+            <version>${spring-social-facebook-version}</version>
             <exclusions>
                 <!-- Provided by Android -->
                 <exclusion>
@@ -167,15 +162,12 @@
         <plugins>
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                <artifactId>maven-android-plugin</artifactId>
-                <version>${maven-android-plugin-version}</version>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>${android-maven-plugin-version}</version>
                 <configuration>
                     <sdk>
                         <platform>${android-platform}</platform>
                     </sdk>
-                    <emulator>
-                        <avd>${android-emulator}</avd>
-                    </emulator>
                     <deleteConflictingFiles>true</deleteConflictingFiles>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
                 </configuration>
@@ -207,15 +199,21 @@
             <id>org.springframework.maven.snapshot</id>
             <name>Spring Maven Snapshot Repository</name>
             <url>http://maven.springframework.org/snapshot</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <!-- For developing against latest Spring milestones -->
         <repository>
             <id>org.springframework.maven.milestone</id>
             <name>Spring Maven Milestone Repository</name>
             <url>http://maven.springframework.org/milestone</url>
-            <snapshots><enabled>false</enabled></snapshots>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -225,27 +223,38 @@
 
   <section id="maven-commands">
 	<title>Maven Commands</title>
-	<para>
-		Once you have configured a Maven POM in your Android project you can use the following Maven command 
-		to clean and assemble your Android APK file.  
-		Additional <link xlink:href="http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html">goals</link>
-		are available for use with the Maven Android Plugin.
-	</para>
+	<para>Once you have configured a Maven POM in your Android project you can use the following Maven command to clean and assemble your Android APK file.</para>
+	
 	<programlisting><![CDATA[
 $ mvn clean install]]>
 	</programlisting>
-	<para>
-		The following command starts the emulator specified in the Maven Android Plugin section of the POM file
-	</para>
+	
+	<para>The Android Maven Plugin provides several <link xlink:href="http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html">goals</link> for use in building and deploying your application. You can configure a specific emulator in the plugin configuration, or if you omit the emulator name, the plugin will attempt to execute the specified goal on all available emulators and devices.</para>
+	
+	<para>The following command starts the emulator specified in the Maven Android Plugin section of the POM file. If no emulator name is configured, then the plugin attempts to start an AVD with the name of <literal>Default</literal>.</para>
+	
 	<programlisting><![CDATA[
 $ mvn android:emulator-start]]>
 	</programlisting>
-	<para>
-		Deploys the application package to the emulator
-	</para>
+	
+	<para>Deploys the built apk file to the emulator or attached device.</para>
+	
 	<programlisting><![CDATA[
 $ mvn android:deploy]]>
 	</programlisting>
+	
+	<para>Starts the app on the emulator or attached device.</para>
+	
+	<programlisting><![CDATA[
+$ mvn android:run]]>
+	</programlisting>
+	
+	<para>Displays a list of help topics for the Android Maven Plugin.</para>
+	
+	<programlisting><![CDATA[
+$ mvn android:help]]>
+	</programlisting>
+	
   </section>
 
 </chapter>

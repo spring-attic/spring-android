@@ -22,7 +22,9 @@
 		
 		<title>HTTP Client</title>
 		
-		<para><classname>RestTemplate</classname> provides an abstraction for making RESTful http requests, and internally, <classname>RestTemplate</classname> utilizes a native Android HTTP client library for those requests.  The <link xlink:href="http://hc.apache.org/httpcomponents-client-ga/index.html">HttpComponents HttpClient</link> is a native HTTP client available on the Android platform. Within Spring for Android RestTemplate the HttpClient is made available through the <classname>HttpComponentsClientHttpRequestFactory</classname>. This class is set as the default <interfacename>ClientHttpRequestFactory</interfacename> when you create a new <classname>RestTemplate</classname> instance.  The standard J2SE facilities are also available as a native Android library, and are made available through the <classname>SimpleClientHttpRequestFactory</classname>. To utilize the <classname>SimpleClientHttpRequestFactory</classname>, you must either pass a new instance into the <classname>RestTemplate</classname> constructor, or call <methodname>setRequestFactory(ClientHttpRequestFactory requestFactory)</methodname> on an existing <classname>RestTemplate</classname> instance.</para>
+		<para><classname>RestTemplate</classname> provides an abstraction for making RESTful HTTP requests, and internally, <classname>RestTemplate</classname> utilizes a native Android HTTP client library for those requests. There are two native HTTP clients available on Android, the standard J2SE facilities, and the <link xlink:href="http://hc.apache.org/httpcomponents-client-ga/index.html">HttpComponents HttpClient</link>. The standard JS2SE facilities are made available through the <classname>SimpleClientHttpRequestFactory</classname>, while the HttpClient is made available through the <classname>HttpComponentsClientHttpRequestFactory</classname>. The default <interfacename>ClientHttpRequestFactory</interfacename> used when you create a new <classname>RestTemplate</classname> instance differs based on the version of Android on which your application is running.</para>
+
+		<para>Google recommends to use the J2SE facilities on <link xlink:href="http://android-developers.blogspot.com/2011/09/androids-http-clients.html">Gingerbread (Version 2.3)</link> and newer, while previous versions should use the HttpComponents HttpClient. Based on this recommendation <classname>RestTemplate</classname> checks the version of Android on which your app is running and uses the appropriate <interfacename>ClientHttpRequestFactory</interfacename>. To utilize a specific <interfacename>ClientHttpRequestFactory</interfacename> you must either pass a new instance into the <classname>RestTemplate</classname> constructor, or call <methodname>setRequestFactory(ClientHttpRequestFactory requestFactory)</methodname> on an existing <classname>RestTemplate</classname> instance.</para>
 		
 	</section>
 	
@@ -30,7 +32,7 @@
 		
 		<title>Gzip Compression</title>
 		
-		<para><classname>RestTemplate</classname> supports sending and receiving data encoded with gzip compression.  The HTTP specification allows for additional values in the <literal>Accept-Encoding</literal> header field, however <classname>RestTemplate</classname> only supports gzip compression at this time.</para>
+		<para><classname>RestTemplate</classname> supports sending and receiving data encoded with gzip compression. The HTTP specification allows for additional values in the <literal>Accept-Encoding</literal> header field, however <classname>RestTemplate</classname> only supports gzip compression at this time.</para>
 		
 	</section>
 	
@@ -38,7 +40,7 @@
 		
 		<title>Object to JSON Marshaling</title>
 		
-		<para>Object to JSON marshaling in Spring for Android RestTemplate requires the use of a third party JSON mapping library. There are two libraries supported in Spring for Android, <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>, and <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>.  While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
+		<para>Object to JSON marshaling in Spring for Android RestTemplate requires the use of a third party JSON mapping library. There are two libraries supported in Spring for Android, <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>, and <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>. While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
 		
 	</section>
 	
@@ -455,13 +457,25 @@ String result = restTemplate.getForObject(url, String.class, "SpringSource");]]>
 
 		<title>Using Gzip Compression</title>
 
-		<para>Gzip compression can significantly reduce the size of the response data being returned in a REST request. Gzip must be supported by the web server to which the request is being made.  By setting the content coding type of the <literal>Accept-Encoding</literal> header to <literal>gzip</literal>, you are requesting that the server respond using gzip compression.  If gzip is available, or enabled on the server, then it should return a compressed response.  RestTemplate checks the <literal>Content-Encoding</literal> header in the response to determine if, in fact, the response is gzip compressed.  At this time, RestTemplate only supports the gzip content coding type in the <literal>Content-Encoding</literal> header.  If the response data is determined to be gzip compressed, then a <link xlink:href="http://developer.android.com/reference/java/util/zip/GZIPInputStream.html">GZIPInputStream</link> is used to decompress it.</para>
+		<para>Gzip compression can significantly reduce the size of the response data being returned in a REST request. Gzip must be supported by the web server to which the request is being made. By setting the content coding type of the <literal>Accept-Encoding</literal> header to <literal>gzip</literal>, you are requesting that the server respond using gzip compression. If gzip is available, or enabled on the server, then it should return a compressed response. RestTemplate checks the <literal>Content-Encoding</literal> header in the response to determine if, in fact, the response is gzip compressed. At this time, RestTemplate only supports the gzip content coding type in the <literal>Content-Encoding</literal> header. If the response data is determined to be gzip compressed, then a <link xlink:href="http://developer.android.com/reference/java/util/zip/GZIPInputStream.html">GZIPInputStream</link> is used to decompress it.</para>
 		
 		<para>The following example shows how to request a gzip compressed response from the server.</para>
 
 		<programlisting language="java"><![CDATA[
 HttpHeaders requestHeaders = new HttpHeaders();
-requestHeaders.setAcceptEncoding(Collections.singletonList(ContentCodingType.GZIP));
+requestHeaders.setAcceptEncoding(ContentCodingType.GZIP);
+
+HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+
+RestTemplate restTemplate = new RestTemplate();
+ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);]]>
+		</programlisting>
+		
+		<para>One thing to note, is that when using the J2SE facilities with the <classname>SimpleClientHttpRequestFactory</classname>, Gingerbread and newer automatically set the Accept-Encoding header to request gzip responses. This is built in functionality of newer versions of Android. If you desire to disable gzip, then you must set the <literal>identity</literal> value in the header.</para>
+
+		<programlisting language="java"><![CDATA[
+HttpHeaders requestHeaders = new HttpHeaders();
+requestHeaders.setAcceptEncoding(ContentCodingType.IDENTITY);
 
 HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
 
