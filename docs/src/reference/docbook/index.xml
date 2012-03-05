@@ -3,9 +3,9 @@
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xlink="http://www.w3.org/1999/xlink">
   <bookinfo>
-    <title>Spring Android Reference Manual</title>
-    <titleabbrev>Spring Android ${version}</titleabbrev>
-    <productname>Spring Android</productname>
+    <title>Spring for Android Reference Manual</title>
+    <titleabbrev>Spring for Android ${version}</titleabbrev>
+    <productname>Spring for Android</productname>
     <releaseinfo>${version}</releaseinfo>
 
     <!-- TODO: this isn't showing up. -->
@@ -27,7 +27,7 @@
       </author>
     </authorgroup>
 
-    <legalnotice><para>© SpringSource Inc., 2011</para></legalnotice>
+    <legalnotice><para>© SpringSource Inc., 2012</para></legalnotice>
   </bookinfo>
 
   <toc></toc>

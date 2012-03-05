@@ -1,4 +1,4 @@
-Spring Android
+Spring for Android
 ================================
 
 1.0.0.M4 (2011.07.21)
@@ -8,9 +8,9 @@ Minimum Requirements:
   Previous Android versions are not officially supported.
 
 New Features
-* Support for Spring Social 1.0.0.RC1 in Spring Android Auth. The known issues
+* Support for Spring Social 1.0.0.RC1 in Spring for Android Auth. The known issues
   in Spring Social 1.0.0.M3 have been resolved in the 1.0.0.RC1 release.
-* Support for Spring Security 3.1.0.RC2 in Spring Android Auth
+* Support for Spring Security 3.1.0.RC2 in Spring for Android Auth
 * Updated RestTemplate to be compatible with Spring Framework 3.1.0.M2
 * Added gzip compression support in Rest Template.
 * Added support for Google's Gson, JSON parsing library.
@@ -21,18 +21,18 @@ New Features
 Deprecated:
 * Deprecated CommonsClientHttpRequestFactory and supporting classes. Commons
   Client support is now deprecated in Spring Framework 3.1.0.M2 as well as
-  Spring Android.
+  Spring for Android.
 
 
 1.0.0.M3 (2011.05.10)
 
 New Features
-* Support for Spring Social 1.0.0.M3 through the new Spring Android Auth 
+* Support for Spring Social 1.0.0.M3 through the new Spring for Android Auth 
   library, which includes a SQLite datastore, and Android compatible Spring 
   Security Encryptors. Spring Social is currently supported in Android 
   version 2.3.1 (API Level 9) and higher.
 * Updated RestTemplate to be compatible with Spring Framework 3.1.0.M1.
-* Separated core functionality into a new Spring Android Core library.
+* Separated core functionality into a new Spring for Android Core library.
 * Restored support for CommonsClientHttpRequestFactory.
 
 Known Issues:

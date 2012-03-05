@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="rest-template" xmlns:xlink="http://www.w3.org/1999/xlink">
- <title>Spring Android RestTemplate Module</title>
+ <title>Spring for Android RestTemplate Module</title>
 
   <section id="rest-template-introduction">
 	
 	<title>Introduction</title>
 	
-	<para>Spring's RestTemplate is a robust, popular Java-based REST client. The Spring Android RestTemplate Module provides a version of RestTemplate that works in an Android environment.</para>
+	<para>Spring's RestTemplate is a robust, popular Java-based REST client. The Spring for Android RestTemplate Module provides a version of RestTemplate that works in an Android environment.</para>
 	
   </section>
 
@@ -14,7 +14,7 @@
 	
 	<title>Overview</title>	
 	
-	<para>The <classname>RestTemplate</classname> class is the heart of the Spring Android RestTemplate library. It is conceptually similar to other template classes found in other Spring portfolio projects. RestTemplate's behavior is customized by providing callback methods and configuring the <interfacename>HttpMessageConverter</interfacename> used to marshal objects into the HTTP request body and to unmarshal any response back into an object. When you create a new <classname>RestTemplate</classname> instance, the constructor sets up several supporting objects that make up the RestTemplate functionality.</para>
+	<para>The <classname>RestTemplate</classname> class is the heart of the Spring for Android RestTemplate library. It is conceptually similar to other template classes found in other Spring portfolio projects. RestTemplate's behavior is customized by providing callback methods and configuring the <interfacename>HttpMessageConverter</interfacename> used to marshal objects into the HTTP request body and to unmarshal any response back into an object. When you create a new <classname>RestTemplate</classname> instance, the constructor sets up several supporting objects that make up the RestTemplate functionality.</para>
 			
 	<para>Here is an overview of the functionality supported within <classname>RestTemplate</classname>.</para>
 	
@@ -22,7 +22,7 @@
 		
 		<title>HTTP Client</title>
 		
-		<para><classname>RestTemplate</classname> provides an abstraction for making RESTful http requests, and internally, <classname>RestTemplate</classname> utilizes a native Android HTTP client library for those requests.  The <link xlink:href="http://hc.apache.org/httpcomponents-client-ga/index.html">HttpComponents HttpClient</link> is a native HTTP client available on the Android platform. Within Spring Android RestTemplate the HttpClient is made available through the <classname>HttpComponentsClientHttpRequestFactory</classname>. This class is set as the default <interfacename>ClientHttpRequestFactory</interfacename> when you create a new <classname>RestTemplate</classname> instance.  The standard J2SE facilities are also available as a native Android library, and are made available through the <classname>SimpleClientHttpRequestFactory</classname>. To utilize the <classname>SimpleClientHttpRequestFactory</classname>, you must either pass a new instance into the <classname>RestTemplate</classname> constructor, or call <methodname>setRequestFactory(ClientHttpRequestFactory requestFactory)</methodname> on an existing <classname>RestTemplate</classname> instance.</para>
+		<para><classname>RestTemplate</classname> provides an abstraction for making RESTful http requests, and internally, <classname>RestTemplate</classname> utilizes a native Android HTTP client library for those requests.  The <link xlink:href="http://hc.apache.org/httpcomponents-client-ga/index.html">HttpComponents HttpClient</link> is a native HTTP client available on the Android platform. Within Spring for Android RestTemplate the HttpClient is made available through the <classname>HttpComponentsClientHttpRequestFactory</classname>. This class is set as the default <interfacename>ClientHttpRequestFactory</interfacename> when you create a new <classname>RestTemplate</classname> instance.  The standard J2SE facilities are also available as a native Android library, and are made available through the <classname>SimpleClientHttpRequestFactory</classname>. To utilize the <classname>SimpleClientHttpRequestFactory</classname>, you must either pass a new instance into the <classname>RestTemplate</classname> constructor, or call <methodname>setRequestFactory(ClientHttpRequestFactory requestFactory)</methodname> on an existing <classname>RestTemplate</classname> instance.</para>
 		
 	</section>
 	
@@ -38,7 +38,7 @@
 		
 		<title>Object to JSON Marshaling</title>
 		
-		<para>Object to JSON marshaling in Spring Android RestTemplate requires the use of a third party JSON mapping library. There are two libraries supported in Spring Android, <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>, and <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>.  While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
+		<para>Object to JSON marshaling in Spring for Android RestTemplate requires the use of a third party JSON mapping library. There are two libraries supported in Spring for Android, <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>, and <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>.  While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
 		
 	</section>
 	
@@ -46,7 +46,7 @@
 		
 		<title>Object to XML Marshaling</title>
 		
-		<para>Object to XML marshaling in Spring Android RestTemplate requires the use of a third party XML mapping library. The <link xlink:href="http://simple.sourceforge.net">Simple XML serializer</link> is used to provide this marshaling functionality.</para>
+		<para>Object to XML marshaling in Spring for Android RestTemplate requires the use of a third party XML mapping library. The <link xlink:href="http://simple.sourceforge.net">Simple XML serializer</link> is used to provide this marshaling functionality.</para>
 		
 	</section>
 	
@@ -54,7 +54,7 @@
 		
 		<title>RSS and Atom Support</title>
 		
-		<para>RSS and Atom feed support in Spring Android RestTemplate requires the use of a third party feed reader library. The <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> is used to provide this functionality.</para>
+		<para>RSS and Atom feed support in Spring for Android RestTemplate requires the use of a third party feed reader library. The <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> is used to provide this functionality.</para>
 		
 	</section>
 	
@@ -212,7 +212,7 @@ public interface HttpMessageConverter<T> {
 
 	<para>Concrete implementations for the main media (mime) types are provided in the framework and are registered by default within <classname>RestTemplate</classname></para>
 
-	<para>The following <interfacename>HttpMessageConverter</interfacename> implementations are available in Spring Android. For all converters a default media type is used but can be overridden by calling the <methodname>setSupportedMediaTypes()</methodname> method.</para>
+	<para>The following <interfacename>HttpMessageConverter</interfacename> implementations are available in Spring for Android. For all converters a default media type is used but can be overridden by calling the <methodname>setSupportedMediaTypes()</methodname> method.</para>
 
 	<section>
 
@@ -244,7 +244,7 @@ public interface HttpMessageConverter<T> {
 
 		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write XML from the HTTP request and response using <link xlink:href="http://simple.sourceforge.net">Simple Framework</link>'s <interfacename>Serializer</interfacename>. XML mapping can be customized as needed through the use of Simple's provided annotations. When additional control is needed, a custom <interfacename>Serializer</interfacename> can be injected through the <interfacename>Serializer</interfacename> property. By default, this converter reads and writes the media types <literal>application/xml</literal>, <literal>text/xml</literal>, and <literal>application/*+xml</literal>.</para>
 
-		<para>It is important to note that this is not a Spring OXM compatible message converter. It is a standalone implementation that enables XML serialization through Spring Android.</para>
+		<para>It is important to note that this is not a Spring OXM compatible message converter. It is a standalone implementation that enables XML serialization through Spring for Android.</para>
 
 	</section>
 
@@ -327,9 +327,9 @@ public interface HttpMessageConverter<T> {
 </dependency>]]>
 	</programlisting>
 	
-	<para>Google's provided Android toolset does not include dependency management support. However, through the use of third party tools, you can use Maven to manage dependencies and build your Android app. See the <link linkend="spring-android-maven">Spring Android and Maven</link> section for more information.</para>
+	<para>Google's provided Android toolset does not include dependency management support. However, through the use of third party tools, you can use Maven to manage dependencies and build your Android app. See the <link linkend="spring-android-maven">Spring for Android and Maven</link> section for more information.</para>
 
-	<para>Spring Android RestTemplate supports several optional libraries.  These optional libraries are used by different <interfacename>HttpMessageConverter</interfacename> instances within <classname>RestTemplate</classname>.  If you would like to make use of these message converters, then you need to include the corresponding libraries in your classpath.</para>	
+	<para>Spring for Android RestTemplate supports several optional libraries.  These optional libraries are used by different <interfacename>HttpMessageConverter</interfacename> instances within <classname>RestTemplate</classname>.  If you would like to make use of these message converters, then you need to include the corresponding libraries in your classpath.</para>	
 	
 	<section id="rest-template-howtoget-jackson">
 		

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="auth" xmlns:xlink="http://www.w3.org/1999/xlink">
 	
-  <title>Spring Android Auth Module</title>
+  <title>Spring for Android Auth Module</title>
 
   <section id="auth-introduction">
 	
@@ -35,7 +35,7 @@
 		
 		<title>Encryption</title>
 		
-		<para>The Spring Security Crypto library is not currently supported on Android.  To take advantage of the encryption tools in Spring Security, the Android specific class, <link xlink:href="http://static.springsource.org/spring-android/docs/1.0.x/api/org/springframework/security/crypto/encrypt/AndroidEncryptors.html"><classname>AndroidEncryptors</classname></link> has been provided in Spring Android. This class uses an Android compatible <link xlink:href="http://developer.android.com/reference/java/security/SecureRandom.html"><classname>SecureRandom</classname></link> provider for generating byte array based keys using the SHA1PRNG algorithm.</para>
+		<para>The Spring Security Crypto library is not currently supported on Android.  To take advantage of the encryption tools in Spring Security, the Android specific class, <link xlink:href="http://static.springsource.org/spring-android/docs/1.0.x/api/org/springframework/security/crypto/encrypt/AndroidEncryptors.html"><classname>AndroidEncryptors</classname></link> has been provided in Spring for Android. This class uses an Android compatible <link xlink:href="http://developer.android.com/reference/java/security/SecureRandom.html"><classname>SecureRandom</classname></link> provider for generating byte array based keys using the SHA1PRNG algorithm.</para>
 		
 	</section>
 
@@ -71,7 +71,7 @@
     <artifactId>spring-security-crypto</artifactId>
     <version>3.1.0.RC2.crypto</version>
     <exclusions>
-        <!-- Exclude in favor of Spring Android Core -->
+        <!-- Exclude in favor of Spring for Android Core -->
         <exclusion>
             <artifactId>spring-core</artifactId>
             <groupId>org.springframework</groupId>
@@ -84,7 +84,7 @@
     <artifactId>spring-social-core</artifactId>
     <version>${spring-social-version}</version>
     <exclusions>
-        <!-- Exclude in favor of Spring Android RestTemplate -->
+        <!-- Exclude in favor of Spring for Android RestTemplate -->
         <exclusion>
             <artifactId>spring-web</artifactId>
             <groupId>org.springframework</groupId>
@@ -145,7 +145,7 @@
 	
   	<title>Usage Examples</title>
 
-  	<para>Below are several usage examples that illustrate how to use Spring Android with Spring Social.</para>
+  	<para>Below are several usage examples that illustrate how to use Spring for Android with Spring Social.</para>
 
 	<para>The following examples are based on a <link xlink:href="https://github.com/SpringSource/spring-android-samples">sample Android application</link>, which has Facebook and Twitter examples using Spring Social.  You can retrieve the source code for the sample app with Git:</para>
 	

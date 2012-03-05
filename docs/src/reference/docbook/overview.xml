@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="overview" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>Spring Android Overview</title>
+  <title>Spring for Android Overview</title>
 
   <section id="spring-android-overview-introduction">
 	
     <title>Introduction</title>
 
-    <para>The Spring Android project supports the usage of the Spring Framework in an Android environment. This includes the ability to use RestTemplate as the REST client for your Android applications. Spring Android also provides support for integrating Spring Social functionality into your Android application, which includes a robust OAuth based, authorization client and implementations for popular social web sites, such as Twitter and Facebook.</para>
+    <para>The Spring for Android project supports the usage of the Spring Framework in an Android environment. This includes the ability to use RestTemplate as the REST client for your Android applications. Spring for Android also provides support for integrating Spring Social functionality into your Android application, which includes a robust OAuth based, authorization client and implementations for popular social web sites, such as Twitter and Facebook.</para>
 
   </section>
 

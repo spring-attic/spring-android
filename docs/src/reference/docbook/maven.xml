@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="spring-android-maven" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <title>Spring Android and Maven</title>
+  <title>Spring for Android and Maven</title>
 
   <section id="maven-example-introduction">
 	<title>Introduction</title>
@@ -19,9 +19,9 @@
 	<para>
 		The following 
 		<link xlink:href="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html">Maven POM file</link> 
-		from the Spring Android Showcase sample application, illustrates how to configure the 
+		from the Spring for Android Showcase sample application, illustrates how to configure the 
 		<link xlink:href="http://code.google.com/p/maven-android-plugin">Maven Android Plugin</link> and associated 
-		dependencies for use with Spring Android and Spring Social.
+		dependencies for use with Spring for Android and Spring Social.
 	</para>
 	<programlisting language="xml"><![CDATA[
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -77,7 +77,7 @@
             <artifactId>spring-security-crypto</artifactId>
             <version>3.1.0.RC2.crypto</version>
             <exclusions>
-                <!-- Exclude in favor of Spring Android Core -->
+                <!-- Exclude in favor of Spring for Android Core -->
                 <exclusion>
                     <artifactId>spring-core</artifactId>
                     <groupId>org.springframework</groupId>
@@ -89,7 +89,7 @@
             <artifactId>spring-social-core</artifactId>
             <version>${spring-social-version}</version>
             <exclusions>
-                <!-- Exclude in favor of Spring Android RestTemplate -->
+                <!-- Exclude in favor of Spring for Android RestTemplate -->
                 <exclusion>
                     <artifactId>spring-web</artifactId>
                     <groupId>org.springframework</groupId>
