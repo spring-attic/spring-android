@@ -59,7 +59,7 @@ public class UriComponentsBuilder {
 
 	private static final String USERINFO_PATTERN = "([^@/]*)";
 
-	private static final String HOST_PATTERN = "([^/?#:]*)";
+	private static final String HOST_PATTERN = "(\\[[:0-9a-f]*\\]|[^/?#:\\[\\]]*)";
 
 	private static final String PORT_PATTERN = "(\\d*)";
 
