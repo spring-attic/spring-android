@@ -14,7 +14,7 @@ configure(allprojects) {
 
     group = 'org.springframework.android'
 
-    androidVersion = '4.0.1.2'
+    ext.androidVersion = '4.0.1.2'
 
     [compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:none']
 
@@ -200,7 +200,7 @@ configure(rootProject) {
         description = "Builds -${classifier} archive, containing all jars and docs, " +
                       "suitable for community download page."
 
-        baseDir = "${project.name}-${project.version}";
+        def baseDir = "${project.name}-${project.version}";
 
         from('src/dist') {
             include 'readme.txt'
@@ -239,7 +239,7 @@ configure(rootProject) {
 
     task wrapper(type: Wrapper) {
         description = 'Generates gradlew[.bat] scripts'
-        gradleVersion = '1.0-milestone-8a'
+        gradleVersion = '1.0-rc-1'
     }
 
 }
