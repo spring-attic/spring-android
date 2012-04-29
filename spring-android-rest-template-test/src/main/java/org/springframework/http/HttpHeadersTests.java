@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.springframework.http;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -29,6 +30,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
+
+import org.springframework.util.Base64Utils;
+
 import android.test.suitebuilder.annotation.SmallTest;
 
 /**
@@ -42,7 +46,12 @@ public class HttpHeadersTests extends TestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		headers = new HttpHeaders();
+		this.headers = new HttpHeaders();
+	}
+
+	@Override
+	public void tearDown() {
+		this.headers = null;
 	}
 
 	@SmallTest
@@ -288,5 +297,27 @@ public class HttpHeadersTests extends TestCase {
 		assertEquals("Invalid Content-Encoding header", "gzip", headers.getFirst("Content-Encoding"));
 	}
 
+	@SmallTest
+	public void testAuthorization() throws IOException {
+		headers.setAuthorization(new HttpBasicAuthentication("foo", "bar"));
+		String credentials = "foo:bar";
+		byte[] encodedCredentialsBytes = credentials.getBytes("UTF-8");
+		String encodedCredentials = Base64Utils.encodeToString(encodedCredentialsBytes);
+		String authHeader = "Basic " + encodedCredentials;
+		assertEquals("Invalid Authorization header", authHeader, headers.getAuthorization());
+	}
+
+	@SmallTest
+	public void testUserAgent() {
+		headers.setUserAgent("Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/A.B (KHTML, like Gecko) Chrome/X.Y.Z.W Safari/A.B.");
+		assertEquals(
+				"Invalid User-Agent header",
+				"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/A.B (KHTML, like Gecko) Chrome/X.Y.Z.W Safari/A.B.",
+				headers.get("User-Agent").get(0));
+		assertEquals(
+				"Invalid User-Agent header",
+				"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/A.B (KHTML, like Gecko) Chrome/X.Y.Z.W Safari/A.B.",
+				headers.getUserAgent());
+	}
 
 }
