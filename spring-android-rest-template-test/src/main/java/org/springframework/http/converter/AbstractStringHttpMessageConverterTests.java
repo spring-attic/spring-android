@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,30 +31,32 @@ import android.test.suitebuilder.annotation.SmallTest;
  * @author Arjen Poutsma
  * @author Roy Clarkson 
  */
-public class StringHttpMessageConverterTests extends TestCase {
+public abstract class AbstractStringHttpMessageConverterTests extends TestCase {
 
-	private StringHttpMessageConverter converter;
+	protected StringHttpMessageConverter converter;
+
+	protected abstract StringHttpMessageConverter getStringHttpMessageConverter();
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		converter = new StringHttpMessageConverter();
+		this.converter = getStringHttpMessageConverter();
 	}
-	
+
 	@Override
 	public void tearDown() {
-		converter = null;
+		this.converter = null;
 	}
 
 	@SmallTest
 	public void testCanRead() {
-		assertTrue(converter.canRead(String.class, new MediaType("text", "plain")));
+		assertTrue(this.converter.canRead(String.class, new MediaType("text", "plain")));
 	}
 
 	@SmallTest
 	public void testCanWrite() {
-		assertTrue(converter.canWrite(String.class, new MediaType("text", "plain")));
-		assertTrue(converter.canWrite(String.class, MediaType.ALL));
+		assertTrue(this.converter.canWrite(String.class, new MediaType("text", "plain")));
+		assertTrue(this.converter.canWrite(String.class, MediaType.ALL));
 	}
 
 	@SmallTest
@@ -68,18 +70,6 @@ public class StringHttpMessageConverterTests extends TestCase {
 	}
 
 	@SmallTest
-	public void testWriteDefaultCharset() throws IOException {
-		Charset iso88591 = Charset.forName("ISO-8859-1");
-		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
-		String body = "H\u00e9llo W\u00f6rld";
-		converter.write(body, null, outputMessage);
-		assertEquals("Invalid result", body, outputMessage.getBodyAsString(iso88591));
-		assertEquals("Invalid content-type", new MediaType("text", "plain", iso88591), outputMessage.getHeaders().getContentType());
-		assertEquals("Invalid content-length", body.getBytes(iso88591.displayName()).length, outputMessage.getHeaders().getContentLength());
-		assertFalse("Invalid accept-charset", outputMessage.getHeaders().getAcceptCharset().isEmpty());
-	}
-
-	@SmallTest
 	public void testWriteUTF8() throws IOException {
 		Charset utf8 = Charset.forName("UTF-8");
 		MediaType contentType = new MediaType("text", "plain", utf8);
@@ -88,7 +78,8 @@ public class StringHttpMessageConverterTests extends TestCase {
 		converter.write(body, contentType, outputMessage);
 		assertEquals("Invalid result", body, outputMessage.getBodyAsString(utf8));
 		assertEquals("Invalid content-type", contentType, outputMessage.getHeaders().getContentType());
-		assertEquals("Invalid content-length", body.getBytes(utf8.displayName()).length, outputMessage.getHeaders().getContentLength());
+		assertEquals("Invalid content-length", body.getBytes(utf8.displayName()).length, outputMessage.getHeaders()
+				.getContentLength());
 		assertFalse("Invalid accept-charset", outputMessage.getHeaders().getAcceptCharset().isEmpty());
 	}
 
@@ -103,7 +94,8 @@ public class StringHttpMessageConverterTests extends TestCase {
 		converter.write(body, requestedContentType, outputMessage);
 		assertEquals("Invalid result", body, outputMessage.getBodyAsString(utf8));
 		assertEquals("Invalid content-type", contentType, outputMessage.getHeaders().getContentType());
-		assertEquals("Invalid content-length", body.getBytes(utf8).length, outputMessage.getHeaders().getContentLength());
+		assertEquals("Invalid content-length", body.getBytes(utf8).length, outputMessage.getHeaders()
+				.getContentLength());
 		assertFalse("Invalid accept-charset", outputMessage.getHeaders().getAcceptCharset().isEmpty());
 	}
 
