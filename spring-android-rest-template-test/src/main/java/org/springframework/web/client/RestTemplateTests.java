@@ -16,6 +16,11 @@
 
 package org.springframework.web.client;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
@@ -24,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.easymock.EasyMock.*;
 import junit.framework.TestCase;
 
 import org.springframework.http.HttpEntity;
