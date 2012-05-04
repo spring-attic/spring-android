@@ -37,7 +37,7 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.android.test.Assert;
-import org.springframework.core.io.AssetResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -51,6 +51,7 @@ import org.springframework.util.MultiValueMap;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.util.Log;
 
 /** 
  * @author Arjen Poutsma
@@ -58,9 +59,15 @@ import android.test.suitebuilder.annotation.MediumTest;
  */
 public abstract class AbstractRestTemplateIntegrationTests extends AndroidTestCase {
 
+	private static final String TAG = getTag();
+
+	protected static String getTag() {
+		return AbstractRestTemplateIntegrationTests.class.getSimpleName();
+	}
+	
 	private RestTemplate restTemplate;
 
-	private Server jettyServer;
+	private static Server jettyServer;
 
 	private static String helloWorld = "H\u00e9llo W\u00f6rld";
 
@@ -70,6 +77,7 @@ public abstract class AbstractRestTemplateIntegrationTests extends AndroidTestCa
 
 	@Override
 	protected void setUp() throws Exception {
+		super.setUp();
 		setUpJetty();
 		this.restTemplate = getRestTemplate();
 	}
@@ -77,31 +85,44 @@ public abstract class AbstractRestTemplateIntegrationTests extends AndroidTestCa
 	@Override
 	protected void tearDown() throws Exception {
 		this.restTemplate = null;
-		if (this.jettyServer != null) {
-			this.jettyServer.stop();
-			this.jettyServer = null;
-		}
 	}
 
 	private void setUpJetty() throws Exception {
-		int port = 8080;
-		this.jettyServer = new Server(port);
-		baseUrl = "http://localhost:" + port;
-		Context jettyContext = new Context(jettyServer, "/");
-		byte[] bytes = helloWorld.getBytes("UTF-8");
-		contentType = new MediaType("text", "plain", Collections.singletonMap("charset", "utf-8"));
-		jettyContext.addServlet(new ServletHolder(new GetServlet(bytes, contentType)), "/get");
-		jettyContext.addServlet(new ServletHolder(new GetServlet(new byte[0], contentType)), "/get/nothing");
-		jettyContext.addServlet(new ServletHolder(new GetServlet(bytes, null)), "/get/nocontenttype");
-		jettyContext.addServlet(
-				new ServletHolder(new PostServlet(helloWorld, baseUrl + "/post/1", bytes, contentType)), "/post");
-		jettyContext.addServlet(new ServletHolder(new StatusCodeServlet(204)), "/status/nocontent");
-		jettyContext.addServlet(new ServletHolder(new StatusCodeServlet(304)), "/status/notmodified");
-		jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/status/notfound");
-		jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/status/server");
-		jettyContext.addServlet(new ServletHolder(new UriServlet()), "/uri/*");
-		jettyContext.addServlet(new ServletHolder(new MultipartServlet()), "/multipart");
-		this.jettyServer.start();
+		if (jettyServer == null) {
+			int port = 8181;
+			jettyServer = new Server(port);
+			baseUrl = "http://localhost:" + port;
+			Context jettyContext = new Context(jettyServer, "/");
+			byte[] bytes = helloWorld.getBytes("UTF-8");
+			contentType = new MediaType("text", "plain", Collections.singletonMap("charset", "utf-8"));
+			jettyContext.addServlet(new ServletHolder(new GetServlet(bytes, contentType)), "/get");
+			jettyContext.addServlet(new ServletHolder(new GetServlet(new byte[0], contentType)), "/get/nothing");
+			jettyContext.addServlet(new ServletHolder(new GetServlet(bytes, null)), "/get/nocontenttype");
+			jettyContext.addServlet(new ServletHolder(new ErrorServlet(401)), "/get/notauthorized");
+			jettyContext.addServlet(new ServletHolder(new PostServlet(helloWorld, baseUrl + "/post/1", bytes,
+					contentType)), "/post");
+			jettyContext.addServlet(new ServletHolder(new StatusCodeServlet(204)), "/status/nocontent");
+			jettyContext.addServlet(new ServletHolder(new StatusCodeServlet(304)), "/status/notmodified");
+			jettyContext.addServlet(new ServletHolder(new ErrorServlet(401)), "/status/notfound");
+			jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/status/notfound");
+			jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/status/server");
+			jettyContext.addServlet(new ServletHolder(new UriServlet()), "/uri/*");
+			jettyContext.addServlet(new ServletHolder(new MultipartServlet()), "/multipart");
+			jettyServer.start();
+		}
+	}
+
+	private void tearDownJetty() throws Exception {
+		if (jettyServer != null && jettyServer.isRunning()) {
+			jettyServer.stop();
+			while (jettyServer.isStopping()) {
+				Log.d(TAG, "Stopping Jetty...");
+			}
+			if (jettyServer.isStopped()) {
+				Log.d(TAG, "Jetty is stopped");
+				jettyServer = null;
+			}
+		}
 	}
 
 	protected abstract RestTemplate getRestTemplate();
@@ -119,6 +140,18 @@ public abstract class AbstractRestTemplateIntegrationTests extends AndroidTestCa
 		assertFalse("No headers", entity.getHeaders().isEmpty());
 		assertEquals("Invalid content-type", contentType, entity.getHeaders().getContentType());
 		assertEquals("Invalid status code", HttpStatus.OK, entity.getStatusCode());
+	}
+
+	@MediumTest
+	public void testGetEntityNotAuthorized() {
+		try {
+			restTemplate.getForEntity(baseUrl + "/get/notauthorized", String.class);
+			fail("HttpClientErrorException expected");
+		} catch (HttpClientErrorException ex) {
+			assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+			assertEquals(HttpStatus.UNAUTHORIZED.getReasonPhrase(), ex.getStatusText());
+			assertNotNull(ex.getResponseBodyAsString());
+		}
 	}
 
 	@MediumTest
@@ -223,10 +256,7 @@ public abstract class AbstractRestTemplateIntegrationTests extends AndroidTestCa
 		parts.add("name 1", "value 1");
 		parts.add("name 2", "value 2+1");
 		parts.add("name 2", "value 2+2");
-//		Resource logo = new FileSystemResource(getClass().getResource("logo.jpg").getFile());
-//		Resource logo = new ClassPathResource("org/springframework/web/client/logo.jpg");
-//		Resource logo = new ClassPathResource("res/drawable/icon.png");
-		Resource logo = new AssetResource(getContext().getAssets(), "logo.jpg");
+		Resource logo = new ClassPathResource("res/drawable/icon.png");
 		parts.add("logo", logo);
 		restTemplate.postForLocation(baseUrl + "/multipart", parts);
 	}

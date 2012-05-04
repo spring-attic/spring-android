@@ -35,22 +35,48 @@ import org.springframework.util.StringUtils;
  */
 final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 
+	private static final String AUTHENTICATION_ERROR = "Received authentication challenge is null";
+
 	private final HttpURLConnection connection;
 
 	private HttpHeaders headers;
-
 
 	SimpleClientHttpResponse(HttpURLConnection connection) {
 		this.connection = connection;
 	}
 
-
 	public HttpStatus getStatusCode() throws IOException {
-		return HttpStatus.valueOf(this.connection.getResponseCode());
+		try {
+			return HttpStatus.valueOf(this.connection.getResponseCode());
+		} catch (IOException ex) {
+			/* 
+			 * If credentials are incorrect or not provided for Basic Auth, then 
+			 * Android throws this exception when an HTTP 401 is received. Checking 
+			 * for this response and returning the proper status.
+			 */
+			if (ex.getLocalizedMessage().equals(AUTHENTICATION_ERROR)) {
+				return HttpStatus.UNAUTHORIZED;
+			} else {
+				throw ex;
+			}
+		}
 	}
 
 	public String getStatusText() throws IOException {
-		return this.connection.getResponseMessage();
+		try {
+			return this.connection.getResponseMessage();
+		} catch (IOException ex) {
+			/* 
+			 * If credentials are incorrect or not provided for Basic Auth, then 
+			 * Android throws this exception when an HTTP 401 is received. Checking 
+			 * for this response and returning the proper status.
+			 */
+			if (ex.getLocalizedMessage().equals(AUTHENTICATION_ERROR)) {
+				return HttpStatus.UNAUTHORIZED.getReasonPhrase();
+			} else {
+				throw ex;
+			}
+		}
 	}
 
 	public HttpHeaders getHeaders() {

@@ -45,17 +45,29 @@ import org.springframework.util.FileCopyUtils;
 
 import android.os.Build;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.util.Log;
 
+/** 
+ * @author Arjen Poutsma
+ * @author Roy Clarkson 
+ */
 public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
+
+	private static final String TAG = getTag();
+
+	protected static String getTag() {
+		return AbstractHttpRequestFactoryTestCase.class.getSimpleName();
+	}
 
 	protected ClientHttpRequestFactory factory;
 
 	protected static String baseUrl;
 
-	private Server jettyServer;
+	private static Server jettyServer;
 
 	@Override
 	protected void setUp() throws Exception {
+		super.setUp();
 		setUpJetty();
 		this.factory = createRequestFactory();
 	}
@@ -63,28 +75,39 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		this.factory = null;
-		if (jettyServer != null) {
-			this.jettyServer.stop();
-			this.jettyServer = null;
-		}
 	}
 
 	private void setUpJetty() throws Exception {
-		int port = 8080;
-		this.jettyServer = new Server(port);
-		baseUrl = "http://localhost:" + port;
-		Context jettyContext = new Context(jettyServer, "/");
-		jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/echo");
-		jettyContext.addServlet(new ServletHolder(new GzipServlet()), "/gzip");
-		jettyContext.addServlet(new ServletHolder(new StatusServlet(200)), "/status/ok");
-		jettyContext.addServlet(new ServletHolder(new StatusServlet(404)), "/status/notfound");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("DELETE")), "/methods/delete");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("GET")), "/methods/get");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("HEAD")), "/methods/head");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("OPTIONS")), "/methods/options");
-		jettyContext.addServlet(new ServletHolder(new PostServlet()), "/methods/post");
-		jettyContext.addServlet(new ServletHolder(new MethodServlet("PUT")), "/methods/put");
-		this.jettyServer.start();
+		if (jettyServer == null) {
+			int port = 8080;
+			jettyServer = new Server(port);
+			baseUrl = "http://localhost:" + port;
+			Context jettyContext = new Context(jettyServer, "/");
+			jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/echo");
+			jettyContext.addServlet(new ServletHolder(new GzipServlet()), "/gzip");
+			jettyContext.addServlet(new ServletHolder(new StatusServlet(200)), "/status/ok");
+			jettyContext.addServlet(new ServletHolder(new StatusServlet(404)), "/status/notfound");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("DELETE")), "/methods/delete");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("GET")), "/methods/get");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("HEAD")), "/methods/head");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("OPTIONS")), "/methods/options");
+			jettyContext.addServlet(new ServletHolder(new PostServlet()), "/methods/post");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("PUT")), "/methods/put");
+			jettyServer.start();
+		}
+	}
+
+	private void tearDownJetty() throws Exception {
+		if (jettyServer != null) {
+			jettyServer.stop();
+			while (jettyServer.isStopping()) {
+				Log.d(TAG, "Stopping Jetty...");
+			}
+			if (jettyServer.isStopped()) {
+				Log.d(TAG, "Jetty is stopped");
+				jettyServer = null;
+			}
+		}
 	}
 
 	protected abstract ClientHttpRequestFactory createRequestFactory();
