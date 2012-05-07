@@ -98,7 +98,7 @@ project('spring-android-rest-template') {
     dependencies {
         compile ("com.google.android:android:$androidVersion", provided)
         compile project (':spring-android-core')
-        compile ("org.codehaus.jackson:jackson-mapper-asl:1.9.5", optional)
+        compile ("org.codehaus.jackson:jackson-mapper-asl:1.9.7", optional)
         compile ("com.google.code.gson:gson:2.1", optional)
         compile ("org.simpleframework:simple-xml:2.6.2") { dep ->
             optional dep
