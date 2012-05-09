@@ -41,7 +41,7 @@ public class Base64Utils {
 	 */
 	public static byte[] encode(byte[] input) {
 		if (froyoOrNewer) {
-			return android.util.Base64.encode(input, android.util.Base64.DEFAULT);
+			return android.util.Base64.encode(input, android.util.Base64.DEFAULT | android.util.Base64.NO_WRAP);
 		} else {
 			return org.springframework.util.support.Base64.encodeBytesToBytes(input);
 		}
@@ -57,7 +57,7 @@ public class Base64Utils {
 	 */
 	public static String encodeToString(byte[] input) {
 		if (froyoOrNewer) {
-			return android.util.Base64.encodeToString(input, android.util.Base64.DEFAULT);
+			return android.util.Base64.encodeToString(input, android.util.Base64.DEFAULT | android.util.Base64.NO_WRAP);
 		} else {
 			return org.springframework.util.support.Base64.encodeBytes(input);
 		}
@@ -73,7 +73,7 @@ public class Base64Utils {
 	 */
 	public static byte[] decode(byte[] input) {
 		if (froyoOrNewer) {
-			return android.util.Base64.decode(input, android.util.Base64.DEFAULT);
+			return android.util.Base64.decode(input, android.util.Base64.DEFAULT | android.util.Base64.NO_WRAP);
 		} else {
 			try {
 				return org.springframework.util.support.Base64.decode(input);
@@ -93,7 +93,7 @@ public class Base64Utils {
 	 */
 	public static byte[] decode(String str) {
 		if (froyoOrNewer) {
-			return android.util.Base64.decode(str, android.util.Base64.DEFAULT);
+			return android.util.Base64.decode(str, android.util.Base64.DEFAULT | android.util.Base64.NO_WRAP);
 		} else {
 			try {
 				return org.springframework.util.support.Base64.decode(str);
