@@ -167,34 +167,7 @@ configure(rootProject) {
         }
     }
 
-    task schemaZip(type: Zip) {
-        group = 'Distribution'
-        classifier = 'schema'
-        description = "Builds -${classifier} archive containing all " +
-            "XSDs for deployment at static.springframework.org/schema."
-
-        subprojects.each { subproject ->
-            def Properties schemas = new Properties();
-
-            subproject.sourceSets.main.resources.find {
-                it.path.endsWith('META-INF/spring.schemas')
-            }?.withInputStream { schemas.load(it) }
-
-            for (def key : schemas.keySet()) {
-                def shortName = key.replaceAll(/http.*schema.(.*).spring-.*/, '$1')
-                assert shortName != key
-                File xsdFile = subproject.sourceSets.main.resources.find {
-                    it.path.endsWith(schemas.get(key))
-                }
-                assert xsdFile != null
-                into (shortName) {
-                    from xsdFile.path
-                }
-            }
-        }
-    }
-
-    task distZip(type: Zip, dependsOn: [docsZip, schemaZip]) {
+    task distZip(type: Zip, dependsOn: docsZip) {
         group = 'Distribution'
         classifier = 'dist'
         description = "Builds -${classifier} archive, containing all jars and docs, " +
@@ -214,10 +187,6 @@ configure(rootProject) {
             into "${baseDir}/docs"
         }
 
-        from(zipTree(schemaZip.archivePath)) {
-            into "${baseDir}/schema"
-        }
-
         subprojects.each { subproject ->
             into ("${baseDir}/libs") {
                 from subproject.jar
@@ -233,7 +202,6 @@ configure(rootProject) {
 
     artifacts {
         archives docsZip
-//        archives schemaZip
         archives distZip
     }
 
