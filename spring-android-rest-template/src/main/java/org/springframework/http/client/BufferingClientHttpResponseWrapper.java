@@ -46,6 +46,10 @@ final class BufferingClientHttpResponseWrapper implements ClientHttpResponse {
 	public HttpStatus getStatusCode() throws IOException {
 		return this.response.getStatusCode();
 	}
+	
+	public int getRawStatusCode() throws IOException {
+		return this.response.getRawStatusCode();
+	}
 
 	public String getStatusText() throws IOException {
 		return this.response.getStatusText();

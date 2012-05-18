@@ -284,7 +284,11 @@ public class InterceptingClientHttpRequestFactoryTests extends TestCase {
 		private HttpHeaders headers = new HttpHeaders();
 
 		public HttpStatus getStatusCode() throws IOException {
-			return statusCode;
+			return HttpStatus.valueOf(getRawStatusCode());
+		}
+		
+		public int getRawStatusCode() throws IOException {
+			return statusCode.value();
 		}
 
 		public String getStatusText() throws IOException {
@@ -296,7 +300,7 @@ public class InterceptingClientHttpRequestFactoryTests extends TestCase {
 		}
 
 		public InputStream getBody() throws IOException {
-			return null; // To change body of implemented methods use File | Settings | File Templates.
+			return null;
 		}
 
 		public void close() {

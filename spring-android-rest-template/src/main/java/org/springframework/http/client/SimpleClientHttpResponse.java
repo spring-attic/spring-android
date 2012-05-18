@@ -44,10 +44,15 @@ final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 	SimpleClientHttpResponse(HttpURLConnection connection) {
 		this.connection = connection;
 	}
+	
+	public int getRawStatusCode() throws IOException {
+		return this.connection.getResponseCode();
+	}
 
+	@Override
 	public HttpStatus getStatusCode() throws IOException {
 		try {
-			return HttpStatus.valueOf(this.connection.getResponseCode());
+			return HttpStatus.valueOf(getRawStatusCode());
 		} catch (IOException ex) {
 			/* 
 			 * If credentials are incorrect or not provided for Basic Auth, then 

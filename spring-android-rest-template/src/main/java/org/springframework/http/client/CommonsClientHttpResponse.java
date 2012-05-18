@@ -22,7 +22,6 @@ import java.io.InputStream;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpMethod;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 
 /**
  * {@link org.springframework.http.client.ClientHttpResponse} implementation that uses
@@ -49,8 +48,8 @@ final class CommonsClientHttpResponse extends AbstractClientHttpResponse {
 	}
 
 
-	public HttpStatus getStatusCode() {
-		return HttpStatus.valueOf(this.httpMethod.getStatusCode());
+	public int getRawStatusCode() {
+		return this.httpMethod.getStatusCode();
 	}
 
 	public String getStatusText() {
