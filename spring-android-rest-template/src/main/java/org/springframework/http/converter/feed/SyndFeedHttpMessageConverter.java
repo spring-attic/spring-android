@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 the original author or authors.
+ * Copyright 2011-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 		super(MediaType.APPLICATION_RSS_XML, MediaType.APPLICATION_ATOM_XML);
 
 		// Workaround to get ROME working with Android 2.1 and earlier
-		if (Build.VERSION.SDK != null && Integer.parseInt(Build.VERSION.SDK) < 8) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
 			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 		}
 	}

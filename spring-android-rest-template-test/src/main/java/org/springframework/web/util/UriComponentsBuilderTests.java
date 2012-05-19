@@ -176,6 +176,15 @@ public class UriComponentsBuilderTests extends TestCase {
 		assertEquals("/foo/", result.getPath());
 		assertEquals(Arrays.asList("foo"), result.getPathSegments());
 	}
+	
+	@SmallTest
+	public void testPathSegmentsSomeEmpty() {
+		UriComponentsBuilder builder = UriComponentsBuilder.newInstance().pathSegment("", "foo", "", "bar");
+		UriComponents result = builder.build();
+
+		assertEquals("/foo/bar", result.getPath());
+		assertEquals(Arrays.asList("foo", "bar"), result.getPathSegments());
+	}
 
 	@SmallTest
 	public void testReplacePath() {

@@ -39,16 +39,16 @@ import org.springframework.util.StringUtils;
  * Represents an immutable collection of URI components, mapping component type to string values. Contains convenience
  * getters for all components. Effectively similar to {@link URI}, but with more powerful encoding options and support
  * for URI template variables.
- * 
+ *
  * @author Arjen Poutsma
  * @since 1.0
  * @see UriComponentsBuilder
  */
 public final class UriComponents {
 
-	private static final String DEFAULT_ENCODING = "UTF-8";
+    private static final String DEFAULT_ENCODING = "UTF-8";
 
-	private static final char PATH_DELIMITER = '/';
+    private static final char PATH_DELIMITER = '/';
 
 	/** Captures URI template variable names. */
 	private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)\\}");
@@ -67,12 +67,12 @@ public final class UriComponents {
 
 	private final String fragment;
 
-	private final boolean encoded;
+    private final boolean encoded;
 
 	/**
 	 * Package-friendly constructor that creates a new {@code UriComponents} instance from the given parameters. All
 	 * parameters are optional, and can be {@code null}.
-	 * 
+	 *
 	 * @param scheme the scheme
 	 * @param userInfo the user info
 	 * @param host the host
@@ -83,13 +83,22 @@ public final class UriComponents {
 	 * @param encoded whether the components are encoded
 	 * @param verify whether the components need to be verified to determine whether they contain illegal characters
 	 */
-	UriComponents(String scheme, String userInfo, String host, int port, PathComponent path, MultiValueMap<String, String> queryParams, String fragment, boolean encoded, boolean verify) {
+	UriComponents(String scheme,
+				  String userInfo,
+				  String host,
+				  int port,
+				  PathComponent path,
+				  MultiValueMap<String, String> queryParams,
+				  String fragment,
+				  boolean encoded,
+				  boolean verify) {
 		this.scheme = scheme;
 		this.userInfo = userInfo;
 		this.host = host;
 		this.port = port;
 		this.path = path != null ? path : NULL_PATH_COMPONENT;
-		this.queryParams = CollectionUtils.unmodifiableMultiValueMap(queryParams != null ? queryParams : new LinkedMultiValueMap<String, String>(0));
+		this.queryParams = CollectionUtils.unmodifiableMultiValueMap(
+				queryParams != null ? queryParams : new LinkedMultiValueMap<String, String>(0));
 		this.fragment = fragment;
 		this.encoded = encoded;
 		if (verify) {
@@ -99,63 +108,63 @@ public final class UriComponents {
 
 	// component getters
 
-	/**
-	 * Returns the scheme.
-	 * 
-	 * @return the scheme. Can be {@code null}.
-	 */
-	public String getScheme() {
+    /**
+     * Returns the scheme.
+     *
+     * @return the scheme. Can be {@code null}.
+     */
+    public String getScheme() {
 		return scheme;
-	}
+    }
 
-	/**
-	 * Returns the user info.
-	 * 
-	 * @return the user info. Can be {@code null}.
-	 */
-	public String getUserInfo() {
+    /**
+     * Returns the user info.
+     *
+     * @return the user info. Can be {@code null}.
+     */
+    public String getUserInfo() {
 		return userInfo;
-	}
+    }
 
-	/**
-	 * Returns the host.
-	 * 
-	 * @return the host. Can be {@code null}.
-	 */
-	public String getHost() {
+    /**
+     * Returns the host.
+     *
+     * @return the host. Can be {@code null}.
+     */
+    public String getHost() {
 		return host;
-	}
+    }
 
-	/**
-	 * Returns the port. Returns {@code -1} if no port has been set.
-	 * 
-	 * @return the port
-	 */
-	public int getPort() {
+    /**
+     * Returns the port. Returns {@code -1} if no port has been set.
+     *
+     * @return the port
+     */
+    public int getPort() {
 		return port;
-	}
+    }
 
 	/**
 	 * Returns the path.
-	 * 
+	 *
 	 * @return the path. Can be {@code null}.
 	 */
 	public String getPath() {
 		return path.getPath();
 	}
 
-	/**
-	 * Returns the list of path segments.
-	 * 
-	 * @return the path segments. Empty if no path has been set.
-	 */
+    /**
+     * Returns the list of path segments.
+     *
+     * @return the path segments. Empty if no path has been set.
+     */
 	public List<String> getPathSegments() {
 		return path.getPathSegments();
 	}
 
 	/**
 	 * Returns the query.
-	 * 
+	 *
 	 * @return the query. Can be {@code null}.
 	 */
 	public String getQuery() {
@@ -169,7 +178,8 @@ public final class UriComponents {
 						queryBuilder.append('&');
 					}
 					queryBuilder.append(name);
-				} else {
+				}
+				else {
 					for (Object value : values) {
 						if (queryBuilder.length() != 0) {
 							queryBuilder.append('&');
@@ -184,65 +194,68 @@ public final class UriComponents {
 				}
 			}
 			return queryBuilder.toString();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
 
 	/**
-	 * Returns the map of query parameters.
-	 * 
-	 * @return the query parameters. Empty if no query has been set.
-	 */
-	public MultiValueMap<String, String> getQueryParams() {
+     * Returns the map of query parameters.
+     *
+     * @return the query parameters. Empty if no query has been set.
+     */
+    public MultiValueMap<String, String> getQueryParams() {
 		return queryParams;
-	}
+    }
 
-	/**
-	 * Returns the fragment.
-	 * 
-	 * @return the fragment. Can be {@code null}.
-	 */
-	public String getFragment() {
+    /**
+     * Returns the fragment.
+     *
+     * @return the fragment. Can be {@code null}.
+     */
+    public String getFragment() {
 		return fragment;
-	}
+    }
 
-	// encoding
+    // encoding
 
 	/**
 	 * Encodes all URI components using their specific encoding rules, and returns the result as a new
 	 * {@code UriComponents} instance. This method uses UTF-8 to encode.
-	 * 
+	 *
 	 * @return the encoded uri components
 	 */
-	public UriComponents encode() {
-		try {
-			return encode(DEFAULT_ENCODING);
-		} catch (UnsupportedEncodingException e) {
-			throw new InternalError("\"" + DEFAULT_ENCODING + "\" not supported");
-		}
-	}
+    public UriComponents encode() {
+        try {
+            return encode(DEFAULT_ENCODING);
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new InternalError("\"" + DEFAULT_ENCODING + "\" not supported");
+        }
+    }
 
-	/**
-	 * Encodes all URI components using their specific encoding rules, and returns the result as a new
-	 * {@code UriComponents} instance.
-	 * 
-	 * @param encoding the encoding of the values contained in this map
-	 * @return the encoded uri components
-	 * @throws UnsupportedEncodingException if the given encoding is not supported
-	 */
-	public UriComponents encode(String encoding) throws UnsupportedEncodingException {
-		Assert.hasLength(encoding, "'encoding' must not be empty");
+    /**
+     * Encodes all URI components using their specific encoding rules, and returns the result as a new
+     * {@code UriComponents} instance.
+     *
+     * @param encoding the encoding of the values contained in this map
+     * @return the encoded uri components
+     * @throws UnsupportedEncodingException if the given encoding is not supported
+     */
+    public UriComponents encode(String encoding) throws UnsupportedEncodingException {
+        Assert.hasLength(encoding, "'encoding' must not be empty");
 
-		if (encoded) {
-			return this;
-		}
+        if (encoded) {
+            return this;
+        }
 
 		String encodedScheme = encodeUriComponent(this.scheme, encoding, Type.SCHEME);
 		String encodedUserInfo = encodeUriComponent(this.userInfo, encoding, Type.USER_INFO);
 		String encodedHost = encodeUriComponent(this.host, encoding, Type.HOST);
 		PathComponent encodedPath = path.encode(encoding);
-		MultiValueMap<String, String> encodedQueryParams = new LinkedMultiValueMap<String, String>(this.queryParams.size());
+		MultiValueMap<String, String> encodedQueryParams =
+				new LinkedMultiValueMap<String, String>(this.queryParams.size());
 		for (Map.Entry<String, List<String>> entry : this.queryParams.entrySet()) {
 			String encodedName = encodeUriComponent(entry.getKey(), encoding, Type.QUERY_PARAM);
 			List<String> encodedValues = new ArrayList<String>(entry.getValue().size());
@@ -254,20 +267,22 @@ public final class UriComponents {
 		}
 		String encodedFragment = encodeUriComponent(this.fragment, encoding, Type.FRAGMENT);
 
-		return new UriComponents(encodedScheme, encodedUserInfo, encodedHost, this.port, encodedPath, encodedQueryParams, encodedFragment, true, false);
-	}
+		return new UriComponents(encodedScheme, encodedUserInfo, encodedHost, this.port, encodedPath,
+				encodedQueryParams, encodedFragment, true, false);
+    }
 
-	/**
-	 * Encodes the given source into an encoded String using the rules specified by the given component and with the
-	 * given options.
-	 * 
-	 * @param source the source string
-	 * @param encoding the encoding of the source string
-	 * @param type the URI component for the source
-	 * @return the encoded URI
-	 * @throws IllegalArgumentException when the given uri parameter is not a valid URI
-	 */
-	static String encodeUriComponent(String source, String encoding, Type type) throws UnsupportedEncodingException {
+    /**
+     * Encodes the given source into an encoded String using the rules specified by the given component and with the
+     * given options.
+     *
+     * @param source the source string
+     * @param encoding the encoding of the source string
+     * @param type the URI component for the source
+     * @return the encoded URI
+     * @throws IllegalArgumentException when the given uri parameter is not a valid URI
+     */
+	static String encodeUriComponent(String source, String encoding, Type type)
+			throws UnsupportedEncodingException {
 		if (source == null) {
 			return null;
 		}
@@ -284,35 +299,36 @@ public final class UriComponents {
 
 	private static byte[] encodeBytes(byte[] source, Type type) {
 		Assert.notNull(source, "'source' must not be null");
-		Assert.notNull(type, "'type' must not be null");
+        Assert.notNull(type, "'type' must not be null");
 
-		ByteArrayOutputStream bos = new ByteArrayOutputStream(source.length);
-		for (int i = 0; i < source.length; i++) {
-			int b = source[i];
-			if (b < 0) {
-				b += 256;
-			}
-			if (type.isAllowed(b)) {
-				bos.write(b);
-			} else {
-				bos.write('%');
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(source.length);
+        for (int i = 0; i < source.length; i++) {
+            int b = source[i];
+            if (b < 0) {
+                b += 256;
+            }
+            if (type.isAllowed(b)) {
+                bos.write(b);
+            }
+            else {
+                bos.write('%');
 
-				char hex1 = Character.toUpperCase(Character.forDigit((b >> 4) & 0xF, 16));
-				char hex2 = Character.toUpperCase(Character.forDigit(b & 0xF, 16));
+                char hex1 = Character.toUpperCase(Character.forDigit((b >> 4) & 0xF, 16));
+                char hex2 = Character.toUpperCase(Character.forDigit(b & 0xF, 16));
 
-				bos.write(hex1);
-				bos.write(hex2);
-			}
-		}
-		return bos.toByteArray();
-	}
+                bos.write(hex1);
+                bos.write(hex2);
+            }
+        }
+        return bos.toByteArray();
+    }
 
 	// verifying
 
 	/**
 	 * Verifies all URI components to determine whether they contain any illegal characters, throwing an
 	 * {@code IllegalArgumentException} if so.
-	 * 
+	 *
 	 * @throws IllegalArgumentException if any of the components contain illegal characters
 	 */
 	private void verify() {
@@ -340,7 +356,7 @@ public final class UriComponents {
 
 		int length = source.length();
 
-		for (int i = 0; i < length; i++) {
+		for (int i=0; i < length; i++) {
 			char ch = source.charAt(i);
 			if (ch == '%') {
 				if ((i + 2) < length) {
@@ -352,11 +368,14 @@ public final class UriComponents {
 						throw new IllegalArgumentException("Invalid encoded sequence \"" + source.substring(i) + "\"");
 					}
 					i += 2;
-				} else {
+				}
+				else {
 					throw new IllegalArgumentException("Invalid encoded sequence \"" + source.substring(i) + "\"");
 				}
-			} else if (!type.isAllowed(ch)) {
-				throw new IllegalArgumentException("Invalid character '" + ch + "' for " + type.name() + " in \"" + source + "\"");
+			}
+			else if (!type.isAllowed(ch)) {
+				throw new IllegalArgumentException(
+						"Invalid character '" + ch + "' for " + type.name() + " in \"" + source + "\"");
 			}
 		}
 	}
@@ -364,9 +383,9 @@ public final class UriComponents {
 	// expanding
 
 	/**
-	 * Replaces all URI template variables with the values from a given map. The map keys represent variable names; the
-	 * values variable values. The order of variables is not significant.
-	 * 
+	 * Replaces all URI template variables with the values from a given map. The map keys represent
+	 * variable names; the values variable values. The order of variables is not significant.
+
 	 * @param uriVariables the map of URI variables
 	 * @return the expanded uri components
 	 */
@@ -377,9 +396,9 @@ public final class UriComponents {
 	}
 
 	/**
-	 * Replaces all URI template variables with the values from a given array. The array represent variable values. The
-	 * order of variables is significant.
-	 * 
+	 * Replaces all URI template variables with the values from a given array. The array represent variable values.
+	 * The order of variables is significant.
+
 	 * @param uriVariableValues URI variable values
 	 * @return the expanded uri components
 	 */
@@ -396,7 +415,8 @@ public final class UriComponents {
 		String expandedUserInfo = expandUriComponent(this.userInfo, uriVariables);
 		String expandedHost = expandUriComponent(this.host, uriVariables);
 		PathComponent expandedPath = path.expand(uriVariables);
-		MultiValueMap<String, String> expandedQueryParams = new LinkedMultiValueMap<String, String>(this.queryParams.size());
+		MultiValueMap<String, String> expandedQueryParams =
+				new LinkedMultiValueMap<String, String>(this.queryParams.size());
 		for (Map.Entry<String, List<String>> entry : this.queryParams.entrySet()) {
 			String expandedName = expandUriComponent(entry.getKey(), uriVariables);
 			List<String> expandedValues = new ArrayList<String>(entry.getValue().size());
@@ -408,7 +428,8 @@ public final class UriComponents {
 		}
 		String expandedFragment = expandUriComponent(this.fragment, uriVariables);
 
-		return new UriComponents(expandedScheme, expandedUserInfo, expandedHost, this.port, expandedPath, expandedQueryParams, expandedFragment, false, false);
+		return new UriComponents(expandedScheme, expandedUserInfo, expandedHost, this.port, expandedPath,
+				expandedQueryParams, expandedFragment, false, false);
 	}
 
 	private static String expandUriComponent(String source, UriTemplateVariables uriVariables) {
@@ -441,35 +462,45 @@ public final class UriComponents {
 		return variableValue != null ? variableValue.toString() : "";
 	}
 
+    /**
+     * Normalize the path removing sequences like "path/..".
+     * @see StringUtils#cleanPath(String)
+     */
+    public UriComponents normalize() {
+		String normalizedPath = StringUtils.cleanPath(getPath());
+		return new UriComponents(scheme, userInfo, host, this.port, new FullPathComponent(normalizedPath),
+				queryParams, fragment, encoded, false);
+    }
+
 	// other functionality
 
-	/**
-	 * Returns a URI string from this {@code UriComponents} instance.
-	 * 
-	 * @return the URI string
-	 */
-	public String toUriString() {
-		StringBuilder uriBuilder = new StringBuilder();
+    /**
+     * Returns a URI string from this {@code UriComponents} instance.
+     *
+     * @return the URI string
+     */
+    public String toUriString() {
+        StringBuilder uriBuilder = new StringBuilder();
 
-		if (scheme != null) {
-			uriBuilder.append(scheme);
-			uriBuilder.append(':');
-		}
+        if (scheme != null) {
+            uriBuilder.append(scheme);
+            uriBuilder.append(':');
+        }
 
-		if (userInfo != null || host != null) {
-			uriBuilder.append("//");
-			if (userInfo != null) {
+        if (userInfo != null || host != null) {
+            uriBuilder.append("//");
+            if (userInfo != null) {
 				uriBuilder.append(userInfo);
-				uriBuilder.append('@');
-			}
-			if (host != null) {
+                uriBuilder.append('@');
+            }
+            if (host != null) {
 				uriBuilder.append(host);
-			}
-			if (port != -1) {
-				uriBuilder.append(':');
+            }
+            if (port != -1) {
+                uriBuilder.append(':');
 				uriBuilder.append(port);
-			}
-		}
+            }
+        }
 
 		String path = getPath();
 		if (StringUtils.hasLength(path)) {
@@ -481,38 +512,41 @@ public final class UriComponents {
 
 		String query = getQuery();
 		if (query != null) {
-			uriBuilder.append('?');
-			uriBuilder.append(query);
-		}
+            uriBuilder.append('?');
+            uriBuilder.append(query);
+        }
 
-		if (fragment != null) {
-			uriBuilder.append('#');
+        if (fragment != null) {
+            uriBuilder.append('#');
 			uriBuilder.append(fragment);
-		}
+        }
 
-		return uriBuilder.toString();
-	}
+        return uriBuilder.toString();
+    }
 
-	/**
-	 * Returns a {@code URI} from this {@code UriComponents} instance.
-	 * 
-	 * @return the URI
-	 */
-	public URI toUri() {
-		try {
-			if (encoded) {
-				return new URI(toUriString());
-			} else {
+    /**
+     * Returns a {@code URI} from this {@code UriComponents} instance.
+     *
+     * @return the URI
+     */
+    public URI toUri() {
+        try {
+            if (encoded) {
+                return new URI(toUriString());
+            }
+            else {
 				String path = getPath();
 				if (StringUtils.hasLength(path) && path.charAt(0) != PATH_DELIMITER) {
 					path = PATH_DELIMITER + path;
 				}
-				return new URI(getScheme(), getUserInfo(), getHost(), getPort(), path, getQuery(), getFragment());
-			}
-		} catch (URISyntaxException ex) {
-			throw new IllegalStateException("Could not create URI object: " + ex.getMessage(), ex);
-		}
-	}
+				return new URI(getScheme(), getUserInfo(), getHost(), getPort(), path, getQuery(),
+						getFragment());
+            }
+        }
+        catch (URISyntaxException ex) {
+            throw new IllegalStateException("Could not create URI object: " + ex.getMessage(), ex);
+        }
+    }
 
 	@Override
 	public boolean equals(Object o) {
@@ -544,7 +578,8 @@ public final class UriComponents {
 				return false;
 			}
 			return true;
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
@@ -562,159 +597,161 @@ public final class UriComponents {
 	}
 
 	@Override
-	public String toString() {
+    public String toString() {
 		return toUriString();
-	}
+    }
 
-	// inner types
+    // inner types
 
-	/**
-	 * Enumeration used to identify the parts of a URI.
-	 * <p/>
-	 * Contains methods to indicate whether a given character is valid in a specific URI component.
-	 * 
-	 * @author Arjen Poutsma
-	 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>
-	 */
-	static enum Type {
+    /**
+     * Enumeration used to identify the parts of a URI.
+     * <p/>
+     * Contains methods to indicate whether a given character is valid in a specific URI component.
+     *
+     * @author Arjen Poutsma
+     * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>
+     */
+    static enum Type {
 
-		SCHEME {
-			@Override
-			public boolean isAllowed(int c) {
-				return isAlpha(c) || isDigit(c) || '+' == c || '-' == c || '.' == c;
-			}
-		},
-		AUTHORITY {
-			@Override
-			public boolean isAllowed(int c) {
-				return isUnreserved(c) || isSubDelimiter(c) || ':' == c || '@' == c;
-			}
-		},
-		USER_INFO {
-			@Override
-			public boolean isAllowed(int c) {
-				return isUnreserved(c) || isSubDelimiter(c) || ':' == c;
-			}
-		},
-		HOST {
-			@Override
-			public boolean isAllowed(int c) {
-				return isUnreserved(c) || isSubDelimiter(c);
-			}
-		},
-		PORT {
-			@Override
-			public boolean isAllowed(int c) {
-				return isDigit(c);
-			}
-		},
-		PATH {
-			@Override
-			public boolean isAllowed(int c) {
-				return isPchar(c) || '/' == c;
-			}
-		},
-		PATH_SEGMENT {
-			@Override
-			public boolean isAllowed(int c) {
-				return isPchar(c);
-			}
-		},
-		QUERY {
-			@Override
-			public boolean isAllowed(int c) {
-				return isPchar(c) || '/' == c || '?' == c;
-			}
-		},
-		QUERY_PARAM {
-			@Override
-			public boolean isAllowed(int c) {
-				if ('=' == c || '+' == c || '&' == c) {
-					return false;
-				} else {
-					return isPchar(c) || '/' == c || '?' == c;
-				}
-			}
-		},
-		FRAGMENT {
-			@Override
-			public boolean isAllowed(int c) {
-				return isPchar(c) || '/' == c || '?' == c;
-			}
-		};
+        SCHEME {
+            @Override
+            public boolean isAllowed(int c) {
+                return isAlpha(c) || isDigit(c) || '+' == c || '-' == c || '.' == c;
+            }
+        },
+        AUTHORITY {
+            @Override
+            public boolean isAllowed(int c) {
+                return isUnreserved(c) || isSubDelimiter(c) || ':' == c || '@' == c;
+            }
+        },
+        USER_INFO {
+            @Override
+            public boolean isAllowed(int c) {
+                return isUnreserved(c) || isSubDelimiter(c) || ':' == c;
+            }
+        },
+        HOST {
+            @Override
+            public boolean isAllowed(int c) {
+                return isUnreserved(c) || isSubDelimiter(c);
+            }
+        },
+        PORT {
+            @Override
+            public boolean isAllowed(int c) {
+                return isDigit(c);
+            }
+        },
+        PATH {
+            @Override
+            public boolean isAllowed(int c) {
+                return isPchar(c) || '/' == c;
+            }
+        },
+        PATH_SEGMENT {
+            @Override
+            public boolean isAllowed(int c) {
+                return isPchar(c);
+            }
+        },
+        QUERY {
+            @Override
+            public boolean isAllowed(int c) {
+                return isPchar(c) || '/' == c || '?' == c;
+            }
+        },
+        QUERY_PARAM {
+            @Override
+            public boolean isAllowed(int c) {
+                if ('=' == c || '+' == c || '&' == c) {
+                    return false;
+                }
+                else {
+                    return isPchar(c) || '/' == c || '?' == c;
+                }
+            }
+        },
+        FRAGMENT {
+            @Override
+            public boolean isAllowed(int c) {
+                return isPchar(c) || '/' == c || '?' == c;
+            }
+        };
 
-		/**
-		 * Indicates whether the given character is allowed in this URI component.
-		 * 
-		 * @param c the character
-		 * @return {@code true} if the character is allowed; {@code false} otherwise
-		 */
-		public abstract boolean isAllowed(int c);
+        /**
+         * Indicates whether the given character is allowed in this URI component.
+         *
+         * @param c the character
+         * @return {@code true} if the character is allowed; {@code false} otherwise
+         */
+        public abstract boolean isAllowed(int c);
 
-		/**
-		 * Indicates whether the given character is in the {@code ALPHA} set.
-		 * 
-		 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
-		 */
-		protected boolean isAlpha(int c) {
-			return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
-		}
+        /**
+         * Indicates whether the given character is in the {@code ALPHA} set.
+         *
+         * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+         */
+        protected boolean isAlpha(int c) {
+            return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
+        }
 
-		/**
-		 * Indicates whether the given character is in the {@code DIGIT} set.
-		 * 
-		 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
-		 */
-		protected boolean isDigit(int c) {
-			return c >= '0' && c <= '9';
-		}
+        /**
+         * Indicates whether the given character is in the {@code DIGIT} set.
+         *
+         * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+         */
+        protected boolean isDigit(int c) {
+            return c >= '0' && c <= '9';
+        }
 
-		/**
-		 * Indicates whether the given character is in the {@code gen-delims} set.
-		 * 
-		 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
-		 */
-		protected boolean isGenericDelimiter(int c) {
-			return ':' == c || '/' == c || '?' == c || '#' == c || '[' == c || ']' == c || '@' == c;
-		}
+        /**
+         * Indicates whether the given character is in the {@code gen-delims} set.
+         *
+         * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+         */
+        protected boolean isGenericDelimiter(int c) {
+            return ':' == c || '/' == c || '?' == c || '#' == c || '[' == c || ']' == c || '@' == c;
+        }
 
-		/**
-		 * Indicates whether the given character is in the {@code sub-delims} set.
-		 * 
-		 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
-		 */
-		protected boolean isSubDelimiter(int c) {
-			return '!' == c || '$' == c || '&' == c || '\'' == c || '(' == c || ')' == c || '*' == c || '+' == c || ',' == c || ';' == c || '=' == c;
-		}
+        /**
+         * Indicates whether the given character is in the {@code sub-delims} set.
+         *
+         * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+         */
+        protected boolean isSubDelimiter(int c) {
+            return '!' == c || '$' == c || '&' == c || '\'' == c || '(' == c || ')' == c || '*' == c || '+' == c ||
+                    ',' == c || ';' == c || '=' == c;
+        }
 
-		/**
-		 * Indicates whether the given character is in the {@code reserved} set.
-		 * 
-		 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
-		 */
-		protected boolean isReserved(char c) {
-			return isGenericDelimiter(c) || isReserved(c);
-		}
+        /**
+         * Indicates whether the given character is in the {@code reserved} set.
+         *
+         * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+         */
+        protected boolean isReserved(char c) {
+            return isGenericDelimiter(c) || isReserved(c);
+        }
 
-		/**
-		 * Indicates whether the given character is in the {@code unreserved} set.
-		 * 
-		 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
-		 */
-		protected boolean isUnreserved(int c) {
-			return isAlpha(c) || isDigit(c) || '-' == c || '.' == c || '_' == c || '~' == c;
-		}
+        /**
+         * Indicates whether the given character is in the {@code unreserved} set.
+         *
+         * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+         */
+        protected boolean isUnreserved(int c) {
+            return isAlpha(c) || isDigit(c) || '-' == c || '.' == c || '_' == c || '~' == c;
+        }
 
-		/**
-		 * Indicates whether the given character is in the {@code pchar} set.
-		 * 
-		 * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
-		 */
-		protected boolean isPchar(int c) {
-			return isUnreserved(c) || isSubDelimiter(c) || ':' == c || '@' == c;
-		}
+        /**
+         * Indicates whether the given character is in the {@code pchar} set.
+         *
+         * @see <a href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986, appendix A</a>
+         */
+        protected boolean isPchar(int c) {
+            return isUnreserved(c) || isSubDelimiter(c) || ':' == c || '@' == c;
+        }
 
-	}
+    }
 
 	/**
 	 * Defines the contract for path (segments).
@@ -749,13 +786,13 @@ public final class UriComponents {
 		}
 
 		public List<String> getPathSegments() {
-			String delimiter = new String(new char[] { PATH_DELIMITER });
+			String delimiter = new String(new char[]{PATH_DELIMITER});
 			String[] pathSegments = StringUtils.tokenizeToStringArray(path, delimiter);
 			return Collections.unmodifiableList(Arrays.asList(pathSegments));
 		}
 
 		public PathComponent encode(String encoding) throws UnsupportedEncodingException {
-			String encodedPath = encodeUriComponent(getPath(), encoding, Type.PATH);
+			String encodedPath = encodeUriComponent(getPath(),encoding, Type.PATH);
 			return new FullPathComponent(encodedPath);
 		}
 
@@ -799,7 +836,7 @@ public final class UriComponents {
 		public String getPath() {
 			StringBuilder pathBuilder = new StringBuilder();
 			pathBuilder.append(PATH_DELIMITER);
-			for (Iterator<String> iterator = pathSegments.iterator(); iterator.hasNext();) {
+			for (Iterator<String> iterator = pathSegments.iterator(); iterator.hasNext(); ) {
 				String pathSegment = iterator.next();
 				pathBuilder.append(pathSegment);
 				if (iterator.hasNext()) {
@@ -908,6 +945,7 @@ public final class UriComponents {
 	}
 
 
+
 	/**
 	 * Represents an empty path.
 	 */
@@ -946,7 +984,7 @@ public final class UriComponents {
 
 	/**
 	 * Defines the contract for URI Template variables
-	 * 
+	 *
 	 * @see UriComponents#expand
 	 */
 	private interface UriTemplateVariables {
@@ -968,6 +1006,9 @@ public final class UriComponents {
 		}
 
 		public Object getValue(String name) {
+			if (!this.uriVariables.containsKey(name)) {
+				throw new IllegalArgumentException("Map has no value for '" + name + "'");
+			}
 			return this.uriVariables.get(name);
 		}
 	}
@@ -976,6 +1017,7 @@ public final class UriComponents {
 	 * URI template variables backed by a variable argument array.
 	 */
 	private static class VarArgsTemplateVariables implements UriTemplateVariables {
+
 		private final Iterator<Object> valueIterator;
 
 		public VarArgsTemplateVariables(Object... uriVariableValues) {
@@ -984,7 +1026,7 @@ public final class UriComponents {
 
 		public Object getValue(String name) {
 			if (!valueIterator.hasNext()) {
-				throw new IllegalArgumentException("Not enough variable values available to expand [" + name + "]");
+				throw new IllegalArgumentException("Not enough variable values available to expand '" + name + "'");
 			}
 			return valueIterator.next();
 		}

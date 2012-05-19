@@ -16,35 +16,34 @@
 
 package org.springframework.http;
 
-import org.apache.commons.codec.binary.Base64;
+import org.springframework.util.Base64Utils;
 
 /**
  * Represents HTTP Basic Authentication. Intended for use
  * with {@link org.springframework.http.client.ClientHttpRequest}
  * and {@link org.springframework.web.client.RestTemplate}.
- * 
+ * @see <a href="http://www.ietf.org/rfc/rfc2617.txt">RFC2617</a>
  * @author Jonathan Sweemer
+ * @author Roy Clarkson
  */
 public class HttpBasicAuthentication extends HttpAuthentication {
 
 	private final String username;
 	private final String password;
-	
+
 	public HttpBasicAuthentication(String username, String password) {
 		this.username = username;
 		this.password = password;
 	}
-	
+
 	/**
 	 * @return the value for the 'Authorization' HTTP header.
 	 */
 	public String getHeaderValue() {
-		String value = null;
 		byte[] bytes = String.format("%s:%s", username, password).getBytes();
-		value = new String(Base64.encodeBase64(bytes));
-		return String.format("Basic %s", value);
+		return String.format("Basic %s", Base64Utils.encodeToString(bytes));
 	}
-	
+
 	@Override
 	public String toString() {
 		String s = null;

@@ -111,6 +111,7 @@ public class UriUtilsTests extends TestCase {
 		assertTrue("expected IllegalArgumentException", success);
 	}
 
+	@SuppressWarnings("deprecation")
 	@SmallTest
 	public void testEncodeUri() throws UnsupportedEncodingException {
 		assertEquals("Invalid encoded URI", "http://www.ietf.org/rfc/rfc3986.txt",
@@ -142,6 +143,7 @@ public class UriUtilsTests extends TestCase {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@SmallTest
 	public void testEncodeHttpUrl() throws UnsupportedEncodingException {
 		assertEquals("Invalid encoded HTTP URL", "http://www.ietf.org/rfc/rfc3986.txt",
@@ -168,8 +170,18 @@ public class UriUtilsTests extends TestCase {
 				UriUtils.encodeHttpUrl("http://[::1]:8080/rest.xml", ENC));
 		assertEquals("Invalid encoded HTTP URL", "http://[fe80::a2cf:33ff:fee2:124f]:8080/rest.xml",
 				UriUtils.encodeHttpUrl("http://[fe80::a2cf:33ff:fee2:124f]:8080/rest.xml", ENC));
+		
+		// SPR-8974
+		assertEquals("http://example.org?format=json&url=http://another.com?foo=bar",
+				UriUtils.encodeUri("http://example.org?format=json&url=http://another.com?foo=bar", ENC));
+
+		// ANDROID-76
+		assertEquals("Invalid encoded HTTP URL", 
+				"http://query.yahooapis.com/v1/public/yql?q=select%20Date,%20Close,%20Volume%20from%20yahoo.finance.historicaldata%20where%20symbol%20=%20%22AAPL%22%20and%20startDate%20=%20%222012-01-01%22%20and%20endDate%20=%20%222012-01-10%22&format=json&env=store://datatables.org/alltableswithkeys", 
+				UriUtils.encodeHttpUrl("http://query.yahooapis.com/v1/public/yql?q=select Date, Close, Volume from yahoo.finance.historicaldata where symbol = \"AAPL\" and startDate = \"2012-01-01\" and endDate = \"2012-01-10\"&format=json&env=store://datatables.org/alltableswithkeys", ENC));
 	}
 
+	@SuppressWarnings("deprecation")
 	@SmallTest
 	public void testEncodeHttpUrlMail() throws UnsupportedEncodingException {
 		boolean success = false;

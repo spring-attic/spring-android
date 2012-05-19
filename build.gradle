@@ -1,211 +1,232 @@
-/*
- * Copyright 2010-2011 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-import org.springframework.build.Version
+buildscript {
+    repositories {
+        maven { url 'http://repo.springsource.org/plugins-release' }
+    }
+    dependencies {
+        classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.1.5'
+    }
+}
 
-// -----------------------------------------------------------------------------
-// Main gradle build file for Spring Mobile
-// @author Chris Beams
-// @author Roy Clarkson
-// -----------------------------------------------------------------------------
+configure(allprojects) {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
 
-// -----------------------------------------------------------------------------
-// Configuration for the root project
-// -----------------------------------------------------------------------------
-description = 'Spring for Android'
-abbreviation = 'ANDROID'
-
-apply plugin: 'base'
-apply plugin: 'idea'
-
-def buildSrcDir = "$rootDir/buildSrc"
-apply from: "$buildSrcDir/wrapper.gradle"
-apply from: "$buildSrcDir/maven-root-pom.gradle"
-
-// -----------------------------------------------------------------------------
-// Configuration for all projects including this one (the root project)
-// @see settings.gradle for list of all projects
-// -----------------------------------------------------------------------------
-allprojects {
-    // group will translate to groupId during pom generation and deployment
     group = 'org.springframework.android'
 
-    // version will be used in maven pom generation as well as determining
-    // where artifacts should be deployed, based on release type of snapshot,
-    // milestone or release.
-    // @see org.springframework.build.Version under buildSrc/ for more info
-    // @see gradle.properties for the declaration of this property.
-    version = new Version(springAndroidVersion)
+    ext.androidVersion = '4.0.1.2'
 
-    // default set of maven repositories to be used when resolving dependencies
+    [compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:none']
+
     repositories {
-        mavenRepo urls: 'http://maven.springframework.org/release'
-        mavenRepo urls: 'http://maven.springframework.org/milestone'
-        mavenRepo urls: 'http://maven.springframework.org/snapshot'
-        mavenCentral()
+        maven { url "http://repo.springsource.org/libs-release" }
+        maven { url "http://repo.springsource.org/ebr-maven-external" }
+        maven { url "https://android-rome-feed-reader.googlecode.com/svn/maven2/releases" }
     }
-}
-
-
-// -----------------------------------------------------------------------------
-// Create collection of subprojects - each will receive their own configuration
-// - all subprojects that start with spring-mobile-* are 'java projects'
-// - documentation-related projects are not collected here
-//
-// @see configure(*) sections below
-// -----------------------------------------------------------------------------
-javaprojects = subprojects.findAll { project ->
-    project.path.startsWith(':spring-android-')
-}
-
-
-// -----------------------------------------------------------------------------
-// Configuration for all java projects
-// -----------------------------------------------------------------------------
-configure(javaprojects) {
-
-    apply plugin: 'java'     // tasks for conventional java lifecycle
-    apply plugin: 'maven'    // `gradle install` to push jars to local .m2 cache
-    apply plugin: 'eclipse'  // `gradle eclipse` to generate .classpath/.project
-    apply plugin: 'idea'     // `gradle idea` to generate .ipr/.iml
-
-    // ensure JDK 5 compatibility
-    sourceCompatibility=1.5
-    targetCompatibility=1.5
-
-    // set up dedicated directories for jars and source jars.
-    // this makes it easier when putting together the distribution
-    libsBinDir = new File(libsDir, 'bin')
-    libsSrcDir = new File(libsDir, 'src')
-
-    // add tasks for creating source jars and generating poms etc
-    apply from: "$buildSrcDir/maven-deployment.gradle"
-
-    // add tasks for finding and publishing .xsd files
-    apply from: "$buildSrcDir/schema-publication.gradle"
-
-    junitVersion = '4.7'
-    log4jVersion = '1.2.16'
-    springVersion = '3.1.1.RELEASE'
-    springSocialVersion = '1.0.2.RELEASE'
-    springSecurityVersion = '3.1.0.RELEASE'
-    androidVersion = '4.0.1.2'
-    commonsHttpclientVersion = '3.1'
-    jacksonVersion = '1.9.5'
-	gsonVersion = '2.1'
-    simpleXmlVersion = '2.6.2'
-    androidRomeVersion = '1.0.0-r2'
-    javaxServletApiVersion = '2.5'
-    commonsFileuploadVersion = '1.2'
-    jettyVersion = '6.1.9'
-    xmlUnitVersion = '1.3'
     
-    // dependencies that are common across all java projects
-    dependencies {
-        testCompile "junit:junit:$junitVersion"
-        testCompile "log4j:log4j:$log4jVersion"
-        testCompile "org.springframework:spring-test:$springVersion"
+    // servlet-api (2.5) and tomcat-servlet-api (3.0) classpath entries should not be
+    // exported to dependent projects in Eclipse to avoid false compilation errors due
+    // to changing APIs across these versions
+    eclipse.classpath.file.whenMerged { classpath ->
+        classpath.entries.findAll { entry -> entry.path.contains('servlet-api') }*.exported = false
     }
-
-    // enable all compiler warnings (GRADLE-1077)
-    [compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:all']
-
-    // generate .classpath files without GRADLE_CACHE variable (GRADLE-1079)
-    eclipseClasspath.variables = [:]
 }
 
+configure(subprojects) { subproject ->
+    apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
-// -----------------------------------------------------------------------------
-// Configuration for each individual core java subproject
-//
-// @see configure(javaprojects) above for general config
-// -----------------------------------------------------------------------------
+    jar {
+        manifest.attributes['Implementation-Title'] = subproject.name
+        manifest.attributes['Implementation-Version'] = subproject.version
+
+        from("${rootProject.projectDir}/src/dist") {
+            include "license.txt"
+            include "notice.txt"
+            into "META-INF"
+            expand(copyright: new Date().format('yyyy'), version: project.version)
+        }
+    }
+
+    javadoc {
+        options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+        options.author = true
+        options.header = project.name
+    }
+
+    task sourcesJar(type: Jar, dependsOn:classes) {
+        classifier = 'sources'
+        from sourceSets.main.allJava
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+}
+
 project('spring-android-core') {
     description = "Spring for Android Core"
-
+    
     dependencies {
-        compile ("com.google.android:android:$androidVersion") { 
-            provided = true 
-        }
+        compile ("com.google.android:android:$androidVersion", provided)
     }
 }
 
 project('spring-android-auth') {
     description = 'Spring for Android Auth'
-    
     dependencies {
-        compile ("com.google.android:android:$androidVersion") { 
-            provided = true 
-        }
-        compile ("org.springframework.social:spring-social-core:$springSocialVersion") {
+        compile ("com.google.android:android:$androidVersion", provided)
+        compile project (':spring-android-core')
+        compile project (':spring-android-rest-template');
+        compile ("org.springframework.social:spring-social-core:1.0.2.RELEASE") {
             // exclude spring-web in favor of spring-android-rest-template
             exclude group: "org.springframework", module: "spring-web"
         }
-        compile ("org.springframework.security:spring-security-crypto:$springSecurityVersion") {
+        compile ("org.springframework.security:spring-security-crypto:3.1.0.RELEASE") {
             transitive = false
         }
-        compile project (':spring-android-core')
-        compile project (':spring-android-rest-template');
     }
 }
 
 project('spring-android-rest-template') {
     description = 'Spring for Android Rest Template'
-
-    repositories {
-        mavenRepo urls: 'https://android-rome-feed-reader.googlecode.com/svn/maven2/releases'
-    }
-    
     dependencies {
-        compile ("com.google.android:android:$androidVersion") { 
-            provided = true 
-        }
-        compile ("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion") {
-            optional = true
-        }
-        compile ("com.google.code.gson:gson:$gsonVersion") {
-            optional = true
-        }
-        compile ("org.simpleframework:simple-xml:$simpleXmlVersion") { 
-            optional = true 
+        compile ("com.google.android:android:$androidVersion", provided)
+        compile project (':spring-android-core')
+        compile ("org.codehaus.jackson:jackson-mapper-asl:1.9.7", optional)
+        compile ("com.google.code.gson:gson:2.1", optional)
+        compile ("org.simpleframework:simple-xml:2.6.2") { dep ->
+            optional dep
             transitive = false 
         }
-        compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion") { 
-            optional = true 
-        }
-        compile ("commons-httpclient:commons-httpclient:$commonsHttpclientVersion") {
-            optional = true
+        compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:1.0.0-r2", optional)
+        compile ("commons-httpclient:commons-httpclient:3.1") { dep ->
+            optional dep
             transitive = false
         }
-        compile project (':spring-android-core')
-
-        testCompile "org.springframework:spring-core:$springVersion"
-        testCompile "javax.servlet:servlet-api:$javaxServletApiVersion"
-        testCompile "commons-fileupload:commons-fileupload:$commonsFileuploadVersion"
-        testCompile "org.mortbay.jetty:jetty:$jettyVersion"
-        testCompile "xmlunit:xmlunit:$xmlUnitVersion"
     }
 }
 
+configure(rootProject) {
+    description = 'Spring for Android'
 
-// -----------------------------------------------------------------------------
-// Configuration for the docs subproject
-// -----------------------------------------------------------------------------
-project('docs') {
-    apply from: "$buildSrcDir/docs.gradle"
+    apply plugin: 'docbook-reference'
+
+    reference {
+        sourceDir = file('src/reference/docbook')
+    }
+
+    // don't publish the default jar for the root project
+    configurations.archives.artifacts.clear()
+
+    dependencies { // for integration tests
+    }
+    
+    task api(type: Javadoc) {
+        group = 'Documentation'
+        description = 'Generates aggregated Javadoc API documentation.'
+        title = "${rootProject.description} ${version} API"
+        options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+        options.author = true
+        options.header = rootProject.description
+        options.overview = 'src/api/overview.html'
+        options.links(
+            'http://docs.jboss.org/jbossas/javadoc/4.0.5/connector'
+        )
+        source subprojects.collect { project ->
+            project.sourceSets.main.allJava
+        }
+        destinationDir = new File(buildDir, "api")
+        classpath = files(subprojects.collect { project ->
+            project.sourceSets.main.compileClasspath
+        })
+        maxMemory = '1024m'
+    }
+
+    task docsZip(type: Zip) {
+        group = 'Distribution'
+        classifier = 'docs'
+        description = "Builds -${classifier} archive containing api and reference " +
+            "for deployment at static.springframework.org/spring-android/docs."
+
+        from('src/dist') {
+            include 'changelog.txt'
+        }
+
+        from (api) {
+            into 'api'
+        }
+
+        from (reference) {
+            into 'reference'
+        }
+    }
+
+    task distZip(type: Zip, dependsOn: docsZip) {
+        group = 'Distribution'
+        classifier = 'dist'
+        description = "Builds -${classifier} archive, containing all jars and docs, " +
+                      "suitable for community download page."
+
+        def baseDir = "${project.name}-${project.version}";
+
+        from('src/dist') {
+            include 'readme.txt'
+            include 'license.txt'
+            include 'notice.txt'
+            into "${baseDir}"
+            expand(copyright: new Date().format('yyyy'), version: project.version)
+        }
+
+        from(zipTree(docsZip.archivePath)) {
+            into "${baseDir}/docs"
+        }
+
+        subprojects.each { subproject ->
+            into ("${baseDir}/libs") {
+                from subproject.jar
+                if (subproject.tasks.findByPath('sourcesJar')) {
+                    from subproject.sourcesJar
+                }
+                if (subproject.tasks.findByPath('javadocJar')) {
+                    from subproject.javadocJar
+                }
+            }
+        }
+    }
+
+    artifacts {
+        archives docsZip
+        archives distZip
+    }
+
+    task wrapper(type: Wrapper) {
+        description = 'Generates gradlew[.bat] scripts'
+        gradleVersion = '1.0-rc-3'
+    }
+
 }
 
-apply from: "$buildSrcDir/dist.gradle"
-apply from: "$buildSrcDir/checks.gradle"
+task updateRootDocs << {
+    copy {
+        from 'src/dist'
+        into "${rootProject.projectDir}"
+        include 'notice.txt'
+        expand(copyright: new Date().format('yyyy'), version: project.version)
+        rename { filename -> 'NOTICE' }
+    }
+
+    copy {
+        from 'src/dist'
+        into "${rootProject.projectDir}"
+        include 'license.txt'
+        rename { filename -> 'LICENSE' }
+    }
+}
+
+build.dependsOn('updateRootDocs')

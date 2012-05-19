@@ -6,10 +6,7 @@
 
 1. Clone the repository from GitHub:
 
-		$ git clone --recursive git://github.com/SpringSource/spring-android.git
-
-	_Note: the --recursive switch is important, because Spring for Android uses
-git submodules, which must also be cloned and initialized._
+		$ git clone git://github.com/SpringSource/spring-android.git
 
 2. Navigate into the cloned repository directory:
 
@@ -18,20 +15,6 @@ git submodules, which must also be cloned and initialized._
 3. The project uses [Gradle](http://gradle.org/) to build:
 
 		$ ./gradlew build
-
-Alternatively, if "--recursive" is omitted, the following steps are required for a full check out of the source:
-
-1. Clone the repository from GitHub:
-
-		$ git clone git://github.com/SpringSource/spring-android.git
-
-2. Initialize the submodule
-
-		$ git submodule init
-
-3. Update the submodule in your local repository
-
-		$ git submodule update
 
 ## Eclipse
 

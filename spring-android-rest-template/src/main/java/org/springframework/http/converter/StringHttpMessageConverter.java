@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,15 +43,48 @@ import org.springframework.util.FileCopyUtils;
  */
 public class StringHttpMessageConverter extends AbstractHttpMessageConverter<String> {
 
-	public static final Charset DEFAULT_CHARSET = Charset.forName("ISO-8859-1");
+	private final Charset defaultCharset;
 
 	private final List<Charset> availableCharsets;
 
 	private boolean writeAcceptCharset = true;
 
+	/**
+	 * Create a new StringHttpMessageConverter instance with a default {@link Charset} of ISO-8859-1,
+	 * and default list of available {@link Charset}'s from {@link Charset#availableCharsets()}.
+	 */
 	public StringHttpMessageConverter() {
-		super(new MediaType("text", "plain", DEFAULT_CHARSET), MediaType.ALL);
-		this.availableCharsets = new ArrayList<Charset>(Charset.availableCharsets().values());
+		this(Charset.forName("ISO-8859-1"));
+	}
+
+	/**
+	 * Create a new StringHttpMessageConverter instance with a default {@link Charset},
+	 * and default list of available {@link Charset}'s from {@link Charset#availableCharsets()}.
+	 * @param defaultCharset the Charset to use 
+	 */
+	public StringHttpMessageConverter(Charset defaultCharset) {
+		this(defaultCharset, new ArrayList<Charset>(Charset.availableCharsets().values()));
+	}
+
+	/**
+	 * Create a new StringHttpMessageConverter instance with a default {@link Charset},
+	 * and list of available {@link Charset}'s.
+	 * @param defaultCharset the Charset to use 
+	 * @param availableCharsets the list of available Charsets
+	 */
+	public StringHttpMessageConverter(Charset defaultCharset, List<Charset> availableCharsets) {
+		super(new MediaType("text", "plain", defaultCharset), MediaType.ALL);
+		this.defaultCharset = defaultCharset;
+		this.availableCharsets = availableCharsets;
+	}
+
+	/**
+	 * The default {@link Charset} is ISO-8859-1. Can be overridden in subclasses,
+	 * or through the use of the alternate constructor.
+	 * @return default Charset
+	 */
+	public Charset getDefaultCharset() {
+		return this.defaultCharset;
 	}
 
 	/**
@@ -78,7 +111,7 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 	protected Long getContentLength(String s, MediaType contentType) {
 		Charset charset = getContentTypeCharset(contentType);
 		try {
-			return (long) s.getBytes(charset.name()).length;
+			return (long) s.getBytes(charset.displayName()).length;
 		} catch (UnsupportedEncodingException ex) {
 			// should not occur
 			throw new InternalError(ex.getMessage());
@@ -98,7 +131,8 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 	 * Return the list of supported {@link Charset}.
 	 * 
 	 * <p>
-	 * By default, returns {@link Charset#availableCharsets()}. Can be overridden in subclasses.
+	 * By default, returns {@link Charset#availableCharsets()}. Can be overridden in subclasses,
+	 * or through the use of the alternate constructor.
 	 * 
 	 * @return the list of accepted charsets
 	 */
@@ -110,7 +144,7 @@ public class StringHttpMessageConverter extends AbstractHttpMessageConverter<Str
 		if (contentType != null && contentType.getCharSet() != null) {
 			return contentType.getCharSet();
 		} else {
-			return DEFAULT_CHARSET;
+			return getDefaultCharset();
 		}
 	}
 

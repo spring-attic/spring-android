@@ -1,32 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+	<modelVersion>4.0.0</modelVersion>
+		
 	<parent>
 		<groupId>org.springframework.android</groupId>
 		<artifactId>spring-android-test</artifactId>
 		<version>1.0.0.BUILD-SNAPSHOT</version>
 	</parent>
-	
-	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>spring-android-auth-test</artifactId>
 	<packaging>apk</packaging>
 	<name>spring-android-auth-test</name>
 
 	<properties>
-		<spring-security-version>3.1.0.RELEASE</spring-security-version>
+		<org.springframework.security-version>3.1.0.RELEASE</org.springframework.security-version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-auth</artifactId>
-			<version>${spring-android-version}</version>
+			<version>${org.springframework.android-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
-			<version>${spring-security-version}</version>
+			<version>${org.springframework.security-version}</version>
 			<exclusions>
 				<!-- exclude in favor of spring-android-core -->
 				<exclusion>

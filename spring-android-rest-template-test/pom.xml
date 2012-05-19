@@ -1,13 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
 		<groupId>org.springframework.android</groupId>
 		<artifactId>spring-android-test</artifactId>
 		<version>1.0.0.BUILD-SNAPSHOT</version>
 	</parent>
-	
-	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>spring-android-rest-template-test</artifactId>
 	<packaging>apk</packaging>
@@ -15,18 +14,18 @@
 
 	<properties>
 		<commons-httpclient-version>3.1</commons-httpclient-version>
-		<jackson-version>1.9.2</jackson-version>
-		<gson-version>2.0</gson-version>
-		<simple-version>2.6.2</simple-version>
-		<android-rome-feed-reader-version>1.0.0-r2</android-rome-feed-reader-version>
-		<jetty-version>6.1.9</jetty-version>
+		<org.codehaus.jackson-version>1.9.7</org.codehaus.jackson-version>
+		<com.google.code.gson-version>2.1</com.google.code.gson-version>
+		<org.simpleframework-version>2.6.2</org.simpleframework-version>
+		<com.google.code.android-rome-feed-reader-version>1.0.0-r2</com.google.code.android-rome-feed-reader-version>
+		<org.mortbay.jetty-version>6.1.9</org.mortbay.jetty-version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-rest-template</artifactId>
-			<version>${spring-android-version}</version>
+			<version>${org.springframework.android-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-httpclient</groupId>
@@ -46,17 +45,17 @@
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>${jackson-version}</version>
+			<version>${org.codehaus.jackson-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>${gson-version}</version>
+			<version>${com.google.code.gson-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.simpleframework</groupId>
 			<artifactId>simple-xml</artifactId>
-			<version>${simple-version}</version>
+			<version>${org.simpleframework-version}</version>
 			<exclusions>
 				<!-- StAX is not available on Android -->
 				<exclusion>
@@ -77,12 +76,12 @@
 		<dependency>
 			<groupId>com.google.code.android-rome-feed-reader</groupId>
 			<artifactId>android-rome-feed-reader</artifactId>
-			<version>${android-rome-feed-reader-version}</version>
+			<version>${com.google.code.android-rome-feed-reader-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>
-			<version>${jetty-version}</version>
+			<version>${org.mortbay.jetty-version}</version>
 		</dependency>
 	</dependencies>
 

@@ -88,5 +88,11 @@ public class UriComponentsTests extends TestCase {
 		}
 		assertTrue("expected IllegalArgumentException", success);
 	}
+	
+	@SmallTest
+	public void testNormalize() {
+		UriComponents uriComponents = UriComponentsBuilder.fromUriString("http://example.com/foo/../bar").build();
+		assertEquals("http://example.com/bar", uriComponents.normalize().toString());
+	}
 
 }

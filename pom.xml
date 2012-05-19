@@ -26,8 +26,8 @@
 		<java-version>1.6</java-version>
 		<android-version>4.0.1.2</android-version>
 		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3, 4.0.1.2 -->
-		<spring-android-version>1.0.0.BUILD-SNAPSHOT</spring-android-version>
-		<easymock-version>2.5.2</easymock-version>
+		<org.springframework.android-version>1.0.0.BUILD-SNAPSHOT</org.springframework.android-version>
+		<org.easymock-version>2.5.2</org.easymock-version>
 	</properties>
 	
 	<dependencies>
@@ -47,7 +47,7 @@
 			<!-- easymock 3.x does NOT work on Android -->
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
-			<version>${easymock-version}</version>
+			<version>${org.easymock-version}</version>
 		</dependency>
 	</dependencies>
 
@@ -55,9 +55,9 @@
 	<repositories>
 		<!-- For testing against latest Spring snapshots -->
 		<repository>
-			<id>org.springframework.maven.snapshot</id>
-			<name>Spring Maven Snapshot Repository</name>
-			<url>http://maven.springframework.org/snapshot</url>
+			<id>springsource-snapshot</id>
+			<name>SpringSource Snapshot Repository</name>
+			<url>http://repo.springframework.org/snapshot</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -67,12 +67,18 @@
 		</repository>
 		<!-- For developing against latest Spring milestones -->
 		<repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Maven Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
+			<id>springsource-milestone</id>
+			<name>SpringSource Milestone Repository</name>
+			<url>http://repo.springframework.org/milestone</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
+		</repository>
+		<!-- For developing against latest Spring releases -->
+		<repository>
+			<id>springsource-repository</id>
+			<name>SpringSource Repository</name>
+			<url>http://repo.springframework.org/release</url>
 		</repository>
 	</repositories>
 
