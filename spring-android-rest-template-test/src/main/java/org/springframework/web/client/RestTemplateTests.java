@@ -261,6 +261,22 @@ public class RestTemplateTests extends TestCase {
 		verifyMocks();
 	}
 
+	@SmallTest
+	public void testGetForObjectNoMessageConverters() throws Exception {
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate = new RestTemplate(requestFactory);
+
+		replayMocks();
+
+		try {
+			restTemplate.getForObject("http://example.com", String.class);
+			fail("IllegalArgumentException expected");
+		} catch (IllegalArgumentException ex) {
+			// expected
+		}
+
+		verifyMocks();
+	}
 
 	@SmallTest
 	public void testHeadForHeaders() throws Exception {

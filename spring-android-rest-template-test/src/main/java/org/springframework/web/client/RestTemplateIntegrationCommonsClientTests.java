@@ -25,7 +25,7 @@ public class RestTemplateIntegrationCommonsClientTests extends AbstractRestTempl
 
 	@Override
 	protected RestTemplate getRestTemplate() {
-		return new RestTemplate(new CommonsClientHttpRequestFactory());
+		return new RestTemplate(true, new CommonsClientHttpRequestFactory());
 	}
 
 }
