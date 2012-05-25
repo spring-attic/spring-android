@@ -639,8 +639,7 @@ public class MediaType implements Comparable<MediaType> {
 
 
 	/**
-	 * Parse the given String value into a {@code MediaType} object, with this method name following the 'valueOf'
-	 * naming convention (as supported by {@link org.springframework.core.convert.ConversionService}.
+	 * Parse the given String value into a {@code MediaType} object.
 	 * @see #parseMediaType(String)
 	 */
 	public static MediaType valueOf(String value) {

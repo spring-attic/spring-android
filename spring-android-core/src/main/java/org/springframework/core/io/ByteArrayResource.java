@@ -26,14 +26,12 @@ import java.util.Arrays;
  * 
  * <p>
  * Useful for loading content from any given byte array, without having to resort to a single-use
- * {@link InputStreamResource}. Particularly useful for creating mail attachments from local content, where JavaMail
- * needs to be able to read the stream multiple times.
+ * {@link InputStreamResource}.
  * 
  * @author Juergen Hoeller
  * @since 1.0
  * @see java.io.ByteArrayInputStream
  * @see InputStreamResource
- * @see org.springframework.mail.javamail.MimeMessageHelper#addAttachment(String, InputStreamSource)
  */
 public class ByteArrayResource extends AbstractResource {
 
