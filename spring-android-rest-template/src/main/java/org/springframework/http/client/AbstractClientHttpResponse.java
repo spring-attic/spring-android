@@ -40,7 +40,7 @@ public abstract class AbstractClientHttpResponse implements ClientHttpResponse {
 
 	public InputStream getBody() throws IOException {
 		InputStream body = getBodyInternal();
-		if (shouldCompress()) {
+		if (isCompressed()) {
 			return getCompressedBody(body);
 		}
 		return body;
@@ -57,7 +57,7 @@ public abstract class AbstractClientHttpResponse implements ClientHttpResponse {
 		closeInternal();
 	}
 
-	private boolean shouldCompress() {
+	private boolean isCompressed() {
 		List<ContentCodingType> contentCodingTypes = this.getHeaders().getContentEncoding();
 		for (ContentCodingType contentCodingType : contentCodingTypes) {
 			if (contentCodingType.equals(ContentCodingType.GZIP)) {
