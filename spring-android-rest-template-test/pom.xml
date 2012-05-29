@@ -15,7 +15,7 @@
 	<properties>
 		<commons-httpclient-version>3.1</commons-httpclient-version>
 		<org.codehaus.jackson-version>1.9.7</org.codehaus.jackson-version>
-		<com.google.code.gson-version>2.1</com.google.code.gson-version>
+		<com.google.code.gson-version>2.2.1</com.google.code.gson-version>
 		<org.simpleframework-version>2.6.2</org.simpleframework-version>
 		<com.google.code.android-rome-feed-reader-version>1.0.0-r2</com.google.code.android-rome-feed-reader-version>
 		<org.mortbay.jetty-version>6.1.9</org.mortbay.jetty-version>
