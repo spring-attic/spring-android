@@ -66,7 +66,7 @@
 
 	<title>How to get</title>
 
-	<para>There are a few methods for including external jars in your Android app. One is to manually download them and include them in your app's libs folder. Another option is to use Maven for dependency management.</para>
+	<para>There are a few methods for including external jars in your Android app. One is to manually download them and include them in your app's <literal>libs/</literal> folder. Another option is to use Maven for dependency management.</para>
 
 	<section>
 
