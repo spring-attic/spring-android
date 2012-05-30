@@ -840,6 +840,33 @@ SyndFeed feed = restTemplate.getForObject(url, SyndFeed.class);]]>
 		
 	</section>
 	
+	<section>
+		
+		<title>HTTP Basic Authentication</title>
+		
+		<para>This example illustrates how to populate the HTTP Basic Authentication header with the username and password. If the username and password are accepted, then you will receive the response from the request. If they are not accepted, then the server is supposed to return an HTTP 401 Unauthorized response. Internally, RestTemplate handles the response, then throws an <classname>HttpClientErrorException</classname>. By calling <methodname>getStatusCode()</methodname> on this exception, you can determine the exact cause and handle it appropriately.</para>
+		
+		<programlisting language="java"><![CDATA[
+HttpAuthentication authHeader = new HttpBasicAuthentication(username, password);
+HttpHeaders requestHeaders = new HttpHeaders();
+requestHeaders.setAuthorization(authHeader);
+
+HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+
+RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+try {
+    ResponseEntity<Message> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+    return response.getBody();
+} catch (HttpClientErrorException e) {
+    Log.e(TAG, e.getLocalizedMessage(), e);
+    // Handle 401 Unauthorized response
+}]]>
+		</programlisting>
+	
+	</section>
+	
   </section>
 
 </chapter>
