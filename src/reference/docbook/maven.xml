@@ -1,13 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="spring-android-maven" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-  <title>Spring for Android and Maven</title>
+  <title>Maven Dependency Management</title>
 
   <section id="maven-example-introduction">
   
 	<title>Introduction</title>
 	
-	<para>An alternative to downloading the individual library JARs yourself is to use Maven for dependency management. The <link xlink:href="http://code.google.com/p/maven-android-plugin">Android Maven Plugin</link> allows developers to utilize Maven's dependency management capabilities within an Android application. Additionally, the <link xlink:href="http://rgladwell.github.com/m2e-android/">Android Configurator for M2E</link> bridges the Maven Android Plugin and the <link xlink:href="http://developer.android.com/sdk/eclipse-adt.html">Android Development Tools (ADT)</link> to allow the use of dependency management within Eclipse.</para>
+	<para>An alternative to downloading the individual library jars yourself is to use Maven for dependency management. The <link xlink:href="http://code.google.com/p/maven-android-plugin">Android Maven Plugin</link> allows developers to utilize Maven's dependency management capabilities within an Android application. Additionally, the <link xlink:href="http://rgladwell.github.com/m2e-android/">Android Configurator for M2E</link> bridges the Maven Android Plugin and the <link xlink:href="http://developer.android.com/sdk/eclipse-adt.html">Android Development Tools (ADT)</link> to allow the use of dependency management within Eclipse.</para>
+	
+  </section>
+
+  <section>
+	
+	<title>SpringSource Repository</title>
+	
+	<para>The following repositories are available for all SpringSource projects. Much more information is available at the <link xlink:href="https://github.com/SpringSource/spring-framework/wiki/SpringSource-repository-FAQ">SpringSource Repository FAQ</link>.</para>
+	
+	<para>Release versions, such as 1.0.0.RELEASE, are available through <link xlink:href="http://search.maven.org/">Maven Central</link> or via the <link xlink:href="http://repo.springsource.org/">SpringSource Repository</link>:
+
+		<programlisting language="xml"><![CDATA[
+<repository>
+    <id>springsource-repo</id>
+    <name>SpringSource Repository</name>
+    <url>http://repo.springsource.org/release</url>
+</repository>]]>
+		</programlisting>
+
+	</para>
+
+	<para>If you are developing against a milestone version, such as 1.0.0.RC2, you will need to add the following repository in order to resolve the artifact:
+
+		<programlisting language="xml"><![CDATA[
+<repository>
+    <id>springsource-milestone</id>
+    <name>SpringSource Milestone Repository</name>
+    <url>http://repo.springsource.org/milestone</url>
+</repository>]]>
+		</programlisting>
+
+	</para>
+
+	<para>If you are testing out the latest nightly build version (e.g. 1.0.0.BUILD-SNAPSHOT), you will need to add the following repository:
+
+		<programlisting language="xml"><![CDATA[
+<repository>
+    <id>springsource-snapshot</id>
+    <name>SpringSource Snapshot Repository</name>
+    <url>http://repo.springsource.org/snapshot</url>
+</repository>]]>
+		</programlisting>
+
+	</para>
 	
   </section>
   
@@ -35,7 +79,7 @@
 
     <properties>
         <android-platform>15</android-platform>
-        <android-maven-plugin-version>3.1.1</android-maven-plugin-version>
+        <android-maven-plugin-version>3.2.0</android-maven-plugin-version>
         <maven-compiler-plugin-version>2.3.2</maven-compiler-plugin-version>
         <java-version>1.6</java-version>
         <maven-eclipse-plugin-version>2.8</maven-eclipse-plugin-version>

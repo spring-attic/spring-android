@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="auth" xmlns:xlink="http://www.w3.org/1999/xlink">
 	
-  <title>Spring for Android Auth Module</title>
+  <title>Auth Module</title>
 
   <section id="auth-introduction">
 	
@@ -43,15 +43,67 @@
 	
     <title>How to get</title>
 
-	<para>Add the spring-android-auth and the supporting artifacts to your classpath. Maven will handle the dependency management, but the required dependencies are listed here for clarity.</para>
+	<section>
+
+		<title>Standard Installation</title>
+
+		<para>In order to use RestTemplate in your Android application, you must include the following Spring jars in the <literal>libs/</literal> folder. These are available from the SpringSource <link xlink:href="http://www.springsource.org/download/community">Community Downloads</link> page.
+
+			<itemizedlist>
+				<listitem><literal>spring-android-auth-{version}.jar</literal></listitem>
+				<listitem><literal>spring-android-rest-template-{version}.jar</literal></listitem>
+				<listitem><literal>spring-android-core-{version}.jar</literal></listitem>
+				<listitem><literal>spring-security-crypto-{version}.jar</literal></listitem>
+				<listitem><literal>spring-social-core-{version}.jar</literal></listitem>
+			</itemizedlist>
+
+		</para>
 		
-	<programlisting language="xml"><![CDATA[
+		<para>Each <link xlink:href="http://www.springsource.org/spring-social">Spring Social</link> provider may have additional dependencies. For example, to use Spring Social Twitter, the following jars are required.
+
+			<itemizedlist>
+				<listitem><literal>spring-social-twitter-{version}.jar</literal></listitem>
+				<listitem><literal>spring-social-core-{version}.jar</literal></listitem>
+				<listitem><literal>spring-security-crypto-{version}.jar</literal></listitem>
+				<listitem><literal>jackson-mapper-asl-{version}.jar</literal></listitem>
+				<listitem><literal>jackson-core-asl-{version}.jar</literal></listitem>
+			</itemizedlist>
+
+		</para>
+
+		<para>If you are building your project with Ant, Ant will automatically include any jars located in the <literal>libs/</literal> folder located in the root of your project. However, in Eclipse you must manually add the jars to the Build Path. Follow these steps to add the jars to your existing Android project in Eclipse.
+
+		<orderedlist>
+			<listitem>Refresh the project in Eclipse so the <literal>libs/</literal> folder and jars display in the Package Explorer.</listitem>
+			<listitem>Right-Click (Command-Click) the first jar.</listitem>
+			<listitem>Select the <literal>BuildPath</literal> submenu.</listitem>
+			<listitem>Select <literal>Add to Build Path</literal> from the context menu.</listitem>
+			<listitem>Repeat these steps for each jar.</listitem>
+		</orderedlist>
+
+		</para>
+
+	</section>
+	
+	<section>
+		
+		<title>Maven Dependencies</title>
+
+		<para>Add the spring-android-auth artifact to your classpath. See the <link linkend="spring-android-maven">Spring for Android and Maven</link> section for more information.
+
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.android</groupId>
     <artifactId>spring-android-auth</artifactId>
     <version>${spring-android-version}</version>
-</dependency>
+</dependency>]]>
+			</programlisting>
+	
+		</para>
+	
+		<para>The transitive dependencies are automatically imported by Maven, but they are listed here for clarity.
 
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.android</groupId>
     <artifactId>spring-android-rest-template</artifactId>
@@ -88,24 +140,14 @@
             <groupId>org.springframework</groupId>
         </exclusion>
     </exclusions>
-</dependency>
-
-<dependency>
-	<groupId>org.codehaus.jackson</groupId>
-	<artifactId>jackson-mapper-asl</artifactId>
-	<version>${jackson-version}</version>
-</dependency>
-
-<dependency>
-	<groupId>org.codehaus.jackson</groupId>
-	<artifactId>jackson-core-asl</artifactId>
-	<version>${jackson-version}</version>
 </dependency>]]>
-	</programlisting>
+			</programlisting>
+		
+		</para>
 	
-	<para>To use the Spring Social Twitter provider, you can add it to your classpath. Note the exclusions in this dependency. Commons Logging is built into Android, and many of the Spring Social provider libraries are built with support for Spring Web, which is not needed on Android.</para>
+		<para>To use the Spring Social Twitter provider, you can add it to your classpath. Note the exclusions in this dependency. Commons Logging is built into Android, and many of the Spring Social provider libraries are built with support for Spring Web, which is not needed on Android.
 
-	<programlisting language="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.social</groupId>
     <artifactId>spring-social-twitter</artifactId>
@@ -118,11 +160,13 @@
         </exclusion>
     </exclusions>
 </dependency>]]>
-	</programlisting>
+			</programlisting>
+		
+		</para>
 	
-	<para>Similarly, you can use the Spring Social Facebook provider by adding it to your classpath. Again note the exclusions.</para>
+		<para>Similarly, you can use the Spring Social Facebook provider by adding it to your classpath. Again note the exclusions.
 
-	<programlisting language="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.social</groupId>
     <artifactId>spring-social-facebook</artifactId>
@@ -135,7 +179,29 @@
         </exclusion>
     </exclusions>
 </dependency>]]>
-	</programlisting>
+			</programlisting>
+		
+		</para>
+	
+		<para>Both the Spring Social Twitter and Facebook libraries transitively depend on the <link xlink:href="http://jackson.codehaus.org/">Jackson JSON processor</link>. Again, if you are not using Maven, you will need to include these in your <literal>libs/</literal> folder.
+	
+			<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-mapper-asl</artifactId>
+    <version>${jackson-version}</version>
+</dependency>
+
+<dependency>
+    <groupId>org.codehaus.jackson</groupId>
+    <artifactId>jackson-core-asl</artifactId>
+    <version>${jackson-version}</version>
+</dependency>]]>
+			</programlisting>
+		
+		</para>
+		
+	</section>
 	
   </section>
 
