@@ -62,6 +62,116 @@
 	
   </section>
 
+  <section id="rest-template-howtoget">
+
+	<title>How to get</title>
+
+	<para>There are a few methods for including external jars in your Android app. One is to manually download them and include them in your app's libs folder. Another option is to use Maven for dependency management.</para>
+
+	<section>
+
+		<title>Standard Installation</title>
+
+		<para>In order to use RestTemplate in your Android application, you must include the following two Spring for Android jars in the <literal>libs/</literal> folder. These are available from the SpringSource <link xlink:href="http://www.springsource.org/download/community?project=Spring%20for%20Android">Community Downloads</link> page. Simply download the latest release and look in the <literal>bin/</literal> folder.
+
+			<itemizedlist>
+				<listitem><literal>spring-android-rest-template.{version}.jar</literal></listitem>
+				<listitem><literal>spring-android-core.{version}.jar</literal></listitem>
+			</itemizedlist>
+
+		</para>
+
+		<para>If you are building your project with Ant, Ant will automatically include any jars located in the <literal>libs/</literal> folder located in the root of your project. However, in Eclipse you must manually add the jars to the Build Path. Follow these steps to add the jars to your existing Android project in Eclipse.
+
+		<orderedlist>
+			<listitem>Refresh the project in Eclipse so the <literal>libs/</literal> folder and jars display in the Package Explorer.</listitem>
+			<listitem>Right-Click (Command-Click) the first jar.</listitem>
+			<listitem>Select the <literal>BuildPath</literal> submenu.</listitem>
+			<listitem>Select <literal>Add to Build Path</literal> from the context menu.</listitem>
+			<listitem>Repeat these steps for each jar.</listitem>
+		</orderedlist>
+
+		</para>
+
+	</section>
+
+	<section>
+
+		<title>Maven Dependencies</title>
+
+		<para>Google's provided Android toolset does not include dependency management support. However, through the use of third party tools, you can use Maven to manage dependencies and build your Android app. See the <link linkend="spring-android-maven">Spring for Android and Maven</link> section for more information.</para>
+
+		<para>Add the RestTemplate artifact to your classpath:
+
+			<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.springframework.android</groupId>
+    <artifactId>spring-android-rest-template</artifactId>
+    <version>${spring-android-version}</version>
+</dependency>]]>
+			</programlisting>
+
+		</para>
+
+		<para>Release versions, such as 1.0.0.RELEASE, are available through <link xlink:href="http://search.maven.org/">Maven Central</link> or via the <link xlink:href="http://repo.springsource.org/">SpringSource Repository</link>:
+
+			<programlisting language="xml"><![CDATA[
+<repository>
+    <id>springsource-repo</id>
+	<name>SpringSource Repository</name>
+	<url>http://repo.springsource.org/release</url>
+</repository>]]>
+			</programlisting>
+
+		</para>
+
+		<para>If you are developing against a milestone version, such as 1.0.0.RC2, you will need to add the following repository in order to resolve the artifact:
+
+			<programlisting language="xml"><![CDATA[
+<repository>
+    <id>springsource-milestone</id>
+    <name>SpringSource Milestone Repository</name>
+    <url>http://repo.springsource.org/milestone</url>
+</repository>]]>
+			</programlisting>
+
+		</para>
+
+		<para>If you are testing out the latest nightly build version (e.g. 1.0.0.BUILD-SNAPSHOT), you will need to add the following repository:
+
+			<programlisting language="xml"><![CDATA[
+<repository>
+    <id>springsource-snapshot</id>
+    <name>SpringSource Snapshot Repository</name>
+    <url>http://repo.springsource.org/snapshot</url>
+</repository>]]>
+			</programlisting>
+
+		</para>
+
+	</section>
+
+  </section>
+
+  <section id="rest-template-constructors">
+	
+	<title>RestTemplate Constructors</title>
+	
+	<para>The four <classname>RestTemplate</classname> constructors are listed below. The default constructor does not include any message body converters. You must add a message converter when using the default constructor. If you would like to include a default set of message converters with a new <classname>RestTemplate</classname> instance, then you can pass <literal>true</literal> for the <literal>includeDefaultConverters</literal> parameter. For a list of default converters, see the <link linkend="rest-template-message-converters">HTTP Message Conversion</link> section. Additionally, if you would like to specify a different <interfacename>ClientHttpRequestFactory</interfacename> then you can do so by passing it in to the <literal>requestFactory</literal> parameter.
+	
+		<programlisting language="java"><![CDATA[
+RestTemplate();
+
+RestTemplate(boolean includeDefaultConverters);
+
+RestTemplate(ClientHttpRequestFactory requestFactory);
+
+RestTemplate(boolean includeDefaultConverters, ClientHttpRequestFactory requestFactory);]]>
+		</programlisting>
+	
+	</para>
+	
+  </section>
 
   <section id="rest-template-methods">
 		
@@ -182,10 +292,27 @@ public void put(String url, Object request, Map<String, ?> urlVariables) throws 
 
 	<title>HTTP Message Conversion</title>
 
-	<para>Objects passed to and returned from the methods <methodname>getForObject()</methodname>, <methodname>getForEntity()</methodname>, <methodname>postForLocation()</methodname>, <methodname>postForObject()</methodname> and <methodname>put()</methodname> are converted to HTTP requests and from HTTP responses by <interfacename>HttpMessageConverter</interfacename> instances. Converters for the main mime types are registered by default, but you can also write your own converter and register it via the <methodname>messageConverters()</methodname> property.</para> 
+	<para>Objects passed to and returned from the methods <methodname>getForObject()</methodname>, <methodname>getForEntity()</methodname>, <methodname>postForLocation()</methodname>, <methodname>postForObject()</methodname> and <methodname>put()</methodname> are converted to HTTP requests and from HTTP responses by <interfacename>HttpMessageConverter</interfacename> instances. For performance reasons, the default constructor does not register any message converters. However, if you pass <literal>true</literal> to the alternate constructor, then converters for the main mime types are registered by default. You can also write your own converter and register it via the <methodname>messageConverters()</methodname> property.</para> 
 	
+	<para>When using the alternate <classname>RestTemplate</classname> constructor, the default converter instances registered with the template are <link linkend="ByteArrayHttpMessageConverter"><classname>ByteArrayHttpMessageConverter</classname></link>, <classname>StringHttpMessageConverter</classname>, and <classname>ResourceHttpMessageConverter</classname>.  If your app is running on Android 2.2 or later, then <classname>XmlAwareFormHttpMessageConverter</classname> and <classname>SourceHttpMessageConverter</classname> are registered, as these two message converters require <classname>javax.xml.transform.Source</classname>. On Android 2.1, this falls back to the <classname>FormHttpMessageConverter</classname> which lacks some of the XML support in the other two. See the following table for more information.</para> 
 	
-	<para>The default converter instances registered with the template are <classname>ByteArrayHttpMessageConverter</classname>, <classname>StringHttpMessageConverter</classname>, and <classname>ResourceHttpMessageConverter</classname>.  If you are app is running on Android 2.2 or later, then <classname>XmlAwareFormHttpMessageConverter</classname> and <classname>SourceHttpMessageConverter</classname> are registered, as these two message converters require the <classname>javax.xml.transform</classname> library. On Android 2.1, this falls back to the <classname>FormHttpMessageConverter</classname> which lacks some of the XML support in the other two.</para> 
+	<table border="1" cellpadding="2" cellspacing="0" align="center">
+		<caption>Default Message Converters</caption>
+		<thead>
+			<tr><th>Message Body Converter</th><th>Inclusion Rule</th></tr>
+		</thead>
+		<tbody>
+			<tr><td><link linkend="ByteArrayHttpMessageConverter"><classname>ByteArrayHttpMessageConverter</classname></link></td><td rowspan="3" valign="top">Always included</td></tr>
+			<tr><td><link linkend="StringHttpMessageConverter"><classname>StringHttpMessageConverter</classname></link></td></tr>
+			<tr><td><link linkend="ResourceHttpMessageConverter"><classname>ResourceHttpMessageConverter</classname></link></td></tr>
+			<tr><td><link linkend="SourceHttpMessageConverter"><classname>SourceHttpMessageConverter</classname></link></td><td rowspan="2" valign="top">Included on Android 2.2 (Froyo) or newer, where <classname>javax.xml.transform.Source</classname> is available.</td></tr>
+			<tr><td><link linkend="XmlAwareFormHttpMessageConverter"><classname>XmlAwareFormHttpMessageConverter</classname></link></td></tr>
+			<tr><td><link linkend="FormHttpMessageConverter"><classname>FormHttpMessageConverter</classname></link></td><td>Included on Android 2.1 (Eclair) and older.</td></tr>
+			<tr><td><link linkend="SimpleXmlHttpMessageConverter"><classname>SimpleXmlHttpMessageConverter</classname></link></td><td>Included if the Simple XML serializer is present.</td></tr>
+			<tr><td><link linkend="MappingJacksonHttpMessageConverter"><classname>MappingJacksonHttpMessageConverter</classname></link></td><td>Included if the Jackson JSON processor is present.</td></tr>
+			<tr><td><link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link></td><td>Included if the Android ROME Feed Reader is present.</td></tr>
+		</tbody>
+	</table>
 	
 	<para>The <interfacename>HttpMessageConverter</interfacename> interface is shown below to give you a better feel for its functionality.</para>
 
@@ -214,9 +341,49 @@ public interface HttpMessageConverter<T> {
 
 	<para>Concrete implementations for the main media (mime) types are provided in the framework and are registered by default within <classname>RestTemplate</classname></para>
 
-	<para>The following <interfacename>HttpMessageConverter</interfacename> implementations are available in Spring for Android. For all converters a default media type is used but can be overridden by calling the <methodname>setSupportedMediaTypes()</methodname> method.</para>
+	<para>The following <interfacename>HttpMessageConverter</interfacename> implementations are available in Spring for Android. For all converters a default media type is used but can be overridden by calling the <methodname>getSupportedMediaTypes()</methodname> method.</para>
 
-	<section>
+	<section id="ByteArrayHttpMessageConverter">
+
+		<title>ByteArrayHttpMessageConverter</title>
+
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write byte arrays from the HTTP request and response. By default, this converter supports all media types (<literal>*/*</literal>), and writes with a <literal>Content-Type</literal> of <literal>application/octet-stream</literal>. This can be overridden by setting the supportedMediaTypes property, and overriding <methodname>getContentType(byte[])</methodname>.</para>
+
+	</section>
+	
+	<section id="FormHttpMessageConverter">
+
+		<title>FormHttpMessageConverter</title>
+
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write form data from the HTTP request and response. By default, this converter reads and writes the media type <literal>application/x-www-form-urlencoded</literal>. Form data is read from and written into a <literal>MultiValueMap&lt;String, String&gt;</literal>.</para>
+
+	</section>
+	
+	<section id="XmlAwareFormHttpMessageConverter">
+
+		<title>XmlAwareFormHttpMessageConverter</title>
+
+		<para>Extension of <classname>FormHttpMessageConverter</classname>, adding support for XML-based parts through a <classname> SourceHttpMessageConverter</classname></para>
+
+	</section>
+	
+	<section id="ResourceHttpMessageConverter">
+
+		<title>ResourceHttpMessageConverter</title>
+
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write <interfacename>Resource</interfacename> Resources. By default, this converter can read all media types. <literal>application/octet-stream</literal> is used to determine the <classname>Content-Type</classname> of written resources</para>
+
+	</section>
+	
+	<section id="SourceHttpMessageConverter">
+
+		<title>SourceHttpMessageConverter</title>
+
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write <classname>javax.xml.transform.Source</classname> from the HTTP request and response. Only <classname>DOMSource</classname>, <classname>SAXSource</classname>, and <classname>StreamSource</classname> are supported. By default, this converter supports <literal>text/xml</literal> and <literal>application/xml</literal>.</para>
+
+	</section>
+
+	<section id="StringHttpMessageConverter">
 
 		<title>StringHttpMessageConverter</title>
 
@@ -224,145 +391,60 @@ public interface HttpMessageConverter<T> {
 
 	</section>
 
-	<section>
-
-		<title>FormHttpMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write form data from the HTTP request and response. By default, this converter reads and writes the media type <literal>application/x-www-form-urlencoded</literal>. Form data is read from and written into a <literal>MultiValueMap&lt;String, String&gt;</literal>.</para>
-
-	</section>
-
-	<section>
-
-		<title>ByteArrayMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write byte arrays from the HTTP request and response. By default, this converter supports all media types (<literal>*/*</literal>), and writes with a <literal>Content-Type</literal> of <literal>application/octet-stream</literal>. This can be overridden by setting the supportedMediaTypes property, and overriding <methodname>getContentType(byte[])</methodname>.</para>
-
-	</section>
-
-	<section>
+	<section id="SimpleXmlHttpMessageConverter">
 
 		<title>SimpleXmlHttpMessageConverter</title>
 
 		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write XML from the HTTP request and response using <link xlink:href="http://simple.sourceforge.net">Simple Framework</link>'s <interfacename>Serializer</interfacename>. XML mapping can be customized as needed through the use of Simple's provided annotations. When additional control is needed, a custom <interfacename>Serializer</interfacename> can be injected through the <interfacename>Serializer</interfacename> property. By default, this converter reads and writes the media types <literal>application/xml</literal>, <literal>text/xml</literal>, and <literal>application/*+xml</literal>.</para>
 
 		<para>It is important to note that this is not a Spring OXM compatible message converter. It is a standalone implementation that enables XML serialization through Spring for Android.</para>
+		
+		<para>Add the following dependency to your classpath to enable the <classname>SimpleXmlHttpMessageConverter</classname>.
+		
+			<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>org.simpleframework</groupId>
+    <artifactId>simple-xml</artifactId>
+    <version>${simple-version}</version>
+</dependency>]]>
+			</programlisting>
+		
+		</para>
 
 	</section>
 
-	<section>
+	<section id="MappingJacksonHttpMessageConverter">
 
 		<title>MappingJacksonHttpMessageConverter</title>
 
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>'s <classname>ObjectMapper</classname>. JSON mapping can be customized as needed through the use of Jackson's provided annotations. When further control is needed, a custom <classname>ObjectMapper</classname> can be injected through the <classname>ObjectMapper</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports (<literal>application/json</literal>).</para>
-
-	</section>
-
-	<section>
-
-		<title>GsonHttpMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>'s <classname>Gson</classname> class. JSON mapping can be customized as needed through the use of Gson's provided annotations. When further control is needed, a custom <classname>Gson</classname> can be injected through the <classname>Gson</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports (<literal>application/json</literal>).</para>
-
-		<para>Please note that this message converter and the <classname>MappingJacksonHttpMessageConverter</classname> support <literal>application/json</literal>. Because of this, only one will automatically be loaded with a new <classname>RestTemplate</classname> instance. If you include Jackson and Gson in your classpath, Jackson will take precedence over Gson.</para>
-
-	</section>
-
-	<section>
-
-		<title>SourceHttpMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write <classname>javax.xml.transform.Source</classname> from the HTTP request and response. Only <classname>DOMSource</classname>, <classname>SAXSource</classname>, and <classname>StreamSource</classname> are supported. By default, this converter supports (<literal>text/xml</literal>) and (<literal>application/xml</literal>).</para>
-
-	</section>
-	
-	<section>
-
-		<title>SyndFeedHttpMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS and Atom feeds from the HTTP request and response using <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link>.  The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed</classname>.  By default, this converter supports (<literal>application/rss+xml</literal>) and (<literal>application/atom+xml</literal>).</para>
-
-	</section>
-	
-	<section>
-
-		<title>RssChannelHttpMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS feeds from the HTTP request and response.  The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel</classname>.  By default, this converter supports (<literal>application/rss+xml</literal>).</para>
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>'s <classname>ObjectMapper</classname>. JSON mapping can be customized as needed through the use of Jackson's provided annotations. When further control is needed, a custom <classname>ObjectMapper</classname> can be injected through the <classname>ObjectMapper</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
 		
-		<para>Because the <classname>SyndFeedHttpMessageConverter</classname> provides a higher level of abstraction around RSS and Atom feeds, the <classname>RssChannelHttpMessageConverter</classname> is not automatically added when you create a new <classname>RestTemplate</classname> instance.  If you prefer to use this message converter then you have to manually add it to the <classname>RestTemplate</classname> instance.
-		</para>
+		<para>Please note that this message converter and the <classname>GsonHttpMessageConverter</classname> both support <literal>application/json</literal> by default. Because of this, you should only add one JSON message converter to a <classname>RestTemplate</classname> instance. <classname>RestTemplate</classname> will use the first converter it finds that matches the specified mime type, so including both could produce unintended results.</para>
 		
-	</section>
-	
-	<section>
-
-		<title>AtomFeedHttpMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write Atom feeds from the HTTP request and response.  The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed</classname>.  By default, this converter supports (<literal>application/atom+xml</literal>).</para>
+		<para>Include the following dependencies in your classpath to enable the <classname>MappingJacksonHttpMessageConverter</classname>. Please note that if you are manually copying the jars into your project, you will also need to include the <literal>jackson-core-asl</literal> jar.
 		
-		<para>Because the <classname>SyndFeedHttpMessageConverter</classname> provides a higher level of abstraction around RSS and Atom feeds, the <classname>AtomFeedHttpMessageConverter</classname> is not automatically added when you create a new <classname>RestTemplate</classname> instance.  If you prefer to use this message converter then you have to manually add it to the <classname>RestTemplate</classname> instance.
-		</para>
-		
-	</section>
-
-  </section>
-
-
-  <section id="rest-template-howtoget">
-	
-	<title>How to get</title>
-	
-	<para>Add the spring-android-rest-template artifact to your classpath:</para>
-		
-	<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.springframework.android</groupId>
-    <artifactId>spring-android-rest-template</artifactId>
-    <version>${spring-android-version}</version>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework.android</groupId>
-    <artifactId>spring-android-core</artifactId>
-    <version>${spring-android-version}</version>
-</dependency>]]>
-	</programlisting>
-	
-	<para>Google's provided Android toolset does not include dependency management support. However, through the use of third party tools, you can use Maven to manage dependencies and build your Android app. See the <link linkend="spring-android-maven">Spring for Android and Maven</link> section for more information.</para>
-
-	<para>Spring for Android RestTemplate supports several optional libraries.  These optional libraries are used by different <interfacename>HttpMessageConverter</interfacename> instances within <classname>RestTemplate</classname>.  If you would like to make use of these message converters, then you need to include the corresponding libraries in your classpath.</para>	
-	
-	<section id="rest-template-howtoget-jackson">
-		
-		<title>Jackson JSON Processor</title>
-				
-		<para>Include the following <link xlink:href="http://jackson.codehaus.org">Jackson</link> dependencies to your classpath to enable the <classname>MappingJacksonHttpMessageConverter</classname>.</para>
-		
-		<programlisting language="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.codehaus.jackson</groupId>
     <artifactId>jackson-mapper-asl</artifactId>
     <version>${jackson-version}</version>
 </dependency>]]>
-		</programlisting>
+			</programlisting>
 		
-		<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.codehaus.jackson</groupId>
-    <artifactId>jackson-core-asl</artifactId>
-    <version>${jackson-version}</version>
-</dependency>]]>
-		</programlisting>
-		
+		</para>
+
 	</section>
-	
-		<section id="rest-template-howtoget-gson">
-			
-			<title>Google Gson</title>
-			
-			<para>Add the following <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link> dependency to your classpath to enable the <classname>GsonHttpMessageConverter</classname>.</para>
-			
+
+	<section id="GsonHttpMessageConverter">
+
+		<title>GsonHttpMessageConverter</title>
+
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>'s <classname>Gson</classname> class. JSON mapping can be customized as needed through the use of Gson's provided annotations. When further control is needed, a custom <classname>Gson</classname> can be injected through the <classname>Gson</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
+
+		<para>Please note that this message converter and the <classname>MappingJacksonHttpMessageConverter</classname> both support <literal>application/json</literal> by default. Because of this, you should only add one JSON message converter to a <classname>RestTemplate</classname> instance. <classname>RestTemplate</classname> will use the first converter it finds that matches the specified mime type, so including both could produce unintended results.</para>
+		
+		<para>Include the following dependency in your classpath to enable the <classname>GsonHttpMessageConverter</classname>.
+
 			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>com.google.code.gson</groupId>
@@ -370,62 +452,79 @@ public interface HttpMessageConverter<T> {
     <version>${gson-version}</version>
 </dependency>]]>
 			</programlisting>
-			
-		</section>
-	
-	<section id="rest-template-howtoget-simple">
-		
-		<title>Simple XML Serializer</title>
-		
-		<para>Add the following <link xlink:href="http://simple.sourceforge.net">Simple XML Serializer</link> dependency to your classpath to enable the <classname>SimpleXmlHttpMessageConverter</classname>.</para>
-		
-		<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.simpleframework</groupId>
-    <artifactId>simple-xml</artifactId>
-    <version>${simple-version}</version>
-</dependency>]]>
-		</programlisting>
-		
+					
+		</para>
+
 	</section>
 	
-	<section id="rest-template-howtoget-rome">
+	<section id="SyndFeedHttpMessageConverter">
+
+		<title>SyndFeedHttpMessageConverter</title>
+
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS and Atom feeds from the HTTP request and response using <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed</classname>. By default, this converter supports <literal>application/rss+xml</literal> and <literal>application/atom+xml</literal>.</para>
 		
-		<title>Android ROME Feed Reader</title>
+		<para>Add the following dependencies to your classpath to enable the <classname>SyndFeedHttpMessageConverter</classname>, <classname>RssChannelHttpMessageConverter</classname>, or <classname>AtomFeedHttpMessageConverter</classname>. This library depends on a forked version of JDOM to work on Android 2.1 and earlier. The JDOM library addresses a <link xlink:href="http://www.jdom.org/pipermail/jdom-interest/2009-July/016345.html">bug</link> in the Android XML parser.
 		
-		<para>Add the following <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> dependencies to your classpath to enable the <classname>RssChannelHttpMessageConverter</classname>, <classname>AtomFeedHttpMessageConverter</classname>, and <classname>SyndFeedHttpMessageConverter</classname>. This library depends on a forked version of JDOM to work on Android 2.1 and earlier. The JDOM library addresses a <link xlink:href="http://www.jdom.org/pipermail/jdom-interest/2009-July/016345.html">bug</link> in the Android XML parser.</para>
-		
-		<programlisting language="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>com.google.code.android-rome-feed-reader</groupId>
     <artifactId>android-rome-feed-reader</artifactId>
     <version>${android-rome-version}</version>
 </dependency>]]>
-		</programlisting>
+			</programlisting>
 		
-		<programlisting language="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.jdom</groupId>
     <artifactId>jdom</artifactId>
     <version>${jdom-fork-version}</version>
 </dependency>]]>
-		</programlisting>
+			</programlisting>
+			
+		</para>
 		
-		<para>The Android ROME Feed Reader is not available through the Maven central repository. When using Maven, you will need to include the following repository in your POM.</para>
+		<para>The Android ROME Feed Reader is not available through Maven Central. When using Maven, you will need to include the following repository in your POM.
 		
-		<programlisting language="xml"><![CDATA[
+			<programlisting language="xml"><![CDATA[
 <!-- For developing with Android ROME Feed Reader -->
 <repository>
     <id>android-rome-feed-reader-repository</id>
     <name>Android ROME Feed Reader Repository</name>
     <url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
 </repository>]]>
-		</programlisting>
+			</programlisting>
+		
+		</para>
+
+	</section>
+	
+	<section id="RssChannelHttpMessageConverter">
+
+		<title>RssChannelHttpMessageConverter</title>
+
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS feeds from the HTTP request and response using <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel</classname>. By default, this converter supports <literal>application/rss+xml</literal>.</para>
+		
+		<para>The <classname>SyndFeedHttpMessageConverter</classname> provides a higher level of abstraction around RSS and Atom feeds, the <classname>RssChannelHttpMessageConverter</classname> is not included in the default set of message converters when you create a new <classname>RestTemplate</classname> instance. If you prefer to use this message converter then you have to manually add it to the <classname>RestTemplate</classname> instance.
+		</para>
+		
+		<para>See the <link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link> section for information about the required <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> dependencies.</para>
 		
 	</section>
 	
-  </section>
+	<section id="AtomFeedHttpMessageConverter">
 
+		<title>AtomFeedHttpMessageConverter</title>
+
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write Atom feeds from the HTTP request and response using <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed</classname>. By default, this converter supports <literal>application/atom+xml</literal>.</para>
+		
+		<para>Because the <classname>SyndFeedHttpMessageConverter</classname> provides a higher level of abstraction around RSS and Atom feeds, the <classname>AtomFeedHttpMessageConverter</classname> is not included in the default set of message converters when you create a new <classname>RestTemplate</classname> instance. If you prefer to use this message converter then you have to manually add it to the <classname>RestTemplate</classname> instance.
+		</para>
+		
+		<para>See the <link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link> section for information about the required <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> dependencies.</para>
+		
+	</section>
+
+  </section>
 
   <section id="rest-template-examples">
 	
@@ -447,6 +546,7 @@ $ git clone git://github.com/SpringSource/spring-android-samples.git
 		
 		<programlisting language="java"><![CDATA[
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 String url = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q={query}";
 String result = restTemplate.getForObject(url, String.class, "SpringSource");]]>
 		</programlisting>
@@ -457,7 +557,7 @@ String result = restTemplate.getForObject(url, String.class, "SpringSource");]]>
 
 		<title>Using Gzip Compression</title>
 
-		<para>Gzip compression can significantly reduce the size of the response data being returned in a REST request. Gzip must be supported by the web server to which the request is being made. By setting the content coding type of the <literal>Accept-Encoding</literal> header to <literal>gzip</literal>, you are requesting that the server respond using gzip compression. If gzip is available, or enabled on the server, then it should return a compressed response. RestTemplate checks the <literal>Content-Encoding</literal> header in the response to determine if, in fact, the response is gzip compressed. At this time, RestTemplate only supports the gzip content coding type in the <literal>Content-Encoding</literal> header. If the response data is determined to be gzip compressed, then a <link xlink:href="http://developer.android.com/reference/java/util/zip/GZIPInputStream.html">GZIPInputStream</link> is used to decompress it.</para>
+		<para>Gzip compression can significantly reduce the size of the response data being returned in a REST request. Gzip must be supported by the web server to which the request is being made. By setting the content coding type of the <literal>Accept-Encoding</literal> header to <literal>gzip</literal>, you are requesting that the server respond using gzip compression. If gzip is available, or enabled on the server, then it should return a compressed response. RestTemplate checks the <literal>Content-Encoding</literal> header in the response to determine if, in fact, the response is gzip compressed. At this time, RestTemplate only supports the gzip content coding type in the <literal>Content-Encoding</literal> header. If the response data is determined to be gzip compressed, then a <link xlink:href="http://developer.android.com/reference/java/util/zip/GZIPInputStream.html"><classname>GZIPInputStream</classname></link> is used to decompress it.</para>
 		
 		<para>The following example shows how to request a gzip compressed response from the server.</para>
 
@@ -468,6 +568,7 @@ requestHeaders.setAcceptEncoding(ContentCodingType.GZIP);
 HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
 
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);]]>
 		</programlisting>
 		
@@ -480,6 +581,7 @@ requestHeaders.setAcceptEncoding(ContentCodingType.IDENTITY);
 HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
 
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);]]>
 		</programlisting>
 
@@ -521,8 +623,8 @@ public class Event {
 		<para>Make the REST request:</para>
 		
 		<programlisting language="java"><![CDATA[
-String url = "http://mypretendservice.com/events";
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
 Event[] events = restTemplate.getForObject(url, Event[].class);]]>
 		</programlisting>
 		
@@ -531,12 +633,9 @@ Event[] events = restTemplate.getForObject(url, Event[].class);]]>
 		<programlisting language="java"><![CDATA[
 HttpHeaders requestHeaders = new HttpHeaders();
 requestHeaders.setAccept(Collections.singletonList(new MediaType("application","json")));
-
 HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
-
-String url = "http://mypretendservice.com/events";
-
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
 ResponseEntity<Event[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Event[].class);
 Event[] events = responseEntity.getBody();]]>
 		</programlisting>
@@ -546,18 +645,9 @@ Event[] events = responseEntity.getBody();]]>
 		<programlisting language="java"><![CDATA[
 HttpHeaders requestHeaders = new HttpHeaders();
 requestHeaders.setAccept(Collections.singletonList(new MediaType("application","json")));
-
 HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
-
-String url = "http://mypretendservice.com/events";
-
-GsonHttpMessageConverter messageConverter = new GsonHttpMessageConverter();
-List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-messageConverters.add(messageConverter);
-
 RestTemplate restTemplate = new RestTemplate();
-restTemplate.setMessageConverters(messageConverters);
-
+restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 ResponseEntity<Event[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Event[].class);
 Event[] events = responseEntity.getBody();]]>
 		</programlisting>
@@ -622,8 +712,8 @@ public class EventList {
 		<para>Make the REST request:</para>
 		
 		<programlisting language="java"><![CDATA[
-String url = "http://mypretendservice.com/events";
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new SimpleXmlHttpMessageConverter());
 EventList eventList = restTemplate.getForObject(url, EventList.class);]]>
 		</programlisting>
 		
@@ -638,9 +728,8 @@ requestHeaders.setAccept(acceptableMediaTypes);
 
 HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
 
-String url = "http://mypretendservice.com/events";
-
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new SimpleXmlHttpMessageConverter());
 ResponseEntity<EventList> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, EventList.class);
 EventList eventList = responseEntity.getBody();]]>
 		</programlisting>
@@ -697,9 +786,10 @@ Message message = new Message();
 message.setId(555);
 message.setSubject("test subject");
 message.setText("test text");
-			
-String url = "http://mypretendservice.com/sendmessage";
+
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 String response = restTemplate.postForObject(url, message, String.class);]]>
 		</programlisting>
 		
@@ -713,12 +803,11 @@ message.setText("test text");
 
 HttpHeaders requestHeaders = new HttpHeaders();
 requestHeaders.setContentType(new MediaType("application","json"));
-
 HttpEntity<Message> requestEntity = new HttpEntity<Message>(message, requestHeaders);
 
-String url = "http://mypretendservice.com/sendmessage";
-
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 String result = responseEntity.getBody();]]>
 		</programlisting>
@@ -731,26 +820,21 @@ String result = responseEntity.getBody();]]>
 		<para>The following is a basic example of loading an RSS feed:</para>
 		
 		<programlisting language="java"><![CDATA[
-String url = "http://mypretendservice.com/rssfeed";
 RestTemplate restTemplate = new RestTemplate();
+restTemplate.getMessageConverters().add(new SyndFeedHttpMessageConverter());
 SyndFeed = restTemplate.getForObject(url, SyndFeed.class);]]>
 		</programlisting>
 		
 		<para>It is possible that you need to adjust the Media Type associated with the <classname>SyndFeedHttpMessageConverter</classname>. By default, the converter is associated with <literal>application/rss+xml</literal> and <literal>application/atom+xml</literal>.  An RSS feed might instead have a media type of <literal>text/xml</literal>, for example. The following code illustrates how to set the media type.</para>
 		
 		<programlisting language="java"><![CDATA[
-String url = "http://mypretendservice.com/rssfeed";
-
 SyndFeedHttpMessageConverter converter = new SyndFeedHttpMessageConverter();
 List<MediaType> mediaTypes = new ArrayList<MediaType>();
 mediaTypes.add(new MediaType("text","xml"));
 converter.setSupportedMediaTypes(mediaTypes);
 
-List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-messageConverters.add(converter);
-
 RestTemplate restTemplate = new RestTemplate();
-restTemplate.setMessageConverters(messageConverters);
+restTemplate.getMessageConverters().add(converter);
 SyndFeed feed = restTemplate.getForObject(url, SyndFeed.class);]]>
 		</programlisting>
 		

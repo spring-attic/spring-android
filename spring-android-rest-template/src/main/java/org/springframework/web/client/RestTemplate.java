@@ -149,7 +149,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	/**
 	 * Create a new instance of {@link RestTemplate}.
 	 * <p>For performance purposes, no message body converters are included when using this constructor. 
-	 * You must register a converter via the {@link #setMessageConverters messageConverters} bean property in order to 
+	 * You must register a converter via the {@link #setMessageConverters messageConverters} property in order to 
 	 * process HTTP messages.
 	 * @see HttpMessageConverter
 	 */
@@ -158,7 +158,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	}
 
 	/**
-	 * Create a new instance of the {@link RestTemplate}.
+	 * Create a new instance of {@link RestTemplate}.
 	 * <p>For performance purposes, no message body converters are registered when using the default constructor. 
 	 * However, this constructor allows you to specify whether to include a default set of converters, which are listed
 	 * in the {@link RestTemplate} javadoc.</p>
@@ -172,9 +172,9 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	}
 
 	/**
-	 * Create a new instance of the {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
+	 * Create a new instance of {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
 	 * <p>For performance purposes, no message body converters are included when using this constructor. 
-	 * You must register a converter via the {@link #setMessageConverters messageConverters} bean property in order to 
+	 * You must register a converter via the {@link #setMessageConverters messageConverters} property in order to 
 	 * process HTTP messages.
 	 * @param requestFactory HTTP request factory to use
 	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
@@ -185,7 +185,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	}
 	
 	/**
-	 * Create a new instance of the {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
+	 * Create a new instance of {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
 	 * <p>For performance purposes, no message body converters are registered when using the default constructor. 
 	 * However, this constructor allows you to specify whether to include a default set of converters, which are listed
 	 * in the {@link RestTemplate} javadoc.</p>
