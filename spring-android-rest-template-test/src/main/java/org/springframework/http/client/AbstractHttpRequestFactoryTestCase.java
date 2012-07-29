@@ -45,8 +45,19 @@ import org.springframework.util.FileCopyUtils;
 
 import android.os.Build;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.util.Log;
 
+/** 
+ * @author Arjen Poutsma
+ * @author Roy Clarkson 
+ */
 public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
+
+	private static final String TAG = getTag();
+
+	protected static String getTag() {
+		return AbstractHttpRequestFactoryTestCase.class.getSimpleName();
+	}
 
 	protected ClientHttpRequestFactory factory;
 
@@ -54,18 +65,16 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
 	private static Server jettyServer;
 
-
 	@Override
 	protected void setUp() throws Exception {
+		super.setUp();
 		setUpJetty();
 		this.factory = createRequestFactory();
-		super.setUp();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		this.factory = null;
-		super.tearDown();
 	}
 
 	private void setUpJetty() throws Exception {
@@ -88,8 +97,20 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		}
 	}
 
-	protected abstract ClientHttpRequestFactory createRequestFactory();
+	private void tearDownJetty() throws Exception {
+		if (jettyServer != null) {
+			jettyServer.stop();
+			while (jettyServer.isStopping()) {
+				Log.d(TAG, "Stopping Jetty...");
+			}
+			if (jettyServer.isStopped()) {
+				Log.d(TAG, "Jetty is stopped");
+				jettyServer = null;
+			}
+		}
+	}
 
+	protected abstract ClientHttpRequestFactory createRequestFactory();
 
 	@MediumTest
 	public void testStatus() throws Exception {
@@ -118,7 +139,8 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			assertNotNull(response.getStatusText());
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
-			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders().get(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders()
+					.get(headerName));
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
 		} finally {
@@ -142,7 +164,8 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			assertNotNull(response.getStatusText());
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
-			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders().get(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders()
+					.get(headerName));
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
 		} finally {
@@ -230,7 +253,8 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertTrue("Header not found", response.getHeaders().containsKey("Content-Encoding"));
 			assertEquals("Header value not found", Arrays.asList("gzip"), response.getHeaders().get("Content-Encoding"));
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip ".getBytes("UTF-8");
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(body.length);
@@ -252,7 +276,8 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			assertNotNull(response.getStatusText());
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertFalse("Header found", response.getHeaders().containsKey("Content-Encoding"));
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip ".getBytes("UTF-8");
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
 			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(body.length);
@@ -261,8 +286,10 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			byte[] compressedBody = byteArrayOutputStream.toByteArray();
 			long contentLength = response.getHeaders().getContentLength();
 			// Gingerbread and newer seamlessly request and handle gzip responses from the server 
-			assertTrue("Invalid content-length", (contentLength == body.length) || 
-					((contentLength == compressedBody.length) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)));
+			assertTrue(
+					"Invalid content-length",
+					(contentLength == body.length)
+							|| ((contentLength == compressedBody.length) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)));
 		} finally {
 			response.close();
 		}
@@ -279,7 +306,8 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			assertNotNull(response.getStatusText());
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertFalse("Header found", response.getHeaders().containsKey("Content-Encoding"));
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip ".getBytes("UTF-8");
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
 			assertEquals("Invalid content-length", response.getHeaders().getContentLength(), body.length);
@@ -287,13 +315,14 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			response.close();
 		}
 	}
-	
+
 	@MediumTest
 	public void testPostContentEncodingGzip() throws Exception {
 		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/gzip"), HttpMethod.POST);
 		assertEquals("Invalid HTTP method", HttpMethod.POST, request.getMethod());
 		request.getHeaders().add("Content-Encoding", "gzip");
-		byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip ".getBytes("UTF-8");
+		byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+				.getBytes("UTF-8");
 		FileCopyUtils.copy(body, request.getBody());
 		ClientHttpResponse response = request.execute();
 		try {
@@ -414,7 +443,8 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip ".getBytes("UTF-8");
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
 			resp.setStatus(HttpServletResponse.SC_OK);
 			if (containsHeader(req, "Accept-Encoding", "gzip")) {
 				resp.addHeader("Content-Encoding", "gzip");
@@ -429,10 +459,11 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 				resp.addHeader("Content-Length", String.valueOf(body.length));
 			}
 		}
-		
+
 		@Override
 		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip ".getBytes("UTF-8");
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
 			resp.setStatus(HttpServletResponse.SC_OK);
 			if (containsHeader(req, "Content-Encoding", "gzip")) {
 				GZIPInputStream gzipInputStream = new GZIPInputStream(req.getInputStream());

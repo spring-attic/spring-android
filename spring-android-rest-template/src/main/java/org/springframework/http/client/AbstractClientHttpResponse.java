@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2011 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import org.springframework.http.ContentCodingType;
+import org.springframework.http.HttpStatus;
 
 /**
  * Abstract base for {@link ClientHttpResponse}.
@@ -33,10 +34,13 @@ public abstract class AbstractClientHttpResponse implements ClientHttpResponse {
 
 	private InputStream compressedBody;
 
+	public HttpStatus getStatusCode() throws IOException {
+		return HttpStatus.valueOf(getRawStatusCode());
+	}
 
 	public InputStream getBody() throws IOException {
 		InputStream body = getBodyInternal();
-		if (shouldCompress()) {
+		if (isCompressed()) {
 			return getCompressedBody(body);
 		}
 		return body;
@@ -53,7 +57,7 @@ public abstract class AbstractClientHttpResponse implements ClientHttpResponse {
 		closeInternal();
 	}
 
-	private boolean shouldCompress() {
+	private boolean isCompressed() {
 		List<ContentCodingType> contentCodingTypes = this.getHeaders().getContentEncoding();
 		for (ContentCodingType contentCodingType : contentCodingTypes) {
 			if (contentCodingType.equals(ContentCodingType.GZIP)) {

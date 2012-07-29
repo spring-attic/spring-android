@@ -102,9 +102,27 @@ import android.util.Log;
  * will not perform any URL encoding.
  *
  * <p>Objects passed to and returned from these methods are converted to and from HTTP messages by {@link
- * HttpMessageConverter} instances. Converters for the main mime types are registered by default, but you can also write
- * your own converter and register it via the {@link #setMessageConverters messageConverters} bean property.
- *
+ * HttpMessageConverter} instances. For performance purposes, no converters are registered when using the default 
+ * constructor. When you create a new RestTemplate instance, you can then select and customize which converters to 
+ * register. This is accomplished via the {@link #setMessageConverters messageConverters} bean property. You can also 
+ * write your own converter and register it the same way.
+ * 
+ * <p>Alternate constructors allow you to specify whether to include a default set of converters for the main mime 
+ * types. These converters are listed in the following table, and are registered based on the corresponding rule.</p>
+ * <table border=1 cellpadding=2 cellspacing=0>
+ * <tr><th>Message Body Converter</th><th>Rule</th></tr>
+ * <tr><td>{@link ByteArrayHttpMessageConverter}</td><td rowspan=3 valign=top>Always included</td></tr>
+ * <tr><td>{@link StringHttpMessageConverter}</td></tr>
+ * <tr><td>{@link ResourceHttpMessageConverter}</td></tr>
+ * <tr><td>{@link SourceHttpMessageConverter}</td><td rowspan=2 valign=top>Included on Android 2.2 (Froyo) or newer, 
+ * where {@link javax.xml.transform.Source} is available.</td></tr>
+ * <tr><td>{@link XmlAwareFormHttpMessageConverter}</td></tr>
+ * <tr><td>{@link FormHttpMessageConverter}</td><td>Included on Android 2.1 (Eclair) and older.</td></tr>
+ * <tr><td>{@link SimpleXmlHttpMessageConverter}</td><td>Included if the Simple XML serializer is present.</td></tr>
+ * <tr><td>{@link MappingJacksonHttpMessageConverter}</td><td>Included if the Jackson JSON processor is present.</td></tr>
+ * <tr><td>{@link SyndFeedHttpMessageConverter}</td><td>Included if the Android ROME Feed Reader is present.</td></tr>
+ * </table><br />  
+ * 
  * <p>This template uses a {@link org.springframework.http.client.HttpComponentsClientHttpRequestFactory} and a {@link
  * DefaultResponseErrorHandler} as default strategies for creating HTTP connections or handling HTTP errors,
  * respectively. These defaults can be overridden through the {@link #setRequestFactory(ClientHttpRequestFactory)
@@ -122,62 +140,63 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	
 	private static final String TAG = "RestTemplate";
 
-	private static final boolean javaxXmlTransformPresent = 
-			ClassUtils.isPresent("javax.xml.transform.Source", RestTemplate.class.getClassLoader());
-
-	private static final boolean simpleXmlPresent =
-			ClassUtils.isPresent("org.simpleframework.xml.Serializer", RestTemplate.class.getClassLoader());
-
-	private static final boolean jacksonPresent =
-			ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", RestTemplate.class.getClassLoader()) &&
-					ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", RestTemplate.class.getClassLoader());
-	
-	private static boolean romePresent =
-			ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed", RestTemplate.class.getClassLoader());
-
-
 	private final ResponseExtractor<HttpHeaders> headersExtractor = new HeadersExtractor();
 
 	private List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
 
 	private ResponseErrorHandler errorHandler = new DefaultResponseErrorHandler();
-
-
-	/** Create a new instance of the {@link RestTemplate} using default settings. */
+	
+	/**
+	 * Create a new instance of {@link RestTemplate}.
+	 * <p>For performance purposes, no message body converters are included when using this constructor. 
+	 * You must register a converter via the {@link #setMessageConverters messageConverters} property in order to 
+	 * process HTTP messages.
+	 * @see HttpMessageConverter
+	 */
 	public RestTemplate() {
-		this.messageConverters.add(new ByteArrayHttpMessageConverter());
-		this.messageConverters.add(new StringHttpMessageConverter());
-		this.messageConverters.add(new ResourceHttpMessageConverter());
-		
-		// if javax.xml.transform is not available, fall back to standard Form message converter
-		if (javaxXmlTransformPresent) {
-			this.messageConverters.add(new SourceHttpMessageConverter<Source>());
-			this.messageConverters.add(new XmlAwareFormHttpMessageConverter());
-		} else {
-			this.messageConverters.add(new FormHttpMessageConverter());
-		}
-		
-		if (simpleXmlPresent) {
-			this.messageConverters.add(new SimpleXmlHttpMessageConverter());
-		}
-		
-		if (jacksonPresent) {
-			this.messageConverters.add(new MappingJacksonHttpMessageConverter());
-		}
-		
-		if (romePresent) {
-			this.messageConverters.add(new SyndFeedHttpMessageConverter());
+		this(false);
+	}
+
+	/**
+	 * Create a new instance of {@link RestTemplate}.
+	 * <p>For performance purposes, no message body converters are registered when using the default constructor. 
+	 * However, this constructor allows you to specify whether to include a default set of converters, which are listed
+	 * in the {@link RestTemplate} javadoc.</p>
+	 * @param includeDefaultConverters true to add the default set of message body converters
+	 * @see HttpMessageConverter
+	 */
+	public RestTemplate(boolean includeDefaultConverters) {
+		if (includeDefaultConverters) {
+			DefaultMessageConverters.init(messageConverters);
 		}
 	}
 
 	/**
-	 * Create a new instance of the {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
+	 * Create a new instance of {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
+	 * <p>For performance purposes, no message body converters are included when using this constructor. 
+	 * You must register a converter via the {@link #setMessageConverters messageConverters} property in order to 
+	 * process HTTP messages.
 	 * @param requestFactory HTTP request factory to use
 	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
 	 * @see org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 	 */
 	public RestTemplate(ClientHttpRequestFactory requestFactory) {
-		this();
+		this(false, requestFactory);
+	}
+	
+	/**
+	 * Create a new instance of {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
+	 * <p>For performance purposes, no message body converters are registered when using the default constructor. 
+	 * However, this constructor allows you to specify whether to include a default set of converters, which are listed
+	 * in the {@link RestTemplate} javadoc.</p>
+	 * @param includeDefaultConverters true to add the default set of message body converters
+	 * @param requestFactory HTTP request factory to use
+	 * @see HttpMessageConverter
+	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
+	 * @see org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+	 */
+	public RestTemplate(boolean includeDefaultConverters, ClientHttpRequestFactory requestFactory) {
+		this(includeDefaultConverters);
 		setRequestFactory(requestFactory);
 	}
 
@@ -504,7 +523,6 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		getErrorHandler().handleError(response);
 	}
 
-
 	/**
 	 * Request callback implementation that prepares the request's accept headers.
 	 */
@@ -642,6 +660,47 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		}
 	}
 
+	private static class DefaultMessageConverters {
+		
+		private static final boolean javaxXmlTransformPresent = 
+				ClassUtils.isPresent("javax.xml.transform.Source", RestTemplate.class.getClassLoader());
+
+		private static final boolean simpleXmlPresent =
+				ClassUtils.isPresent("org.simpleframework.xml.Serializer", RestTemplate.class.getClassLoader());
+
+		private static final boolean jacksonPresent =
+				ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", RestTemplate.class.getClassLoader()) &&
+						ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", RestTemplate.class.getClassLoader());
+		
+		private static final boolean romePresent =
+				ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed", RestTemplate.class.getClassLoader());
+		
+		public static void init(List<HttpMessageConverter<?>> messageConverters) {
+			messageConverters.add(new ByteArrayHttpMessageConverter());
+			messageConverters.add(new StringHttpMessageConverter());
+			messageConverters.add(new ResourceHttpMessageConverter());
+			
+			// if javax.xml.transform is not available, fall back to standard Form message converter
+			if (javaxXmlTransformPresent) {
+				messageConverters.add(new SourceHttpMessageConverter<Source>());
+				messageConverters.add(new XmlAwareFormHttpMessageConverter());
+			} else {
+				messageConverters.add(new FormHttpMessageConverter());
+			}
+			
+			if (simpleXmlPresent) {
+				messageConverters.add(new SimpleXmlHttpMessageConverter());
+			}
+			
+			if (jacksonPresent) {
+				messageConverters.add(new MappingJacksonHttpMessageConverter());
+			}
+			
+			if (romePresent) {
+				messageConverters.add(new SyndFeedHttpMessageConverter());
+			}
+		}
+	}
 
 	/**
 	 * Response extractor that extracts the response {@link HttpHeaders}.

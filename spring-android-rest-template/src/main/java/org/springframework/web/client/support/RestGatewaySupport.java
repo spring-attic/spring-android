@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2009 the original author or authors.
+ * Copyright 2002-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package org.springframework.web.client.support;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
@@ -28,14 +26,12 @@ import org.springframework.web.client.RestTemplate;
  * <p>Requires a {@link ClientHttpRequestFactory} or a {@link RestTemplate} instance to be set.
  *
  * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 1.0
  * @see #setRestTemplate
  * @see org.springframework.web.client.RestTemplate
  */
 public class RestGatewaySupport {
-
-	/** Logger available to subclasses */
-	protected final Log logger = LogFactory.getLog(getClass());
 
 	private RestTemplate restTemplate;
 

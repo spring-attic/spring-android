@@ -47,7 +47,6 @@ import org.springframework.util.Assert;
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
- * @see org.springframework.web.servlet.view.json.MappingJacksonJsonView
  */
 public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConverter<Object> {
 

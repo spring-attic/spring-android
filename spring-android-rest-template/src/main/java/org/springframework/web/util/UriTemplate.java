@@ -31,12 +31,11 @@ import java.util.regex.Pattern;
 import org.springframework.util.Assert;
 
 /**
- * Represents a URI template. A URI template is a URI-like String that contains variables enclosed by braces (
- * <code>{</code>, <code>}</code>), which can be expanded to produce an actual URI.
- * 
- * <p>
- * See {@link #expand(Map)}, {@link #expand(Object[])}, and {@link #match(String)} for example usages.
- * 
+ * Represents a URI template. A URI template is a URI-like String that contains variables enclosed
+ * by braces (<code>{</code>, <code>}</code>), which can be expanded to produce an actual URI.
+ *
+ * <p>See {@link #expand(Map)}, {@link #expand(Object[])}, and {@link #match(String)} for example usages.
+ *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
  * @author Roy Clarkson
@@ -61,7 +60,6 @@ public class UriTemplate implements Serializable {
 
 	private final String uriTemplate;
 
-
 	/**
 	 * Construct a new {@code UriTemplate} with the given URI String.
 	 * @param uriTemplate the URI template string
@@ -85,24 +83,21 @@ public class UriTemplate implements Serializable {
 	// expanding
 
 	/**
-	 * Given the Map of variables, expands this template into a URI. The Map keys represent variable names, the Map
-	 * values variable values. The order of variables is not significant.
-	 * <p>
-	 * Example:
-	 * 
+	 * Given the Map of variables, expands this template into a URI. The Map keys represent variable names,
+	 * the Map values variable values. The order of variables is not significant.
+	 * <p>Example:
 	 * <pre class="code">
-	 * UriTemplate template = new UriTemplate(&quot;http://example.com/hotels/{hotel}/bookings/{booking}&quot;);
+	 * UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
 	 * Map&lt;String, String&gt; uriVariables = new HashMap&lt;String, String&gt;();
-	 * uriVariables.put(&quot;booking&quot;, &quot;42&quot;);
-	 * uriVariables.put(&quot;hotel&quot;, &quot;1&quot;);
+	 * uriVariables.put("booking", "42");
+	 * uriVariables.put("hotel", "1");
 	 * System.out.println(template.expand(uriVariables));
 	 * </pre>
-	 * 
 	 * will print: <blockquote><code>http://example.com/hotels/1/bookings/42</code></blockquote>
 	 * @param uriVariables the map of URI variables
 	 * @return the expanded URI
-	 * @throws IllegalArgumentException if <code>uriVariables</code> is <code>null</code>; or if it does not contain
-	 *             values for all the variable names
+	 * @throws IllegalArgumentException if <code>uriVariables</code> is <code>null</code>;
+	 * or if it does not contain values for all the variable names
 	 */
 	public URI expand(Map<String, ?> uriVariables) {
 		UriComponents expandedComponents = uriComponents.expand(uriVariables);
@@ -111,21 +106,18 @@ public class UriTemplate implements Serializable {
 	}
 
 	/**
-	 * Given an array of variables, expand this template into a full URI. The array represent variable values. The order
-	 * of variables is significant.
-	 * <p>
-	 * Example:
-	 * 
+	 * Given an array of variables, expand this template into a full URI. The array represent variable values.
+	 * The order of variables is significant.
+	 * <p>Example:
 	 * <pre class="code">
 	 * UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
 	 * System.out.println(template.expand("1", "42));
 	 * </pre>
-	 * 
 	 * will print: <blockquote><code>http://example.com/hotels/1/bookings/42</code></blockquote>
 	 * @param uriVariableValues the array of URI variables
 	 * @return the expanded URI
-	 * @throws IllegalArgumentException if <code>uriVariables</code> is <code>null</code> or if it does not contain
-	 *             sufficient variables
+	 * @throws IllegalArgumentException if <code>uriVariables</code> is <code>null</code>
+	 * or if it does not contain sufficient variables
 	 */
 	public URI expand(Object... uriVariableValues) {
 		UriComponents expandedComponents = uriComponents.expand(uriVariableValues);
@@ -149,16 +141,13 @@ public class UriTemplate implements Serializable {
 	}
 
 	/**
-	 * Match the given URI to a map of variable values. Keys in the returned map are variable names, values are variable
-	 * values, as occurred in the given URI.
-	 * <p>
-	 * Example:
-	 * 
+	 * Match the given URI to a map of variable values. Keys in the returned map are variable names,
+	 * values are variable values, as occurred in the given URI.
+	 * <p>Example:
 	 * <pre class="code">
-	 * UriTemplate template = new UriTemplate(&quot;http://example.com/hotels/{hotel}/bookings/{booking}&quot;);
-	 * System.out.println(template.match(&quot;http://example.com/hotels/1/bookings/42&quot;));
+	 * UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
+	 * System.out.println(template.match("http://example.com/hotels/1/bookings/42"));
 	 * </pre>
-	 * 
 	 * will print: <blockquote><code>{hotel=1, booking=42}</code></blockquote>
 	 * @param uri the URI to match to
 	 * @return a map of variable values
@@ -179,8 +168,7 @@ public class UriTemplate implements Serializable {
 
 	/**
 	 * Encodes the given String as URL.
-	 * <p>
-	 * Defaults to {@link UriUtils#encodeUri(String, String)}.
+	 * <p>Defaults to {@link UriUtils#encodeUri(String, String)}.
 	 * @param uri the URI to encode
 	 * @return the encoded URI
 	 * @deprecated No longer in use, with no direct replacement
@@ -202,7 +190,6 @@ public class UriTemplate implements Serializable {
 	public String toString() {
 		return this.uriTemplate;
 	}
-
 
 	/**
 	 * Static inner class to parse URI template strings into a matching regular expression.
@@ -259,6 +246,5 @@ public class UriTemplate implements Serializable {
 			return Pattern.compile(this.patternBuilder.toString());
 		}
 	}
-
 
 }

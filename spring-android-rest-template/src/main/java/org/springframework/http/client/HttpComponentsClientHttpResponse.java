@@ -22,7 +22,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 
 /**
  * {@link org.springframework.http.client.ClientHttpResponse} implementation that uses Apache HttpClient 4.0 to execute
@@ -46,8 +45,8 @@ final class HttpComponentsClientHttpResponse extends AbstractClientHttpResponse 
 		this.httpResponse = httpResponse;
 	}
 
-	public HttpStatus getStatusCode() throws IOException {
-		return HttpStatus.valueOf(this.httpResponse.getStatusLine().getStatusCode());
+	public int getRawStatusCode() throws IOException {
+		return this.httpResponse.getStatusLine().getStatusCode();
 	}
 
 	public String getStatusText() throws IOException {

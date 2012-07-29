@@ -1,0 +1,146 @@
+Spring for Android
+==================
+
+1.0.0.RELEASE (2012.05.30)
+==========================
+Minimum Requirements:
+* Minimum requirements remain Android 2.1 (API Level 7). Earlier versions have 
+  not been tested on this release.
+
+Improvements:
+* Added alternate RestTemplate constructor that does not include any message
+  converters. (ANDROID-88)
+* Merged in applicable RestTemplate changes from Spring Framework 3.1.1.RELEASE.
+  (ANDROID-95)
+* Added the ability to specify a default charset and list of available charsets 
+  in StringHttpMessageConverter. (ANDROID-82)
+* Improved Android version checking. (ANDROID-87)
+* Removed unused references to Commons Logging from RestGatewaySupport. 
+  (ANDROID-86)
+
+Bugs Fixes:
+* HttpUrlConnection was throwing an IOException for a 401 Unauthorized response, 
+  which was not being handled properly by RestTemplate. (ANDROID-89)
+* UriUtils was not encoding a URL properly. (ANDROID-76)
+* HttpBasicAuthentication was utilizing an unsupported Base64 library. 
+  (ANDROID-85)
+
+
+1.0.0.RC1 (2012.03.05)
+======================
+Minimum Requirements:
+* Minimum requirements remain Android 2.1 (API Level 7). Earlier versions have 
+  not been tested on this release.
+
+New Features:
+* Support for Spring Social 1.0.2.RELEASE in Spring for Android Auth
+* Support for Spring Security 3.1.0.RELEASE in Spring for Android Auth
+* Updated RestTemplate to be compatible with Spring Framework 3.1.0.RELEASE
+* Added support for Basic Authentication
+* Added AssetResource for accessing static resources stored in the assets 
+  directory of an Android project
+* Removed automatic loading of GsonHttpMessageConverter due to incompatibilities 
+  with preinstalled versions of Gson on some devices.
+* Improved gzip support
+* Now defaulting to standard J2SE facilities (HttpURLConnection) in Gingerbread
+  and newer, as recommended by Google
+* Disabled connection reuse on Eclair and older versions when using 
+  HttpURLConnection, because of a defect in connection pooling on those versions
+  of Android
+* Several bug fixes and improvements
+
+
+1.0.0.M4 (2011.07.21)
+=====================
+Minimum Requirements:
+* This release is now being built against Android 2.1 update 1 (API Level 7).
+  Previous Android versions are not officially supported.
+
+New Features:
+* Support for Spring Social 1.0.0.RC1 in Spring for Android Auth. The known issues
+  in Spring Social 1.0.0.M3 have been resolved in the 1.0.0.RC1 release.
+* Support for Spring Security 3.1.0.RC2 in Spring for Android Auth
+* Updated RestTemplate to be compatible with Spring Framework 3.1.0.M2
+* Added gzip compression support in Rest Template.
+* Added support for Google's Gson, JSON parsing library.
+* Updated support for Jackson 1.8.x
+* Fixed several issues in the JavaDoc
+* Several bug fixes
+
+Deprecated:
+* Deprecated CommonsClientHttpRequestFactory and supporting classes. Commons
+  Client support is now deprecated in Spring Framework 3.1.0.M2 as well as
+  Spring for Android.
+
+
+1.0.0.M3 (2011.05.10)
+=====================
+New Features:
+* Support for Spring Social 1.0.0.M3 through the new Spring for Android Auth 
+  library, which includes a SQLite datastore, and Android compatible Spring 
+  Security Encryptors. Spring Social is currently supported in Android 
+  version 2.3.1 (API Level 9) and higher.
+* Updated RestTemplate to be compatible with Spring Framework 3.1.0.M1.
+* Separated core functionality into a new Spring for Android Core library.
+* Restored support for CommonsClientHttpRequestFactory.
+
+Known Issues:
+  There are several known issues when working with Spring Social in an Android
+  environment. The majority of these are specific to older Android releases.
+
+* https://jira.springsource.org/browse/SOCIAL-138 - String.getBytes(Charset 
+  charset) is not available in Android versions prior to API level 9
+* https://jira.springsource.org/browse/SOCIAL-139 - The HttpComponents version 
+  verification is failing on 1.x Android versions
+* https://jira.springsource.org/browse/SOCIAL-144 - TwitterTemplate 
+  TimelineTemplate.updateStatus() is throwing an exception in Android API level 
+  8 and lower.
+* https://jira.springsource.org/browse/SOCIAL-148 - LinkedInTemplate not 
+  working on Android because of javax.xml.bind.annotation.XmlRootElement 
+  dependency
+* https://jira.springsource.org/browse/SOCIAL-149 - All OAuth2 template tests 
+  are failing on Android 1.x
+
+
+1.0.0.M2 (2011.02.07)
+=====================
+New Features:
+* Updated RestTemplate to include HttpComponents HttpClient 4.x support using 
+  the HttpComponentsClientHttpRequestFactory.
+* New RestTemplate instances now use the HttpComponentsClientHttpRequestFactory 
+  by default.
+* Added support for Object to XML serialization through the 
+  SimpleXmlHttpMessageConverter, which utilizes the Simple XML serializer.
+* Added support for RSS and Atom feeds through the SyndFeedHttpMessageConverter, 
+  RssChannelHttpMessageConverter, and AtomFeedHttpMessageConverter.
+
+Deprecated:
+* Deprecated CommonsClientHttpRequestFactory and supporting classes, since the 
+  Commons HttpClient 3.x is not native to the Android platform. These classes 
+  will be removed in the next release.
+
+Removed:
+* Commons-Logging has been removed due to conflicts with private Android 
+  classes. This future of this library will be reevaluated for the next 
+  release.
+
+1.0.0.M1 (2010.11.18)
+=====================
+New Features:
+* Commons-Logging facade for Android allows libraries using commons-logging to 
+  log to Android's native log. The logging levels specified for Commons Logging 
+  can be almost directly mapped to the levels that exist in the Google Android 
+  platform. The following list shows the mapping implemented by this logger:
+
+  - JCL TRACE to Android VERBOSE
+  - JCL DEBUG to Android DEBUG
+  - JCL INFO to Android INFO
+  - JCL WARN to Android WARN
+  - JCL ERROR to Android ERROR
+  - JCL FATAL to Android ERROR	  
+
+* RestTemplate support in Android. You can now utilize RestTemplate calls in 
+  Android projects using the CommonsClientHttpRequestFactory. Due to known 
+  issues with Android's java.net.HttpURLConnection implementation, we 
+  recommend avoiding using SimpleClientHttpRequestFactory at this time.
+	  

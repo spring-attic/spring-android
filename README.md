@@ -6,10 +6,7 @@
 
 1. Clone the repository from GitHub:
 
-		$ git clone --recursive git://github.com/SpringSource/spring-android.git
-
-	_Note: the --recursive switch is important, because Spring for Android uses
-git submodules, which must also be cloned and initialized._
+		$ git clone git://github.com/SpringSource/spring-android.git
 
 2. Navigate into the cloned repository directory:
 
@@ -18,20 +15,6 @@ git submodules, which must also be cloned and initialized._
 3. The project uses [Gradle](http://gradle.org/) to build:
 
 		$ ./gradlew build
-
-Alternatively, if "--recursive" is omitted, the following steps are required for a full check out of the source:
-
-1. Clone the repository from GitHub:
-
-		$ git clone git://github.com/SpringSource/spring-android.git
-
-2. Initialize the submodule
-
-		$ git submodule init
-
-3. Update the submodule in your local repository
-
-		$ git submodule update
 
 ## Eclipse
 
@@ -72,3 +55,52 @@ There are three Android Test Projects located in the repository that correspond 
 		$ mvn clean install
 
 	_Note: Each test project can also be executed individually, by running the previous command from within the respective test project's directory._
+
+## Maven
+
+The [Android Maven Plugin](http://code.google.com/p/maven-android-plugin) makes it possible to build Android applications utilizing the power of Maven dependency management.
+
+### Dependencies
+
+Spring for Android consists of three modules: Core, Rest Template, and Auth. These are available via the following Maven dependencies:
+
+	<dependency>
+	    <groupId>org.springframework.android</groupId>
+	    <artifactId>spring-android-core</artifactId>
+	    <version>${org.springframework.android-version}</version>
+	</dependency>
+
+	<dependency>
+	    <groupId>org.springframework.android</groupId>
+	    <artifactId>spring-android-rest-template</artifactId>
+	    <version>${org.springframework.android-version}</version>
+	</dependency>
+
+	<dependency>
+	    <groupId>org.springframework.android</groupId>
+	    <artifactId>spring-android-auth</artifactId>
+	    <version>${org.springframework.android-version}</version>
+	</dependency>
+
+### Repositories
+
+Three primary repositories are provided by SpringSource: release, milestone, and snapshot. More information can be found at the [SpringSource Repository FAQ](https://github.com/SpringSource/spring-framework/wiki/SpringSource-repository-FAQ).
+
+	<repository>
+		<id>springsource-repo</id>
+		<name>SpringSource Repository</name>
+		<url>http://repo.springsource.org/release</url>
+	</repository>	
+		
+	<repository>
+		<id>springsource-milestone</id>
+		<name>SpringSource Milestone Repository</name>
+		<url>http://repo.springsource.org/milestone</url>
+	</repository>
+	
+	<repository>
+		<id>springsource-snapshot</id>
+		<name>SpringSource Snapshot Repository</name>
+		<url>http://repo.springsource.org/snapshot</url>
+	</repository>
+

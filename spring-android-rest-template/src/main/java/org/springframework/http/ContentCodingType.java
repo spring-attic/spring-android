@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 the original author or authors.
+ * Copyright 2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -357,8 +357,7 @@ public class ContentCodingType implements Comparable<ContentCodingType> {
 	}
 
 	/**
-	 * Parse the given String value into a {@code ContentCodingType} object, with this method name following the
-	 * 'valueOf' naming convention (as supported by {@link org.springframework.core.convert.ConversionService}.
+	 * Parse the given String value into a {@code ContentCodingType} object.
 	 * @see #parseCodingType(String)
 	 */
 	public static ContentCodingType valueOf(String value) {
