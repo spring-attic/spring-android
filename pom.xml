@@ -53,35 +53,10 @@
 
 	
 	<repositories>
-		<!-- For testing against latest Spring snapshots -->
 		<repository>
-			<id>springsource-snapshot</id>
+			<id>spring-snapshot</id>
 			<name>SpringSource Snapshot Repository</name>
-			<url>http://repo.springsource.org/snapshot</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<!-- For developing against latest Spring milestones -->
-		<repository>
-			<id>springsource-milestone</id>
-			<name>SpringSource Milestone Repository</name>
-			<url>http://repo.springsource.org/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<!-- For developing against latest Spring releases -->
-		<repository>
-			<id>springsource-repo</id>
-			<name>SpringSource Repository</name>
-			<url>http://repo.springsource.org/release</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
+			<url>http://repo.springsource.org/libs-snapshot</url>
 		</repository>
 	</repositories>
 
