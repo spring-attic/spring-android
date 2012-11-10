@@ -87,20 +87,20 @@ Spring for Android consists of three modules: Core, Rest Template, and Auth. The
 Three primary repositories are provided by SpringSource: release, milestone, and snapshot. More information can be found at the [SpringSource Repository FAQ](https://github.com/SpringSource/spring-framework/wiki/SpringSource-repository-FAQ).
 
 	<repository>
-		<id>springsource-repo</id>
-		<name>SpringSource Repository</name>
+		<id>spring-repo</id>
+		<name>Spring Repository</name>
 		<url>http://repo.springsource.org/release</url>
 	</repository>	
 		
 	<repository>
-		<id>springsource-milestone</id>
-		<name>SpringSource Milestone Repository</name>
+		<id>spring-milestone</id>
+		<name>Spring Milestone Repository</name>
 		<url>http://repo.springsource.org/milestone</url>
 	</repository>
 	
 	<repository>
-		<id>springsource-snapshot</id>
-		<name>SpringSource Snapshot Repository</name>
+		<id>spring-snapshot</id>
+		<name>Spring Snapshot Repository</name>
 		<url>http://repo.springsource.org/snapshot</url>
 	</repository>
 
