@@ -288,6 +288,10 @@ public final class UriComponents {
 		}
 
 		Assert.hasLength(encoding, "'encoding' must not be empty");
+		
+		// do not encode ipv6-hostnames like [::1]
+		if(type==Type.HOST && source.startsWith("[") && source.endsWith("]"))
+			return source;
 
 		byte[] bytes = encodeBytes(source.getBytes(encoding), type);
 		return new String(bytes, "US-ASCII");

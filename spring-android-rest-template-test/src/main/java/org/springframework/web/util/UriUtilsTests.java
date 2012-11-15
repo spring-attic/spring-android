@@ -45,6 +45,8 @@ public class UriUtilsTests extends TestCase {
 	public void testEncodeHost() throws UnsupportedEncodingException {
 		assertEquals("Invalid encoded result", "foobar", UriUtils.encodeHost("foobar", ENC));
 		assertEquals("Invalid encoded result", "foo%20bar", UriUtils.encodeHost("foo bar", ENC));
+		assertEquals("Invalid encoded result", "[::1]", UriUtils.encodeHost("[::1]", ENC));
+		assertEquals("Invalid encoded result", "[fe80::a2cf:33ff:fee2:124f]", UriUtils.encodeHost("[fe80::a2cf:33ff:fee2:124f]", ENC));
 	}
 
 	@SmallTest
@@ -132,6 +134,12 @@ public class UriUtilsTests extends TestCase {
 		assertEquals("Invalid encoded URI", "file:///~/calendar", UriUtils.encodeUri("file:///~/calendar", ENC));
 		assertEquals("Invalid encoded URI", "http://example.com/query=foo@bar",
 				UriUtils.encodeUri("http://example.com/query=foo@bar", ENC));
+		assertEquals("Invalid encoded URI", "http://[::1]/rest.xml",
+				UriUtils.encodeUri("http://[::1]/rest.xml", ENC));
+		assertEquals("Invalid encoded URI", "http://[::1]:8080/rest.xml",
+				UriUtils.encodeUri("http://[::1]:8080/rest.xml", ENC));
+		assertEquals("Invalid encoded URI", "http://[fe80::a2cf:33ff:fee2:124f]:8080/rest.xml",
+				UriUtils.encodeUri("http://[fe80::a2cf:33ff:fee2:124f]:8080/rest.xml", ENC));
 
 	}
 
@@ -156,6 +164,12 @@ public class UriUtilsTests extends TestCase {
 				UriUtils.encodeHttpUrl("http://java.sun.com/j2se/1.3/", ENC));
 		assertEquals("Invalid encoded HTTP URL", "http://example.com/query=foo@bar",
 				UriUtils.encodeHttpUrl("http://example.com/query=foo@bar", ENC));
+		assertEquals("Invalid encoded HTTP URL", "http://[::1]/rest.xml",
+				UriUtils.encodeHttpUrl("http://[::1]/rest.xml", ENC));
+		assertEquals("Invalid encoded HTTP URL", "http://[::1]:8080/rest.xml",
+				UriUtils.encodeHttpUrl("http://[::1]:8080/rest.xml", ENC));
+		assertEquals("Invalid encoded HTTP URL", "http://[fe80::a2cf:33ff:fee2:124f]:8080/rest.xml",
+				UriUtils.encodeHttpUrl("http://[fe80::a2cf:33ff:fee2:124f]:8080/rest.xml", ENC));
 		
 		// SPR-8974
 		assertEquals("http://example.org?format=json&url=http://another.com?foo=bar",
