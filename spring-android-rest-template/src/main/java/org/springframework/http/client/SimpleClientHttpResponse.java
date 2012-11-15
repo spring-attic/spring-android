@@ -59,7 +59,7 @@ final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 			 * Android throws this exception when an HTTP 401 is received. Checking 
 			 * for this response and returning the proper status.
 			 */
-			if (ex.getLocalizedMessage().equals(AUTHENTICATION_ERROR)) {
+			if (AUTHENTICATION_ERROR.equals(ex.getLocalizedMessage())) {
 				return HttpStatus.UNAUTHORIZED;
 			} else {
 				throw ex;
@@ -76,7 +76,7 @@ final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 			 * Android throws this exception when an HTTP 401 is received. Checking 
 			 * for this response and returning the proper status.
 			 */
-			if (ex.getLocalizedMessage().equals(AUTHENTICATION_ERROR)) {
+			if (AUTHENTICATION_ERROR.equals(ex.getLocalizedMessage())) {
 				return HttpStatus.UNAUTHORIZED.getReasonPhrase();
 			} else {
 				throw ex;
