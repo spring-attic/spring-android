@@ -39,6 +39,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.android.test.Assert;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpBasicAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -99,6 +100,7 @@ public abstract class AbstractRestTemplateIntegrationTests extends AndroidTestCa
 			jettyContext.addServlet(new ServletHolder(new GetServlet(new byte[0], contentType)), "/get/nothing");
 			jettyContext.addServlet(new ServletHolder(new GetServlet(bytes, null)), "/get/nocontenttype");
 			jettyContext.addServlet(new ServletHolder(new ErrorServlet(401)), "/get/notauthorized");
+			jettyContext.addServlet(new ServletHolder(new ErrorServlet(407)), "/get/notproxyauthorized");
 			jettyContext.addServlet(new ServletHolder(new PostServlet(helloWorld, baseUrl + "/post/1", bytes,
 					contentType)), "/post");
 			jettyContext.addServlet(new ServletHolder(new StatusCodeServlet(204)), "/status/nocontent");
@@ -150,6 +152,33 @@ public abstract class AbstractRestTemplateIntegrationTests extends AndroidTestCa
 		} catch (HttpClientErrorException ex) {
 			assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
 			assertEquals(HttpStatus.UNAUTHORIZED.getReasonPhrase(), ex.getStatusText());
+			assertNotNull(ex.getResponseBodyAsString());
+		}
+	}
+	
+	@MediumTest
+	public void testGetEntityNotAuthorizedBadCredentials() {
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setAuthorization(new HttpBasicAuthentication("bob", "password"));
+			HttpEntity<Void> requestEntity = new HttpEntity<Void>(headers);
+			restTemplate.exchange(baseUrl + "/get/notauthorized", HttpMethod.GET, requestEntity, String.class);
+			fail("HttpClientErrorException expected");
+		} catch (HttpClientErrorException ex) {
+			assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+			assertEquals(HttpStatus.UNAUTHORIZED.getReasonPhrase(), ex.getStatusText());
+			assertNotNull(ex.getResponseBodyAsString());
+		}
+	}
+	
+	@MediumTest
+	public void testGetEntityNotProxyAuthorized() {
+		try {
+			restTemplate.getForEntity(baseUrl + "/get/notproxyauthorized", String.class);
+			fail("HttpClientErrorException expected");
+		} catch (HttpClientErrorException ex) {
+			assertEquals(HttpStatus.PROXY_AUTHENTICATION_REQUIRED, ex.getStatusCode());
+			assertEquals(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.getReasonPhrase(), ex.getStatusText());
 			assertNotNull(ex.getResponseBodyAsString());
 		}
 	}
@@ -265,7 +294,7 @@ public abstract class AbstractRestTemplateIntegrationTests extends AndroidTestCa
 	public void testExchangeGet() throws Exception {
 		HttpHeaders requestHeaders = new HttpHeaders();
 		requestHeaders.set("MyHeader", "MyValue");
-		HttpEntity<?> requestEntity = new HttpEntity(requestHeaders);
+		HttpEntity<Void> requestEntity = new HttpEntity<Void>(requestHeaders);
 		ResponseEntity<String> response = restTemplate.exchange(baseUrl + "/{method}", HttpMethod.GET, requestEntity,
 				String.class, "get");
 		assertEquals("Invalid content", helloWorld, response.getBody());

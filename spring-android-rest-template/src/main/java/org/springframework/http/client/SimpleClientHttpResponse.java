@@ -35,7 +35,11 @@ import org.springframework.util.StringUtils;
  */
 final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 
-	private static final String AUTHENTICATION_ERROR = "Received authentication challenge is null";
+	private static final String AUTH_ERROR = "Received authentication challenge is null";
+	
+	private static final String AUTH_ERROR_JELLY_BEAN = "No authentication challenges found";
+	
+	private static final String PROXY_AUTH_ERROR = "Received HTTP_PROXY_AUTH (407) code while not using proxy";
 
 	private final HttpURLConnection connection;
 
@@ -46,41 +50,41 @@ final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 	}
 	
 	public int getRawStatusCode() throws IOException {
-		return this.connection.getResponseCode();
+		try {
+			return this.connection.getResponseCode();
+		} catch (IOException ex) {
+			return handleIOException(ex);			
+		}
+	}
+	
+	/** 
+	 * If credentials are incorrect or not provided for Basic Auth, then Android 
+	 * may throw this exception when an HTTP 401 is received. A separate exception 
+	 * is thrown for proxy authentication errors. Checking for this response and 
+	 * returning the proper status.
+	 * @param ex the exception raised from Android 
+	 * @return HTTP Status Code
+	 */
+	private int handleIOException(IOException ex) throws IOException {
+		if (AUTH_ERROR.equals(ex.getMessage()) || AUTH_ERROR_JELLY_BEAN.equals(ex.getMessage())) {
+			return HttpStatus.UNAUTHORIZED.value();
+		} else if (PROXY_AUTH_ERROR.equals(ex.getMessage())) {
+			return HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value();
+		} else {
+			throw ex;
+		}
 	}
 
 	@Override
 	public HttpStatus getStatusCode() throws IOException {
-		try {
-			return HttpStatus.valueOf(getRawStatusCode());
-		} catch (IOException ex) {
-			/* 
-			 * If credentials are incorrect or not provided for Basic Auth, then 
-			 * Android throws this exception when an HTTP 401 is received. Checking 
-			 * for this response and returning the proper status.
-			 */
-			if (ex.getLocalizedMessage().equals(AUTHENTICATION_ERROR)) {
-				return HttpStatus.UNAUTHORIZED;
-			} else {
-				throw ex;
-			}
-		}
+		return HttpStatus.valueOf(getRawStatusCode());
 	}
 
 	public String getStatusText() throws IOException {
 		try {
 			return this.connection.getResponseMessage();
-		} catch (IOException ex) {
-			/* 
-			 * If credentials are incorrect or not provided for Basic Auth, then 
-			 * Android throws this exception when an HTTP 401 is received. Checking 
-			 * for this response and returning the proper status.
-			 */
-			if (ex.getLocalizedMessage().equals(AUTHENTICATION_ERROR)) {
-				return HttpStatus.UNAUTHORIZED.getReasonPhrase();
-			} else {
-				throw ex;
-			}
+		} catch (IOException ex) {			
+			return HttpStatus.valueOf(handleIOException(ex)).getReasonPhrase();
 		}
 	}
 
