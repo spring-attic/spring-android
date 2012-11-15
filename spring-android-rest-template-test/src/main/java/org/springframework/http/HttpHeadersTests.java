@@ -20,9 +20,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -165,7 +168,7 @@ public class HttpHeadersTests extends TestCase {
 		long date = calendar.getTimeInMillis();
 		headers.setDate(date);
 		assertEquals("Invalid Date header", date, headers.getDate());
-		assertEquals("Invalid Date header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00", headers.getFirst("date"));
+		assertEquals("Invalid Date header", calendar.getTime(), getDateFromHeader(headers, "date"));
 
 		// RFC 850
 		headers.set("Date", "Thursday, 18-Dec-08 11:20:00 GMT+01:00");
@@ -193,7 +196,7 @@ public class HttpHeadersTests extends TestCase {
 			calendar.setTimeZone(TimeZone.getTimeZone("CET"));
 			long date = calendar.getTimeInMillis();
 			headers.setDate(date);
-			assertEquals("Invalid Date header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00", headers.getFirst("date"));
+			assertEquals("Invalid Date header", calendar.getTime(), getDateFromHeader(headers, "date"));
 			assertEquals("Invalid Date header", date, headers.getDate());
 		} finally {
 			Locale.setDefault(defaultLocale);
@@ -207,7 +210,7 @@ public class HttpHeadersTests extends TestCase {
 		long date = calendar.getTimeInMillis();
 		headers.setLastModified(date);
 		assertEquals("Invalid Last-Modified header", date, headers.getLastModified());
-		assertEquals("Invalid Last-Modified header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00", headers.getFirst("last-modified"));
+		assertEquals("Invalid Date header", calendar.getTime(), getDateFromHeader(headers, "last-modified"));
 	}
 
 	@SmallTest
@@ -217,7 +220,7 @@ public class HttpHeadersTests extends TestCase {
 		long date = calendar.getTimeInMillis();
 		headers.setExpires(date);
 		assertEquals("Invalid Expires header", date, headers.getExpires());
-		assertEquals("Invalid Expires header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00", headers.getFirst("expires"));
+		assertEquals("Invalid Date header", calendar.getTime(), getDateFromHeader(headers, "expires"));
 	}
 
 	@SmallTest
@@ -227,7 +230,7 @@ public class HttpHeadersTests extends TestCase {
 		long date = calendar.getTimeInMillis();
 		headers.setIfModifiedSince(date);
 		assertEquals("Invalid If-Modified-Since header", date, headers.getIfNotModifiedSince());
-		assertEquals("Invalid If-Modified-Since header", "Thu, 18 Dec 2008 10:20:00 GMT+00:00", headers.getFirst("if-modified-since"));
+		assertEquals("Invalid Date header", calendar.getTime(), getDateFromHeader(headers, "if-modified-since"));
 	}
 
 	@SmallTest
@@ -318,6 +321,21 @@ public class HttpHeadersTests extends TestCase {
 				"Invalid User-Agent header",
 				"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/A.B (KHTML, like Gecko) Chrome/X.Y.Z.W Safari/A.B.",
 				headers.getUserAgent());
+	}
+	
+	// helpers
+	
+	private Date getDateFromHeader(HttpHeaders headers, String key) {
+		String headerDate = headers.getFirst(key);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+		Date date = null;
+		try {
+			date = simpleDateFormat.parse(headerDate);
+		} catch (ParseException e) {
+			// ignore
+		}
+		return date;
 	}
 
 }
