@@ -268,34 +268,6 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 	}
 
 	@MediumTest
-	public void testGetAcceptEncodingNone() throws Exception {
-		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/gzip"), HttpMethod.GET);
-		assertEquals("Invalid HTTP method", HttpMethod.GET, request.getMethod());
-		ClientHttpResponse response = request.execute();
-		try {
-			assertNotNull(response.getStatusText());
-			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
-			assertFalse("Header found", response.getHeaders().containsKey("Content-Encoding"));
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
-					.getBytes("UTF-8");
-			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
-			assertTrue("Invalid body", Arrays.equals(body, result));
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(body.length);
-			GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
-			FileCopyUtils.copy(body, gzipOutputStream);
-			byte[] compressedBody = byteArrayOutputStream.toByteArray();
-			long contentLength = response.getHeaders().getContentLength();
-			// Gingerbread and newer seamlessly request and handle gzip responses from the server 
-			assertTrue(
-					"Invalid content-length",
-					(contentLength == body.length)
-							|| ((contentLength == compressedBody.length) && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)));
-		} finally {
-			response.close();
-		}
-	}
-
-	@MediumTest
 	public void testGetAcceptEncodingIdentity() throws Exception {
 		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/gzip"), HttpMethod.GET);
 		assertEquals("Invalid HTTP method", HttpMethod.GET, request.getMethod());
