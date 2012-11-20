@@ -1,6 +1,10 @@
 Spring for Android
 ==================
 
+1.0.1.RELEASE (TBD)
+==========================
+* translate IOException from Jackson to HttpMessageNotReadableException (ANDROID-101)
+
 1.0.0.RELEASE (2012.05.30)
 ==========================
 Minimum Requirements:
