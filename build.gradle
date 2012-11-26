@@ -14,7 +14,7 @@ configure(allprojects) {
 
     group = 'org.springframework.android'
 
-    ext.androidVersion = '4.0.1.2'
+    ext.androidVersion = '4.1.1.4'
 
     [compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:none']
 
