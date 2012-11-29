@@ -19,21 +19,21 @@ package org.springframework.http.converter.json;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.type.JavaType;
+import com.fasterxml.jackson.databind.JavaType;
 
 /**
  * @author Roy Clarkson
  */
-public class MappingJacksonHttpMessageConverterTests extends AbstractMappingJacksonHttpMessageConverterTests {
+public class MappingJackson2HttpMessageConverterTests extends AbstractMappingJacksonHttpMessageConverterTests {
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		this.converter = new MappingJacksonHttpMessageConverter();
+		this.converter = new MappingJackson2HttpMessageConverter();
 	}
 
 	protected void prepareReadGenericsTest() {
-		converter = new MappingJacksonHttpMessageConverter() {
+		this.converter = new MappingJackson2HttpMessageConverter() {
 			@Override
 			protected JavaType getJavaType(Class<?> clazz) {
 				if (List.class.isAssignableFrom(clazz)) {

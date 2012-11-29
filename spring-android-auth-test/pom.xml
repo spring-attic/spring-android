@@ -13,7 +13,7 @@
 	<name>spring-android-auth-test</name>
 
 	<properties>
-		<org.springframework.security-version>3.1.0.RELEASE</org.springframework.security-version>
+		<org.springframework.security-version>3.1.3.RELEASE</org.springframework.security-version>
 	</properties>
 
 	<dependencies>

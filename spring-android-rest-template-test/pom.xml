@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.springframework.android</groupId>
 		<artifactId>spring-android-test</artifactId>
@@ -14,9 +14,10 @@
 
 	<properties>
 		<commons-httpclient-version>3.1</commons-httpclient-version>
-		<org.codehaus.jackson-version>1.9.7</org.codehaus.jackson-version>
-		<com.google.code.gson-version>2.2.1</com.google.code.gson-version>
-		<org.simpleframework-version>2.6.2</org.simpleframework-version>
+		<org.codehaus.jackson-version>1.9.11</org.codehaus.jackson-version>
+		<com.fasterxml.jackson.core-version>2.1.1</com.fasterxml.jackson.core-version>
+		<com.google.code.gson-version>2.2.2</com.google.code.gson-version>
+		<org.simpleframework-version>2.6.7</org.simpleframework-version>
 		<com.google.code.android-rome-feed-reader-version>1.0.0-r2</com.google.code.android-rome-feed-reader-version>
 		<org.mortbay.jetty-version>6.1.9</org.mortbay.jetty-version>
 	</properties>
@@ -46,6 +47,11 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${org.codehaus.jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${com.fasterxml.jackson.core-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

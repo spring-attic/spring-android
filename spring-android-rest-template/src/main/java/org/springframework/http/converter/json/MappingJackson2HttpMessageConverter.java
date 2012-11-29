@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2012 the original author or authors.
+ * Copyright 2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.type.TypeFactory;
-import org.codehaus.jackson.type.JavaType;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -33,9 +28,14 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter HttpMessageConverter}
- * that can read and write JSON using <a href="http://jackson.codehaus.org/">Jackson's</a> {@link ObjectMapper}.
+ * that can read and write JSON using <a href="http://jackson.codehaus.org/">Jackson 2's</a> {@link ObjectMapper}.
  *
  * <p>This converter can be used to bind to typed beans, or untyped {@link java.util.HashMap HashMap} instances.
  *
@@ -43,10 +43,11 @@ import org.springframework.util.Assert;
  * {@link #setSupportedMediaTypes(List) supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
+ * @author Keith Donald
  * @author Roy Clarkson
- * @since 1.0
+ * @since 1.0.1
  */
-public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConverter<Object> {
+public class MappingJackson2HttpMessageConverter extends AbstractHttpMessageConverter<Object> {
 
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
@@ -59,7 +60,7 @@ public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConve
 	/**
 	 * Construct a new {@code BindingJacksonHttpMessageConverter}.
 	 */
-	public MappingJacksonHttpMessageConverter() {
+	public MappingJackson2HttpMessageConverter() {
 		super(new MediaType("application", "json", DEFAULT_CHARSET));
 	}
 
@@ -132,7 +133,7 @@ public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConve
 
 		JsonEncoding encoding = getJsonEncoding(outputMessage.getHeaders().getContentType());
 		JsonGenerator jsonGenerator =
-				this.objectMapper.getJsonFactory().createJsonGenerator(outputMessage.getBody(), encoding);
+				this.objectMapper.getFactory().createJsonGenerator(outputMessage.getBody(), encoding);
 		try {
 			if (this.prefixJson) {
 				jsonGenerator.writeRaw("{} && ");
@@ -147,13 +148,13 @@ public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConve
 
 	/**
 	 * Return the Jackson {@link JavaType} for the specified class.
-	 * <p>The default implementation returns {@link TypeFactory#type(java.lang.reflect.Type)},
+	 * <p>The default implementation returns {@link ObjectMapper#constructType(java.lang.reflect.Type)},
 	 * but this can be overridden in subclasses, to allow for custom generic collection handling.
 	 * For instance:
 	 * <pre class="code">
 	 * protected JavaType getJavaType(Class&lt;?&gt; clazz) {
 	 *   if (List.class.isAssignableFrom(clazz)) {
-	 *     return TypeFactory.collectionType(ArrayList.class, MyBean.class);
+	 *     return objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, MyBean.class);
 	 *   } else {
 	 *     return super.getJavaType(clazz);
 	 *   }
@@ -163,7 +164,7 @@ public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConve
 	 * @return the java type
 	 */
 	protected JavaType getJavaType(Class<?> clazz) {
-        return this.objectMapper.getTypeFactory().constructType(clazz);
+		return objectMapper.constructType(clazz);
 	}
 
 	/**

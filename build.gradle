@@ -99,6 +99,7 @@ project('spring-android-rest-template') {
         compile ("com.google.android:android:$androidVersion", provided)
         compile project (':spring-android-core')
         compile ("org.codehaus.jackson:jackson-mapper-asl:1.9.11", optional)
+		compile ("com.fasterxml.jackson.core:jackson-databind:2.1.1", optional)
         compile ("com.google.code.gson:gson:2.2.2", optional)
         compile ("org.simpleframework:simple-xml:2.6.7") { dep ->
             optional dep
