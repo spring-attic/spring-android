@@ -510,9 +510,9 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	}
 
 	private void handleResponseError(HttpMethod method, URI url, ClientHttpResponse response) throws IOException {
-		if (Log.isLoggable(TAG, Log.DEBUG)) {
+		if (Log.isLoggable(TAG, Log.WARN)) {
 			try {
-				Log.d(TAG, 
+				Log.w(TAG, 
 						method.name() + " request for \"" + url + "\" resulted in " + response.getStatusCode() + " (" +
 								response.getStatusText() + "); invoking error handler");
 			}

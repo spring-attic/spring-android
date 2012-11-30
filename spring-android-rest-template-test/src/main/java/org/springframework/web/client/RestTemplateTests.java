@@ -18,6 +18,7 @@ package org.springframework.web.client;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
@@ -61,6 +62,7 @@ public class RestTemplateTests extends TestCase {
 
 	private ResponseErrorHandler errorHandler;
 
+	@SuppressWarnings("rawtypes")
 	private HttpMessageConverter converter;
 
 	@Override
@@ -146,28 +148,27 @@ public class RestTemplateTests extends TestCase {
 		verifyMocks();
 	}
 
-	// TODO: fix failing test
-//	@SmallTest
-//	public void testErrorHandling() throws Exception {
-//		expect(requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET)).andReturn(request);
-//		expect(request.execute()).andReturn(response);
-//		expect(errorHandler.hasError(response)).andReturn(true);
-//		expect(response.getStatusCode()).andReturn(HttpStatus.INTERNAL_SERVER_ERROR);
-//		expect(response.getStatusText()).andReturn("Internal Server Error");
-//		errorHandler.handleError(response);
-//		expectLastCall().andThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
-//		response.close();
-//
-//		replayMocks();
-//
-//		try {
-//			template.execute("http://example.com", HttpMethod.GET, null, null);
-//			fail("HttpServerErrorException expected");
-//		} catch (HttpServerErrorException ex) {
-//			// expected
-//		}
-//		verifyMocks();
-//	}
+	@SmallTest
+	public void testErrorHandling() throws Exception {
+		expect(requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET)).andReturn(request);
+		expect(request.execute()).andReturn(response);
+		expect(errorHandler.hasError(response)).andReturn(true);
+		expect(response.getStatusCode()).andReturn(HttpStatus.INTERNAL_SERVER_ERROR);
+		expect(response.getStatusText()).andReturn("Internal Server Error");
+		errorHandler.handleError(response);
+		expectLastCall().andThrow(new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
+		response.close();
+
+		replayMocks();
+
+		try {
+			template.execute("http://example.com", HttpMethod.GET, null, null);
+			fail("HttpServerErrorException expected");
+		} catch (HttpServerErrorException ex) {
+			// expected
+		}
+		verifyMocks();
+	}
 
 	@SmallTest
 	public void testGetForObject() throws Exception {
