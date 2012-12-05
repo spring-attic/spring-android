@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="spring-android-reference"
+<book xml:id="spring-framework-reference"
+    xmlns="http://docbook.org/ns/docbook" version="5.0"
+    xmlns:xl="http://www.w3.org/1999/xlink"
     xmlns:xi="http://www.w3.org/2001/XInclude"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
-  <bookinfo>
-    <title>Spring for Android Reference Manual</title>
-    <titleabbrev>Spring for Android ${version}</titleabbrev>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+        http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+        
+  <info>
+    <title>Spring for Android Reference Documentation</title>
+    
     <productname>Spring for Android</productname>
+    
     <releaseinfo>${version}</releaseinfo>
-
-    <!-- TODO: this isn't showing up. -->
-    <mediaobject>
-      <imageobject role="fo">
-        <imagedata fileref="images/logo.png"
-          format="PNG" align="center"/>
-      </imageobject>
-      <imageobject role="html">
-        <imagedata fileref="images/logo.png" format="PNG" align="center"/>
-      </imageobject>
-    </mediaobject>
-    <!-- END TODO -->
 
     <authorgroup>
       <author>
-        <firstname>Roy</firstname>
-        <surname>Clarkson</surname>
+        <personname>
+          <firstname>Roy</firstname>
+          <surname>Clarkson</surname>
+        </personname>
       </author>
     </authorgroup>
 
-    <legalnotice><para>© SpringSource Inc., 2010-2012</para></legalnotice>
-  </bookinfo>
+        <copyright>
+      <year>2010-2012</year>
+    </copyright>
+
+    <legalnotice>
+      <para>Copies of this document may be made for your own use and for
+      distribution to others, provided that you do not charge any fee for such
+      copies and further provided that each copy contains this Copyright
+      Notice, whether distributed in print or electronically.</para>
+    </legalnotice>
+    
+  </info>
 
   <toc></toc>
   
