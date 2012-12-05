@@ -42,6 +42,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.feed.SyndFeedHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
@@ -672,6 +673,10 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 				ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", RestTemplate.class.getClassLoader()) &&
 						ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", RestTemplate.class.getClassLoader());
 		
+		private static final boolean jackson2Present =
+				ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", RestTemplate.class.getClassLoader()) &&
+						ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", RestTemplate.class.getClassLoader());
+		
 		private static final boolean romePresent =
 				ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed", RestTemplate.class.getClassLoader());
 		
@@ -692,7 +697,9 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 				messageConverters.add(new SimpleXmlHttpMessageConverter());
 			}
 			
-			if (jacksonPresent) {
+			if (jackson2Present) {
+				messageConverters.add(new MappingJackson2HttpMessageConverter());
+			} else if (jacksonPresent) {
 				messageConverters.add(new MappingJacksonHttpMessageConverter());
 			}
 			
