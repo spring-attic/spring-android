@@ -3,7 +3,20 @@ Spring for Android
 
 1.0.1.RELEASE (TBD)
 ==========================
+* Improved handling of situations where Android throws IOExceptions related to 
+  HTTP Status Codes 401 and 407 (ANDROID-102)
+* Support for Jackson 2.0 via the MappingJackson2HttpMessageConverter (ANDROID-99)
+* Jackson 2.0 takes precedence over Jackson 1.x when configuring RestTemplate
+  with default message converters.
 * translate IOException from Jackson to HttpMessageNotReadableException (ANDROID-101)
+* Updated to the latest DocBook  
+* Now building against Android 4.1 (Jelly Bean)
+* Updated all build dependencies to latest versions:
+  - Spring Security Crypto 3.1.3.RELEASE
+  - Gson 2.2.2
+  - Simple XML 2.6.9
+  - Jackson 1.9.11
+
 
 1.0.0.RELEASE (2012.05.30)
 ==========================
