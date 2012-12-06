@@ -20,7 +20,6 @@ configure(allprojects) {
 
     repositories {
         maven { url "http://repo.springsource.org/libs-release" }
-        maven { url "http://repo.springsource.org/ebr-maven-external" }
         maven { url "https://android-rome-feed-reader.googlecode.com/svn/maven2/releases" }
     }
     
