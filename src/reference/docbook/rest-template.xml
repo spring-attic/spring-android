@@ -40,7 +40,7 @@
 		
 		<title>Object to JSON Marshaling</title>
 		
-		<para>Object to JSON marshaling in Spring for Android RestTemplate requires the use of a third party JSON mapping library. There are two libraries supported in Spring for Android, <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>, and <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>. While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
+		<para>Object to JSON marshaling in Spring for Android RestTemplate requires the use of a third party JSON mapping library. There are three libraries supported in Spring for Android, <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>, <link xlink:href="https://github.com/FasterXML/jackson-databind">Jackson 2.x</link>, and <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>. While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
 		
 	</section>
 	
@@ -316,8 +316,8 @@ public interface HttpMessageConverter<T> {
 				<tr><td><link linkend="XmlAwareFormHttpMessageConverter"><classname>XmlAwareFormHttpMessageConverter</classname></link></td></tr>
 				<tr><td><link linkend="FormHttpMessageConverter"><classname>FormHttpMessageConverter</classname></link></td><td>Included on Android 2.1 (Eclair) and older.</td></tr>
 				<tr><td><link linkend="SimpleXmlHttpMessageConverter"><classname>SimpleXmlHttpMessageConverter</classname></link></td><td>Included if the Simple XML serializer is present.</td></tr>
-				<tr><td><link linkend="MappingJacksonHttpMessageConverter"><classname>MappingJackson2HttpMessageConverter</classname></link></td><td>Included if the Jackson 2.x JSON processor is present.</td></tr>
-				<tr><td><link linkend="MappingJacksonHttpMessageConverter"><classname>MappingJacksonHttpMessageConverter</classname></link></td><td>Included if the Jackson 1.x JSON processor is present. Jackson 2.x support takes precedence over Jackson 1.x if both versions are available on the classpath.</td></tr>
+				<tr><td><link linkend="MappingJackson2HttpMessageConverter"><classname>MappingJackson2HttpMessageConverter</classname></link></td><td>Included if the Jackson 2.x JSON processor is present.</td></tr>
+				<tr><td><link linkend="MappingJackson2HttpMessageConverter"><classname>MappingJacksonHttpMessageConverter</classname></link></td><td>Included if the Jackson 1.x JSON processor is present. Jackson 2.x support takes precedence over Jackson 1.x if both versions are available on the classpath.</td></tr>
 				<tr><td><link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link></td><td>Included if the Android ROME Feed Reader is present.</td></tr>
 			</tbody>
 		</table>
@@ -400,11 +400,11 @@ public interface HttpMessageConverter<T> {
 
 	</section>
 
-	<section id="MappingJacksonHttpMessageConverter">
+	<section id="MappingJackson2HttpMessageConverter">
 
-		<title>MappingJacksonHttpMessageConverter</title>
+		<title>MappingJackson2HttpMessageConverter</title>
 
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>'s <classname>ObjectMapper</classname>. JSON mapping can be customized as needed through the use of Jackson's provided annotations. When further control is needed, a custom <classname>ObjectMapper</classname> can be injected through the <classname>ObjectMapper</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <link xlink:href="https://github.com/FasterXML/jackson-databind">Jackson (2.x)</link>'s <classname>ObjectMapper</classname>. JSON mapping can be customized as needed through the use of Jackson's provided annotations. When further control is needed, a custom <classname>ObjectMapper</classname> can be injected through the <classname>ObjectMapper</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
 		
 		<para>Please note that this message converter and the <classname>GsonHttpMessageConverter</classname> both support <literal>application/json</literal> by default. Because of this, you should only add one JSON message converter to a <classname>RestTemplate</classname> instance. <classname>RestTemplate</classname> will use the first converter it finds that matches the specified mime type, so including both could produce unintended results.</para>
 		
@@ -420,7 +420,7 @@ public interface HttpMessageConverter<T> {
 			
 		</para>
 			
-		<para>If you would prefer to use Jackson 1.x instead, then include the following dependencies in your classpath to enable the <classname>MappingJacksonHttpMessageConverter</classname>. Please note that if you are manually copying the jars into your project, you will also need to include the <literal>jackson-core-asl</literal> jar.
+		<para>If you would prefer to use the <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link> instead, then include the following dependencies in your classpath to enable the <classname>MappingJacksonHttpMessageConverter</classname>. Please note that if you are manually copying the jars into your project, you will also need to include the <literal>jackson-core-asl</literal> jar.
 			
 			<programlisting language="xml"><![CDATA[
 <dependency>
@@ -440,7 +440,7 @@ public interface HttpMessageConverter<T> {
 
 		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>'s <classname>Gson</classname> class. JSON mapping can be customized as needed through the use of Gson's provided annotations. When further control is needed, a custom <classname>Gson</classname> can be injected through the <classname>Gson</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
 
-		<para>Please note that this message converter and the <classname>MappingJacksonHttpMessageConverter</classname> both support <literal>application/json</literal> by default. Because of this, you should only add one JSON message converter to a <classname>RestTemplate</classname> instance. <classname>RestTemplate</classname> will use the first converter it finds that matches the specified mime type, so including both could produce unintended results.</para>
+		<para>Please note that this message converter and the <classname>MappingJackson2HttpMessageConverter</classname> both support <literal>application/json</literal> by default. Because of this, you should only add one JSON message converter to a <classname>RestTemplate</classname> instance. <classname>RestTemplate</classname> will use the first converter it finds that matches the specified mime type, so including both could produce unintended results.</para>
 		
 		<para>Include the following dependency in your classpath to enable the <classname>GsonHttpMessageConverter</classname>.
 
@@ -644,7 +644,7 @@ public class Event {
 RestTemplate restTemplate = new RestTemplate();
 
 // Add the Jackson message converter
-restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
 // Make the HTTP GET request, marshaling the response from JSON to an array of Events
 Event[] events = restTemplate.getForObject(url, Event[].class);]]>
@@ -662,7 +662,7 @@ HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
 RestTemplate restTemplate = new RestTemplate();
 
 // Add the Jackson message converter
-restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
 // Make the HTTP GET request, marshaling the response from JSON to an array of Events
 ResponseEntity<Event[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Event[].class);
@@ -835,7 +835,7 @@ message.setText("test text");
 RestTemplate restTemplate = new RestTemplate();
 
 // Add the Jackson and String message converters
-restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
 // Make the HTTP POST request, marshaling the request to JSON, and the response to a String
@@ -860,7 +860,7 @@ HttpEntity<Message> requestEntity = new HttpEntity<Message>(message, requestHead
 RestTemplate restTemplate = new RestTemplate();
 
 // Add the Jackson and String message converters
-restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
 // Make the HTTP POST request, marshaling the request to JSON, and the response to a String
