@@ -316,7 +316,8 @@ public interface HttpMessageConverter<T> {
 				<tr><td><link linkend="XmlAwareFormHttpMessageConverter"><classname>XmlAwareFormHttpMessageConverter</classname></link></td></tr>
 				<tr><td><link linkend="FormHttpMessageConverter"><classname>FormHttpMessageConverter</classname></link></td><td>Included on Android 2.1 (Eclair) and older.</td></tr>
 				<tr><td><link linkend="SimpleXmlHttpMessageConverter"><classname>SimpleXmlHttpMessageConverter</classname></link></td><td>Included if the Simple XML serializer is present.</td></tr>
-				<tr><td><link linkend="MappingJacksonHttpMessageConverter"><classname>MappingJacksonHttpMessageConverter</classname></link></td><td>Included if the Jackson JSON processor is present.</td></tr>
+				<tr><td><link linkend="MappingJacksonHttpMessageConverter"><classname>MappingJackson2HttpMessageConverter</classname></link></td><td>Included if the Jackson 2.x JSON processor is present.</td></tr>
+				<tr><td><link linkend="MappingJacksonHttpMessageConverter"><classname>MappingJacksonHttpMessageConverter</classname></link></td><td>Included if the Jackson 1.x JSON processor is present. Jackson 2.x support takes precedence over Jackson 1.x if both versions are available on the classpath.</td></tr>
 				<tr><td><link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link></td><td>Included if the Android ROME Feed Reader is present.</td></tr>
 			</tbody>
 		</table>
@@ -407,8 +408,20 @@ public interface HttpMessageConverter<T> {
 		
 		<para>Please note that this message converter and the <classname>GsonHttpMessageConverter</classname> both support <literal>application/json</literal> by default. Because of this, you should only add one JSON message converter to a <classname>RestTemplate</classname> instance. <classname>RestTemplate</classname> will use the first converter it finds that matches the specified mime type, so including both could produce unintended results.</para>
 		
-		<para>Include the following dependencies in your classpath to enable the <classname>MappingJacksonHttpMessageConverter</classname>. Please note that if you are manually copying the jars into your project, you will also need to include the <literal>jackson-core-asl</literal> jar.
-		
+		<para>Include the following dependencies in your classpath to enable the <classname>MappingJackson2HttpMessageConverter</classname>. Please note that if you are manually copying the jars into your project, you will also need to include the <literal>jackson-annotations</literal> and <literal>jackson-core</literal> jars.
+
+			<programlisting language="xml"><![CDATA[
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>${jackson-version}</version>
+</dependency>]]>
+			</programlisting>
+			
+		</para>
+			
+		<para>If you would prefer to use Jackson 1.x instead, then include the following dependencies in your classpath to enable the <classname>MappingJacksonHttpMessageConverter</classname>. Please note that if you are manually copying the jars into your project, you will also need to include the <literal>jackson-core-asl</literal> jar.
+			
 			<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.codehaus.jackson</groupId>
