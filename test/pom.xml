@@ -8,6 +8,7 @@
 	<packaging>pom</packaging>
 	<name>spring-android-test</name>
 	<url>http://www.springsource.org</url>
+	<inceptionYear>2010</inceptionYear>
 	<organization>
 		<name>SpringSource</name>
 		<url>http://www.springsource.org</url>
@@ -20,12 +21,13 @@
 	</modules>
 
 	<properties>
-		<android-platform>16</android-platform>
-		<android-maven-plugin-version>3.4.0</android-maven-plugin-version>
+		<android-platform>17</android-platform>
+		<android-maven-plugin-version>3.5.0</android-maven-plugin-version>
 		<maven-compiler-plugin-version>3.0</maven-compiler-plugin-version>
 		<java-version>1.6</java-version>
 		<com.google.android-version>4.1.1.4</com.google.android-version>
-		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 2.2.1, 2.3.1, 2.3.3, 4.0.1.2, 4.1.1.4 -->
+		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 
+			2.2.1, 2.3.1, 2.3.3, 4.0.1.2, 4.1.1.4 -->
 		<org.springframework.android-version>1.0.2.BUILD-SNAPSHOT</org.springframework.android-version>
 		<org.easymock-version>2.5.2</org.easymock-version>
 		<maven-surefire-plugin-version>2.9</maven-surefire-plugin-version>
@@ -44,8 +46,9 @@
 			<version>${com.google.android-version}</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- easymock 3.x does NOT work on Android -->
 		<dependency>
-			<!-- easymock 3.x does NOT work on Android -->
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
 			<version>${org.easymock-version}</version>
