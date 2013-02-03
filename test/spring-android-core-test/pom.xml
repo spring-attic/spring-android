@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.android</groupId>
 		<artifactId>spring-android-test</artifactId>
-		<version>1.0.2.BUILD-SNAPSHOT</version>
+		<version>1.1.0.BUILD-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>spring-android-core-test</artifactId>
