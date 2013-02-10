@@ -12,44 +12,47 @@ The [Android Maven Plugin] makes it possible to build Android applications utili
 
 Spring for Android consists of three modules: Core, Rest Template, and Auth.
 
-	<dependency>
-	    <groupId>org.springframework.android</groupId>
-	    <artifactId>spring-android-core</artifactId>
-	    <version>${org.springframework.android-version}</version>
-	</dependency>
+```xml
+<dependency>
+    <groupId>org.springframework.android</groupId>
+    <artifactId>spring-android-core</artifactId>
+    <version>${org.springframework.android-version}</version>
+</dependency>
 
-	<dependency>
-	    <groupId>org.springframework.android</groupId>
-	    <artifactId>spring-android-rest-template</artifactId>
-	    <version>${org.springframework.android-version}</version>
-	</dependency>
+<dependency>
+    <groupId>org.springframework.android</groupId>
+    <artifactId>spring-android-rest-template</artifactId>
+    <version>${org.springframework.android-version}</version>
+</dependency>
 
-	<dependency>
-	    <groupId>org.springframework.android</groupId>
-	    <artifactId>spring-android-auth</artifactId>
-	    <version>${org.springframework.android-version}</version>
-	</dependency>
+<dependency>
+    <groupId>org.springframework.android</groupId>
+    <artifactId>spring-android-auth</artifactId>
+    <version>${org.springframework.android-version}</version>
+</dependency>
+```
 
 ### Repositories
 
-	<repository>
-		<id>spring-repo</id>
-		<name>Spring Repository</name>
-		<url>http://repo.springsource.org/release</url>
-	</repository>	
-		
-	<repository>
-		<id>spring-milestone</id>
-		<name>Spring Milestone Repository</name>
-		<url>http://repo.springsource.org/milestone</url>
-	</repository>
+```xml
+<repository>
+	<id>spring-repo</id>
+	<name>Spring Repository</name>
+	<url>http://repo.springsource.org/release</url>
+</repository>	
 	
-	<repository>
-		<id>spring-snapshot</id>
-		<name>Spring Snapshot Repository</name>
-		<url>http://repo.springsource.org/snapshot</url>
-	</repository>
+<repository>
+	<id>spring-milestone</id>
+	<name>Spring Milestone Repository</name>
+	<url>http://repo.springsource.org/milestone</url>
+</repository>
 
+<repository>
+	<id>spring-snapshot</id>
+	<name>Spring Snapshot Repository</name>
+	<url>http://repo.springsource.org/snapshot</url>
+</repository>
+```
 
 ## Documentation
 
