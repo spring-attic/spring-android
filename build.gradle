@@ -4,13 +4,30 @@ buildscript {
 }
 
 configure(allprojects) {
+	group = 'org.springframework.android'
+
+	ext.androidVersion = '4.1.1.4'
+	ext.springSocialVersion = '1.0.2.RELEASE'
+	ext.springSecurityVersion = '3.1.3.RELEASE'
+	ext.jacksonVersion = '1.9.11'
+	ext.jackson2Version = '2.1.2'
+	ext.gsonVersion = '2.2.2'
+	ext.simpleXmlVersion = '2.6.9'
+	ext.androidRomeVersion = '1.0.0-r2'
+	ext.commonsHttpClientVersion = '3.1'
+
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 
-	group = 'org.springframework.android'
-
-	ext.androidVersion = '4.1.1.4'
+	compileJava {
+		sourceCompatibility=1.5
+		targetCompatibility=1.5
+	}
+	compileTestJava {
+		sourceCompatibility=1.5
+		targetCompatibility=1.5
+	}
 
 	[compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:none']
 
@@ -26,6 +43,10 @@ configure(allprojects) {
 		classpath.entries.findAll { entry -> entry.path.contains('servlet-api') }*.exported = false
 	}
 }
+
+ext.javadocLinks = [
+	"http://docs.jboss.org/jbossas/javadoc/4.0.5/connector",
+] as String[]
 
 configure(subprojects) { subproject ->
 	apply from: "${rootProject.projectDir}/publish-maven.gradle"
@@ -66,40 +87,39 @@ configure(subprojects) { subproject ->
 
 project('spring-android-core') {
 	description = "Spring for Android Core"
-
 	dependencies {
-		compile ("com.google.android:android:$androidVersion", provided)
+		compile("com.google.android:android:$androidVersion", provided)
 	}
 }
 
 project('spring-android-auth') {
 	description = 'Spring for Android Auth'
 	dependencies {
-		compile ("com.google.android:android:$androidVersion", provided)
-		compile project (':spring-android-core')
-		compile project (':spring-android-rest-template');
-		compile ("org.springframework.social:spring-social-core:1.0.2.RELEASE") {
+		compile("com.google.android:android:$androidVersion", provided)
+		compile(project(':spring-android-core'))
+		compile(project(':spring-android-rest-template'))
+		compile("org.springframework.social:spring-social-core:$springSocialVersion") {
 			// exclude spring-web in favor of spring-android-rest-template
 			exclude group: "org.springframework", module: "spring-web"
 		}
-		compile ("org.springframework.security:spring-security-crypto:3.1.3.RELEASE") { transitive = false }
+		compile("org.springframework.security:spring-security-crypto:$springSecurityVersion") { dep -> transitive = false  }
 	}
 }
 
 project('spring-android-rest-template') {
 	description = 'Spring for Android Rest Template'
 	dependencies {
-		compile ("com.google.android:android:$androidVersion", provided)
-		compile project (':spring-android-core')
-		compile ("org.codehaus.jackson:jackson-mapper-asl:1.9.11", optional)
-		compile ("com.fasterxml.jackson.core:jackson-databind:2.1.2", optional)
-		compile ("com.google.code.gson:gson:2.2.2", optional)
-		compile ("org.simpleframework:simple-xml:2.6.9") { dep ->
+		compile("com.google.android:android:$androidVersion", provided)
+		compile(project(':spring-android-core'))
+		compile("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion", optional)
+		compile("com.fasterxml.jackson.core:jackson-databind:$jackson2Version", optional)
+		compile("com.google.code.gson:gson:$gsonVersion", optional)
+		compile("org.simpleframework:simple-xml:$simpleXmlVersion") { dep ->
 			optional dep
 			transitive = false
 		}
-		compile ("com.google.code.android-rome-feed-reader:android-rome-feed-reader:1.0.0-r2", optional)
-		compile ("commons-httpclient:commons-httpclient:3.1") { dep ->
+		compile("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion", optional)
+		compile("commons-httpclient:commons-httpclient:$commonsHttpClientVersion") { dep ->
 			optional dep
 			transitive = false
 		}
@@ -124,21 +144,22 @@ configure(rootProject) {
 		group = 'Documentation'
 		description = 'Generates aggregated Javadoc API documentation.'
 		title = "${rootProject.description} ${version} API"
+
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = rootProject.description
 		options.overview = 'src/api/overview.html'
-		options.links(
-				'http://docs.jboss.org/jbossas/javadoc/4.0.5/connector'
-				)
+		options.links(project.ext.javadocLinks)
+
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
 		}
-		destinationDir = new File(buildDir, "api")
-		classpath = files(subprojects.collect { project ->
-			project.sourceSets.main.compileClasspath
-		})
+
 		maxMemory = '1024m'
+		destinationDir = new File(buildDir, "api")
+
+		classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+
 	}
 
 	task docsZip(type: Zip) {
@@ -160,7 +181,7 @@ configure(rootProject) {
 		description = "Builds -${classifier} archive, containing all jars and docs, " +
 				"suitable for community download page."
 
-		def baseDir = "${project.name}-${project.version}";
+		def baseDir = "${project.name}-${project.version}"
 
 		from('src/dist') {
 			include 'readme.txt'
