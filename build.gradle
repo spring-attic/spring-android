@@ -87,6 +87,9 @@ configure(subprojects) { subproject ->
 
 project('spring-android-core') {
 	description = "Spring for Android Core"
+
+	ext.mavenTestDir = '../test/spring-android-core-test/pom.xml'
+
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
 	}
@@ -94,6 +97,9 @@ project('spring-android-core') {
 
 project('spring-android-auth') {
 	description = 'Spring for Android Auth'
+
+	ext.mavenTestDir = '../test/spring-android-auth-test/pom.xml'
+
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
 		compile(project(':spring-android-core'))
@@ -108,6 +114,9 @@ project('spring-android-auth') {
 
 project('spring-android-rest-template') {
 	description = 'Spring for Android Rest Template'
+
+	ext.mavenTestDir = '../test/spring-android-rest-template-test/pom.xml'
+
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
 		compile(project(':spring-android-core'))
@@ -123,6 +132,14 @@ project('spring-android-rest-template') {
 			optional dep
 			transitive = false
 		}
+	}
+}
+
+configure(subprojects) { subproject ->
+	task testAndroid(type: Exec, dependsOn: install) {
+		// suppress all console output during testing unless running `gradle --info`
+		logging.captureStandardOutput(LogLevel.INFO)
+		commandLine 'mvn', 'clean', 'install', '-f', subproject.ext.mavenTestDir
 	}
 }
 
