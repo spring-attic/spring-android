@@ -111,17 +111,21 @@ Generate IDEA metadata (.iml and .ipr files):
 
 ## Tests
 
-There are three Android Test Projects located in the "test" folder of the repository that correspond to the three Spring for Android Modules (Core, Rest Template, and Auth). These projects are executed separately from the Gradle build process. To run the suite of tests, perform the following steps. The parent POM located in the root of the "test" folder will execute each test project on all attached devices and emulators.
+There are three Android Test Projects located in the "test" folder of the repository that correspond to the three Spring for Android Modules (Core, Rest Template, and Auth). To run the suite of tests, perform the following steps. The parent POM located in the root of the "test" folder will execute each test project on all attached devices and emulators. The tests will fail if there is no device or emulator attached.
 
-1. Build Spring for Android JARs and install them to the local Maven repository:
+Run the Android tests:
 
-		$ ./gradlew build install
+	$ ./gradlew testAndroid
+		
+_Note: To view the output, use the **--info** parameter when running Gradle_
 
-2. The tests are run using the [Android Maven Plugin]:
+Gradle runs the tests using the [Android Maven Plugin]. Alternatively the test suite can be executed using the following Maven command:
+	
+	$ mvn clean install -f ./test/pom.xml
 
-		$ mvn -f ./test/pom.xml clean install
+Test results are available in the following directory for each test project:
 
-	_Note: Each test project can also be executed individually, by running the previous command from within the respective test project's directory._
+	/test/<test-project>/target/surefire-reports
 
 
 ## Contributing
