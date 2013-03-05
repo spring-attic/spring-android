@@ -1,20 +1,23 @@
 buildscript {
-	repositories { maven { url 'http://repo.springsource.org/plugins-release' } }
-	dependencies { classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.2' }
+	repositories { 
+		maven { url 'http://repo.springsource.org/plugins-release' } }
+	dependencies { 
+		classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.4' }
 }
 
 configure(allprojects) {
 	group = 'org.springframework.android'
 
-	ext.androidVersion = '4.1.1.4'
-	ext.springSocialVersion = '1.0.2.RELEASE'
-	ext.springSecurityVersion = '3.1.3.RELEASE'
-	ext.jacksonVersion = '1.9.11'
-	ext.jackson2Version = '2.1.2'
-	ext.gsonVersion = '2.2.2'
-	ext.simpleXmlVersion = '2.6.9'
-	ext.androidRomeVersion = '1.0.0-r2'
-	ext.commonsHttpClientVersion = '3.1'
+	ext.androidVersion           = "4.1.1.4"
+	ext.springSocialVersion      = "1.0.2.RELEASE"
+	ext.springSecurityVersion    = "3.1.3.RELEASE"
+	ext.jacksonVersion           = "1.9.11"
+	ext.jackson2Version          = "2.1.2"
+	ext.gsonVersion              = "2.2.2"
+	ext.simpleXmlVersion         = "2.6.9"
+	ext.androidRomeVersion       = "1.0.0-r2"
+	ext.commonsHttpClientVersion = "3.1"
+	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
@@ -68,9 +71,11 @@ ext.javadocLinks = [
 ] as String[]
 
 configure(subprojects) { subproject ->
-	apply from: "${rootProject.projectDir}/publish-maven.gradle"
+	apply from: "${gradleScriptDir}/publish-maven.gradle"
 
 	jar {
+		manifest.attributes["Created-By"] =
+				"${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
 		manifest.attributes['Implementation-Title'] = subproject.name
 		manifest.attributes['Implementation-Version'] = subproject.version
 
@@ -83,6 +88,8 @@ configure(subprojects) { subproject ->
 	}
 
 	javadoc {
+		description = "Generates project-level javadoc for use in -javadoc jar"
+
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = project.name
@@ -106,9 +113,9 @@ configure(subprojects) { subproject ->
 
 project('spring-android-core') {
 	description = "Spring for Android Core"
-
+	
 	ext.mavenTestDir = '../test/spring-android-core-test/pom.xml'
-
+	
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
 	}
@@ -116,9 +123,9 @@ project('spring-android-core') {
 
 project('spring-android-auth') {
 	description = 'Spring for Android Auth'
-
+	
 	ext.mavenTestDir = '../test/spring-android-auth-test/pom.xml'
-
+	
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
 		compile(project(':spring-android-core'))
@@ -127,15 +134,17 @@ project('spring-android-auth') {
 			// exclude spring-web in favor of spring-android-rest-template
 			exclude group: "org.springframework", module: "spring-web"
 		}
-		compile("org.springframework.security:spring-security-crypto:$springSecurityVersion") { dep -> transitive = false  }
+		compile("org.springframework.security:spring-security-crypto:$springSecurityVersion") { dep ->
+			transitive = false
+		}
 	}
 }
 
 project('spring-android-rest-template') {
 	description = 'Spring for Android Rest Template'
-
+	
 	ext.mavenTestDir = '../test/spring-android-rest-template-test/pom.xml'
-
+	
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
 		compile(project(':spring-android-core'))
@@ -167,7 +176,9 @@ configure(rootProject) {
 
 	apply plugin: 'docbook-reference'
 
-	reference { sourceDir = file('src/reference/docbook') }
+	reference {
+		sourceDir = file('src/reference/docbook')
+	}
 
 	// don't publish the default jar for the root project
 	configurations.archives.artifacts.clear()
@@ -181,6 +192,11 @@ configure(rootProject) {
 		description = 'Generates aggregated Javadoc API documentation.'
 		title = "${rootProject.description} ${version} API"
 
+		dependsOn {
+			subprojects.collect {
+				it.tasks.getByName("jar")
+			}
+		}
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = rootProject.description
@@ -194,8 +210,9 @@ configure(rootProject) {
 		maxMemory = '1024m'
 		destinationDir = new File(buildDir, "api")
 
-		classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
-
+		doFirst {
+			classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
+		}
 	}
 
 	task docsZip(type: Zip) {
@@ -204,11 +221,17 @@ configure(rootProject) {
 		description = "Builds -${classifier} archive containing api and reference " +
 				"for deployment at static.springframework.org/spring-android/docs."
 
-		from('src/dist') { include 'changelog.txt' }
+		from('src/dist') { 
+			include 'changelog.txt' 
+		}
 
-		from (api) { into 'api' }
+		from (api) { 
+			into 'api' 
+		}
 
-		from (reference) { into 'reference' }
+		from (reference) { 
+			into 'reference' 
+		}
 	}
 
 	task distZip(type: Zip, dependsOn: docsZip) {
@@ -227,7 +250,9 @@ configure(rootProject) {
 			expand(copyright: new Date().format('yyyy'), version: project.version)
 		}
 
-		from(zipTree(docsZip.archivePath)) { into "${baseDir}/docs" }
+		from(zipTree(docsZip.archivePath)) { 
+			into "${baseDir}/docs" 
+		}
 
 		subprojects.each { subproject ->
 			into ("${baseDir}/libs") {
@@ -251,10 +276,9 @@ configure(rootProject) {
 		description = 'Generates gradlew[.bat] scripts'
 		gradleVersion = '1.4'
 	}
-
 }
 
-task updateRootDocs << {
+task updateRootDocs {
 	copy {
 		from 'src/dist'
 		into "${rootProject.projectDir}"
@@ -271,4 +295,4 @@ task updateRootDocs << {
 	}
 }
 
-build.dependsOn('updateRootDocs')
+build.dependsOn(updateRootDocs)
