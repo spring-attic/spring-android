@@ -2,7 +2,7 @@ buildscript {
 	repositories { 
 		maven { url 'http://repo.springsource.org/plugins-release' } }
 	dependencies { 
-		classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.4' }
+		classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.6' }
 }
 
 configure(allprojects) {

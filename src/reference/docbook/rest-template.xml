@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="rest-template" xmlns:xlink="http://www.w3.org/1999/xlink">
+<chapter xml:id="rest-template" 
+    xmlns="http://docbook.org/ns/docbook" version="5.0"
+    xmlns:xl="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
+        http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+
  <title>RestTemplate Module</title>
 
   <section id="rest-template-introduction">
@@ -22,9 +30,9 @@
 		
 		<title>HTTP Client</title>
 		
-		<para><classname>RestTemplate</classname> provides an abstraction for making RESTful HTTP requests, and internally, <classname>RestTemplate</classname> utilizes a native Android HTTP client library for those requests. There are two native HTTP clients available on Android, the standard J2SE facilities, and the <link xlink:href="http://hc.apache.org/httpcomponents-client-ga/index.html">HttpComponents HttpClient</link>. The standard JS2SE facilities are made available through the <classname>SimpleClientHttpRequestFactory</classname>, while the HttpClient is made available through the <classname>HttpComponentsClientHttpRequestFactory</classname>. The default <interfacename>ClientHttpRequestFactory</interfacename> used when you create a new <classname>RestTemplate</classname> instance differs based on the version of Android on which your application is running.</para>
+		<para><classname>RestTemplate</classname> provides an abstraction for making RESTful HTTP requests, and internally, <classname>RestTemplate</classname> utilizes a native Android HTTP client library for those requests. There are two native HTTP clients available on Android, the standard J2SE facilities, and the <ulink url="http://hc.apache.org/httpcomponents-client-ga/index.html"><citetitle>HttpComponents HttpClient</citetitle></ulink>. The standard JS2SE facilities are made available through the <classname>SimpleClientHttpRequestFactory</classname>, while the HttpClient is made available through the <classname>HttpComponentsClientHttpRequestFactory</classname>. The default <interfacename>ClientHttpRequestFactory</interfacename> used when you create a new <classname>RestTemplate</classname> instance differs based on the version of Android on which your application is running.</para>
 
-		<para>Google recommends to use the J2SE facilities on <link xlink:href="http://android-developers.blogspot.com/2011/09/androids-http-clients.html">Gingerbread (Version 2.3)</link> and newer, while previous versions should use the HttpComponents HttpClient. Based on this recommendation <classname>RestTemplate</classname> checks the version of Android on which your app is running and uses the appropriate <interfacename>ClientHttpRequestFactory</interfacename>. To utilize a specific <interfacename>ClientHttpRequestFactory</interfacename> you must either pass a new instance into the <classname>RestTemplate</classname> constructor, or call <methodname>setRequestFactory(ClientHttpRequestFactory requestFactory)</methodname> on an existing <classname>RestTemplate</classname> instance.</para>
+		<para>Google recommends to use the J2SE facilities on <ulink url="http://android-developers.blogspot.com/2011/09/androids-http-clients.html"><citetitle>Gingerbread (Version 2.3)</citetitle></ulink> and newer, while previous versions should use the HttpComponents HttpClient. Based on this recommendation <classname>RestTemplate</classname> checks the version of Android on which your app is running and uses the appropriate <interfacename>ClientHttpRequestFactory</interfacename>. To utilize a specific <interfacename>ClientHttpRequestFactory</interfacename> you must either pass a new instance into the <classname>RestTemplate</classname> constructor, or call <methodname>setRequestFactory(ClientHttpRequestFactory requestFactory)</methodname> on an existing <classname>RestTemplate</classname> instance.</para>
 		
 	</section>
 	
@@ -40,7 +48,9 @@
 		
 		<title>Object to JSON Marshaling</title>
 		
-		<para>Object to JSON marshaling in Spring for Android RestTemplate requires the use of a third party JSON mapping library. There are three libraries supported in Spring for Android, <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link>, <link xlink:href="https://github.com/FasterXML/jackson-databind">Jackson 2.x</link>, and <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>. While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
+		<para>Object to JSON marshaling in Spring for Android RestTemplate requires the use of a third party JSON mapping library. There are three libraries supported in Spring for Android, <ulink url="http://jackson.codehaus.org"><citetitle>Jackson JSON Processor</citetitle></ulink>, <ulink url="https://github.com/FasterXML/jackson-databind">
+ 	<citetitle>Jackson 2.x</citetitle></ulink>, and <ulink url="http://code.google.com/p/google-gson/">
+ 	<citetitle>Google Gson</citetitle></ulink>. While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
 		
 	</section>
 	
@@ -48,7 +58,8 @@
 		
 		<title>Object to XML Marshaling</title>
 		
-		<para>Object to XML marshaling in Spring for Android RestTemplate requires the use of a third party XML mapping library. The <link xlink:href="http://simple.sourceforge.net">Simple XML serializer</link> is used to provide this marshaling functionality.</para>
+		<para>Object to XML marshaling in Spring for Android RestTemplate requires the use of a third party XML mapping library. The <ulink url="http://simple.sourceforge.net">
+ 	<citetitle>Simple XML serializer</citetitle></ulink> is used to provide this marshaling functionality.</para>
 		
 	</section>
 	
@@ -56,7 +67,8 @@
 		
 		<title>RSS and Atom Support</title>
 		
-		<para>RSS and Atom feed support in Spring for Android RestTemplate requires the use of a third party feed reader library. The <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> is used to provide this functionality.</para>
+		<para>RSS and Atom feed support in Spring for Android RestTemplate requires the use of a third party feed reader library. The <ulink url="http://code.google.com/p/android-rome-feed-reader">
+ 	<citetitle>Android ROME Feed Reader</citetitle></ulink> is used to provide this functionality.</para>
 		
 	</section>
 	
@@ -72,7 +84,8 @@
 
 		<title>Standard Installation</title>
 
-		<para>In order to use RestTemplate in your Android application, you must include the following Spring for Android jars in the <literal>libs/</literal> folder. These are available from the SpringSource <link xlink:href="http://www.springsource.org/download/community?project=Spring%20for%20Android">Community Downloads</link> page.
+		<para>In order to use RestTemplate in your Android application, you must include the following Spring for Android jars in the <literal>libs/</literal> folder. These are available from the SpringSource <ulink url="http://www.springsource.org/download/community?project=Spring%20for%20Android">
+ 	<citetitle>Community Downloads</citetitle></ulink> page.
 
 			<itemizedlist>
 				<listitem><literal>spring-android-rest-template-{version}.jar</literal></listitem>
@@ -157,7 +170,8 @@ RestTemplate(boolean includeDefaultConverters, ClientHttpRequestFactory requestF
 	
 	<para>The names of <classname>RestTemplate</classname> methods follow a naming convention, the first part indicates what HTTP method is being invoked and the second part indicates what is returned. For example, the method <methodname>getForObject()</methodname> will perform a GET, convert the HTTP response into an object type of your choice and return that object. The method <methodname>postForLocation()</methodname> will do a POST, converting the given object into a HTTP request and return the response HTTP Location header where the newly created object can be found. In case of an exception processing the HTTP request, an exception of the type <classname>RestClientException</classname> will be thrown.  This behavior can be changed by plugging in another <interfacename>ResponseErrorHandler</interfacename> implementation into the <classname>RestTemplate.</classname></para>
 	
-	<para>For more information on <classname>RestTemplate</classname> and it's associated methods, please refer to the <link xlink:href="http://static.springsource.org/spring-android/docs/1.0.x/api/org/springframework/web/client/RestTemplate.html">API Javadoc</link></para>
+	<para>For more information on <classname>RestTemplate</classname> and it's associated methods, please refer to the <ulink url="http://static.springsource.org/spring-android/docs/1.0.x/api/org/springframework/web/client/RestTemplate.html">
+ 	<citetitle>API Javadoc</citetitle></ulink></para>
 	
 	<section>
 		
@@ -382,7 +396,8 @@ public interface HttpMessageConverter<T> {
 
 		<title>SimpleXmlHttpMessageConverter</title>
 
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write XML from the HTTP request and response using <link xlink:href="http://simple.sourceforge.net">Simple Framework</link>'s <interfacename>Serializer</interfacename>. XML mapping can be customized as needed through the use of Simple's provided annotations. When additional control is needed, a custom <interfacename>Serializer</interfacename> can be injected through the <interfacename>Serializer</interfacename> property. By default, this converter reads and writes the media types <literal>application/xml</literal>, <literal>text/xml</literal>, and <literal>application/*+xml</literal>.</para>
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write XML from the HTTP request and response using <ulink url="http://simple.sourceforge.net">
+ 	<citetitle>Simple Framework</citetitle></ulink>'s <interfacename>Serializer</interfacename>. XML mapping can be customized as needed through the use of Simple's provided annotations. When additional control is needed, a custom <interfacename>Serializer</interfacename> can be injected through the <interfacename>Serializer</interfacename> property. By default, this converter reads and writes the media types <literal>application/xml</literal>, <literal>text/xml</literal>, and <literal>application/*+xml</literal>.</para>
 
 		<para>It is important to note that this is not a Spring OXM compatible message converter. It is a standalone implementation that enables XML serialization through Spring for Android.</para>
 		
@@ -404,7 +419,8 @@ public interface HttpMessageConverter<T> {
 
 		<title>MappingJackson2HttpMessageConverter</title>
 
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <link xlink:href="https://github.com/FasterXML/jackson-databind">Jackson (2.x)</link>'s <classname>ObjectMapper</classname>. JSON mapping can be customized as needed through the use of Jackson's provided annotations. When further control is needed, a custom <classname>ObjectMapper</classname> can be injected through the <classname>ObjectMapper</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <ulink url="https://github.com/FasterXML/jackson-databind">
+ 	<citetitle>Jackson (2.x)</citetitle></ulink>'s <classname>ObjectMapper</classname>. JSON mapping can be customized as needed through the use of Jackson's provided annotations. When further control is needed, a custom <classname>ObjectMapper</classname> can be injected through the <classname>ObjectMapper</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
 		
 		<para>Please note that this message converter and the <classname>GsonHttpMessageConverter</classname> both support <literal>application/json</literal> by default. Because of this, you should only add one JSON message converter to a <classname>RestTemplate</classname> instance. <classname>RestTemplate</classname> will use the first converter it finds that matches the specified mime type, so including both could produce unintended results.</para>
 		
@@ -420,7 +436,8 @@ public interface HttpMessageConverter<T> {
 			
 		</para>
 			
-		<para>If you would prefer to use the <link xlink:href="http://jackson.codehaus.org">Jackson JSON Processor</link> instead, then include the following dependencies in your classpath to enable the <classname>MappingJacksonHttpMessageConverter</classname>. Please note that if you are manually copying the jars into your project, you will also need to include the <literal>jackson-core-asl</literal> jar.
+		<para>If you would prefer to use the <ulink url="http://jackson.codehaus.org">
+ 	<citetitle>Jackson JSON Processor</citetitle></ulink> instead, then include the following dependencies in your classpath to enable the <classname>MappingJacksonHttpMessageConverter</classname>. Please note that if you are manually copying the jars into your project, you will also need to include the <literal>jackson-core-asl</literal> jar.
 			
 			<programlisting language="xml"><![CDATA[
 <dependency>
@@ -438,7 +455,8 @@ public interface HttpMessageConverter<T> {
 
 		<title>GsonHttpMessageConverter</title>
 
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <link xlink:href="http://code.google.com/p/google-gson/">Google Gson</link>'s <classname>Gson</classname> class. JSON mapping can be customized as needed through the use of Gson's provided annotations. When further control is needed, a custom <classname>Gson</classname> can be injected through the <classname>Gson</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <ulink url="http://code.google.com/p/google-gson/">
+ 	<citetitle>Google Gson</citetitle></ulink>'s <classname>Gson</classname> class. JSON mapping can be customized as needed through the use of Gson's provided annotations. When further control is needed, a custom <classname>Gson</classname> can be injected through the <classname>Gson</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
 
 		<para>Please note that this message converter and the <classname>MappingJackson2HttpMessageConverter</classname> both support <literal>application/json</literal> by default. Because of this, you should only add one JSON message converter to a <classname>RestTemplate</classname> instance. <classname>RestTemplate</classname> will use the first converter it finds that matches the specified mime type, so including both could produce unintended results.</para>
 		
@@ -460,9 +478,11 @@ public interface HttpMessageConverter<T> {
 
 		<title>SyndFeedHttpMessageConverter</title>
 
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS and Atom feeds from the HTTP request and response using <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed</classname>. By default, this converter supports <literal>application/rss+xml</literal> and <literal>application/atom+xml</literal>.</para>
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS and Atom feeds from the HTTP request and response using <ulink url="http://code.google.com/p/android-rome-feed-reader">
+ 	<citetitle>Android ROME Feed Reader</citetitle></ulink>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed</classname>. By default, this converter supports <literal>application/rss+xml</literal> and <literal>application/atom+xml</literal>.</para>
 		
-		<para>Add the following dependencies to your classpath to enable the <classname>SyndFeedHttpMessageConverter</classname>, <classname>RssChannelHttpMessageConverter</classname>, or <classname>AtomFeedHttpMessageConverter</classname>. This library depends on a forked version of JDOM to work on Android 2.1 and earlier. The JDOM library addresses a <link xlink:href="http://www.jdom.org/pipermail/jdom-interest/2009-July/016345.html">bug</link> in the Android XML parser.
+		<para>Add the following dependencies to your classpath to enable the <classname>SyndFeedHttpMessageConverter</classname>, <classname>RssChannelHttpMessageConverter</classname>, or <classname>AtomFeedHttpMessageConverter</classname>. This library depends on a forked version of JDOM to work on Android 2.1 and earlier. The JDOM library addresses a <ulink url="http://www.jdom.org/pipermail/jdom-interest/2009-July/016345.html">
+ 	<citetitle>bug</citetitle></ulink> in the Android XML parser.
 		
 			<programlisting language="xml"><![CDATA[
 <dependency>
@@ -501,12 +521,13 @@ public interface HttpMessageConverter<T> {
 
 		<title>RssChannelHttpMessageConverter</title>
 
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS feeds from the HTTP request and response using <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel</classname>. By default, this converter supports <literal>application/rss+xml</literal>.</para>
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS feeds from the HTTP request and response using <ulink url="http://code.google.com/p/android-rome-feed-reader">
+ 	<citetitle>Android ROME Feed Reader</citetitle></ulink>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel</classname>. By default, this converter supports <literal>application/rss+xml</literal>.</para>
 		
 		<para>The <classname>SyndFeedHttpMessageConverter</classname> provides a higher level of abstraction around RSS and Atom feeds, the <classname>RssChannelHttpMessageConverter</classname> is not included in the default set of message converters when you create a new <classname>RestTemplate</classname> instance. If you prefer to use this message converter then you have to manually add it to the <classname>RestTemplate</classname> instance.
 		</para>
 		
-		<para>See the <link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link> section for information about the required <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> dependencies.</para>
+		<para>See the <link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link> section for information about the required <ulink url="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</ulink> dependencies.</para>
 		
 	</section>
 	
@@ -514,12 +535,14 @@ public interface HttpMessageConverter<T> {
 
 		<title>AtomFeedHttpMessageConverter</title>
 
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write Atom feeds from the HTTP request and response using <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed</classname>. By default, this converter supports <literal>application/atom+xml</literal>.</para>
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write Atom feeds from the HTTP request and response using <ulink url="http://code.google.com/p/android-rome-feed-reader">
+ 	<citetitle>Android ROME Feed Reader</citetitle></ulink>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed</classname>. By default, this converter supports <literal>application/atom+xml</literal>.</para>
 		
 		<para>Because the <classname>SyndFeedHttpMessageConverter</classname> provides a higher level of abstraction around RSS and Atom feeds, the <classname>AtomFeedHttpMessageConverter</classname> is not included in the default set of message converters when you create a new <classname>RestTemplate</classname> instance. If you prefer to use this message converter then you have to manually add it to the <classname>RestTemplate</classname> instance.
 		</para>
 		
-		<para>See the <link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link> section for information about the required <link xlink:href="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</link> dependencies.</para>
+		<para>See the <link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link> section for information about the required <ulink url="http://code.google.com/p/android-rome-feed-reader">
+ 	<citetitle>Android ROME Feed Reader</citetitle></ulink> dependencies.</para>
 		
 	</section>
 	
@@ -533,7 +556,8 @@ public interface HttpMessageConverter<T> {
 
   	<para>Using <classname>RestTemplate</classname>, it's easy to invoke RESTful APIs.  Below are several usage examples that illustrate the different methods for making RESTful requests.</para>
 	
-	<para>All of the following examples are based on a <link xlink:href="https://github.com/SpringSource/spring-android-samples">sample Android application</link>. You can retrieve the source code for the sample app with the following command:</para>
+	<para>All of the following examples are based on a <ulink url="https://github.com/SpringSource/spring-android-samples">
+ 	<citetitle>sample Android application</citetitle></ulink>. You can retrieve the source code for the sample app with the following command:</para>
 	
 	<programlisting>
 $ git clone git://github.com/SpringSource/spring-android-samples.git
@@ -564,7 +588,10 @@ String result = restTemplate.getForObject(url, String.class, "SpringSource");]]>
 
 		<title>Using Gzip Compression</title>
 
-		<para>Gzip compression can significantly reduce the size of the response data being returned in a REST request. Gzip must be supported by the web server to which the request is being made. By setting the content coding type of the <literal>Accept-Encoding</literal> header to <literal>gzip</literal>, you are requesting that the server respond using gzip compression. If gzip is available, or enabled on the server, then it should return a compressed response. RestTemplate checks the <literal>Content-Encoding</literal> header in the response to determine if, in fact, the response is gzip compressed. At this time, RestTemplate only supports the gzip content coding type in the <literal>Content-Encoding</literal> header. If the response data is determined to be gzip compressed, then a <link xlink:href="http://developer.android.com/reference/java/util/zip/GZIPInputStream.html"><classname>GZIPInputStream</classname></link> is used to decompress it.</para>
+		<para>Gzip compression can significantly reduce the size of the response data being returned in a REST request. Gzip must be supported by the web server to which the request is being made. By setting the content coding type of the <literal>Accept-Encoding</literal> header to <literal>gzip</literal>, you are requesting that the server respond using gzip compression. If gzip is available, or enabled on the server, then it should return a compressed response. RestTemplate checks the <literal>Content-Encoding</literal> header in the response to determine if, in fact, the response is gzip compressed. At this time, RestTemplate only supports the gzip content coding type in the <literal>Content-Encoding</literal> header. If the response data is determined to be gzip compressed, then a <ulink url="http://developer.android.com/reference/java/util/zip/GZIPInputStream.html">
+ 	<citetitle>
+ 		<classname>GZIPInputStream</classname>
+ 	</citetitle></ulink> is used to decompress it.</para>
 		
 		<para>The following example shows how to request a gzip compressed response from the server.</para>
 
@@ -909,7 +936,9 @@ SyndFeed feed = restTemplate.getForObject(url, SyndFeed.class);]]>
 		
 		<title>HTTP Basic Authentication</title>
 		
-		<para>This example illustrates how to populate the <link xlink:href="http://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-spec.html#BasicAA">HTTP Basic Authentication</link> header with the username and password. If the username and password are accepted, then you will receive the response from the request. If they are not accepted, then the server is supposed to return an <link xlink:href="http://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-spec.html#Code401">HTTP 401 Unauthorized</link> response. Internally, RestTemplate handles the response, then throws an <classname>HttpClientErrorException</classname>. By calling <methodname>getStatusCode()</methodname> on this exception, you can determine the exact cause and handle it appropriately.</para>
+		<para>This example illustrates how to populate the <ulink url="http://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-spec.html#BasicAA">
+ 	<citetitle>HTTP Basic Authentication</citetitle></ulink> header with the username and password. If the username and password are accepted, then you will receive the response from the request. If they are not accepted, then the server is supposed to return an <ulink url="http://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-spec.html#Code401">
+ 	<citetitle>HTTP 401 Unauthorized</citetitle></ulink> response. Internally, RestTemplate handles the response, then throws an <classname>HttpClientErrorException</classname>. By calling <methodname>getStatusCode()</methodname> on this exception, you can determine the exact cause and handle it appropriately.</para>
 		
 		<programlisting language="java"><![CDATA[
 // Set the username and password for creating a Basic Auth request
