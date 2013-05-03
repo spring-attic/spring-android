@@ -75,7 +75,9 @@
 					<sdk>
 						<platform>${android-platform}</platform>
 					</sdk>
-					<!-- <device>emulator-5554</device> -->
+					<!-- <emulatorAvd>Android-4_2_2</emulatorAvd> -->
+					<!-- <emulatorOptions>-no-window</emulatorOptions> -->
+					<!-- <emulatorWait>36000</emulatorWait> -->
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 				</configuration>
