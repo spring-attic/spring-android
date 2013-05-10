@@ -1,13 +1,25 @@
+# Operating System files
+
 .DS_Store
+Thumbs.db
+
+# build files
+
+.gradle/
+build/
+target/
+bin/
+gen/
+
+# Eclipse files
+
+.classpath
+.project
+.settings/
+
+# IDEA files
+
 *.iml
 *.ipr
 *.iws
 *.sw?
-.classpath
-.project
-.settings
-.gradle
-build
-target
-bin
-gen
