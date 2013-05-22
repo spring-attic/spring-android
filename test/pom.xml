@@ -4,7 +4,7 @@
 
 	<groupId>org.springframework.android</groupId>
 	<artifactId>spring-android-test</artifactId>
-	<version>1.1.0.BUILD-SNAPSHOT</version>
+	<version>1.0.2.BUILD-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>spring-android-test</name>
 	<url>http://www.springsource.org</url>
