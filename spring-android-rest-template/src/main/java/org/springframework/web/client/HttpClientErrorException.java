@@ -30,7 +30,7 @@ import org.springframework.http.HttpStatus;
  */
 public class HttpClientErrorException extends HttpStatusCodeException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6777393766937023392L;
 
 	/**
 	 * Construct a new instance of {@code HttpClientErrorException} based on a {@link HttpStatus}.

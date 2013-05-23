@@ -26,13 +26,14 @@ import org.springframework.http.HttpStatus;
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
+ * @author Chris Beams
  * @since 1.0
  */
 public abstract class HttpStatusCodeException extends RestClientException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1549626836533638803L;
 
-	private static final Charset DEFAULT_CHARSET = Charset.forName("ISO-8859-1");
+	private static final String DEFAULT_CHARSET = "ISO-8859-1";
 
 	private final HttpStatus statusCode;
 
@@ -40,7 +41,7 @@ public abstract class HttpStatusCodeException extends RestClientException {
 
 	private final byte[] responseBody;
 
-	private final Charset responseCharset;
+	private final String responseCharset;
 
 	/**
 	 * Construct a new instance of {@code HttpStatusCodeException} based on a {@link HttpStatus}.
@@ -78,7 +79,7 @@ public abstract class HttpStatusCodeException extends RestClientException {
 		this.statusCode = statusCode;
 		this.statusText = statusText;
 		this.responseBody = responseBody != null ? responseBody : new byte[0];
-		this.responseCharset = responseCharset != null ? responseCharset : DEFAULT_CHARSET;
+		this.responseCharset = responseCharset != null ? responseCharset.name() : DEFAULT_CHARSET;
 	}
 
 	/**
@@ -107,7 +108,7 @@ public abstract class HttpStatusCodeException extends RestClientException {
 	 */
 	public String getResponseBodyAsString() {
 		try {
-			return new String(responseBody, responseCharset.name());
+			return new String(responseBody, responseCharset);
 		}
 		catch (UnsupportedEncodingException ex) {
 			// should not occur

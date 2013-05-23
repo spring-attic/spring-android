@@ -30,7 +30,7 @@ import org.springframework.http.HttpStatus;
  */
 public class HttpServerErrorException extends HttpStatusCodeException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2565832100451369997L;
 
 	/**
 	 * Construct a new instance of {@code HttpServerErrorException} based on a {@link HttpStatus}.
