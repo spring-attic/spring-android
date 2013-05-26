@@ -5,8 +5,7 @@
 
 ## Downloading artifacts
 
-The [Android Maven Plugin] makes it possible to build Android applications utilizing the power of Maven dependency management. See [downloading Spring artifacts] for Maven repository information. Unable to use Maven or other transitive dependency management tools? See [building a distribution with dependencies].
-
+The [Android Maven Plugin] makes it possible to build Android applications utilizing the power of [Maven] dependency management. See [downloading Spring artifacts] for [Maven] repository information. Unable to use [Maven] or other transitive dependency management tools? See [building a distribution with dependencies].
 
 ### Dependencies
 
@@ -54,6 +53,7 @@ Spring for Android consists of three modules: Core, Rest Template, and Auth.
 </repository>
 ```
 
+
 ## Documentation
 
 See the current [Javadoc] and [reference docs].
@@ -76,6 +76,7 @@ Report issues via the [Spring Android JIRA]. While JIRA is preferred, [GitHub is
 	```sh
 	$ git clone git://github.com/SpringSource/spring-android.git
 	```
+> *Note:* If you are unfamiliar with [Git], you may want to try [GitHub for Windows] or [GitHub for Mac].
 
 2. Navigate into the cloned repository directory:
 
@@ -89,7 +90,7 @@ Report issues via the [Spring Android JIRA]. While JIRA is preferred, [GitHub is
 	$ ./gradlew build
 	```
 		
-4. Install jars into your local Maven cache (optional)
+4. Install jars into your local [Maven] cache (optional)
 
 	```sh
 	$ ./gradlew install
@@ -162,12 +163,16 @@ Spring for Android is released under version 2.0 of the [Apache License].
 [Spring Framework]: http://www.springsource.org/spring-framework
 [Android]: http://developer.android.com/index.html
 [Android Maven Plugin]: http://code.google.com/p/maven-android-plugin
+[Maven]: http://maven.apache.org
 [downloading Spring artifacts]: https://github.com/SpringSource/spring-framework/wiki/Downloading-Spring-artifacts
 [building a distribution with dependencies]: https://github.com/SpringSource/spring-framework/wiki/Building-a-distribution-with-dependencies
-[Javadoc]: http://static.springsource.org/spring-android/docs/1.0.x/api/
-[reference docs]: http://static.springsource.org/spring-android/docs/1.0.x/reference/html/
+[Javadoc]: http://static.springsource.org/spring-android/docs/1.0.x/api
+[reference docs]: http://static.springsource.org/spring-android/docs/1.0.x/reference/html
 [samples repository]: https://github.com/SpringSource/spring-android-samples
 [Spring Android JIRA]: http://jira.springsource.org/browse/ANDROID
+[Git]: http://git-scm.com
+[GitHub for Windows]: http://windows.github.com
+[GitHub for Mac]: http://mac.github.com
 [GitHub issues]: https://github.com/SpringSource/spring-android/issues?direction=desc&sort=created&state=open
 [the lifecycle of an issue]: https://github.com/cbeams/spring-framework/wiki/The-Lifecycle-of-an-Issue
 [Gradle]: http://gradle.org
@@ -175,5 +180,3 @@ Spring for Android is released under version 2.0 of the [Apache License].
 [Pull requests]: http://help.github.com/send-pull-requests
 [contributor guidelines]: https://github.com/SpringSource/spring-android/wiki/Contributor-Guidelines
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
-
-
