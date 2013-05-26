@@ -73,19 +73,27 @@ Report issues via the [Spring Android JIRA]. While JIRA is preferred, [GitHub is
 
 1. Clone the repository from GitHub:
 
-		$ git clone git://github.com/SpringSource/spring-android.git
+	```sh
+	$ git clone git://github.com/SpringSource/spring-android.git
+	```
 
 2. Navigate into the cloned repository directory:
 
-		$ cd spring-android
+	```sh
+	$ cd spring-android
+	```
 
 3. The project uses [Gradle] to build:
 
-		$ ./gradlew build
+	```sh
+	$ ./gradlew build
+	```
 		
 4. Install jars into your local Maven cache (optional)
 
-		$ ./gradlew install
+	```sh
+	$ ./gradlew install
+	```
 
 
 ## Import Source into your IDE
@@ -94,19 +102,25 @@ Report issues via the [Spring Android JIRA]. While JIRA is preferred, [GitHub is
 
 1. To generate Eclipse metadata (.classpath and .project files):
 
-		$ ./gradlew eclipse
+	```sh
+	$ ./gradlew eclipse
+	```
 
 2. Once complete, you may then import the projects into Eclipse as usual:
 
-		File -> Import -> Existing projects into workspace
+	```
+	File -> Import -> Existing projects into workspace
+	```
 
-	_Note: [SpringSource Tool Suite] has built in support for [Gradle], and you can simply import as Gradle projects._
+> **Note:** [Spring Tool Suite] has built in support for [Gradle], and you can simply import as Gradle projects.
 
 ### IDEA
 
 Generate IDEA metadata (.iml and .ipr files):
 
-	$ ./gradlew idea
+```sh
+$ ./gradlew idea
+```
 
 
 ## Tests
@@ -115,17 +129,23 @@ There are three Android Test Projects located in the "test" folder of the reposi
 
 Run the Android tests:
 
-	$ ./gradlew testAndroid
+```sh
+$ ./gradlew testAndroid
+```
 		
-_Note: To view the output, use the **--info** parameter when running Gradle_
+> **Note:** To view the output, use the **--info** parameter when running Gradle
 
 Gradle runs the tests using the [Android Maven Plugin]. Alternatively the test suite can be executed using the following Maven command:
-	
-	$ mvn clean install -f ./test/pom.xml
+
+```sh
+$ mvn clean install -f ./test/pom.xml
+```
 
 Test results are available in the following directory for each test project:
 
-	/test/<test-project>/target/surefire-reports
+```
+/test/<test-project>/target/surefire-reports
+```
 
 
 ## Contributing
@@ -135,7 +155,7 @@ Test results are available in the following directory for each test project:
 
 ## License
 
-Spring Mobile is released under version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
+Spring for Android is released under version 2.0 of the [Apache License].
 
 
 [Spring for Android]: http://www.springsource.org/spring-android
@@ -151,9 +171,9 @@ Spring Mobile is released under version 2.0 of the [Apache License](http://www.a
 [GitHub issues]: https://github.com/SpringSource/spring-android/issues?direction=desc&sort=created&state=open
 [the lifecycle of an issue]: https://github.com/cbeams/spring-framework/wiki/The-Lifecycle-of-an-Issue
 [Gradle]: http://gradle.org
-[SpringSource Tool Suite]: http://www.springsource.com/developer/sts
+[Spring Tool Suite]: http://www.springsource.com/developer/sts
 [Pull requests]: http://help.github.com/send-pull-requests
 [contributor guidelines]: https://github.com/SpringSource/spring-android/wiki/Contributor-Guidelines
-
+[Apache License]: http://www.apache.org/licenses/LICENSE-2.0
 
 
