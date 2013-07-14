@@ -35,21 +35,21 @@ Spring for Android consists of three modules: Core, Rest Template, and Auth.
 
 ```xml
 <repository>
-	<id>spring-repo</id>
-	<name>Spring Repository</name>
-	<url>http://repo.springsource.org/release</url>
-</repository>	
-	
+    <id>spring-repo</id>
+    <name>Spring Repository</name>
+    <url>http://repo.springsource.org/release</url>
+</repository>   
+    
 <repository>
-	<id>spring-milestone</id>
-	<name>Spring Milestone Repository</name>
-	<url>http://repo.springsource.org/milestone</url>
+    <id>spring-milestone</id>
+    <name>Spring Milestone Repository</name>
+    <url>http://repo.springsource.org/milestone</url>
 </repository>
 
 <repository>
-	<id>spring-snapshot</id>
-	<name>Spring Snapshot Repository</name>
-	<url>http://repo.springsource.org/snapshot</url>
+    <id>spring-snapshot</id>
+    <name>Spring Snapshot Repository</name>
+    <url>http://repo.springsource.org/snapshot</url>
 </repository>
 ```
 
@@ -73,28 +73,28 @@ Report issues via the [Spring Android JIRA]. While JIRA is preferred, [GitHub is
 
 1. Clone the repository from GitHub:
 
-	```sh
-	$ git clone git://github.com/SpringSource/spring-android.git
-	```
-> *Note:* If you are unfamiliar with [Git], you may want to try [GitHub for Windows] or [GitHub for Mac].
+    ```sh
+    $ git clone git://github.com/SpringSource/spring-android.git
+    ```
+    > *Note:* If you are unfamiliar with [Git], you may want to try [GitHub for Windows] or [GitHub for Mac].
 
 2. Navigate into the cloned repository directory:
 
-	```sh
-	$ cd spring-android
-	```
+    ```sh
+    $ cd spring-android
+    ```
 
 3. The project uses [Gradle] to build:
 
-	```sh
-	$ ./gradlew build
-	```
-		
+    ```sh
+    $ ./gradlew build
+    ```
+
 4. Install jars into your local [Maven] cache (optional)
 
-	```sh
-	$ ./gradlew install
-	```
+    ```sh
+    $ ./gradlew install
+    ```
 
 
 ## Import Source into your IDE
@@ -103,17 +103,17 @@ Report issues via the [Spring Android JIRA]. While JIRA is preferred, [GitHub is
 
 1. To generate Eclipse metadata (.classpath and .project files):
 
-	```sh
-	$ ./gradlew eclipse
-	```
+    ```sh
+    $ ./gradlew eclipse
+    ```
 
 2. Once complete, you may then import the projects into Eclipse as usual:
 
-	```
-	File -> Import -> Existing projects into workspace
-	```
+    ```
+    File -> Import -> Existing projects into workspace
+    ```
 
-> **Note:** [Spring Tool Suite] has built in support for [Gradle], and you can simply import as Gradle projects.
+    > **Note**: [Spring Tool Suite][sts] includes support for [Gradle], and you can simply import as Gradle projects.
 
 ### IDEA
 
@@ -133,8 +133,8 @@ Run the Android tests:
 ```sh
 $ ./gradlew testAndroid
 ```
-		
-> **Note:** To view the output, use the **--info** parameter when running Gradle
+
+> **Note**: To view the output, use the **--info** parameter when running Gradle
 
 Gradle runs the tests using the [Android Maven Plugin]. Alternatively the test suite can be executed using the following Maven command:
 
@@ -156,27 +156,26 @@ Test results are available in the following directory for each test project:
 
 ## License
 
-Spring for Android is released under version 2.0 of the [Apache License].
+[Spring for Android] is released under version 2.0 of the [Apache License].
 
 
 [Spring for Android]: http://www.springsource.org/spring-android
 [Spring Framework]: http://www.springsource.org/spring-framework
-[Android]: http://developer.android.com/index.html
+[Android]: http://developer.android.com
 [Android Maven Plugin]: http://code.google.com/p/maven-android-plugin
 [Maven]: http://maven.apache.org
 [downloading Spring artifacts]: https://github.com/SpringSource/spring-framework/wiki/Downloading-Spring-artifacts
 [building a distribution with dependencies]: https://github.com/SpringSource/spring-framework/wiki/Building-a-distribution-with-dependencies
-[Javadoc]: http://static.springsource.org/spring-android/docs/1.0.x/api
-[reference docs]: http://static.springsource.org/spring-android/docs/1.0.x/reference/html
+[Javadoc]: http://static.springsource.org/spring-android/docs/current/api/
+[reference docs]: http://static.springsource.org/spring-android/docs/current/reference/html/
 [samples repository]: https://github.com/SpringSource/spring-android-samples
 [Spring Android JIRA]: http://jira.springsource.org/browse/ANDROID
 [Git]: http://git-scm.com
 [GitHub for Windows]: http://windows.github.com
 [GitHub for Mac]: http://mac.github.com
 [GitHub issues]: https://github.com/SpringSource/spring-android/issues?direction=desc&sort=created&state=open
-[the lifecycle of an issue]: https://github.com/cbeams/spring-framework/wiki/The-Lifecycle-of-an-Issue
-[Gradle]: http://gradle.org
-[Spring Tool Suite]: http://www.springsource.com/developer/sts
+[the lifecycle of an issue]: https://github.com/springsource/spring-framework/wiki/The-Lifecycle-of-an-Issue
+[sts]: http://www.springsource.com/developer/sts
 [Pull requests]: http://help.github.com/send-pull-requests
 [contributor guidelines]: https://github.com/SpringSource/spring-android/wiki/Contributor-Guidelines
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
