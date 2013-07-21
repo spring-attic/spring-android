@@ -28,10 +28,9 @@ import com.squareup.okhttp.OkHttpClient;
 
 /**
  * {@link ClientHttpRequestFactory} implementation that uses standard J2SE facilities.
- * @author Arjen Poutsma
- * @author Roy Clarkson
- * @see java.net.HttpURLConnection
- * @since 1.0
+ * @author Stéphane Nicolas
+ * @see OkHttpClient
+ * @since 1.0.2
  */
 public class OkHttpRequestFactory extends SimpleClientHttpRequestFactory {
 
