@@ -15,6 +15,7 @@ configure(allprojects) {
 	ext.jackson2Version          = "2.1.2"
 	ext.gsonVersion              = "2.2.2"
 	ext.simpleXmlVersion         = "2.6.9"
+	ext.okHttpVersion            = "1.1.1"
 	ext.androidRomeVersion       = "1.0.0-r2"
 	ext.commonsHttpClientVersion = "3.1"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
@@ -56,6 +57,7 @@ configure(allprojects) {
 	repositories {
 		maven { url "http://repo.springsource.org/libs-release" }
 		maven { url "https://android-rome-feed-reader.googlecode.com/svn/maven2/releases" }
+		mavenCentral()
 	}
 
 	// servlet-api (2.5) and tomcat-servlet-api (3.0) classpath entries should not be
@@ -160,6 +162,7 @@ project('spring-android-rest-template') {
 			optional dep
 			transitive = false
 		}
+		compile("com.squareup.okhttp:okhttp:$okHttpVersion", optional)
 	}
 }
 
