@@ -1,8 +1,11 @@
 buildscript {
 	repositories { 
-		maven { url 'http://repo.springsource.org/plugins-release' } }
+		maven { url 'http://repo.springsource.org/plugins-release' } 
+	}
 	dependencies { 
-		classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.6' }
+		classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.6' 
+		classpath 'me.champeau.gradle:gradle-javadoc-hotfix-plugin:0.1'
+	}
 }
 
 configure(allprojects) {
@@ -22,6 +25,7 @@ configure(allprojects) {
 	apply plugin: 'java'
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
+	apply plugin: 'javadocHotfix'
 
 	compileJava {
 		sourceCompatibility=1.5
