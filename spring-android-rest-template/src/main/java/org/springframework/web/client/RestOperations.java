@@ -293,6 +293,42 @@ public interface RestOperations {
 	 */
 	void put(URI url, Object request) throws RestClientException;
 
+	// PATCH
+
+	/**
+	 * Create or update a resource by PATCHing the given object to the URI.
+	 * <p>URI Template variables are expanded using the given URI variables, if any.
+	 * <p>The {@code request} parameter can be a {@link HttpEntity} in order to
+	 * add additional HTTP headers to the request.
+	 * @param url the URL
+	 * @param request the Object to be PATCH, may be <code>null</code>
+	 * @param uriVariables the variables to expand the template
+	 * @see HttpEntity
+	 */
+	void patch(String url, Object request, Object... uriVariables) throws RestClientException;
+
+	/**
+	 * Creates a new resource by PATCHing the given object to URI template.
+	 * <p>URI Template variables are expanded using the given map.
+	 * <p>The {@code request} parameter can be a {@link HttpEntity} in order to
+	 * add additional HTTP headers to the request.
+	 * @param url the URL
+	 * @param request the Object to be PATCH, may be <code>null</code>
+	 * @param uriVariables the variables to expand the template
+	 * @see HttpEntity
+	 */
+	void patch(String url, Object request, Map<String, ?> uriVariables) throws RestClientException;
+
+	/**
+	 * Creates a new resource by PATCHing the given object to URL.
+	 * <p>The {@code request} parameter can be a {@link HttpEntity} in order to
+	 * add additional HTTP headers to the request.
+	 * @param url the URL
+	 * @param request the Object to be PATCH, may be <code>null</code>
+	 * @see HttpEntity
+	 */
+	void patch(URI url, Object request) throws RestClientException;
+
 	// DELETE
 
 	/**

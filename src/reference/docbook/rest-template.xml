@@ -275,6 +275,20 @@ public void put(String url, Object request, Map<String, ?> urlVariables) throws 
 
 	</section>
 	
+	<section>
+
+		<title>HTTP PATCH</title>
+
+		<programlisting language="java"><![CDATA[
+public void patch(String url, Object request, Object... urlVariables) throws RestClientException;
+
+public void patch(String url, Object request, Map<String, ?> urlVariables) throws RestClientException;
+
+public void patch(String url, Object request, Map<String, ?> urlVariables) throws RestClientException;]]>
+		</programlisting>
+
+	</section>
+
   </section>
 
 

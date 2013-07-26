@@ -60,7 +60,7 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 	 * Indicates whether this request factory should buffer the {@linkplain ClientHttpRequest#getBody() request body}
 	 * internally.
 	 * <p>
-	 * Default is {@code true}. When sending large amounts of data via POST or PUT, it is recommended to change this
+	 * Default is {@code true}. When sending large amounts of data via POST, PUT or PATCH, it is recommended to change this
 	 * property to {@code false}, so as not to run out of memory. This will result in a {@link ClientHttpRequest} that
 	 * either streams directly to the underlying {@link HttpURLConnection} (if the
 	 * {@link org.springframework.http.HttpHeaders#getContentLength() Content-Length} is known in advance), or that will
@@ -160,7 +160,7 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 		} else {
 			connection.setInstanceFollowRedirects(false);
 		}
-		if ("PUT".equals(httpMethod) || "POST".equals(httpMethod)) {
+		if ("PUT".equals(httpMethod) || "POST".equals(httpMethod) || "PATCH".equals(httpMethod)) {
 			connection.setDoOutput(true);
 		} else {
 			connection.setDoOutput(false);

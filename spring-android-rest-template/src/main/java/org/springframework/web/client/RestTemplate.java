@@ -70,6 +70,7 @@ import android.util.Log;
  * <tr><td>POST</td><td>{@link #postForLocation}</td></tr>
  * <tr><td></td><td>{@link #postForObject}</td></tr>
  * <tr><td>PUT</td><td>{@link #put}</td></tr>
+ * <tr><td>PATCH</td><td>{@link #patch}</td></tr>
  * <tr><td>any</td><td>{@link #exchange}</td></tr>
  * <tr><td></td><td>{@link #execute}</td></tr> </table>
  *
@@ -373,6 +374,23 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	public void put(URI url, Object request) throws RestClientException {
 		HttpEntityRequestCallback requestCallback = new HttpEntityRequestCallback(request);
 		execute(url, HttpMethod.PUT, requestCallback, null);
+	}
+
+	// PATCH
+
+	public void patch(String url, Object request, Object... urlVariables) throws RestClientException {
+		HttpEntityRequestCallback requestCallback = new HttpEntityRequestCallback(request);
+		execute(url, HttpMethod.PATCH, requestCallback, null, urlVariables);
+	}
+
+	public void patch(String url, Object request, Map<String, ?> urlVariables) throws RestClientException {
+		HttpEntityRequestCallback requestCallback = new HttpEntityRequestCallback(request);
+		execute(url, HttpMethod.PATCH, requestCallback, null, urlVariables);
+	}
+
+	public void patch(URI url, Object request) throws RestClientException {
+		HttpEntityRequestCallback requestCallback = new HttpEntityRequestCallback(request);
+		execute(url, HttpMethod.PATCH, requestCallback, null);
 	}
 
 	// DELETE

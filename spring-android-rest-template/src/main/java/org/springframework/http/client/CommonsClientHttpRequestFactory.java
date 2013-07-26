@@ -29,6 +29,7 @@ import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.httpclient.methods.OptionsMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.PatchMethod;
 import org.apache.commons.httpclient.methods.TraceMethod;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.http.HttpMethod;
@@ -135,6 +136,8 @@ public class CommonsClientHttpRequestFactory implements ClientHttpRequestFactory
 				return new PostMethod(uri);
 			case PUT:
 				return new PutMethod(uri);
+			case PATCH:
+				return new PatchMethod(uri);
 			case TRACE:
 				return new TraceMethod(uri);
 			default:
