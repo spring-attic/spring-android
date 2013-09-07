@@ -1,0 +1,100 @@
+---
+# The name of your project
+title: Spring for Android
+
+badges:
+
+  # Specify your project's twitter handle, if any. Delete if none.
+  twitter: springandroid
+
+  # Customize your project's badges. Delete any entries that do not apply.
+  custom:
+    - name: Source (GitHub)
+      url:  https://github.com/spring-projects/spring-android
+      icon: github
+
+    - name: Issues (JIRA)
+      url:  http://jira.springsource.org/browse/ANDROID
+      icon: tracking
+
+    - name: CI (Bamboo)
+      url:  https://build.springsource.org/browse/ANDROID
+      icon: ci
+
+    - name: Forum
+      url:  http://forum.spring.io/forum/spring-projects/android
+      icon: forum
+
+    - name: StackOverflow
+      url:  http://stackoverflow.com/questions/tagged/spring-android
+      icon: stackoverflow
+
+---
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+{% capture billboard_description %}
+
+Spring for Android is an extension of the Spring Framework that aims to simplify the development of native Android applications.
+
+{% endcapture %}
+
+{% capture main_content %}
+
+Spring for Android is a framework that is designed to provide components of the Spring family of projects for use in Android apps. Like all Spring projects, the real power of Spring for Android is found in how easily it can be extended.
+
+## Features
+
+* A Rest Client for Android
+* Auth support for accessing secure APIs
+
+<span id="quick-start"></span>
+## Quick Start
+
+{% include download_widget.md %}
+
+### Usage
+
+The following example illustrates how to search Google:
+
+```java
+// The connection URL 
+String url = "https://ajax.googleapis.com/ajax/" + 
+    "services/search/web?v=1.0&q={query}";
+			
+// Create a new RestTemplate instance
+RestTemplate restTemplate = new RestTemplate();
+
+// Add the String message converter
+restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+
+// Make the HTTP GET request, marshaling the response to a String
+String result = restTemplate.getForObject(url, String.class, "Android");
+```
+
+{% endcapture %}
+
+{% capture related_resources %}
+
+### Sample Projects
+
+* [Spring for Android Samples](https://github.com/SpringSource/spring-android-samples)
+
+### Getting Started Guides
+
+* [Consuming RESTful Web Services with Spring for Android]({{site.main_site_url}}/guides/gs/consuming-rest-android)
+* [Consuming XML from a RESTful Web Service with Spring for Android]({{site.main_site_url}}/guides/gs/consuming-rest-xml-android)
+* [Building Android Projects with Gradle]({{site.main_site_url}}/guides/gs/gradle-android)
+* [Building Android Projects with Maven]({{site.main_site_url}}/guides/gs/maven-android)
+* [Installing the Android Development Environment]({{site.main_site_url}}/guides/gs/android)
+
+### Tutorials
+
+* [Designing and Implementing RESTful Web Services with Spring]({{site.main_site_url}}/guides/tutorials/rest)
+
+{% endcapture %}
+
+
+{% include project_page.html %}
+
+</html>

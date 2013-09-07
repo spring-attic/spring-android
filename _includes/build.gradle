@@ -1,0 +1,5 @@
+dependencies {
+    compile '{@= groupId @}:spring-android-rest-template:{@= version @}'
+    compile '{@= groupId @}:spring-android-auth:{@= version @}'
+    compile '{@= groupId @}:spring-android-core:{@= version @}'
+}
