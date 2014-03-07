@@ -23,20 +23,20 @@
 
   <section>
 	
-	<title>SpringSource Repository</title>
+	<title>Spring Repository</title>
 	
 	<para>The following repositories are available for all SpringSource projects. Much more information is available at the <ulink url="https://github.com/SpringSource/spring-framework/wiki/SpringSource-repository-FAQ">
  	<citetitle>SpringSource Repository FAQ</citetitle></ulink>.</para>
 	
 	<para>Release versions, such as 1.0.0.RELEASE, are available through <ulink url="http://search.maven.org/">
- 	<citetitle>Maven Central</citetitle></ulink> or via the <ulink url="http://repo.springsource.org/">
+ 	<citetitle>Maven Central</citetitle></ulink> or via the <ulink url="http://repo.spring.io/">
  	<citetitle>SpringSource Repository</citetitle></ulink>:
 
 		<programlisting language="xml"><![CDATA[
 <repository>
-    <id>springsource-repo</id>
-    <name>SpringSource Repository</name>
-    <url>http://repo.springsource.org/release</url>
+    <id>spring-repo</id>
+    <name>Spring Repository</name>
+    <url>http://repo.spring.io/release</url>
 </repository>]]>
 		</programlisting>
 
@@ -46,9 +46,9 @@
 
 		<programlisting language="xml"><![CDATA[
 <repository>
-    <id>springsource-milestone</id>
-    <name>SpringSource Milestone Repository</name>
-    <url>http://repo.springsource.org/milestone</url>
+    <id>spring-milestone</id>
+    <name>Spring Milestone Repository</name>
+    <url>http://repo.spring.io/milestone</url>
 </repository>]]>
 		</programlisting>
 
@@ -58,9 +58,9 @@
 
 		<programlisting language="xml"><![CDATA[
 <repository>
-    <id>springsource-snapshot</id>
-    <name>SpringSource Snapshot Repository</name>
-    <url>http://repo.springsource.org/snapshot</url>
+    <id>spring-snapshot</id>
+    <name>Spring Snapshot Repository</name>
+    <url>http://repo.spring.io/snapshot</url>
 </repository>]]>
 		</programlisting>
 
@@ -163,8 +163,8 @@
     <repositories>
         <repository>
             <id>spring-snapshot</id>
-            <name>SpringSource Snapshot Repository</name>
-            <url>http://repo.springsource.org/libs-snapshot</url>
+            <name>Spring Snapshot Repository</name>
+            <url>http://repo.spring.io/libs-snapshot</url>
         </repository>
     </repositories>
 

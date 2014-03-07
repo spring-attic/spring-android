@@ -55,12 +55,11 @@
 		</dependency>
 	</dependencies>
 
-
 	<repositories>
 		<repository>
 			<id>spring-snapshot</id>
-			<name>SpringSource Snapshot Repository</name>
-			<url>http://repo.springsource.org/libs-snapshot</url>
+			<name>Spring Snapshot Repository</name>
+			<url>http://repo.spring.io/libs-snapshot</url>
 		</repository>
 	</repositories>
 

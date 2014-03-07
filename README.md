@@ -37,19 +37,19 @@ Spring for Android consists of three modules: Core, Rest Template, and Auth.
 <repository>
     <id>spring-repo</id>
     <name>Spring Repository</name>
-    <url>http://repo.springsource.org/release</url>
+    <url>http://repo.spring.io/release</url>
 </repository>   
     
 <repository>
     <id>spring-milestone</id>
     <name>Spring Milestone Repository</name>
-    <url>http://repo.springsource.org/milestone</url>
+    <url>http://repo.spring.io/milestone</url>
 </repository>
 
 <repository>
     <id>spring-snapshot</id>
     <name>Spring Snapshot Repository</name>
-    <url>http://repo.springsource.org/snapshot</url>
+    <url>http://repo.spring.io/snapshot</url>
 </repository>
 ```
 
