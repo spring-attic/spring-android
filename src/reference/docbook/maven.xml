@@ -25,7 +25,7 @@
 	
 	<title>Spring Repository</title>
 	
-	<para>The following repositories are available for all SpringSource projects. Much more information is available at the <ulink url="https://github.com/SpringSource/spring-framework/wiki/SpringSource-repository-FAQ">
+	<para>The following repositories are available for all SpringSource projects. Much more information is available at the <ulink url="https://github.com/spring-projects/spring-framework/wiki/SpringSource-repository-FAQ">
  	<citetitle>SpringSource Repository FAQ</citetitle></ulink>.</para>
 	
 	<para>Release versions, such as 1.0.0.RELEASE, are available through <ulink url="http://search.maven.org/">
@@ -73,7 +73,7 @@
 	<title>Example POM</title>
 	
 	<para>The following <ulink url="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html">
- 	<citetitle>Maven POM file</citetitle></ulink> from the <ulink url="https://github.com/SpringSource/spring-android-samples">
+ 	<citetitle>Maven POM file</citetitle></ulink> from the <ulink url="https://github.com/spring-projects/spring-android-samples">
  	<citetitle>Spring for Android Showcase</citetitle></ulink> sample application, illustrates how to configure the <ulink url="http://code.google.com/p/maven-android-plugin">
  	<citetitle>Maven Android Plugin</citetitle></ulink> and associated dependencies for use with Spring for Android and Spring Social.</para>
 	

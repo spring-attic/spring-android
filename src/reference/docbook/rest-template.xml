@@ -556,11 +556,11 @@ public interface HttpMessageConverter<T> {
 
   	<para>Using <classname>RestTemplate</classname>, it's easy to invoke RESTful APIs.  Below are several usage examples that illustrate the different methods for making RESTful requests.</para>
 	
-	<para>All of the following examples are based on a <ulink url="https://github.com/SpringSource/spring-android-samples">
+	<para>All of the following examples are based on a <ulink url="https://github.com/spring-projects/spring-android-samples">
  	<citetitle>sample Android application</citetitle></ulink>. You can retrieve the source code for the sample app with the following command:</para>
 	
 	<programlisting>
-$ git clone git://github.com/SpringSource/spring-android-samples.git
+$ git clone git://github.com/spring-projects/spring-android-samples.git
 	</programlisting>	
 
   	<section>

@@ -247,11 +247,11 @@
 
   	<para>Below are several usage examples that illustrate how to use Spring for Android with Spring Social.</para>
 
-	<para>The following examples are based on a <ulink url="https://github.com/SpringSource/spring-android-samples">
+	<para>The following examples are based on a <ulink url="https://github.com/spring-projects/spring-android-samples">
  	<citetitle>sample Android application</citetitle></ulink>, which has Facebook and Twitter examples using Spring Social. You can retrieve the source code for the sample app with Git:</para>
 	
 	<programlisting>
-$ git clone git://github.com/SpringSource/spring-android-samples.git
+$ git clone git://github.com/spring-projects/spring-android-samples.git
 	</programlisting>
 
   	<section>

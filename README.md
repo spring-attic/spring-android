@@ -74,7 +74,7 @@ Report issues via the [Spring Android JIRA]. While JIRA is preferred, [GitHub is
 1. Clone the repository from GitHub:
 
     ```sh
-    $ git clone git://github.com/SpringSource/spring-android.git
+    $ git clone git://github.com/spring-projects/spring-android.git
     ```
     > *Note:* If you are unfamiliar with [Git], you may want to try [GitHub for Windows] or [GitHub for Mac].
 
@@ -164,18 +164,18 @@ Test results are available in the following directory for each test project:
 [Android]: http://developer.android.com
 [Android Maven Plugin]: http://code.google.com/p/maven-android-plugin
 [Maven]: http://maven.apache.org
-[downloading Spring artifacts]: https://github.com/SpringSource/spring-framework/wiki/Downloading-Spring-artifacts
-[building a distribution with dependencies]: https://github.com/SpringSource/spring-framework/wiki/Building-a-distribution-with-dependencies
+[downloading Spring artifacts]: https://github.com/spring-projects/spring-framework/wiki/Downloading-Spring-artifacts
+[building a distribution with dependencies]: https://github.com/spring-projects/spring-framework/wiki/Building-a-distribution-with-dependencies
 [Javadoc]: http://docs.spring.io/spring-android/docs/current/api/
 [reference docs]: http://docs.spring.io/spring-android/docs/current/reference/html/
-[samples repository]: https://github.com/SpringSource/spring-android-samples
+[samples repository]: https://github.com/spring-projects/spring-android-samples
 [Spring Android JIRA]: http://jira.springsource.org/browse/ANDROID
 [Git]: http://git-scm.com
 [GitHub for Windows]: http://windows.github.com
 [GitHub for Mac]: http://mac.github.com
-[GitHub issues]: https://github.com/SpringSource/spring-android/issues?direction=desc&sort=created&state=open
+[GitHub issues]: https://github.com/spring-projects/spring-android/issues?direction=desc&sort=created&state=open
 [the lifecycle of an issue]: https://github.com/springsource/spring-framework/wiki/The-Lifecycle-of-an-Issue
 [sts]: http://www.springsource.com/developer/sts
 [Pull requests]: http://help.github.com/send-pull-requests
-[contributor guidelines]: https://github.com/SpringSource/spring-android/wiki/Contributor-Guidelines
+[contributor guidelines]: https://github.com/spring-projects/spring-android/wiki/Contributor-Guidelines
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
