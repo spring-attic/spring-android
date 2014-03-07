@@ -166,8 +166,8 @@ Test results are available in the following directory for each test project:
 [Maven]: http://maven.apache.org
 [downloading Spring artifacts]: https://github.com/SpringSource/spring-framework/wiki/Downloading-Spring-artifacts
 [building a distribution with dependencies]: https://github.com/SpringSource/spring-framework/wiki/Building-a-distribution-with-dependencies
-[Javadoc]: http://static.springsource.org/spring-android/docs/current/api/
-[reference docs]: http://static.springsource.org/spring-android/docs/current/reference/html/
+[Javadoc]: http://docs.spring.io/spring-android/docs/current/api/
+[reference docs]: http://docs.spring.io/spring-android/docs/current/reference/html/
 [samples repository]: https://github.com/SpringSource/spring-android-samples
 [Spring Android JIRA]: http://jira.springsource.org/browse/ANDROID
 [Git]: http://git-scm.com

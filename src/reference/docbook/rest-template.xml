@@ -170,7 +170,7 @@ RestTemplate(boolean includeDefaultConverters, ClientHttpRequestFactory requestF
 	
 	<para>The names of <classname>RestTemplate</classname> methods follow a naming convention, the first part indicates what HTTP method is being invoked and the second part indicates what is returned. For example, the method <methodname>getForObject()</methodname> will perform a GET, convert the HTTP response into an object type of your choice and return that object. The method <methodname>postForLocation()</methodname> will do a POST, converting the given object into a HTTP request and return the response HTTP Location header where the newly created object can be found. In case of an exception processing the HTTP request, an exception of the type <classname>RestClientException</classname> will be thrown.  This behavior can be changed by plugging in another <interfacename>ResponseErrorHandler</interfacename> implementation into the <classname>RestTemplate.</classname></para>
 	
-	<para>For more information on <classname>RestTemplate</classname> and it's associated methods, please refer to the <ulink url="http://static.springsource.org/spring-android/docs/1.0.x/api/org/springframework/web/client/RestTemplate.html">
+	<para>For more information on <classname>RestTemplate</classname> and it's associated methods, please refer to the <ulink url="http://docs.spring.io/spring-android/docs/1.0.x/api/org/springframework/web/client/RestTemplate.html">
  	<citetitle>API Javadoc</citetitle></ulink></para>
 	
 	<section>
