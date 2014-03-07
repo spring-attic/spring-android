@@ -1,5 +1,5 @@
-rootProject.name = 'spring-android'
+rootProject.name = "spring-android"
 
-include 'spring-android-core'
-include 'spring-android-auth'
-include 'spring-android-rest-template'
+include "spring-android-core"
+include "spring-android-auth"
+include "spring-android-rest-template"

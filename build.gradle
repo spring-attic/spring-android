@@ -1,15 +1,15 @@
 buildscript {
 	repositories { 
-		maven { url 'http://repo.springsource.org/plugins-release' } 
+		maven { url "http://repo.springsource.org/plugins-release" } 
 	}
 	dependencies { 
-		classpath 'org.springframework.build.gradle:docbook-reference-plugin:0.2.8' 
-		classpath 'me.champeau.gradle:gradle-javadoc-hotfix-plugin:0.1'
+		classpath "org.springframework.build.gradle:docbook-reference-plugin:0.2.8" 
+		classpath "me.champeau.gradle:gradle-javadoc-hotfix-plugin:0.1"
 	}
 }
 
 configure(allprojects) {
-	group = 'org.springframework.android'
+	group = "org.springframework.android"
 
 	ext.androidVersion           = "4.1.1.4"
 	ext.springSocialVersion      = "1.0.2.RELEASE"
@@ -22,10 +22,10 @@ configure(allprojects) {
 	ext.commonsHttpClientVersion = "3.1"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 
-	apply plugin: 'java'
-	apply plugin: 'eclipse'
-	apply plugin: 'idea'
-	apply plugin: 'javadocHotfix'
+	apply plugin: "java"
+	apply plugin: "eclipse"
+	apply plugin: "idea"
+	apply plugin: "javadocHotfix"
 
 	compileJava {
 		sourceCompatibility=1.5
@@ -66,7 +66,7 @@ configure(allprojects) {
 	// exported to dependent projects in Eclipse to avoid false compilation errors due
 	// to changing APIs across these versions
 	eclipse.classpath.file.whenMerged { classpath ->
-		classpath.entries.findAll { entry -> entry.path.contains('servlet-api') }*.exported = false
+		classpath.entries.findAll { entry -> entry.path.contains("servlet-api") }*.exported = false
 	}
 }
 
@@ -80,14 +80,14 @@ configure(subprojects) { subproject ->
 	jar {
 		manifest.attributes["Created-By"] =
 				"${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-		manifest.attributes['Implementation-Title'] = subproject.name
-		manifest.attributes['Implementation-Version'] = subproject.version
+		manifest.attributes["Implementation-Title"] = subproject.name
+		manifest.attributes["Implementation-Version"] = subproject.version
 
 		from("${rootProject.projectDir}/src/dist") {
 			include "license.txt"
 			include "notice.txt"
 			into "META-INF"
-			expand(copyright: new Date().format('yyyy'), version: project.version)
+			expand(copyright: new Date().format("yyyy"), version: project.version)
 		}
 	}
 
@@ -100,12 +100,12 @@ configure(subprojects) { subproject ->
 	}
 
 	task sourcesJar(type: Jar, dependsOn:classes) {
-		classifier = 'sources'
+		classifier = "sources"
 		from sourceSets.main.allJava
 	}
 
 	task javadocJar(type: Jar) {
-		classifier = 'javadoc'
+		classifier = "javadoc"
 		from javadoc
 	}
 
@@ -115,25 +115,25 @@ configure(subprojects) { subproject ->
 	}
 }
 
-project('spring-android-core') {
+project("spring-android-core") {
 	description = "Spring for Android Core"
 	
-	ext.mavenTestDir = '../test/spring-android-core-test/pom.xml'
+	ext.mavenTestDir = "../test/spring-android-core-test/pom.xml"
 	
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
 	}
 }
 
-project('spring-android-auth') {
-	description = 'Spring for Android Auth'
+project("spring-android-auth") {
+	description = "Spring for Android Auth"
 	
-	ext.mavenTestDir = '../test/spring-android-auth-test/pom.xml'
+	ext.mavenTestDir = "../test/spring-android-auth-test/pom.xml"
 	
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
-		compile(project(':spring-android-core'))
-		compile(project(':spring-android-rest-template'))
+		compile(project(":spring-android-core"))
+		compile(project(":spring-android-rest-template"))
 		compile("org.springframework.social:spring-social-core:$springSocialVersion") {
 			// exclude spring-web in favor of spring-android-rest-template
 			exclude group: "org.springframework", module: "spring-web"
@@ -144,14 +144,14 @@ project('spring-android-auth') {
 	}
 }
 
-project('spring-android-rest-template') {
-	description = 'Spring for Android Rest Template'
+project("spring-android-rest-template") {
+	description = "Spring for Android Rest Template"
 	
-	ext.mavenTestDir = '../test/spring-android-rest-template-test/pom.xml'
+	ext.mavenTestDir = "../test/spring-android-rest-template-test/pom.xml"
 	
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
-		compile(project(':spring-android-core'))
+		compile(project(":spring-android-core"))
 		compile("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion", optional)
 		compile("com.fasterxml.jackson.core:jackson-databind:$jackson2Version", optional)
 		compile("com.google.code.gson:gson:$gsonVersion", optional)
@@ -171,17 +171,17 @@ configure(subprojects) { subproject ->
 	task testAndroid(type: Exec, dependsOn: install) {
 		// suppress all console output during testing unless running `gradle --info`
 		logging.captureStandardOutput(LogLevel.INFO)
-		commandLine 'mvn', 'clean', 'install', '-f', subproject.ext.mavenTestDir
+		commandLine "mvn", "clean", "install", "-f", subproject.ext.mavenTestDir
 	}
 }
 
 configure(rootProject) {
-	description = 'Spring for Android'
+	description = "Spring for Android"
 
-	apply plugin: 'docbook-reference'
+	apply plugin: "docbook-reference"
 
 	reference {
-		sourceDir = file('src/reference/docbook')
+		sourceDir = file("src/reference/docbook")
 	}
 
 	// don't publish the default jar for the root project
@@ -192,8 +192,8 @@ configure(rootProject) {
 	}
 
 	task api(type: Javadoc) {
-		group = 'Documentation'
-		description = 'Generates aggregated Javadoc API documentation.'
+		group = "Documentation"
+		description = "Generates aggregated Javadoc API documentation."
 		title = "${rootProject.description} ${version} API"
 
 		dependsOn {
@@ -204,14 +204,14 @@ configure(rootProject) {
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = rootProject.description
-		options.overview = 'src/api/overview.html'
+		options.overview = "src/api/overview.html"
 		options.links(project.ext.javadocLinks)
 
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
 		}
 
-		maxMemory = '1024m'
+		maxMemory = "1024m"
 		destinationDir = new File(buildDir, "api")
 
 		doFirst {
@@ -220,38 +220,38 @@ configure(rootProject) {
 	}
 
 	task docsZip(type: Zip) {
-		group = 'Distribution'
-		classifier = 'docs'
+		group = "Distribution"
+		classifier = "docs"
 		description = "Builds -${classifier} archive containing api and reference " +
 				"for deployment at static.springframework.org/spring-android/docs."
 
-		from('src/dist') { 
-			include 'changelog.txt' 
+		from("src/dist") { 
+			include "changelog.txt" 
 		}
 
 		from (api) { 
-			into 'api' 
+			into "api" 
 		}
 
 		from (reference) { 
-			into 'reference' 
+			into "reference" 
 		}
 	}
 
 	task distZip(type: Zip, dependsOn: docsZip) {
-		group = 'Distribution'
-		classifier = 'dist'
+		group = "Distribution"
+		classifier = "dist"
 		description = "Builds -${classifier} archive, containing all jars and docs, " +
 				"suitable for community download page."
 
 		def baseDir = "${project.name}-${project.version}"
 
-		from('src/dist') {
-			include 'readme.txt'
-			include 'license.txt'
-			include 'notice.txt'
+		from("src/dist") {
+			include "readme.txt"
+			include "license.txt"
+			include "notice.txt"
 			into "${baseDir}"
-			expand(copyright: new Date().format('yyyy'), version: project.version)
+			expand(copyright: new Date().format("yyyy"), version: project.version)
 		}
 
 		from(zipTree(docsZip.archivePath)) { 
@@ -261,10 +261,10 @@ configure(rootProject) {
 		subprojects.each { subproject ->
 			into ("${baseDir}/libs") {
 				from subproject.jar
-				if (subproject.tasks.findByPath('sourcesJar')) {
+				if (subproject.tasks.findByPath("sourcesJar")) {
 					from subproject.sourcesJar
 				}
-				if (subproject.tasks.findByPath('javadocJar')) {
+				if (subproject.tasks.findByPath("javadocJar")) {
 					from subproject.javadocJar
 				}
 			}
@@ -277,24 +277,24 @@ configure(rootProject) {
 	}
 
 	task wrapper(type: Wrapper) {
-		gradleVersion = '1.11'
+		gradleVersion = "1.11"
 	}
 }
 
 task updateRootDocs {
 	copy {
-		from 'src/dist'
+		from "src/dist"
 		into "${rootProject.projectDir}"
-		include 'notice.txt'
-		expand(copyright: new Date().format('yyyy'), version: project.version)
-		rename { filename -> 'NOTICE' }
+		include "notice.txt"
+		expand(copyright: new Date().format("yyyy"), version: project.version)
+		rename { filename -> "NOTICE" }
 	}
 
 	copy {
-		from 'src/dist'
+		from "src/dist"
 		into "${rootProject.projectDir}"
-		include 'license.txt'
-		rename { filename -> 'LICENSE' }
+		include "license.txt"
+		rename { filename -> "LICENSE" }
 	}
 }
 
