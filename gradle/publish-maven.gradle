@@ -31,10 +31,10 @@ def customizePom(pom, gradleProject) {
 		generatedPom.project {
 			name = gradleProject.description
 			description = gradleProject.description
-			url = "https://github.com/SpringSource/spring-android"
+			url = "https://github.com/spring-projects/spring-android"
 			organization {
-				name = "SpringSource"
-				url = "http://springsource.org/spring-android"
+				name = "Spring IO"
+				url = "http://projects.spring.io/spring-android"
 			}
 			licenses {
 				license {
@@ -44,16 +44,20 @@ def customizePom(pom, gradleProject) {
 				}
 			}
 			scm {
-				url = "https://github.com/SpringSource/spring-android"
-				connection = "scm:git:git://github.com/SpringSource/spring-android"
-				developerConnection = "scm:git:git://github.com/SpringSource/spring-android"
+				url = "https://github.com/spring-projects/spring-android"
+				connection = "scm:git:git://github.com/spring-projects/spring-android"
+				developerConnection = "scm:git:git://github.com/spring-projects/spring-android"
 			}
 			developers {
 				developer {
 					id = "royclarkson"
 					name = "Roy Clarkson"
-					email = "rclarkson@vmware.com"
+					email = "rclarkson@gopivotal.com"
 				}
+			}
+			issueManagement {
+				system = "Jira"
+				url = "https://jira.springsource.org/browse/ANDROID"
 			}
 		}
 	}

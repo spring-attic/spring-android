@@ -7,11 +7,11 @@
 	<version>1.0.2.BUILD-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>spring-android-test</name>
-	<url>http://www.springsource.org</url>
+	<url>http://spring.io</url>
 	<inceptionYear>2010</inceptionYear>
 	<organization>
-		<name>SpringSource</name>
-		<url>http://www.springsource.org</url>
+		<name>Spring IO</name>
+		<url>http://spring.io</url>
 	</organization>
 
 	<modules>
