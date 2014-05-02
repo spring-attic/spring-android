@@ -202,4 +202,18 @@ public class UriTemplateTests extends TestCase {
 		assertEquals("http://localhost/query=foo@bar", uri.toString());
 	}
 
+	public void testEscapeAmpersandInRequestParameterValueForGet() {
+		UriTemplate template = new UriTemplate(
+				"http://localhost:8080/app/{dir}/{file}?param1={param1}&param2={param2}");
+		HashMap<String, String> vars = new HashMap<String, String>();
+		vars.put("dir", "tmp");
+		vars.put("file", "test.html");
+		vars.put("param1", "foo");
+		vars.put("param2", "foo&bar");
+		URI uri = template.expand(vars);
+		assertEquals(
+				"http://localhost:8080/app/tmp/test.html?param1=foo&param2=foo%26bar",
+				uri.toString());
+	}
+
 }
