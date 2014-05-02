@@ -344,7 +344,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 
 	@MediumTest
 	public void testAddConnection() {
-		Connection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("123456789", null, "987654321", 3600));
+		Connection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("123456789", null, "987654321", 3600L));
 		connectionRepository.addConnection(connection);
 		Connection<TestFacebookApi> restoredConnection = connectionRepository.getPrimaryConnection(TestFacebookApi.class);
 		assertEquals(connection, restoredConnection);
@@ -355,7 +355,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	public void testAddConnectionDuplicate() {
 		boolean success = false;
 		try {
-			Connection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("123456789", null, "987654321", 3600));
+			Connection<TestFacebookApi> connection = connectionFactory.createConnection(new AccessGrant("123456789", null, "987654321", 3600L));
 			connectionRepository.addConnection(connection);
 			connectionRepository.addConnection(connection);
 		} catch (DuplicateConnectionException e) {
@@ -548,20 +548,35 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 
 		public OAuth2Operations getOAuthOperations() {
 			return new OAuth2Operations() {
-				public String buildAuthorizeUrl(GrantType grantType, OAuth2Parameters parameters) {
+				public String buildAuthorizeUrl(GrantType grantType, OAuth2Parameters params) {
 					return null;
 				}
-
-				public String buildAuthenticateUrl(GrantType grantType, OAuth2Parameters parameters) {
+				public String buildAuthenticateUrl(GrantType grantType, OAuth2Parameters params) {
 					return null;
 				}
-
+				public String buildAuthorizeUrl(OAuth2Parameters params) {
+					return null;
+				}
+				public String buildAuthenticateUrl(OAuth2Parameters params) {
+					return null;
+				}
 				public AccessGrant exchangeForAccess(String authorizationGrant, String redirectUri, MultiValueMap<String, String> additionalParameters) {
 					return null;
+				}				
+				public AccessGrant exchangeCredentialsForAccess(String username, String password, MultiValueMap<String, String> additionalParameters) {
+					return null;
 				}
-
+				public AccessGrant refreshAccess(String refreshToken, MultiValueMap<String, String> additionalParameters) {
+					return new AccessGrant("765432109", "read", "654321098", 3600L);
+				}
 				public AccessGrant refreshAccess(String refreshToken, String scope, MultiValueMap<String, String> additionalParameters) {
-					return new AccessGrant("765432109", "read", "654321098", 3600);
+					return new AccessGrant("765432109", "read", "654321098", 3600L);
+				}
+				public AccessGrant authenticateClient() {
+					return null;
+				}
+				public AccessGrant authenticateClient(String scope) {
+					return null;
 				}
 			};
 		}
@@ -603,7 +618,7 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 			values.setImageUrl(profilePictureUrl);
 		}
 
-		public UserProfile fetchUserProfile(TestFacebookApi serviceApi) {
+		public UserProfile fetchUserProfile(TestFacebookApi api) {
 			return new UserProfileBuilder().setName(name).setEmail("keith@interface21.com").setUsername("Keith.Donald").build();
 		}
 
