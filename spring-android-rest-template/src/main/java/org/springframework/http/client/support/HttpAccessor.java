@@ -23,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.OkHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Assert;
 
@@ -30,12 +31,11 @@ import android.os.Build;
 import android.util.Log;
 
 /**
- * Base class for {@link org.springframework.web.client.RestTemplate} and other HTTP accessing gateway helpers, defining
- * common properties such as the {@link ClientHttpRequestFactory} to operate on.
- * 
+ * Base class for {@link org.springframework.web.client.RestTemplate} and other HTTP accessing
+ * gateway helpers, defining common properties such as the {@link ClientHttpRequestFactory} to
+ * operate on.
  * <p>
  * Not intended to be used directly. See {@link org.springframework.web.client.RestTemplate}.
- * 
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
@@ -43,49 +43,64 @@ import android.util.Log;
  */
 public abstract class HttpAccessor {
 
-	private static final String TAG = HttpAccessor.class.getSimpleName();
+    private static final String TAG = HttpAccessor.class.getSimpleName();
 
-	private ClientHttpRequestFactory requestFactory;
+    private ClientHttpRequestFactory requestFactory;
 
+    protected HttpAccessor() {
+        if (isOkHttpPresent()) {
+            this.requestFactory = new OkHttpRequestFactory();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            this.requestFactory = new SimpleClientHttpRequestFactory();
+        } else {
+            this.requestFactory = new HttpComponentsClientHttpRequestFactory();
+        }
+    }
 
-	protected HttpAccessor() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-			this.requestFactory = new SimpleClientHttpRequestFactory();
-		} else {
-			this.requestFactory = new HttpComponentsClientHttpRequestFactory();
-		}
-	}
+    private boolean isOkHttpPresent() {
+        try {
+            Class.forName("com.squareup.okhttp.OkHttpClient");
+            return true;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    /**
+     * Set the request factory that this accessor uses for obtaining {@link ClientHttpRequest
+     * HttpRequests}.
+     */
+    public void setRequestFactory(ClientHttpRequestFactory requestFactory) {
+        Assert.notNull(requestFactory, "'requestFactory' must not be null");
+        this.requestFactory = requestFactory;
+    }
 
-	/**
-	 * Set the request factory that this accessor uses for obtaining {@link ClientHttpRequest HttpRequests}.
-	 */
-	public void setRequestFactory(ClientHttpRequestFactory requestFactory) {
-		Assert.notNull(requestFactory, "'requestFactory' must not be null");
-		this.requestFactory = requestFactory;
-	}
+    /**
+     * Return the request factory that this accessor uses for obtaining {@link ClientHttpRequest
+     * HttpRequests}.
+     */
+    public ClientHttpRequestFactory getRequestFactory() {
+        return this.requestFactory;
+    }
 
-	/**
-	 * Return the request factory that this accessor uses for obtaining {@link ClientHttpRequest HttpRequests}.
-	 */
-	public ClientHttpRequestFactory getRequestFactory() {
-		return this.requestFactory;
-	}
-
-
-	/**
-	 * Create a new {@link ClientHttpRequest} via this template's {@link ClientHttpRequestFactory}.
-	 * @param url the URL to connect to
-	 * @param method the HTTP method to exectute (GET, POST, etc.)
-	 * @return the created request
-	 * @throws IOException in case of I/O errors
-	 */
-	protected ClientHttpRequest createRequest(URI url, HttpMethod method) throws IOException {
-		ClientHttpRequest request = getRequestFactory().createRequest(url, method);
-		if (Log.isLoggable(TAG, Log.DEBUG)) {
-			Log.d(TAG, "Created " + method.name() + " request for \"" + url + "\"");
-		}
-		return request;
-	}
+    /**
+     * Create a new {@link ClientHttpRequest} via this template's {@link ClientHttpRequestFactory}.
+     * @param url
+     *            the URL to connect to
+     * @param method
+     *            the HTTP method to exectute (GET, POST, etc.)
+     * @return the created request
+     * @throws IOException
+     *             in case of I/O errors
+     */
+    protected ClientHttpRequest createRequest(URI url, HttpMethod method) throws IOException {
+        ClientHttpRequest request = getRequestFactory().createRequest(url, method);
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "Created " + method.name() + " request for \"" + url + "\"");
+        }
+        return request;
+    }
 
 }
