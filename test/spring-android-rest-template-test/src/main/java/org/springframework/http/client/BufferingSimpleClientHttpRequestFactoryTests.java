@@ -54,8 +54,8 @@ public class BufferingSimpleClientHttpRequestFactoryTests extends BufferingAbstr
 			byte[] compressedBody = byteArrayOutputStream.toByteArray();
 			long contentLength = response.getHeaders().getContentLength();
 			// Gingerbread and newer seamlessly request and handle gzip responses from the server 
-			if (Build.VERSION.SDK_INT == 17) {
-				// content-length is not being set in Jelly Bean 4.2!!
+			if (Build.VERSION.SDK_INT >= 17) {
+				// content-length is not being set in Jelly Bean 4.2, 4.3, and KitKat 4.4!!!
 				assertEquals(-1, contentLength);
 			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 				assertEquals("Invalid content-length", compressedBody.length, contentLength);
