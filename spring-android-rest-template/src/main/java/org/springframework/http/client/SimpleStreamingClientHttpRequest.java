@@ -49,15 +49,9 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 
 	private OutputStream body;
 
-
 	SimpleStreamingClientHttpRequest(HttpURLConnection connection, int chunkSize) {
 		this.connection = connection;
 		this.chunkSize = chunkSize;
-
-		// Bugs with reusing connections in Android versions older than Froyo (2.2)
-		if (olderThanFroyo) {
-			System.setProperty("http.keepAlive", "false");
-		}
 	}
 
 	public HttpMethod getMethod() {

@@ -26,6 +26,8 @@ import java.net.URLConnection;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
 
+import android.os.Build;
+
 /**
  * {@link ClientHttpRequestFactory} implementation that uses standard J2SE facilities.
  * 
@@ -110,7 +112,6 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 		this.readTimeout = readTimeout;
 	}
 
-
 	public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
 		HttpURLConnection connection = openConnection(uri.toURL(), this.proxy);
 		prepareConnection(connection, httpMethod.name());
@@ -133,6 +134,10 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 	 * @throws IOException in case of I/O errors
 	 */
 	protected HttpURLConnection openConnection(URL url, Proxy proxy) throws IOException {
+		// Bugs with reusing connections in Android 2.2 (Froyo) and older
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO) {
+			System.setProperty("http.keepAlive", "false");
+		}
 		URLConnection urlConnection = (proxy != null ? url.openConnection(proxy) : url.openConnection());
 		Assert.isInstanceOf(HttpURLConnection.class, urlConnection);
 		return (HttpURLConnection) urlConnection;
