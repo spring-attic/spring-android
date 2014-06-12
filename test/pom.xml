@@ -21,16 +21,14 @@
 	</modules>
 
 	<properties>
-		<android-platform>17</android-platform>
-		<android-maven-plugin-version>3.5.3</android-maven-plugin-version>
+		<android-platform>19</android-platform>
+		<android-maven-plugin-version>3.9.0-rc.2</android-maven-plugin-version>
 		<maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
 		<java-version>1.6</java-version>
 		<com.google.android-version>4.1.1.4</com.google.android-version>
-		<!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 
-			2.2.1, 2.3.1, 2.3.3, 4.0.1.2, 4.1.1.4 -->
 		<org.springframework.android-version>1.0.2.BUILD-SNAPSHOT</org.springframework.android-version>
 		<org.easymock-version>2.5.2</org.easymock-version>
-		<maven-surefire-plugin-version>2.14.1</maven-surefire-plugin-version>
+		<maven-surefire-plugin-version>2.17</maven-surefire-plugin-version>
 	</properties>
 
 	<dependencies>
@@ -74,11 +72,9 @@
 					<sdk>
 						<platform>${android-platform}</platform>
 					</sdk>
-					<!-- <emulatorAvd>Android-4_2_2</emulatorAvd> -->
-					<!-- <emulatorOptions>-no-window</emulatorOptions> -->
-					<!-- <emulatorWait>36000</emulatorWait> -->
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
+					<deviceThreads>4</deviceThreads>
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
