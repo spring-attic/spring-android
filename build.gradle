@@ -62,6 +62,10 @@ configure(allprojects) {
 		maven { url "https://android-rome-feed-reader.googlecode.com/svn/maven2/releases" }
 	}
 
+	ext.javadocLinks = [
+		"http://docs.jboss.org/jbossas/javadoc/4.0.5/connector/",
+	] as String[]
+
 	// servlet-api (2.5) and tomcat-servlet-api (3.0) classpath entries should not be
 	// exported to dependent projects in Eclipse to avoid false compilation errors due
 	// to changing APIs across these versions
@@ -69,10 +73,6 @@ configure(allprojects) {
 		classpath.entries.findAll { entry -> entry.path.contains("servlet-api") }*.exported = false
 	}
 }
-
-ext.javadocLinks = [
-	"http://docs.jboss.org/jbossas/javadoc/4.0.5/connector",
-] as String[]
 
 configure(subprojects) { subproject ->
 	apply from: "${gradleScriptDir}/publish-maven.gradle"
@@ -97,6 +97,10 @@ configure(subprojects) { subproject ->
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = project.name
+		options.links(project.ext.javadocLinks)
+		if (JavaVersion.current().isJava8Compatible()) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
 	}
 
 	task sourcesJar(type: Jar, dependsOn:classes) {
@@ -195,28 +199,25 @@ configure(rootProject) {
 		group = "Documentation"
 		description = "Generates aggregated Javadoc API documentation."
 		title = "${rootProject.description} ${version} API"
-
-		dependsOn {
-			subprojects.collect {
-				it.tasks.getByName("jar")
-			}
-		}
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
 		options.author = true
 		options.header = rootProject.description
 		options.overview = "src/api/overview.html"
 		options.links(project.ext.javadocLinks)
+		if (JavaVersion.current().isJava8Compatible()) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
 
 		source subprojects.collect { project ->
 			project.sourceSets.main.allJava
 		}
 
+		classpath = files(subprojects.collect { project ->
+			project.sourceSets.main.compileClasspath
+		})
+
 		maxMemory = "1024m"
 		destinationDir = new File(buildDir, "api")
-
-		doFirst {
-			classpath = files(subprojects.collect { it.sourceSets.main.compileClasspath })
-		}
 	}
 
 	task docsZip(type: Zip) {
