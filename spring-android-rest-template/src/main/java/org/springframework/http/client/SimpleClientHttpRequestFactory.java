@@ -76,13 +76,15 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 	}
 
 	/**
-	 * Sets the number of bytes to write in each chunk when not buffering request bodies locally.
+	 * Sets the number of bytes to write in each chunk when not buffering request bodies locally. The default value
+	 * is 0, which indicates to Android to use the system default chunk size.
 	 * <p>
 	 * Note that this parameter is only used when {@link #setBufferRequestBody(boolean) bufferRequestBody} is set to
 	 * {@code false}, and the {@link org.springframework.http.HttpHeaders#getContentLength() Content-Length} is not
 	 * known in advance.
 	 * 
 	 * @see #setBufferRequestBody(boolean)
+	 * @see {@link HttpURLConnection#setChunkedStreamingMode(int)}
 	 */
 	public void setChunkSize(int chunkSize) {
 		this.chunkSize = chunkSize;
