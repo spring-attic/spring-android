@@ -10,6 +10,7 @@ build/
 target/
 bin/
 gen/
+out/
 
 # Eclipse files
 
@@ -19,6 +20,7 @@ gen/
 
 # IDEA files
 
+*.idea/
 *.iml
 *.ipr
 *.iws
