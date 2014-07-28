@@ -4,14 +4,16 @@
 
 	<groupId>org.springframework.android</groupId>
 	<artifactId>spring-android-test</artifactId>
-	<version>1.0.2.BUILD-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>pom</packaging>
 	<name>spring-android-test</name>
-	<url>http://spring.io</url>
+	<description>Spring for Android Tests</description>
+	<url>https://github.com/spring-project/spring-android</url>
 	<inceptionYear>2010</inceptionYear>
+
 	<organization>
-		<name>Spring IO</name>
-		<url>http://spring.io</url>
+		<name>Pivotal Software, Inc.</name>
+		<url>http://www.spring.io</url>
 	</organization>
 
 	<modules>
@@ -26,7 +28,7 @@
 		<maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
 		<java-version>1.6</java-version>
 		<com.google.android-version>4.1.1.4</com.google.android-version>
-		<org.springframework.android-version>1.0.2.BUILD-SNAPSHOT</org.springframework.android-version>
+		<org.springframework.android-version>2.0.0.BUILD-SNAPSHOT</org.springframework.android-version>
 		<org.easymock-version>2.5.2</org.easymock-version>
 		<maven-surefire-plugin-version>2.17</maven-surefire-plugin-version>
 	</properties>
