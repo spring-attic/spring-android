@@ -527,11 +527,11 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	/**
 	 * Request callback implementation that prepares the request's accept headers.
 	 */
-	private class AcceptHeaderRequestCallback implements RequestCallback {
+    public class AcceptHeaderRequestCallback implements RequestCallback {
 
 		private final Class<?> responseType;
 
-		private AcceptHeaderRequestCallback(Class<?> responseType) {
+        public AcceptHeaderRequestCallback(Class<?> responseType) {
 			this.responseType = responseType;
 		}
 
@@ -565,16 +565,16 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	/**
 	 * Request callback implementation that writes the given object to the request stream.
 	 */
-	private class HttpEntityRequestCallback extends AcceptHeaderRequestCallback {
+    public class HttpEntityRequestCallback extends AcceptHeaderRequestCallback {
 
 		private final HttpEntity<Object> requestEntity;
 
-		private HttpEntityRequestCallback(Object requestBody) {
+        public HttpEntityRequestCallback(Object requestBody) {
 			this(requestBody, null);
 		}
 
 		@SuppressWarnings("unchecked")
-		private HttpEntityRequestCallback(Object requestBody, Class<?> responseType) {
+        public HttpEntityRequestCallback(Object requestBody, Class<?> responseType) {
 			super(responseType);
 			if (requestBody instanceof HttpEntity) {
 				this.requestEntity = (HttpEntity<Object>) requestBody;
@@ -722,7 +722,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	/**
 	 * HTTP-specific subclass of UriTemplate, overriding the encode method.
 	 */
-	private static class HttpUrlTemplate extends UriTemplate {
+	public static class HttpUrlTemplate extends UriTemplate {
 		
 		private static final long serialVersionUID = 1L;
 
