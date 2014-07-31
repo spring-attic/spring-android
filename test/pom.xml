@@ -29,7 +29,8 @@
 		<java-version>1.6</java-version>
 		<com.google.android-version>4.1.1.4</com.google.android-version>
 		<org.springframework.android-version>2.0.0.BUILD-SNAPSHOT</org.springframework.android-version>
-		<org.easymock-version>2.5.2</org.easymock-version>
+		<org.easymock-version>3.2</org.easymock-version>
+		<com.google.dexmaker-version>1.1</com.google.dexmaker-version>
 		<maven-surefire-plugin-version>2.17</maven-surefire-plugin-version>
 	</properties>
 
@@ -46,12 +47,21 @@
 			<version>${com.google.android-version}</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- easymock 3.x does NOT work on Android -->
 		<dependency>
 			<groupId>org.easymock</groupId>
 			<artifactId>easymock</artifactId>
 			<version>${org.easymock-version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>cglib</groupId>
+					<artifactId>cglib-nodep</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.dexmaker</groupId>
+			<artifactId>dexmaker</artifactId>
+			<version>${com.google.dexmaker-version}</version>
 		</dependency>
 	</dependencies>
 
