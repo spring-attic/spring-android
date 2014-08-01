@@ -64,6 +64,9 @@ configure(allprojects) {
 
 	ext.javadocLinks = [
 		"http://docs.jboss.org/jbossas/javadoc/4.0.5/connector/",
+		"http://jackson.codehaus.org/1.9.4/javadoc/",
+		"http://fasterxml.github.com/jackson-core/javadoc/2.3.0/",
+		"http://fasterxml.github.com/jackson-databind/javadoc/2.3.0/",
 	] as String[]
 
 	// servlet-api (2.5) and tomcat-servlet-api (3.0) classpath entries should not be
