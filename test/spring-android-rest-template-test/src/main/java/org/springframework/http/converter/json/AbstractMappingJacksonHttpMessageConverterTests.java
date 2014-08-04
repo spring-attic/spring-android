@@ -26,6 +26,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.springframework.android.test.Assert;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
 import org.springframework.http.MockHttpOutputMessage;
@@ -39,10 +40,17 @@ import android.test.suitebuilder.annotation.SmallTest;
  * @author Rossen Stoyanchev
  * @author Roy Clarkson
  */
-public abstract class AbstractMappingJacksonHttpMessageConverterTests extends TestCase {
-
-	protected HttpMessageConverter<Object> converter;
+public abstract class AbstractMappingJacksonHttpMessageConverterTests<T extends HttpMessageConverter<Object>>
+		extends TestCase {
 	
+	protected static final String NEWLINE_SYSTEM_PROPERTY = System.getProperty("line.separator");
+
+	protected T converter;
+	
+	protected T getConverter() {
+		return this.converter;
+	}
+
 	protected abstract void prepareReadGenericsTest();
 
 	@Override
@@ -60,6 +68,12 @@ public abstract class AbstractMappingJacksonHttpMessageConverterTests extends Te
 	public void testCanWrite() {
 		assertTrue(converter.canWrite(MyBean.class, new MediaType("application", "json")));
 		assertTrue(converter.canWrite(Map.class, new MediaType("application", "json")));
+	}
+
+	@SmallTest
+	public void testCanReadAndWriteMicroformats() {
+		assertTrue(converter.canRead(MyBean.class, new MediaType("application", "vnd.test-micro-type+json")));
+		assertTrue(converter.canWrite(MyBean.class, new MediaType("application", "vnd.test-micro-type+json")));
 	}
 
 	@SmallTest
@@ -87,6 +101,28 @@ public abstract class AbstractMappingJacksonHttpMessageConverterTests extends Te
 		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
 
 		List<MyBean> results = (List<MyBean>) converter.read(List.class, inputMessage);
+		assertEquals(1, results.size());
+		MyBean result = results.get(0);
+		assertEquals("Foo", result.getString());
+		assertEquals(42, result.getNumber());
+		assertEquals(42F, result.getFraction(), 0F);
+		Assert.assertArrayEquals(new String[]{"Foo", "Bar"}, result.getArray());
+		assertTrue(result.isBool());
+		Assert.assertArrayEquals(new byte[]{0x1, 0x2}, result.getBytes());
+	}
+
+	@SmallTest
+	@SuppressWarnings("unchecked")
+	public void testReadParameterizedType() throws IOException {
+		ParameterizedTypeReference<List<MyBean>> beansList = new ParameterizedTypeReference<List<MyBean>>() {};
+
+		String body =
+				"[{\"bytes\":\"AQI=\",\"array\":[\"Foo\",\"Bar\"],\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}]";
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
+		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
+
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		List<MyBean> results = (List<MyBean>) converter.read(beansList.getType(), null, inputMessage);
 		assertEquals(1, results.size());
 		MyBean result = results.get(0);
 		assertEquals("Foo", result.getString());

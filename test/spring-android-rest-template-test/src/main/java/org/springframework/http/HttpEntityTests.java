@@ -21,23 +21,19 @@ import junit.framework.TestCase;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import android.test.suitebuilder.annotation.SmallTest;
-
 /**
  * @author Arjen Poutsma
  * @author Roy Clarkson
  */
 public class HttpEntityTests extends TestCase {
 
-	@SmallTest
 	public void testNoHeaders() {
 		String body = "foo";
 		HttpEntity<String> entity = new HttpEntity<String>(body);
 		assertSame(body, entity.getBody());
 		assertTrue(entity.getHeaders().isEmpty());
 	}
-	
-	@SmallTest
+
 	public void testHttpHeaders() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.TEXT_PLAIN);
@@ -48,7 +44,6 @@ public class HttpEntityTests extends TestCase {
 		assertEquals("text/plain", entity.getHeaders().getFirst("Content-Type"));
 	}
 
-	@SmallTest
 	public void testMultiValueMap() {
 		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
 		map.set("Content-Type", "text/plain");
@@ -58,8 +53,29 @@ public class HttpEntityTests extends TestCase {
 		assertEquals(MediaType.TEXT_PLAIN, entity.getHeaders().getContentType());
 		assertEquals("text/plain", entity.getHeaders().getFirst("Content-Type"));
 	}
-	
-	@SmallTest
+
+	public void testEquals() {
+		MultiValueMap<String, String> map1 = new LinkedMultiValueMap<String, String>();
+		map1.set("Content-Type", "text/plain");
+
+		MultiValueMap<String, String> map2 = new LinkedMultiValueMap<String, String>();
+		map2.set("Content-Type", "application/json");
+
+		assertTrue(new HttpEntity<Object>().equals(new HttpEntity<Object>()));
+		assertFalse(new HttpEntity<Object>(map1).equals(new HttpEntity<Object>()));
+		assertFalse(new HttpEntity<Object>().equals(new HttpEntity<Object>(map2)));
+
+		assertTrue(new HttpEntity<Object>(map1).equals(new HttpEntity<Object>(map1)));
+		assertFalse(new HttpEntity<Object>(map1).equals(new HttpEntity<Object>(map2)));
+
+		assertTrue(new HttpEntity<String>(null, null).equals(new HttpEntity<String>(null, null)));
+		assertFalse(new HttpEntity<String>("foo", null).equals(new HttpEntity<String>(null, null)));
+		assertFalse(new HttpEntity<String>(null, null).equals(new HttpEntity<String>("bar", null)));
+
+		assertTrue(new HttpEntity<String>("foo", map1).equals(new HttpEntity<String>("foo", map1)));
+		assertFalse(new HttpEntity<String>("foo", map1).equals(new HttpEntity<String>("bar", map1)));
+	}
+
 	public void testResponseEntity() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.TEXT_PLAIN);

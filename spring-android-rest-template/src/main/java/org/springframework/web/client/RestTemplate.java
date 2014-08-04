@@ -17,9 +17,8 @@
 package org.springframework.web.client;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +26,7 @@ import java.util.Set;
 
 import javax.xml.transform.Source;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -38,6 +38,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.support.InterceptingHttpAccessor;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.GenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -50,7 +51,6 @@ import org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.util.UriTemplate;
-import org.springframework.web.util.UriUtils;
 
 import android.util.Log;
 
@@ -429,21 +429,46 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		return execute(url, method, requestCallback, responseExtractor);
 	}
 
+	public <T> ResponseEntity<T> exchange(String url, HttpMethod method, HttpEntity<?> requestEntity,
+			ParameterizedTypeReference<T> responseType, Object... uriVariables) throws RestClientException {
+
+		Type type = responseType.getType();
+		HttpEntityRequestCallback requestCallback = new HttpEntityRequestCallback(requestEntity, type);
+		ResponseEntityResponseExtractor<T> responseExtractor = new ResponseEntityResponseExtractor<T>(type);
+		return execute(url, method, requestCallback, responseExtractor, uriVariables);
+	}
+
+	public <T> ResponseEntity<T> exchange(String url, HttpMethod method, HttpEntity<?> requestEntity,
+			ParameterizedTypeReference<T> responseType, Map<String, ?> uriVariables) throws RestClientException {
+
+		Type type = responseType.getType();
+		HttpEntityRequestCallback requestCallback = new HttpEntityRequestCallback(requestEntity, type);
+		ResponseEntityResponseExtractor<T> responseExtractor = new ResponseEntityResponseExtractor<T>(type);
+		return execute(url, method, requestCallback, responseExtractor, uriVariables);
+	}
+
+	public <T> ResponseEntity<T> exchange(URI url, HttpMethod method, HttpEntity<?> requestEntity,
+			ParameterizedTypeReference<T> responseType) throws RestClientException {
+
+		Type type = responseType.getType();
+		HttpEntityRequestCallback requestCallback = new HttpEntityRequestCallback(requestEntity, type);
+		ResponseEntityResponseExtractor<T> responseExtractor = new ResponseEntityResponseExtractor<T>(type);
+		return execute(url, method, requestCallback, responseExtractor);
+	}
+
 	// general execution
 
 	public <T> T execute(String url, HttpMethod method, RequestCallback requestCallback,
 			ResponseExtractor<T> responseExtractor, Object... urlVariables) throws RestClientException {
 
-		UriTemplate uriTemplate = new HttpUrlTemplate(url);
-		URI expanded = uriTemplate.expand(urlVariables);
+		URI expanded = new UriTemplate(url).expand(urlVariables);
 		return doExecute(expanded, method, requestCallback, responseExtractor);
 	}
 
 	public <T> T execute(String url, HttpMethod method, RequestCallback requestCallback,
 			ResponseExtractor<T> responseExtractor, Map<String, ?> urlVariables) throws RestClientException {
 
-		UriTemplate uriTemplate = new HttpUrlTemplate(url);
-		URI expanded = uriTemplate.expand(urlVariables);
+		URI expanded = new UriTemplate(url).expand(urlVariables);
 		return doExecute(expanded, method, requestCallback, responseExtractor);
 	}
 
@@ -454,12 +479,13 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	}
 
 	/**
-	 * Execute the given method on the provided URI. The {@link ClientHttpRequest} is processed using the {@link
-	 * RequestCallback}; the response with the {@link ResponseExtractor}.
+	 * Execute the given method on the provided URI.
+	 * <p>The {@link ClientHttpRequest} is processed using the {@link RequestCallback};
+	 * the response with the {@link ResponseExtractor}.
 	 * @param url the fully-expanded URL to connect to
 	 * @param method the HTTP method to execute (GET, POST, etc.)
-	 * @param requestCallback object that prepares the request (can be <code>null</code>)
-	 * @param responseExtractor object that extracts the return value from the response (can be <code>null</code>)
+	 * @param requestCallback object that prepares the request (can be {@code null})
+	 * @param responseExtractor object that extracts the return value from the response (can be {@code null})
 	 * @return an arbitrary object, as returned by the {@link ResponseExtractor}
 	 */
 	protected <T> T doExecute(URI url, HttpMethod method, RequestCallback requestCallback,
@@ -488,7 +514,8 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			}
 		}
 		catch (IOException ex) {
-			throw new ResourceAccessException("I/O error: " + ex.getMessage(), ex);
+			throw new ResourceAccessException("I/O error on " + method.name() +
+					" request for \"" + url + "\": " + ex.getMessage(), ex);
 		}
 		finally {
 			if (response != null) {
@@ -529,55 +556,75 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	 */
 	private class AcceptHeaderRequestCallback implements RequestCallback {
 
-		private final Class<?> responseType;
+		private final Type responseType;
 
-		private AcceptHeaderRequestCallback(Class<?> responseType) {
+		private AcceptHeaderRequestCallback(Type responseType) {
 			this.responseType = responseType;
 		}
 
 		public void doWithRequest(ClientHttpRequest request) throws IOException {
 			if (responseType != null) {
+				Class<?> responseClass = null;
+				if (responseType instanceof Class) {
+					responseClass = (Class<?>) responseType;
+				}
+
 				List<MediaType> allSupportedMediaTypes = new ArrayList<MediaType>();
-				for (HttpMessageConverter<?> messageConverter : getMessageConverters()) {
-					if (messageConverter.canRead(responseType, null)) {
-						List<MediaType> supportedMediaTypes = messageConverter.getSupportedMediaTypes();
-						for (MediaType supportedMediaType : supportedMediaTypes) {
-							if (supportedMediaType.getCharSet() != null) {
-								supportedMediaType =
-										new MediaType(supportedMediaType.getType(), supportedMediaType.getSubtype());
-							}
-							allSupportedMediaTypes.add(supportedMediaType);
+				for (HttpMessageConverter<?> converter : getMessageConverters()) {
+					if (responseClass != null) {
+						if (converter.canRead(responseClass, null)) {
+							allSupportedMediaTypes.addAll(getSupportedMediaTypes(converter));
 						}
 					}
+					else if (converter instanceof GenericHttpMessageConverter) {
+
+						GenericHttpMessageConverter<?> genericConverter = (GenericHttpMessageConverter<?>) converter;
+						if (genericConverter.canRead(responseType, null, null)) {
+							allSupportedMediaTypes.addAll(getSupportedMediaTypes(converter));
+						}
+					}
+
 				}
 				if (!allSupportedMediaTypes.isEmpty()) {
 					MediaType.sortBySpecificity(allSupportedMediaTypes);
 					if (Log.isLoggable(TAG, Log.DEBUG)) {
-						Log.d(TAG, "Setting request Accept header to " + allSupportedMediaTypes);
+						Log.d(TAG, "Setting request Accept header to " +
+								allSupportedMediaTypes);
 					}
 					request.getHeaders().setAccept(allSupportedMediaTypes);
 				}
 			}
 		}
-	}
 
+		private List<MediaType> getSupportedMediaTypes(HttpMessageConverter<?> messageConverter) {
+			List<MediaType> supportedMediaTypes = messageConverter.getSupportedMediaTypes();
+			List<MediaType> result = new ArrayList<MediaType>(supportedMediaTypes.size());
+			for (MediaType supportedMediaType : supportedMediaTypes) {
+				if (supportedMediaType.getCharSet() != null) {
+					supportedMediaType =
+							new MediaType(supportedMediaType.getType(), supportedMediaType.getSubtype());
+				}
+				result.add(supportedMediaType);
+			}
+			return result;
+		}
+	}
 
 	/**
 	 * Request callback implementation that writes the given object to the request stream.
 	 */
 	private class HttpEntityRequestCallback extends AcceptHeaderRequestCallback {
 
-		private final HttpEntity<Object> requestEntity;
+		private final HttpEntity<?> requestEntity;
 
 		private HttpEntityRequestCallback(Object requestBody) {
 			this(requestBody, null);
 		}
 
-		@SuppressWarnings("unchecked")
-		private HttpEntityRequestCallback(Object requestBody, Class<?> responseType) {
+		private HttpEntityRequestCallback(Object requestBody, Type responseType) {
 			super(responseType);
 			if (requestBody instanceof HttpEntity) {
-				this.requestEntity = (HttpEntity<Object>) requestBody;
+				this.requestEntity = (HttpEntity<?>) requestBody;
 			}
 			else if (requestBody != null) {
 				this.requestEntity = new HttpEntity<Object>(requestBody);
@@ -588,7 +635,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		}
 
 		@Override
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@SuppressWarnings("unchecked")
 		public void doWithRequest(ClientHttpRequest httpRequest) throws IOException {
 			super.doWithRequest(httpRequest);
 			if (!requestEntity.hasBody()) {
@@ -606,14 +653,14 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 				Class<?> requestType = requestBody.getClass();
 				HttpHeaders requestHeaders = requestEntity.getHeaders();
 				MediaType requestContentType = requestHeaders.getContentType();
-				for (HttpMessageConverter messageConverter : getMessageConverters()) {
+				for (HttpMessageConverter<?> messageConverter : getMessageConverters()) {
 					if (messageConverter.canWrite(requestType, requestContentType)) {
 						if (!requestHeaders.isEmpty()) {
 							httpRequest.getHeaders().putAll(requestHeaders);
 						}
 						if (Log.isLoggable(TAG, Log.DEBUG)) {
 							if (requestContentType != null) {
-								Log.d(TAG, "Writing [" + requestBody + "] as \"" + requestContentType + 
+								Log.d(TAG, "Writing [" + requestBody + "] as \"" + requestContentType +
 										"\" using [" + messageConverter + "]");
 							}
 							else {
@@ -621,7 +668,8 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 							}
 
 						}
-						messageConverter.write(requestBody, requestContentType, httpRequest);
+						((HttpMessageConverter<Object>) messageConverter).write(
+								requestBody, requestContentType, httpRequest);
 						return;
 					}
 				}
@@ -642,22 +690,33 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 
 		private final HttpMessageConverterExtractor<T> delegate;
 
-		public ResponseEntityResponseExtractor(Class<T> responseType) {
+		public ResponseEntityResponseExtractor(Type responseType) {
 			if (responseType != null && !Void.class.equals(responseType)) {
 				this.delegate = new HttpMessageConverterExtractor<T>(responseType, getMessageConverters());
-			} else {
+			}
+			else {
 				this.delegate = null;
 			}
 		}
 
 		public ResponseEntity<T> extractData(ClientHttpResponse response) throws IOException {
-			if (delegate != null) {
-				T body = delegate.extractData(response);
+			if (this.delegate != null) {
+				T body = this.delegate.extractData(response);
 				return new ResponseEntity<T>(body, response.getHeaders(), response.getStatusCode());
 			}
 			else {
 				return new ResponseEntity<T>(response.getHeaders(), response.getStatusCode());
 			}
+		}
+	}
+
+	/**
+	 * Response extractor that extracts the response {@link HttpHeaders}.
+	 */
+	private static class HeadersExtractor implements ResponseExtractor<HttpHeaders> {
+
+		public HttpHeaders extractData(ClientHttpResponse response) throws IOException {
+			return response.getHeaders();
 		}
 	}
 
@@ -705,44 +764,6 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			
 			if (romePresent) {
 				messageConverters.add(new SyndFeedHttpMessageConverter());
-			}
-		}
-	}
-
-	/**
-	 * Response extractor that extracts the response {@link HttpHeaders}.
-	 */
-	private static class HeadersExtractor implements ResponseExtractor<HttpHeaders> {
-
-		public HttpHeaders extractData(ClientHttpResponse response) throws IOException {
-			return response.getHeaders();
-		}
-	}
-
-	/**
-	 * HTTP-specific subclass of UriTemplate, overriding the encode method.
-	 */
-	private static class HttpUrlTemplate extends UriTemplate {
-		
-		private static final long serialVersionUID = 1L;
-
-		public HttpUrlTemplate(String uriTemplate) {
-			super(uriTemplate);
-		}
-
-		@Override
-		@SuppressWarnings("deprecation")
-		protected URI encodeUri(String uri) {
-			try {
-				String encoded = UriUtils.encodeHttpUrl(uri, "UTF-8");
-				return new URI(encoded);
-			}
-			catch (UnsupportedEncodingException ex) {
-				// should not happen, UTF-8 is always supported
-				throw new IllegalStateException(ex);
-			}
-			catch (URISyntaxException ex) {
-				throw new IllegalArgumentException("Could not create HTTP URL from [" + uri + "]: " + ex, ex);
 			}
 		}
 	}
