@@ -196,8 +196,8 @@ Follow [@SpringCentral] as well as [@SpringAndroid] on Twitter. In-depth article
 [Spring for Android] is released under version 2.0 of the [Apache License].
 
 
-[Spring for Android]: http://www.springsource.org/spring-android
-[Spring Framework]: http://www.springsource.org/spring-framework
+[Spring for Android]: http://www.spring.io/projects/spring-android
+[Spring Framework]: http://www.spring.io/projects/spring-framework
 [Android Build System]: http://tools.android.com/tech-docs/new-build-system/user-guide
 [Android]: http://developer.android.com
 [Gradle]: http://www.gradle.org
@@ -218,7 +218,7 @@ Follow [@SpringCentral] as well as [@SpringAndroid] on Twitter. In-depth article
 [GitHub for Windows]: http://windows.github.com
 [GitHub for Mac]: http://mac.github.com
 [GitHub issues]: https://github.com/spring-projects/spring-android/issues?direction=desc&sort=created&state=open
-[the lifecycle of an issue]: https://github.com/springsource/spring-framework/wiki/The-Lifecycle-of-an-Issue
+[the lifecycle of an issue]: https://github.com/spring-projects/spring-framework/wiki/The-Lifecycle-of-an-Issue
 [sts]: http://www.spring.io/sts
 [Pull requests]: http://help.github.com/send-pull-requests
 [contributor guidelines]: CONTRIBUTING.md
