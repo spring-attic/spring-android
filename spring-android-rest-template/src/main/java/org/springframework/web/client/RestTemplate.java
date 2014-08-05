@@ -739,6 +739,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		private static final boolean romePresent =
 				ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed", RestTemplate.class.getClassLoader());
 		
+		@SuppressWarnings("deprecation")
 		public static void init(List<HttpMessageConverter<?>> messageConverters) {
 			messageConverters.add(new ByteArrayHttpMessageConverter());
 			messageConverters.add(new StringHttpMessageConverter());

@@ -48,7 +48,9 @@ import org.springframework.util.Assert;
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
+ * @deprecated In favor of {@link MappingJackson2HttpMessageConverter}
  */
+@Deprecated
 public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConverter<Object>
 		implements GenericHttpMessageConverter<Object> {
 
