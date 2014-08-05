@@ -405,7 +405,7 @@ public interface RestOperations {
 	 * @param responseType the type of the return value
 	 * @param uriVariables the variables to expand in the template
 	 * @return the response as entity
-	 * @since 1.1
+	 * @since 2.0
 	 */
 	<T> ResponseEntity<T> exchange(String url,HttpMethod method, HttpEntity<?> requestEntity,
 			ParameterizedTypeReference<T> responseType, Object... uriVariables) throws RestClientException;
@@ -426,7 +426,7 @@ public interface RestOperations {
 	 * @param responseType the type of the return value
 	 * @param uriVariables the variables to expand in the template
 	 * @return the response as entity
-	 * @since 1.1
+	 * @since 2.0
 	 */
 	<T> ResponseEntity<T> exchange(String url, HttpMethod method, HttpEntity<?> requestEntity,
 			ParameterizedTypeReference<T> responseType, Map<String, ?> uriVariables) throws RestClientException;
@@ -446,7 +446,7 @@ public interface RestOperations {
 	 * @param requestEntity the entity (headers and/or body) to write to the request, may be {@code null}
 	 * @param responseType the type of the return value
 	 * @return the response as entity
-	 * @since 1.1
+	 * @since 2.0
 	 */
 	<T> ResponseEntity<T> exchange(URI url, HttpMethod method, HttpEntity<?> requestEntity,
 			ParameterizedTypeReference<T> responseType) throws RestClientException;

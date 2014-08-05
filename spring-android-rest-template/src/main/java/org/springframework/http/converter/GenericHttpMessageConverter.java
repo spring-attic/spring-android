@@ -28,7 +28,7 @@ import org.springframework.http.MediaType;
  *
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
- * @since 1.1
+ * @since 2.0
  *
  * @see org.springframework.core.ParameterizedTypeReference
  */
