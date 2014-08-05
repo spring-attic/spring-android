@@ -19,7 +19,6 @@ configure(allprojects) {
 	ext.gsonVersion              = "2.2.2"
 	ext.simpleXmlVersion         = "2.6.9"
 	ext.androidRomeVersion       = "1.0.0-r2"
-	ext.commonsHttpClientVersion = "3.1"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 
 	apply plugin: "java"
@@ -167,10 +166,6 @@ project("spring-android-rest-template") {
 			transitive = false
 		}
 		compile("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion", optional)
-		compile("commons-httpclient:commons-httpclient:$commonsHttpClientVersion") { dep ->
-			optional dep
-			transitive = false
-		}
 	}
 }
 
