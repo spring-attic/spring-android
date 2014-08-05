@@ -19,11 +19,15 @@ package org.springframework.http.converter.json;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.springframework.android.test.Assert;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
 import org.springframework.http.MockHttpOutputMessage;
@@ -44,16 +48,16 @@ import com.google.gson.reflect.TypeToken;
  */
 public class GsonHttpMessageConverterTests extends TestCase {
 
-	private GsonHttpMessageConverter converter;
-	
 	private static final Charset UTF8 = Charset.forName("UTF-8");
+
+	private GsonHttpMessageConverter converter;
 
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		this.converter = new GsonHttpMessageConverter();
 	}
-	
+
 	@Override
 	public void tearDown() {
 		this.converter = null;
@@ -61,42 +65,61 @@ public class GsonHttpMessageConverterTests extends TestCase {
 
 	@SmallTest
 	public void testCanRead() {
-		assertTrue(converter.canRead(ComplexObject.class, new MediaType("application", "json")));
-		assertTrue(converter.canRead(Map.class, new MediaType("application", "json")));
+		assertTrue(this.converter.canRead(MyBean.class, new MediaType("application", "json")));
+		assertTrue(this.converter.canRead(Map.class, new MediaType("application", "json")));
 	}
 
 	@SmallTest
 	public void testCanWrite() {
-		assertTrue(converter.canWrite(ComplexObject.class, new MediaType("application", "json")));
-		assertTrue(converter.canWrite(Map.class, new MediaType("application", "json")));
+		assertTrue(this.converter.canWrite(MyBean.class, new MediaType("application", "json")));
+		assertTrue(this.converter.canWrite(Map.class, new MediaType("application", "json")));
+	}
+
+	public void testCanReadAndWriteMicroformats() {
+		assertTrue(this.converter.canRead(MyBean.class, new MediaType("application", "vnd.test-micro-type+json")));
+		assertTrue(this.converter.canWrite(MyBean.class, new MediaType("application", "vnd.test-micro-type+json")));
 	}
 
 	@SmallTest
 	public void testReadTyped() throws IOException {
-		String body = "{\"array\":[\"Foo\",\"Bar\"],\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0,\"nullstring\":null}";
-		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes(UTF8.displayName()));
+		String body = "{\"bytes\":[1,2],\"array\":[\"Foo\",\"Bar\"]," +
+				"\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}";
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
 		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
-		ComplexObject result = (ComplexObject) converter.read(ComplexObject.class, inputMessage);
+		MyBean result = (MyBean) this.converter.read(MyBean.class, inputMessage);
+
 		assertEquals("Foo", result.getString());
 		assertEquals(42, result.getNumber());
 		assertEquals(42F, result.getFraction(), 0F);
-		assertArrayEquals(new String[]{"Foo", "Bar"}, result.getArray());
+		Assert.assertArrayEquals(new String[]{"Foo", "Bar"}, result.getArray());
 		assertTrue(result.isBool());
-		assertNull(result.getNullstring());
+		Assert.assertArrayEquals(new byte[]{0x1, 0x2}, result.getBytes());
 	}
-	
+
 	@SmallTest
 	@SuppressWarnings("unchecked")
 	public void testReadUntyped() throws IOException {
-		Type type = new TypeToken<Map<String, String>>(){}.getType();
-		converter.setType(type);
-		String body = "{\"string1\":\"Foo\",\"string2\":\"Bar\"}";
-		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes(UTF8.displayName()));
+		String body = "{\"bytes\":[1,2],\"array\":[\"Foo\",\"Bar\"]," +
+				"\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}";
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
 		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
-		Map<String, String> result = (Map<String, String>) converter.read(HashMap.class, inputMessage);
-		converter.setType(null);
-		assertEquals("Foo", result.get("string1"));
-		assertEquals("Bar", result.get("string2"));
+		HashMap<String, Object> result = (HashMap<String, Object>) this.converter.read(HashMap.class, inputMessage);
+		assertEquals("Foo", result.get("string"));
+		Number n = (Number) result.get("number");
+		assertEquals(42, n.longValue());
+		n = (Number) result.get("fraction");
+		assertEquals(42D, n.doubleValue(), 0D);
+		List<String> array = new ArrayList<String>();
+		array.add("Foo");
+		array.add("Bar");
+		assertEquals(array, result.get("array"));
+		assertEquals(Boolean.TRUE, result.get("bool"));
+		byte[] bytes = new byte[2];
+		List<Number> resultBytes = (ArrayList<Number>)result.get("bytes");
+		for (int i = 0; i < 2; i++) {
+			bytes[i] = resultBytes.get(i).byteValue();
+		}
+		Assert.assertArrayEquals(new byte[]{0x1, 0x2}, bytes);
 	}
 
 	@SmallTest
@@ -105,14 +128,11 @@ public class GsonHttpMessageConverterTests extends TestCase {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(Object.class, new CustomDeserializer());
 		Gson gson = gsonBuilder.create();
-		Type type = new TypeToken<Map<String, Object>>(){}.getType();
-		GsonHttpMessageConverter converter = new GsonHttpMessageConverter(gson);
-		converter.setType(type);
+		this.converter.setGson(gson);
 		String body = "{\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0,\"nullstring\":null}";
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes(UTF8.displayName()));
 		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
-		Map<String, Object> result = (Map<String, Object>) converter.read(HashMap.class, inputMessage);
-		converter = null;
+		Map<String, Object> result = (Map<String, Object>) this.converter.read(HashMap.class, inputMessage);
 		assertEquals("Foo", result.get("string"));
 		Number n = (Number) result.get("number");
 		assertEquals(42, n.longValue());
@@ -121,73 +141,35 @@ public class GsonHttpMessageConverterTests extends TestCase {
 		assertEquals(Boolean.TRUE, result.get("bool"));
 		assertNull(result.get("nullstring"));
 	}
-	
-	@SmallTest
-	public void testWriteUntyped() throws IOException {
-		Type type = new TypeToken<Map<String, String>>(){}.getType();
-		converter.setType(type);
-		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
-		Map<String, String> body = new HashMap<String, String>();
-		body.put("string1", "Foo");
-		body.put("string2", "Bar");
-		converter.write(body, null, outputMessage);
-		converter.setType(null);
-		String result = outputMessage.getBodyAsString(UTF8);
-		assertTrue(result.contains("\"string1\":\"Foo\""));
-		assertTrue(result.contains("\"string2\":\"Bar\""));
-		assertEquals("Invalid content-type", new MediaType("application", "json", UTF8), outputMessage.getHeaders().getContentType());
-	}
 
 	@SmallTest
-	public void testWriteTyped() throws IOException {
+	public void testWrite() throws IOException {
 		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
-		ComplexObject body = new ComplexObject();
+		MyBean body = new MyBean();
 		body.setString("Foo");
 		body.setNumber(42);
 		body.setFraction(42F);
 		body.setArray(new String[]{"Foo", "Bar"});
 		body.setBool(true);
-		body.setNullstring(null);
-		converter.write(body, null, outputMessage);
+		body.setBytes(new byte[]{0x1, 0x2});
+		this.converter.write(body, null, outputMessage);
 		String result = outputMessage.getBodyAsString(UTF8);
 		assertTrue(result.contains("\"string\":\"Foo\""));
 		assertTrue(result.contains("\"number\":42"));
 		assertTrue(result.contains("fraction\":42.0"));
 		assertTrue(result.contains("\"array\":[\"Foo\",\"Bar\"]"));
 		assertTrue(result.contains("\"bool\":true"));
-		assertFalse(result.contains("\"nullstring\":null"));
-		assertEquals("Invalid content-type", new MediaType("application", "json", UTF8), outputMessage.getHeaders().getContentType());
-	}
-	
-	@SmallTest
-	public void testWriteTypedSerializeNulls() throws IOException {
-		GsonHttpMessageConverter converter = new GsonHttpMessageConverter(true);
-		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
-		ComplexObject body = new ComplexObject();
-		body.setString("Foo");
-		body.setNumber(42);
-		body.setFraction(42F);
-		body.setArray(new String[]{"Foo", "Bar"});
-		body.setBool(true);
-		body.setNullstring(null);
-		converter.write(body, null, outputMessage);
-		String result = outputMessage.getBodyAsString(UTF8);
-		assertTrue(result.contains("\"string\":\"Foo\""));
-		assertTrue(result.contains("\"number\":42"));
-		assertTrue(result.contains("fraction\":42.0"));
-		assertTrue(result.contains("\"array\":[\"Foo\",\"Bar\"]"));
-		assertTrue(result.contains("\"bool\":true"));
-		assertTrue(result.contains("\"nullstring\":null"));
-		assertEquals("Invalid content-type", new MediaType("application", "json", UTF8), outputMessage.getHeaders().getContentType());
+		assertTrue(result.contains("\"bytes\":[1,2]"));
+		assertEquals("Invalid content-type", new MediaType("application", "json", UTF8),
+				outputMessage.getHeaders().getContentType());
 	}
 
-	@SmallTest
 	public void testWriteUTF16() throws IOException {
 		Charset utf16 = Charset.forName("UTF-16BE");
 		MediaType contentType = new MediaType("application", "json", utf16);
 		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
 		String body = "H\u00e9llo W\u00f6rld";
-		converter.write(body, contentType, outputMessage);
+		this.converter.write(body, contentType, outputMessage);
 		assertEquals("Invalid result", "\"" + body + "\"", outputMessage.getBodyAsString(utf16));
 		assertEquals("Invalid content-type", contentType, outputMessage.getHeaders().getContentType());
 	}
@@ -199,36 +181,92 @@ public class GsonHttpMessageConverterTests extends TestCase {
 			String body = "FooBar";
 			MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes("UTF-8"));
 			inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
-			converter.read(ComplexObject.class, inputMessage);
+			this.converter.read(MyBean.class, inputMessage);
 		} catch(HttpMessageNotReadableException e) {
 			success = true;
 		}
 		assertTrue(success);
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public void testReadGenerics() throws IOException {
+		GsonHttpMessageConverter converter = new GsonHttpMessageConverter() {
+			@Override
+			protected TypeToken<?> getTypeToken(Type type) {
+				if (type instanceof Class && List.class.isAssignableFrom((Class<?>) type)) {
+					return new TypeToken<ArrayList<MyBean>>() {
+					};
+				}
+				else {
+					return super.getTypeToken(type);
+				}
+			}
+		};
+		String body = "[{\"bytes\":[1,2],\"array\":[\"Foo\",\"Bar\"]," +
+				"\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}]";
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(
+				body.getBytes(UTF8.displayName()));
+		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
+
+		List<MyBean> results = (List<MyBean>) converter.read(List.class, inputMessage);
+		assertEquals(1, results.size());
+		MyBean result = results.get(0);
+		assertEquals("Foo", result.getString());
+		assertEquals(42, result.getNumber());
+		assertEquals(42F, result.getFraction(), 0F);
+		Assert.assertArrayEquals(new String[] { "Foo", "Bar" }, result.getArray());
+		assertTrue(result.isBool());
+		Assert.assertArrayEquals(new byte[] { 0x1, 0x2 }, result.getBytes());
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testReadParameterizedType() throws IOException {
+		ParameterizedTypeReference<List<MyBean>> beansList = new ParameterizedTypeReference<List<MyBean>>() {
+		};
+
+		String body = "[{\"bytes\":[1,2],\"array\":[\"Foo\",\"Bar\"]," +
+				"\"number\":42,\"string\":\"Foo\",\"bool\":true,\"fraction\":42.0}]";
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(
+				body.getBytes(UTF8.displayName()));
+		inputMessage.getHeaders().setContentType(new MediaType("application", "json"));
+
+		List<MyBean> results = (List<MyBean>) this.converter.read(beansList.getType(), null, inputMessage);
+		assertEquals(1, results.size());
+		MyBean result = results.get(0);
+		assertEquals("Foo", result.getString());
+		assertEquals(42, result.getNumber());
+		assertEquals(42F, result.getFraction(), 0F);
+		Assert.assertArrayEquals(new String[] { "Foo", "Bar" }, result.getArray());
+		assertTrue(result.isBool());
+		Assert.assertArrayEquals(new byte[] { 0x1, 0x2 }, result.getBytes());
+	}
+
+	public void testPrefixJson() throws Exception {
+		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
+		this.converter.setPrefixJson(true);
+		this.converter.writeInternal("foo", outputMessage);
+		assertEquals("{} && \"foo\"", outputMessage.getBodyAsString(UTF8));
+	}
+
+	public void testPrefixJsonCustom() throws Exception {
+		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
+		this.converter.setJsonPrefix(")]}',");
+		this.converter.writeInternal("foo", outputMessage);
+		assertEquals(")]}',\"foo\"", outputMessage.getBodyAsString(UTF8));
+	}
+
 	public void testSetNullGson() {
 		boolean success = false;
 		try {
-			converter.setGson(null);
+			this.converter.setGson(null);
 		} catch (IllegalArgumentException e) {
 			success = true;
 		}
 		assertTrue(success);
 	}
-	
-	
-	// helpers
-	
-	private static void assertArrayEquals(Object[] expecteds, Object[] actuals) {
-		assertEquals(expecteds.length, actuals.length);
-		if (expecteds.length == actuals.length) {
-			for (int i = 0; i < expecteds.length; i++) {
-				assertEquals(expecteds[i], actuals[i]);
-			}
-		}
-	}
 
-	private static class ComplexObject {
+
+	public static class MyBean {
 
 		private String string;
 
@@ -239,8 +277,16 @@ public class GsonHttpMessageConverterTests extends TestCase {
 		private String[] array;
 
 		private boolean bool;
-		
-		private String nullstring;
+
+		private byte[] bytes;
+
+		public byte[] getBytes() {
+			return bytes;
+		}
+
+		public void setBytes(byte[] bytes) {
+			this.bytes = bytes;
+		}
 
 		public boolean isBool() {
 			return bool;
@@ -281,17 +327,8 @@ public class GsonHttpMessageConverterTests extends TestCase {
 		public void setArray(String[] array) {
 			this.array = array;
 		}
+	}
 
-		public void setNullstring(String nullstring) {
-			this.nullstring = nullstring;
-		}
-
-		public String getNullstring() {
-			return nullstring;
-		}
-		
-	}	
-	
 	private static class CustomDeserializer implements JsonDeserializer<Object> {
 		
 		public Object deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
@@ -312,5 +349,5 @@ public class GsonHttpMessageConverterTests extends TestCase {
 		}
 
 	}
-	
+
 }

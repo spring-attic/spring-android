@@ -43,8 +43,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.feed.SyndFeedHttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter;
@@ -120,7 +120,8 @@ import android.util.Log;
  * <tr><td>{@link XmlAwareFormHttpMessageConverter}</td></tr>
  * <tr><td>{@link FormHttpMessageConverter}</td><td>Included on Android 2.1 (Eclair) and older.</td></tr>
  * <tr><td>{@link SimpleXmlHttpMessageConverter}</td><td>Included if the Simple XML serializer is present.</td></tr>
- * <tr><td>{@link MappingJacksonHttpMessageConverter}</td><td>Included if the Jackson JSON processor is present.</td></tr>
+ * <tr><td>{@link MappingJackson2HttpMessageConverter}</td><td>Included if the Jackson 2.x JSON processor is present.</td></tr>
+ * <tr><td>{@link GsonHttpMessageConverter}</td><td>Included if the Gson library is present.</td></tr>
  * <tr><td>{@link SyndFeedHttpMessageConverter}</td><td>Included if the Android ROME Feed Reader is present.</td></tr>
  * </table><br />  
  * 
@@ -721,25 +722,23 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	}
 
 	private static class DefaultMessageConverters {
-		
+
 		private static final boolean javaxXmlTransformPresent = 
 				ClassUtils.isPresent("javax.xml.transform.Source", RestTemplate.class.getClassLoader());
 
 		private static final boolean simpleXmlPresent =
 				ClassUtils.isPresent("org.simpleframework.xml.Serializer", RestTemplate.class.getClassLoader());
 
-		private static final boolean jacksonPresent =
-				ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper", RestTemplate.class.getClassLoader()) &&
-						ClassUtils.isPresent("org.codehaus.jackson.JsonGenerator", RestTemplate.class.getClassLoader());
-		
 		private static final boolean jackson2Present =
 				ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", RestTemplate.class.getClassLoader()) &&
 						ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", RestTemplate.class.getClassLoader());
-		
+
+		private static final boolean gsonPresent =
+				ClassUtils.isPresent("com.google.gson.Gson", RestTemplate.class.getClassLoader());
+
 		private static final boolean romePresent =
 				ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed", RestTemplate.class.getClassLoader());
-		
-		@SuppressWarnings("deprecation")
+
 		public static void init(List<HttpMessageConverter<?>> messageConverters) {
 			messageConverters.add(new ByteArrayHttpMessageConverter());
 			messageConverters.add(new StringHttpMessageConverter());
@@ -759,8 +758,8 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			
 			if (jackson2Present) {
 				messageConverters.add(new MappingJackson2HttpMessageConverter());
-			} else if (jacksonPresent) {
-				messageConverters.add(new MappingJacksonHttpMessageConverter());
+			} else if (gsonPresent) {
+				messageConverters.add(new GsonHttpMessageConverter());
 			}
 			
 			if (romePresent) {

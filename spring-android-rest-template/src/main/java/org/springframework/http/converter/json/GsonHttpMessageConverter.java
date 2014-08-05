@@ -28,6 +28,7 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
+import org.springframework.http.converter.GenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
@@ -37,81 +38,92 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 /**
+ * Implementation of {@link org.springframework.http.converter.HttpMessageConverter}
+ * that can read and write JSON using the
+ * <a href="https://code.google.com/p/google-gson/">Google Gson</a> library's
+ * {@link Gson} class.
+ *
+ * <p>This converter can be used to bind to typed beans or untyped {@code HashMap}s.
+ * By default, it supports {@code application/json} and {@code application/*+json}.
+ *
+ * <p>Tested against Gson 2.2; compatible with Gson 2.0 and higher.
+ *
  * @author Roy Clarkson
  * @since 1.0
+ * @see #setGson
+ * @see #setSupportedMediaTypes
  */
-public class GsonHttpMessageConverter extends AbstractHttpMessageConverter<Object> {
+public class GsonHttpMessageConverter extends AbstractHttpMessageConverter<Object>
+		implements GenericHttpMessageConverter<Object> {
 
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-	private Gson gson;
-	
-	private Type type = null;
 
-	private boolean prefixJson = false;
+	private Gson gson = new Gson();
+
+	private String jsonPrefix;
 
 
 	/**
-	 * Construct a new {@code GsonHttpMessageConverter} with a default {@link Gson#Gson() Gson}.
+	 * Construct a new {@code GsonHttpMessageConverter}.
 	 */
 	public GsonHttpMessageConverter() {
-		this(new Gson());
+		super(new MediaType("application", "json", DEFAULT_CHARSET),
+				new MediaType("application", "*+json", DEFAULT_CHARSET));
 	}
-	
-	/**
-	 * Construct a new {@code GsonHttpMessageConverter}.
-	 * 
-	 * @param serializeNulls true to generate json for null values
-	 */
-	public GsonHttpMessageConverter(boolean serializeNulls) {
-		this(serializeNulls ? new GsonBuilder().serializeNulls().create() : new Gson());
-	}
-	
-	/**
-	 * Construct a new {@code GsonHttpMessageConverter}.
-	 * 
-	 * @param gson a customized {@link Gson#Gson() Gson} 
-	 */
-	public GsonHttpMessageConverter(Gson gson) {
-		super(new MediaType("application", "json", DEFAULT_CHARSET));
-		setGson(gson);
-	}
-	
+
 
 	/**
-	 * Sets the {@code Gson} for this view. If not set, a default
-	 * {@link Gson#Gson() Gson} is used.
-	 * <p>Setting a custom-configured {@code Gson} is one way to take further control of the JSON serialization
-	 * process.
-	 * @throws IllegalArgumentException if gson is null
+	 * Set the {@code Gson} instance to use.
+	 * If not set, a default {@link Gson#Gson() Gson} instance is used.
+	 * <p>Setting a custom-configured {@code Gson} is one way to take further
+	 * control of the JSON serialization process.
 	 */
 	public void setGson(Gson gson) {
-		Assert.notNull(gson, "'gson' must not be null");
+		Assert.notNull(gson, "'gson' is required");
 		this.gson = gson;
-	}
-	
-	public void setType(Type type) {
-		this.type = type;
-	}
-	
-	public Type getType() {
-		return type;
 	}
 
 	/**
-	 * Indicates whether the JSON output by this view should be prefixed with "{} &&". Default is false.
-	 * <p> Prefixing the JSON string in this manner is used to help prevent JSON Hijacking. The prefix renders the string
-	 * syntactically invalid as a script so that it cannot be hijacked. This prefix does not affect the evaluation of JSON,
-	 * but if JSON validation is performed on the string, the prefix would need to be ignored.
+	 * Return the configured {@code Gson} instance for this converter.
+	 */
+	public Gson getGson() {
+		return this.gson;
+	}
+
+	/**
+	 * Specify a custom prefix to use for JSON output. Default is none.
+	 * @see #setPrefixJson
+	 */
+	public void setJsonPrefix(String jsonPrefix) {
+		this.jsonPrefix = jsonPrefix;
+	}
+
+	/**
+	 * Indicate whether the JSON output by this view should be prefixed with "{} &&".
+	 * Default is {@code false}.
+	 * <p>Prefixing the JSON string in this manner is used to help prevent JSON
+	 * Hijacking. The prefix renders the string syntactically invalid as a script
+	 * so that it cannot be hijacked. This prefix does not affect the evaluation
+	 * of JSON, but if JSON validation is performed on the string, the prefix
+	 * would need to be ignored.
+	 * @see #setJsonPrefix
 	 */
 	public void setPrefixJson(boolean prefixJson) {
-		this.prefixJson = prefixJson;
+		this.jsonPrefix = (prefixJson ? "{} && " : null);
 	}
+
 
 	@Override
 	public boolean canRead(Class<?> clazz, MediaType mediaType) {
+		return canRead(mediaType);
+	}
+
+	@Override
+	public boolean canRead(Type type, Class<?> contextClass, MediaType mediaType) {
 		return canRead(mediaType);
 	}
 
@@ -129,56 +141,74 @@ public class GsonHttpMessageConverter extends AbstractHttpMessageConverter<Objec
 	@Override
 	protected Object readInternal(Class<?> clazz, HttpInputMessage inputMessage)
 			throws IOException, HttpMessageNotReadableException {
-		
+
+		TypeToken<?> token = getTypeToken(clazz);
+		return readTypeToken(token, inputMessage);
+	}
+
+	@Override
+	public Object read(Type type, Class<?> contextClass, HttpInputMessage inputMessage)
+			throws IOException, HttpMessageNotReadableException {
+
+		TypeToken<?> token = getTypeToken(type);
+		return readTypeToken(token, inputMessage);
+	}
+
+	/**
+	 * Return the Gson {@link TypeToken} for the specified type.
+	 * <p>The default implementation returns {@code TypeToken.get(type)}, but
+	 * this can be overridden in subclasses to allow for custom generic
+	 * collection handling. For instance:
+	 * <pre class="code">
+	 * protected TypeToken<?> getTypeToken(Type type) {
+	 *   if (type instanceof Class && List.class.isAssignableFrom((Class<?>) type)) {
+	 *     return new TypeToken<ArrayList<MyBean>>() {};
+	 *   }
+	 *   else {
+	 *     return super.getTypeToken(type);
+	 *   }
+	 * }
+	 * </pre>
+	 * @param type the type for which to return the TypeToken
+	 * @return the type token
+	 */
+	protected TypeToken<?> getTypeToken(Type type) {
+		return TypeToken.get(type);
+	}
+
+	private Object readTypeToken(TypeToken<?> token, HttpInputMessage inputMessage) throws IOException {
 		Reader json = new InputStreamReader(inputMessage.getBody(), getCharset(inputMessage.getHeaders()));
-		
 		try {
-			Type typeOfT = getType();
-			if (typeOfT != null) {
-				return this.gson.fromJson(json, typeOfT);
-			} else {
-				return this.gson.fromJson(json, clazz);
-			}
-		} catch (JsonSyntaxException ex) {
-			throw new HttpMessageNotReadableException("Could not read JSON: " + ex.getMessage(), ex);
-		} catch (JsonIOException ex) {
-			throw new HttpMessageNotReadableException("Could not read JSON: " + ex.getMessage(), ex);
-		} catch (JsonParseException ex) {
+			return this.gson.fromJson(json, token.getType());
+		}
+		catch (JsonParseException ex) {
 			throw new HttpMessageNotReadableException("Could not read JSON: " + ex.getMessage(), ex);
 		}
+	}
+
+	private Charset getCharset(HttpHeaders headers) {
+		if (headers == null || headers.getContentType() == null || headers.getContentType().getCharSet() == null) {
+			return DEFAULT_CHARSET;
+		}
+		return headers.getContentType().getCharSet();
 	}
 
 	@Override
 	protected void writeInternal(Object o, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException {
-		
-		OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), getCharset(outputMessage.getHeaders()));
-		
+
+		Charset charset = getCharset(outputMessage.getHeaders());
+		OutputStreamWriter writer = new OutputStreamWriter(outputMessage.getBody(), charset);
 		try {
-			if (this.prefixJson) {
-				writer.append("{} && ");
+			if (this.jsonPrefix != null) {
+				writer.append(this.jsonPrefix);
 			}
-			Type typeOfSrc = getType();
-			if (typeOfSrc != null) {
-				this.gson.toJson(o, typeOfSrc, writer);
-			} else {
-				this.gson.toJson(o, writer);
-			}
+			this.gson.toJson(o, writer);
 			writer.close();
-		} catch(JsonIOException  ex) {
-			throw new HttpMessageNotWritableException("Could not write JSON: " + ex.getMessage(), ex);
-		}	
-	}
-	
-	
-	// helpers
-	
-	private Charset getCharset(HttpHeaders headers) {
-		if (headers != null && headers.getContentType() != null
-				&& headers.getContentType().getCharSet() != null) {
-			return headers.getContentType().getCharSet();
 		}
-		return DEFAULT_CHARSET;
+		catch(JsonIOException  ex) {
+			throw new HttpMessageNotWritableException("Could not write JSON: " + ex.getMessage(), ex);
+		}
 	}
 
 }
