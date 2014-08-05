@@ -1,56 +1,72 @@
 # Spring for Android
 
-[Spring for Android] is an extension of the [Spring Framework] that aims to simplify the development of native [Android] applications.
+[Spring for Android] is a framework that is designed to provide components of the [Spring Framework] family of projects for use in native [Android] applications.
 
 
-## Downloading artifacts
-
-The [Android Maven Plugin] makes it possible to build Android applications utilizing the power of [Maven] dependency management. See [downloading Spring artifacts] for [Maven] repository information. Unable to use [Maven] or other transitive dependency management tools? See [building a distribution with dependencies].
-
-### Dependencies
+## Download Artifacts
 
 Spring for Android consists of three modules: Core, Rest Template, and Auth.
 
-```xml
-<dependency>
-    <groupId>org.springframework.android</groupId>
-    <artifactId>spring-android-core</artifactId>
-    <version>${org.springframework.android-version}</version>
-</dependency>
+The new [Android Build System] provides a Gradle plugin for building Android apps, and [Gradle] itself supports external dependency resolution via Maven repositories. Additionally, the [Android Maven Plugin] makes it possible to build Android applications utilizing the power of [Maven] dependency management. See [downloading Spring artifacts] for [Maven] repository information. 
 
-<dependency>
-    <groupId>org.springframework.android</groupId>
-    <artifactId>spring-android-rest-template</artifactId>
-    <version>${org.springframework.android-version}</version>
-</dependency>
+> **Note:** You do not need to include all three repositories, rather select the one that corresponds to the release type of the dependency. GA releases are also available through Maven Central.
 
-<dependency>
-    <groupId>org.springframework.android</groupId>
-    <artifactId>spring-android-auth</artifactId>
-    <version>${org.springframework.android-version}</version>
-</dependency>
+### Gradle
+
+```groovy
+dependencies {
+    compile("org.springframework.mobile:spring-android-core:${springAndroidVersion}")
+    compile("org.springframework.mobile:spring-android-rest-template:${springAndroidVersion}")
+    compile("org.springframework.mobile:spring-android-auth:${springAndroidVersion}")
+}
+repositories {
+    maven { url "http://repo.spring.io/release" }
+    maven { url "http://repo.spring.io/milestone" }
+    maven { url "http://repo.spring.io/snapshot" }
+}
 ```
 
-### Repositories
+### Maven
 
 ```xml
-<repository>
-    <id>spring-repo</id>
-    <name>Spring Repository</name>
-    <url>http://repo.spring.io/release</url>
-</repository>   
-    
-<repository>
-    <id>spring-milestone</id>
-    <name>Spring Milestone Repository</name>
-    <url>http://repo.spring.io/milestone</url>
-</repository>
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.android</groupId>
+        <artifactId>spring-android-core</artifactId>
+        <version>${org.springframework.android-version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.android</groupId>
+        <artifactId>spring-android-rest-template</artifactId>
+        <version>${org.springframework.android-version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.android</groupId>
+        <artifactId>spring-android-auth</artifactId>
+        <version>${org.springframework.android-version}</version>
+    </dependency>
+</dependencies>
 
-<repository>
-    <id>spring-snapshot</id>
-    <name>Spring Snapshot Repository</name>
-    <url>http://repo.spring.io/snapshot</url>
-</repository>
+<repositories>
+    <repository>
+        <id>spring-repo</id>
+        <name>Spring Repository</name>
+        <url>http://repo.spring.io/release</url>
+    </repository>
+    <repository>
+        <id>spring-milestones</id>
+        <name>Spring Milestones</name>
+        <url>http://repo.spring.io/milestone</url>
+    </repository>
+    <repository>
+        <id>spring-snapshots</id>
+        <name>Spring Snapshots</name>
+        <url>http://repo.spring.io/snapshot</url>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
 ```
 
 
@@ -62,6 +78,22 @@ See the current [Javadoc] and [reference docs].
 ## Sample Applications
 
 Several example projects are available in the [samples repository].
+
+
+## Getting Started Guides
+
+The [spring.io] web site contains many [getting started guides][guides] that cover a broad range of topics. 
+
+- [Consuming a RESTful Web Service with Spring for Android](https://spring.io/guides/gs/consuming-rest-android/)
+- [Consuming XML from a RESTful Web Service with Spring for Android](https://spring.io/guides/gs/consuming-rest-xml-android/)
+- [Building Android Projects with Gradle](https://spring.io/guides/gs/gradle-android/)
+- [Building Android Projects with Maven](https://spring.io/guides/gs/maven-android/)
+- [Installing the Android Development Environment](https://spring.io/guides/gs/android/)
+
+
+## Support
+
+Check out the [spring-android][spring-android tag] tag on [Stack Overflow]. [Commercial support] is also available.
 
 
 ## Issue Tracking
@@ -154,6 +186,11 @@ Test results are available in the following directory for each test project:
 [Pull requests] are welcome. See the [contributor guidelines] for details.
 
 
+## Stay in Touch
+
+Follow [@SpringCentral] as well as [@SpringAndroid] on Twitter. In-depth articles can be found at [The Spring Blog], and releases are announced via our [news feed].
+
+
 ## License
 
 [Spring for Android] is released under version 2.0 of the [Apache License].
@@ -161,7 +198,9 @@ Test results are available in the following directory for each test project:
 
 [Spring for Android]: http://www.springsource.org/spring-android
 [Spring Framework]: http://www.springsource.org/spring-framework
+[Android Build System]: http://tools.android.com/tech-docs/new-build-system/user-guide
 [Android]: http://developer.android.com
+[Gradle]: http://www.gradle.org
 [Android Maven Plugin]: http://code.google.com/p/maven-android-plugin
 [Maven]: http://maven.apache.org
 [downloading Spring artifacts]: https://github.com/spring-projects/spring-framework/wiki/Downloading-Spring-artifacts
@@ -169,13 +208,22 @@ Test results are available in the following directory for each test project:
 [Javadoc]: http://docs.spring.io/spring-android/docs/current/api/
 [reference docs]: http://docs.spring.io/spring-android/docs/current/reference/html/
 [samples repository]: https://github.com/spring-projects/spring-android-samples
-[Spring Android JIRA]: http://jira.springsource.org/browse/ANDROID
+[spring.io]: http://spring.io
+[guides]: http://spring.io/guides
+[spring-android tag]: http://stackoverflow.com/questions/tagged/spring-android
+[Stack Overflow]: http://stackoverflow.com/faq
+[Commercial support]: http://spring.io/services
+[Spring Android JIRA]: http://jira.spring.io/browse/ANDROID
 [Git]: http://git-scm.com
 [GitHub for Windows]: http://windows.github.com
 [GitHub for Mac]: http://mac.github.com
 [GitHub issues]: https://github.com/spring-projects/spring-android/issues?direction=desc&sort=created&state=open
 [the lifecycle of an issue]: https://github.com/springsource/spring-framework/wiki/The-Lifecycle-of-an-Issue
-[sts]: http://www.springsource.com/developer/sts
+[sts]: http://www.spring.io/sts
 [Pull requests]: http://help.github.com/send-pull-requests
-[contributor guidelines]: https://github.com/spring-projects/spring-android/wiki/Contributor-Guidelines
+[contributor guidelines]: CONTRIBUTING.md
+[@SpringCentral]: https://twitter.com/springcentral
+[@SpringAndroid]: https://twitter.com/springandroid
+[The Spring Blog]: http://spring.io/blog/
+[news feed]: http://spring.io/blog/category/news
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0
