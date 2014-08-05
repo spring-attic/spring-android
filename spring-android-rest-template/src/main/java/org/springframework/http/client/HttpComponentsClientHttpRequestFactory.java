@@ -26,6 +26,7 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
@@ -155,6 +156,8 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
 				return new HttpPost(uri);
 			case PUT:
 				return new HttpPut(uri);
+			case PATCH:
+				return new HttpPatch(uri);
 			case TRACE:
 				return new HttpTrace(uri);
 			default:
