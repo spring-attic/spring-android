@@ -18,22 +18,23 @@ package org.springframework.http.converter.feed;
 
 import org.springframework.http.MediaType;
 
-import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel;
+import com.rometools.rome.feed.rss.Channel;
 
 /**
- * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} 
- * that can read and write RSS feeds. Specifically, this converter can handle 
- * {@link Channel} objects, from the 
- * <a href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>,
- * which is a repackaging of java.net's <a href="https://rome.dev.java.net/">ROME</a>.
+ * Implementation of {@link org.springframework.http.converter.HttpMessageConverter}
+ * that can read and write RSS feeds. Specifically, this converter can handle {@link Channel}
+ * objects from the <a href="https://github.com/rometools/rome">ROME</a> project.
  *
- * <p>By default, this converter reads and writes the media type ({@code application/rss+xml}). This can
- * be overridden by setting the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
+ * <p>><b>NOTE: As of Spring for Android 2.0, this is based on the {@code com.rometools}
+ * variant of ROME, version 1.5. Please upgrade your build dependency.</b>
+ *
+ * <p>By default, this converter reads and writes the media type ({@code application/rss+xml}).
+ * This can be overridden through the {@link #setSupportedMediaTypes supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
- * @see Channel
  * @since 1.0
+ * @see Channel
  */
 public class RssChannelHttpMessageConverter extends AbstractWireFeedHttpMessageConverter<Channel> {
 
@@ -45,6 +46,5 @@ public class RssChannelHttpMessageConverter extends AbstractWireFeedHttpMessageC
 	protected boolean supports(Class<?> clazz) {
 		return Channel.class.isAssignableFrom(clazz);
 	}
-
 
 }

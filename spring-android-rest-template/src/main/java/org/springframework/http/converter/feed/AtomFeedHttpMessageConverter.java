@@ -18,22 +18,23 @@ package org.springframework.http.converter.feed;
 
 import org.springframework.http.MediaType;
 
-import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed;
+import com.rometools.rome.feed.atom.Feed;
 
 /**
- * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} 
- * that can read and write Atom feeds. Specifically, this converter can handle 
- * {@link Feed} objects, from the 
- * <a href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>,
- * which is a repackaging of java.net's <a href="https://rome.dev.java.net/">ROME</a>.
+ * Implementation of {@link org.springframework.http.converter.HttpMessageConverter}
+ * that can read and write Atom feeds. Specifically, this converter can handle {@link Feed}
+ * objects from the <a href="https://github.com/rometools/rome">ROME</a> project.
  *
- * <p>By default, this converter reads and writes the media type ({@code application/atom+xml}). This can
- * be overridden by setting the {@link #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
+ * <p>><b>NOTE: As of Spring for Android 2.0, this is based on the {@code com.rometools}
+ * variant of ROME, version 1.5. Please upgrade your build dependency.</b>
+ *
+ * <p>By default, this converter reads and writes the media type ({@code application/atom+xml}).
+ * This can be overridden through the {@link #setSupportedMediaTypes supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
- * @see Feed
  * @since 1.0
+ * @see Feed
  */
 public class AtomFeedHttpMessageConverter extends AbstractWireFeedHttpMessageConverter<Feed> {
 
@@ -45,6 +46,5 @@ public class AtomFeedHttpMessageConverter extends AbstractWireFeedHttpMessageCon
 	protected boolean supports(Class<?> clazz) {
 		return Feed.class.isAssignableFrom(clazz);
 	}
-
 
 }
