@@ -3,6 +3,7 @@ buildscript {
 		maven { url "http://repo.spring.io/plugins-release" } 
 	}
 	dependencies { 
+		classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
 		classpath "org.springframework.build.gradle:docbook-reference-plugin:0.2.8" 
 		classpath "me.champeau.gradle:gradle-javadoc-hotfix-plugin:0.1"
 	}
@@ -21,6 +22,10 @@ configure(allprojects) {
 	ext.androidRomeVersion       = "1.0.0-r2"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 
+	apply plugin: 'propdeps'
+	apply plugin: 'propdeps-maven'
+	apply plugin: 'propdeps-eclipse'
+	apply plugin: 'propdeps-idea'
 	apply plugin: "java"
 	apply plugin: "eclipse"
 	apply plugin: "idea"
@@ -138,7 +143,7 @@ project("spring-android-auth") {
 	ext.mavenTestDir = "../test/spring-android-auth-test/pom.xml"
 	
 	dependencies {
-		compile("com.google.android:android:$androidVersion", provided)
+		provided("com.google.android:android:$androidVersion")
 		compile(project(":spring-android-core"))
 		compile(project(":spring-android-rest-template"))
 		compile("org.springframework.social:spring-social-core:$springSocialVersion") {
@@ -157,16 +162,15 @@ project("spring-android-rest-template") {
 	ext.mavenTestDir = "../test/spring-android-rest-template-test/pom.xml"
 	
 	dependencies {
-		compile("com.google.android:android:$androidVersion", provided)
+		provided("com.google.android:android:$androidVersion")
 		compile(project(":spring-android-core"))
-		compile("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion", optional)
-		compile("com.fasterxml.jackson.core:jackson-databind:$jackson2Version", optional)
-		compile("com.google.code.gson:gson:$gsonVersion", optional)
-		compile("org.simpleframework:simple-xml:$simpleXmlVersion") { dep ->
-			optional dep
+		optional("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion")
+		optional("com.fasterxml.jackson.core:jackson-databind:$jackson2Version")
+		optional("com.google.code.gson:gson:$gsonVersion")
+		optional("org.simpleframework:simple-xml:$simpleXmlVersion") { dep ->
 			transitive = false
 		}
-		compile("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion", optional)
+		optional("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion")
 	}
 }
 
