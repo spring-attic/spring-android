@@ -37,8 +37,8 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.Syn
  */
 public class SyndFeedHttpMessageConverterTests extends AndroidTestCase {
 
-	private static final Charset UTF_8 = Charset.forName("UTF-8");
-	
+	private static final Charset utf8 = Charset.forName("UTF-8");
+
 	private SyndFeedHttpMessageConverter converter;	
 
 	@Override
@@ -46,7 +46,7 @@ public class SyndFeedHttpMessageConverterTests extends AndroidTestCase {
 		super.setUp();
 		converter = new SyndFeedHttpMessageConverter();
 	}
-	
+
 	@Override
 	public void tearDown() {
 		converter = null;
@@ -55,24 +55,24 @@ public class SyndFeedHttpMessageConverterTests extends AndroidTestCase {
 	@SmallTest
 	public void estCanRead() {
 		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "rss+xml")));
-		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "rss+xml", UTF_8)));
+		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "rss+xml", utf8)));
 		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "atom+xml")));
-		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "atom+xml", UTF_8)));
+		assertTrue(converter.canRead(SyndFeed.class, new MediaType("application", "atom+xml", utf8)));
 	}
 
 	@SmallTest
 	public void testCanWrite() {
 		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "rss+xml")));
-		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "rss+xml", UTF_8)));
+		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "rss+xml", utf8)));
 		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "atom+xml")));
-		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "atom+xml", UTF_8)));
+		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "atom+xml", utf8)));
 	}
 
 	@MediumTest
 	public void testReadRss() throws IOException {
-	    Resource asset = new AssetResource(getContext().getAssets(), "rss.xml");
+		Resource asset = new AssetResource(getContext().getAssets(), "rss.xml");
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(asset.getInputStream());
-		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", UTF_8));
+		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", utf8));
 		SyndFeed feed = converter.read(SyndFeed.class, inputMessage);
 		assertEquals("title", feed.getTitle());
 		assertEquals("http://example.com", feed.getLink());
@@ -87,12 +87,12 @@ public class SyndFeedHttpMessageConverterTests extends AndroidTestCase {
 		SyndEntry entry2 = (SyndEntry) items.get(1);
 		assertEquals("title2", entry2.getTitle());
 	}
-	
+
 	@MediumTest
 	public void testReadAtom() throws IOException {
 		Resource asset = new AssetResource(getContext().getAssets(), "atom.xml");
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(asset.getInputStream());
-		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", UTF_8));
+		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", utf8));
 		SyndFeed feed = converter.read(SyndFeed.class, inputMessage);
 		assertEquals("title", feed.getTitle());
 		List<?> entries = feed.getEntries();
@@ -104,4 +104,5 @@ public class SyndFeedHttpMessageConverterTests extends AndroidTestCase {
 		SyndEntry entry2 = (SyndEntry) entries.get(1);
 		assertEquals("title2", entry2.getTitle());
 	}
+
 }

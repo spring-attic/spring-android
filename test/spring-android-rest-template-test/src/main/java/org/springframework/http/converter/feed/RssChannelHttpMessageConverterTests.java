@@ -16,12 +16,15 @@
 
 package org.springframework.http.converter.feed;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.custommonkey.xmlunit.XMLUnit;
 import org.springframework.core.io.AssetResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
@@ -41,41 +44,42 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Item
  * */
 public class RssChannelHttpMessageConverterTests extends AndroidTestCase {
 
-	private static final Charset UTF_8 = Charset.forName("UTF-8");
-	
+	private static final Charset utf8 = Charset.forName("UTF-8");
+
 	private RssChannelHttpMessageConverter converter;
 
 	@Override
 	public void setUp() throws Exception{
 		super.setUp();
 		converter = new RssChannelHttpMessageConverter();
-//		XMLUnit.setIgnoreWhitespace(true);
+		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@SmallTest
 	public void testCanRead() {
 		assertTrue(converter.canRead(Channel.class, new MediaType("application", "rss+xml")));
-		assertTrue(converter.canRead(Channel.class, new MediaType("application", "rss+xml", UTF_8)));
+		assertTrue(converter.canRead(Channel.class, new MediaType("application", "rss+xml", utf8)));
 	}
 
 	@SmallTest
 	public void testCanWrite() {
 		assertTrue(converter.canWrite(Channel.class, new MediaType("application", "rss+xml")));
-		assertTrue(converter.canWrite(Channel.class, new MediaType("application", "rss+xml", Charset.forName("UTF-8"))));
+		assertTrue(converter.canWrite(Channel.class, new MediaType("application", "rss+xml", utf8)));
 	}
 
+	@SuppressWarnings("rawtypes")
 	@MediumTest
 	public void testRead() throws IOException {
 		AssetResource resource = new AssetResource(getContext().getAssets(), "rss.xml");
 		InputStream inputStream = resource.getInputStream();
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(inputStream);
-		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", UTF_8));
+		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", utf8));
 		Channel result = converter.read(Channel.class, inputMessage);
 		assertEquals("title", result.getTitle());
 		assertEquals("http://example.com", result.getLink());
 		assertEquals("description", result.getDescription());
 
-		List<?> items = result.getItems();
+		List items = result.getItems();
 		assertEquals(2, items.size());
 
 		Item item1 = (Item) items.get(0);
@@ -85,6 +89,7 @@ public class RssChannelHttpMessageConverterTests extends AndroidTestCase {
 		assertEquals("title2", item2.getTitle());
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@SmallTest
 	public void testWrite() throws IOException, SAXException {
 		Channel channel = new Channel("rss_2.0");
@@ -98,7 +103,7 @@ public class RssChannelHttpMessageConverterTests extends AndroidTestCase {
 		Item item2 = new Item();
 		item2.setTitle("title2");
 
-		List<Item> items = new ArrayList<Item>(2);
+		List items = new ArrayList(2);
 		items.add(item1);
 		items.add(item2);
 		channel.setItems(items);
@@ -106,15 +111,14 @@ public class RssChannelHttpMessageConverterTests extends AndroidTestCase {
 		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
 		converter.write(channel, null, outputMessage);
 
-		assertEquals("Invalid content-type", new MediaType("application", "rss+xml", UTF_8),
+		assertEquals("Invalid content-type", new MediaType("application", "rss+xml", utf8),
 				outputMessage.getHeaders().getContentType());
-		
-		//TODO: verify output
 		String expected = "<rss version=\"2.0\">" +
 				"<channel><title>title</title><link>http://example.com</link><description>description</description>" +
 				"<item><title>title1</title></item>" +
 				"<item><title>title2</title></item>" +
 				"</channel></rss>";
+		assertXMLEqual(expected, outputMessage.getBodyAsString(utf8));
 	}
 
 	@SmallTest
