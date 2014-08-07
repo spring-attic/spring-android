@@ -30,7 +30,7 @@
 		<android-maven-plugin-version>3.9.0-rc.2</android-maven-plugin-version>
 		<maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
 		<java-version>1.6</java-version>
-		<com.google.android-version>4.1.1.4</com.google.android-version>
+		<android-version>4.4.2_r3</android-version>
 		<org.springframework.android-version>2.0.0.BUILD-SNAPSHOT</org.springframework.android-version>
 		<org.easymock-version>3.2</org.easymock-version>
 		<org.hamcrest-version>1.3</org.hamcrest-version>
@@ -41,15 +41,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.google.android</groupId>
+			<groupId>android</groupId>
 			<artifactId>android</artifactId>
-			<version>${com.google.android-version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>android-test</artifactId>
-			<version>${com.google.android-version}</version>
+			<version>${android-version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
