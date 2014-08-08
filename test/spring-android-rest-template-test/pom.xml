@@ -17,7 +17,7 @@
 		<com.fasterxml.jackson.core-version>2.3.4</com.fasterxml.jackson.core-version>
 		<com.google.code.gson-version>2.2.4</com.google.code.gson-version>
 		<org.simpleframework-version>2.6.9</org.simpleframework-version>
-		<com.rometools-version>1.5.0</com.rometools-version>
+		<com.google.code.android-rome-feed-reader-version>1.0.0-r2</com.google.code.android-rome-feed-reader-version>
 		<org.mortbay.jetty-version>6.1.9</org.mortbay.jetty-version>
 	</properties>
 
@@ -64,9 +64,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.rometools</groupId>
-			<artifactId>rome</artifactId>
-			<version>${com.rometools-version}</version>
+			<groupId>com.google.code.android-rome-feed-reader</groupId>
+			<artifactId>android-rome-feed-reader</artifactId>
+			<version>${com.google.code.android-rome-feed-reader-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
@@ -79,5 +79,14 @@
 			<version>1.5</version>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<!-- For developing with Android ROME Feed Reader -->
+		<repository>
+			<id>android-rome-feed-reader-repository</id>
+			<name>Android ROME Feed Reader Repository</name>
+			<url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
+		</repository>
+	</repositories>
 
 </project>

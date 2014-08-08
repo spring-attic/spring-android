@@ -29,8 +29,8 @@ import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.rometools.rome.feed.synd.SyndEntry;
-import com.rometools.rome.feed.synd.SyndFeed;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEntry;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
 
 /** 
  * @author Roy Clarkson 

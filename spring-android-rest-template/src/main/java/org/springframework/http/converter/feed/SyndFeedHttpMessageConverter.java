@@ -31,31 +31,27 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.StringUtils;
 
-import com.rometools.rome.feed.synd.SyndFeed;
-import com.rometools.rome.io.FeedException;
-import com.rometools.rome.io.SyndFeedInput;
-import com.rometools.rome.io.SyndFeedOutput;
+import android.os.Build;
+
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedOutput;
 
 /**
-/**
- * Implementation of {@link org.springframework.http.converter.HttpMessageConverter}
- * that can read and write RSS and ATOM feeds. Specifically, this converter can 
- * handle {@link SyndFeed} objects from the 
- * <a href="https://github.com/rometools/rome">ROME</a> project.
- * 
- *  <p>><b>NOTE: As of Spring for Android 2.0, this is based on the {@code com.rometools}
- * variant of ROME, version 1.5. Please upgrade your build dependency.</b>
+ * Implementation of {@link org.springframework.http.converter.HttpMessageConverter} that can read and write RSS and
+ * ATOM feeds. Specifically, this converter can handle {@link SyndFeed} objects, from the <a
+ * href="http://code.google.com/p/android-rome-feed-reader/">Android ROME Feed Reader</a>, which is a repackaging of
+ * java.net's <a href="https://rome.dev.java.net/">ROME</a>.
  * 
  * <p>
  * By default, this converter reads and writes the media types ({@code application/rss+xml} and
- * {@code application/atom+xml}). This can be overridden by setting the 
- * {@link #setSupportedMediaTypes supportedMediaTypes} property.
+ * {@code application/atom+xml}). This can be overridden by setting the {@link #setSupportedMediaTypes(java.util.List)
+ * supportedMediaTypes} property.
  * 
  * @author Roy Clarkson
  * @since 1.0
  * @see SyndFeed
- * @see RssChannelHttpMessageConverter
- * @see AtomFeedHttpMessageConverter
  */
 public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<SyndFeed> {
 
@@ -67,6 +63,11 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 	 */
 	public SyndFeedHttpMessageConverter() {
 		super(MediaType.APPLICATION_RSS_XML, MediaType.APPLICATION_ATOM_XML);
+
+		// Workaround to get ROME working with Android 2.1 and earlier
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+			Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+		}
 	}
 
 	@Override
@@ -75,13 +76,15 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 	}
 
 	@Override
-	protected SyndFeed readInternal(Class<? extends SyndFeed> clazz, HttpInputMessage inputMessage) 
-			throws IOException, HttpMessageNotReadableException {
-
+	protected SyndFeed readInternal(Class<? extends SyndFeed> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
 		SyndFeedInput feedInput = new SyndFeedInput();
 		MediaType contentType = inputMessage.getHeaders().getContentType();
-		Charset charset =
-				(contentType != null && contentType.getCharSet() != null? contentType.getCharSet() : DEFAULT_CHARSET);
+		Charset charset;
+		if (contentType != null && contentType.getCharSet() != null) {
+			charset = contentType.getCharSet();
+		} else {
+			charset = DEFAULT_CHARSET;
+		}
 		try {
 			Reader reader = new InputStreamReader(inputMessage.getBody(), charset);
 			return feedInput.build(reader);
@@ -91,9 +94,7 @@ public class SyndFeedHttpMessageConverter extends AbstractHttpMessageConverter<S
 	}
 
 	@Override
-	protected void writeInternal(SyndFeed syndFeed, HttpOutputMessage outputMessage) 
-			throws IOException, HttpMessageNotWritableException {
-
+	protected void writeInternal(SyndFeed syndFeed, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
 		String syndFeedEncoding = syndFeed.getEncoding();
 		if (!StringUtils.hasLength(syndFeedEncoding)) {
 			syndFeedEncoding = DEFAULT_CHARSET.name();

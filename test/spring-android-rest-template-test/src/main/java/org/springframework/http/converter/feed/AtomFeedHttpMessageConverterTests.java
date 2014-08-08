@@ -35,8 +35,8 @@ import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.rometools.rome.feed.atom.Entry;
-import com.rometools.rome.feed.atom.Feed;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Entry;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed;
 
 /** 
  * @author Roy Clarkson 

@@ -35,8 +35,8 @@ import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.rometools.rome.feed.rss.Channel;
-import com.rometools.rome.feed.rss.Item;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Item;
 
 /** 
  * @author Arjen Poutsma
