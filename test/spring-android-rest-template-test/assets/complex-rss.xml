@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Pivotal P.O.V.</title>
+	<atom:link href="http://blog.pivotal.io/feed" rel="self" type="application/rss+xml" />
+	<link>http://blog.pivotal.io</link>
+	<description>The Pivotal blog explores how people are harnessing sophisticated data fabrics and the cloud to build applications that achieve extraordinary things.</description>
+	<lastBuildDate>Thu, 07 Aug 2014 14:43:50 +0000</lastBuildDate>
+	<language>en-US</language>
+		<sy:updatePeriod>hourly</sy:updatePeriod>
+		<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=3.9.1</generator>
+	<item>
+		<title>Field Report: Hack Midwest Highlights How Developers Are Innovating on the Internet of Things and Big Data in Real-time</title>
+		<link>http://blog.pivotal.io/pivotal/features/field-report-hack-midwest-highlights-how-developers-are-innovating-on-the-internet-of-things-and-big-data-in-real-time?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=field-report-hack-midwest-highlights-how-developers-are-innovating-on-the-internet-of-things-and-big-data-in-real-time</link>
+		<comments>http://blog.pivotal.io/pivotal/features/field-report-hack-midwest-highlights-how-developers-are-innovating-on-the-internet-of-things-and-big-data-in-real-time#comments</comments>
+		<pubDate>Thu, 07 Aug 2014 14:43:50 +0000</pubDate>
+		<dc:creator><![CDATA[Scott Kahler]]></dc:creator>
+				<category><![CDATA[Features]]></category>
+		<category><![CDATA[Apache httpd]]></category>
+		<category><![CDATA[Big Data]]></category>
+		<category><![CDATA[hackathon]]></category>
+		<category><![CDATA[industrial internet]]></category>
+		<category><![CDATA[Internet of Things]]></category>
+		<category><![CDATA[open source]]></category>
+		<category><![CDATA[Pivotal Web Services]]></category>
+		<category><![CDATA[Redis]]></category>
+
+		<guid isPermaLink="false">http://blog.pivotal.io/?p=10209</guid>
+		<description><![CDATA[In a 24 hour period, over July 19th and 20th, Pivotal community engineer Scott Kahler participated in the Hack Midwest event in Kansas City as a judge. Kahler highlights the energy of the event, as well as shares some of the innovations produced, including a developer oriented dating site, collaborative wish lists for Amazon, and a drone app that is able to sweep crowds and report demographics. All developed in just one day, the event shows how agile developers have become in being able to develop valuable apps that fuse the Internet of Things and big data in real time. ]]></description>
+				<content:encoded><![CDATA[<p>On July 19th and 20th, over 100 developers bunkered up in Kansas City for the <a href="http://hackmidwest.com/" target="_blank">Hack Midwest</a> event (#HackMW). The first time I participated in this hackathon, we all fit in a large room at a country club. This year, to fit the crowd while also providing space for feeding and frisbee, <a href="http://kcitp.com" target="_blank">KCITP</a> ( Kansas City IT Professional group) had to move to a college event center.</p>
+<p><img class="alignnone" src="http://www.simpit.com/images/hackmw-1050x429.png" alt="" width="522" height="213" /></p>
+<p>The goal of Hack Midwest is to get a team of techies together and go from zero to demo in 24 hours. I am constantly amazed by what a good team of people rapidly developing in this amount of time can produce, which is part of why I joined Pivotal, a company the preaches this practice. To help incentivize this various sponsors contribute prizes for categories such as Best Design, Most Technically Challenging, Best Student Team App as well as prizes for the use of specific sponsor APIs or platforms. In addition to Pivotal, there was representation from Mashery, Pebble, Rdio, Simplify (Mastercard), Speedycash, Clarify and Sentient Technologies.</p>
+<p>There was vast array of skill sets represented at the hackathon, although they were not necessarily evenly distributed.  Some teams end up being comprised of mostly of UI designers, while others had solely backend coders. In my time there, I participated in a variety of chats covering topics from Python, C, Erlang, Haskell, Java, and Perl. When it came down to demo time though, the platforms of choice were mainly Ruby on Rails and PHP with lots of Javascript.</p>
+<p><img class="alignnone" src="http://www.simpit.com/images/hackmw_coding.jpg" alt="" width="263" height="197" /></p>
+<p>At the start everyone was pretty cheery, but as evening approached people fell seriously in that coding zone—churning out their prototype as long as they could until they sneaked off for a quick cat nap to recharge. One of the toughest facets of the competition is not only coding for 24 hours, but that at the end, you then must present in front of your peers and a panel of judges a demo your application. For a group of people with no sleep, too much caffeine, and who may lean toward introvertedness, it is always impressive that these presentations go amazingly well—complete with everyone cheering at the end.</p>
+<p>Well over 20 innovative applications were demoed, including apps such as:</p>
+<ul>
+<li><strong>BlastBB.</strong> Using the Unreal engine and the Mashery API to create and interact with objects that represented Best Buy products and subcategories. Not an extremely useful app, but very entertaining.</li>
+<li><strong>Presentation Analytics.</strong> This took an audio file of a presentation and parsed it for words to do analytics. This application will help you figure out how many times you repeat words (such as “like”) and the amount of time it takes up.</li>
+<li><strong>College.cat.</strong> This site was created to pair tutors and students based on skill sets they are looking for, schedule tutoring time and provide a system for feedback and payments.</li>
+</ul>
+<p>At the ends of the event Pivotal gave away two prizes, but I really wish we had given away three.</p>
+<h3><strong>Best Use of Technology in the Pivotal Stack</strong></h3>
+<p>One prize was for the &#8216;Best Use of Technology in the Pivotal Stack&#8217;. Developers had the option to use either the version that we offer on <a title="https://network.pivotal.io/" href="https://network.pivotal.io/" target="_blank">network.pivotal.io</a> or the OSS version.</p>
+<p>Coder Coupling was the winner with an app that was aimed at helping coders find dates. The idea being that instead of your standard online dating question you use one that are more applicable to the coder lifestyle such as OS of choice and Preferred Programming Language. It will then pair you based on these attributes, “because coding is more than something you do it’s a lifestyle, and you need someone you can share that with”. Once you’ve got a date set up it plugs into a large number of APIs to help you figure out what events are going on you may be interested in and provides conduits to get involved in them. Written using Ruby and PHP they were using the <a title="Apache httpd" href="apache%20httpd" target="_blank">Apache httpd</a> web server to host their app and <a title="Redis" href="https://www.pivotal.io/big-data/redis" target="_blank">Redis</a> as the caching mechanism.</p>
+<p><img class="alignnone" src="http://www.simpit.com/images/coder_coupling_crew.jpg" alt="" width="344" height="257" /></p>
+<h3><strong>Best App Running on Pivotal Web Services</strong></h3>
+<p>Another prize was for the &#8216;Best App Running on Pivotal Web Services&#8217;. This prize went to the group that made WishWizard. The app is based around the idea that Amazon wish lists leave a bit to be desired. Personally, I saw its value because I’ve got a bunch of kids that I try to get to make birthday wish lists on Amazon and I like how easy wizards make things—so this is something I’d use. In their app, the user can create a list to which multiple people can add items and favorite or like items, allowing both singular or collaborative wish listing. Under the covers, they were running the Rails and Meteor buildpacks on <a title="Pivotal Web Services" href="https://run.pivotal.io/" target="_blank">Pivotal Web Services (PWS)</a> to power the site. To give the app a little personality, they added a very nice “You shall not pass” video for access forbidden errors.</p>
+<p><img class="alignnone" src="http://www.simpit.com/images/wish_wizard.png" alt="" width="395" height="194" /></p>
+<h3><strong>Other Awards</strong></h3>
+<p>If Pivotal had a third prize to give out, it would have went to the PayFace team. Running on Pivotal Web Services they created an app that mashed together a Pebble watch app, QR codes and the Simplify API from Mastercard. With their system a consumer could create one time payment authorization token. This is manifested as a QR code that can be displayed on any mobile device, such as a Pebble watch in this instance. The token can then be read by a QR apps where the provider is then taken to a site and a transaction is setup. Thus you broker and complete a transaction without pulling out your wallet.</p>
+<p>Overall for the event, &#8216;Best in Show&#8217; went to Drone Analytics. What they demoed was a dashboard showing a breakdown of ethnicity, age and gender which was powered by a video camera on a drone. A very real, practical application of this would be to sweep a crowd to analyze the makeup of its demographics and tailor digital advertising.  Or it could be used to simply determine what type of people were attending your event for future planning and reporting. Of course, we tested it out on our crowd at the hackathon, and it picked up that attendees were about 90% male. Hopefully we see more balance to that in the future.</p>
+<p>There were a large number of outstanding apps that were displayed and it was tough sorting through the various categories for winners as a judge. In fact, there were no unanimous winners, and several times we had a ties that involved discussion and one more more revotes.</p>
+<p>To wrap up, I would encourage anyone who hasn&#8217;t attended a hackathon as a sponsor or as a participant to find one near you and go. As a participant, you will push your abilities, meet peers and learn a great deal from those around you. For sponsors, to see what people can do with your API or stack in a short time period and get real world feedback is invaluable. As part of Pivotal, this is what we are about, rapid application development and quick time to delivery—and nothing shows how well this model works than 20 application prototypes coming out of one room in a 24 hour period.</p>
+<p>For everyone involved at Hack Midwest, it was truly inspirational to see how well developers are able to harness the power of the Internet of Things, real world interaction and fast data analytics today in an incredibly short time period.</p>
+<p>I am definitely looking forward to the next Hack Midwest. I hope to see you there!</p>
+<p><img class="alignnone" src="http://www.simpit.com/images/hackmw_groupshot.jpg" alt="" width="784" height="314" /></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/pivotal/features/field-report-hack-midwest-highlights-how-developers-are-innovating-on-the-internet-of-things-and-big-data-in-real-time/feed</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>How to Deploy Drupal to Pivotal CF Within Seconds</title>
+		<link>http://blog.pivotal.io/cloud-foundry-pivotal/products/how-to-deploy-drupal-to-pivotal-cf-within-seconds?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=how-to-deploy-drupal-to-pivotal-cf-within-seconds</link>
+		<comments>http://blog.pivotal.io/cloud-foundry-pivotal/products/how-to-deploy-drupal-to-pivotal-cf-within-seconds#comments</comments>
+		<pubDate>Tue, 05 Aug 2014 02:07:15 +0000</pubDate>
+		<dc:creator><![CDATA[Adam Zwickey]]></dc:creator>
+				<category><![CDATA[Products]]></category>
+		<category><![CDATA[Cloud Foundry]]></category>
+		<category><![CDATA[how to]]></category>
+		<category><![CDATA[Pivotal CF]]></category>
+		<category><![CDATA[technical]]></category>
+
+		<guid isPermaLink="false">http://blog.gopivotal.com/?p=9983</guid>
+		<description><![CDATA[Content Management Systems (CMS) make it easy to manage content-rich websites with little to no web development knowledge. Using a CMS, content publishers can maintain a dynamic website that always has fresh content, apply design consistency using templates, and manage content creation using policy-based workflows for content publishing. In this post I am going to demonstrate how to deploy a popular CMS, Drupal, to Pivotal CF or another distribution of Cloud Foundry within a matter of seconds. ]]></description>
+				<content:encoded><![CDATA[<p><img class="alignleft wp-image-9988 size-full" src="http://blog.pivotal.io/wp-content/uploads/2014/07/featured-CF-Drupal.png" alt="featured-CF-Drupal" width="200" height="200" />Content Management Systems (CMS) make it easy to manage content-rich websites with little to no web development knowledge. Using a CMS, content publishers can maintain a dynamic website that always has fresh content, apply design consistency using templates, and manage content creation using policy-based workflows for content publishing. Many organizations large and small turn to CMS systems such as WordPress, Joomla, or Drupal to manage content for things like a company’s intranet pages, product pages on a retail website, personal blog sites and news sites.</p>
+<p>In this post I am going to demonstrate how to deploy the popular CMS, Drupal, to Pivotal CF or another distribution of Cloud Foundry within a matter of seconds. The result will be a full technology stack running a Drupal microsite that automatically offers scalability, high availability, and monitoring. Though this blog post is specific to deploying Drupal to Pivotal CF, the general principles should apply to any CMS.</p>
+<p>View the video below to see how fast the process is:<a title="How to deploy Drupal on Pivotal CF in a Minute" href="https://www.youtube.com/watch?v=ZE7mSqD2aHI&amp;list=UUzd8R3vkpllD4CJn_5g5sKg" target="_blank"><img class="alignnone wp-image-10195 size-full" src="http://blog.pivotal.io/wp-content/uploads/2014/08/PCF-Drupal-Video-Screenshot.png" alt="PCF-Drupal-Video-Screenshot" width="615" height="344" /></a></p>
+<h1 dir="ltr">Architecture</h1>
+<p>In order to run a Drupal application, you will need three main components:</p>
+<ol>
+<li>A php runtime paired with a web server</li>
+<li>A relational database</li>
+<li>A storage system for generated or uploaded assets</li>
+</ol>
+<p>Pivotal CF provides all three, making it incredibly simple to prepare for your installation. Using the <a href="https://github.com/azwickey-pivotal/cf-php-build-pack">php buildpack</a>, the php execution environment for Drupal will be created automatically when we push the application. Additionally, Pivotal CF comes with a <a href="http://docs.cloudfoundry.org/services/overview.html">MySQL service broker</a> out of the box. Lastly, we will need a storage system for Drupal assets, such as uploaded images and CSS files. By default, Drupal will store these on the local filesystem. While this will work within Pivotal CF, an application instance’s local file system is ephemeral, so the assets will be lost across application restarts. Also, uploaded assets will only be stored on the individual application instance to which they are uploaded, making horizontal scalability impossible. However, Drupal supports uploading assets to a S3-compatible blob store. By using the <a href="https://github.com/cloudfoundry/cf-riak-cs-release">Riak-CS service broker</a>, we can replace local filesystem storage with a distributed, cloud-based blob store.</p>
+<p>It is very common for Drupal deployments to include a <a href="https://www.varnish-cache.org/">Varnish Cache</a> HTTP reverse proxy to speed up content serving. Within the php buildpack, a Varnish Cache can be enabled to create an extremely performant Drupal application stack. We can also apply the same technique to content served from Riak-CS. Our final architecture within Pivotal CF looks like this:</p>
+<p><img class="aligncenter size-full wp-image-10171" src="http://blog.pivotal.io/wp-content/uploads/2014/08/Screen-Shot-2014-08-03-at-8.50.46-PM.png" alt="Screen Shot 2014-08-03 at 8.50.46 PM" width="1204" height="688" /></p>
+<p>Though this architecture may seem simple, consider a few powerful implications of running your CMS on Pivotal CF.</p>
+<ol>
+<li><strong>Speed and Ease of Deployment. </strong>Previously, each time a new business unit or group needed to create a new Drupal microsite an operations or infrastructure engineer would have to provision new VMs, install and configure a web server (for example, Apache or Nginx), install php, deploy a database, and finally install and configure Drupal. Within some enterprises this may take multiple months. Running on Pivotal CF this process takes seconds with the simple use of “cf push”.</li>
+<li><strong>Scalability.</strong> What happens as your microsite gains in popularity and needs to scale up? Unfortunately you need to follow many of the steps listed all over again. This is time consuming and certainly not something that can be done dynamically in response to sudden traffic spikes. Running on Pivotal CF gives you dynamic scalability, either vertical or horizontal, with the simple command “cf scale”. Paired with Pivotal CF Autoscale service, your Drupal instance can even scale itself up or down to accommodate the ebbs and flows of your site traffic.</li>
+<li><strong>High Availability. </strong> How do you monitor the VMs that you have provisioned? How do you ensure your web server and drupal instances are running and healthy? How do you recover from failures? Pivotal CF ensures applications are always running in the face of system failures, with <a href="http://blog.gopivotal.com/cloud-foundry-pivotal/products/the-four-levels-of-ha-in-pivotal-cf">four levels of H/A</a> built into the platform.</li>
+<li><strong>Routing and Load Balancing. </strong> Lastly, a site operator must worry about load balancing, traffic routing, maintaining public IP pools, and managing site DNS entries. Running on Pivotal CF gives you built in load balancing and DNS registration with every “cf push” command.</li>
+</ol>
+<h1 dir="ltr">How to Get Started</h1>
+<ol>
+<li>Clone the <a title="https://github.com/Pivotal-Field-Engineering/Drupal " href="https://github.com/Pivotal-Field-Engineering/Drupal%20" target="_blank">Cloudfoundry Drupal git repo</a>.  The Drupal settings.php has been modified to read service configuration from the PaaS environment.</li>
+</ol>
+<pre style="width: 615px; overflow: scroll; border: 1px solid #CCC; background: #FFF;"># Pull credentials out of VCAP_SERVICES env
+$services = getenv("VCAP_SERVICES");
+$services_json = json_decode($services,true);
+if (isset($services_json))	{	
+
+	#MySQL
+	$mysql_config = $services_json["p-mysql"][0]["credentials"];
+	$databases['default']['default'] = array(
+	  'driver' =&gt; 'mysql',
+	  'database' =&gt; $mysql_config["name"],
+	  'username' =&gt; $mysql_config["username"],
+	  'password' =&gt; $mysql_config["password"],
+	  'host' =&gt; $mysql_config["hostname"],
+	  'port' =&gt;  $mysql_config["port"],
+	  'prefix' =&gt; 'main_',
+	  'collation' =&gt; 'utf8_general_ci',
+	);
+
+	#S3 API
+	$s3_config = $services_json["p-riakcs"][0]["credentials"];
+	if (isset($s3_config))	{
+		$conf['awssdk2_access_key'] = $s3_config["access_key_id"];
+		$conf['awssdk2_secret_key'] = $s3_config["secret_access_key"];
+
+		$s3_url = parse_url($s3_config["uri"]);
+		$conf['s3fs_bucket'] = ltrim($s3_url['path'],"/");
+		#force http because of self-signed certs for now
+		$full_host = "http://" . substr($s3_url['host'], 9); #strip off 'p-riakcs.' from URL
+		$conf['s3fs_hostname'] = $full_host;
+		$conf['s3fs_use_customhost'] = TRUE;
+		$conf['s3fs_ignore_cache'] = TRUE;
+	}
+}
+</pre>
+<ol start="2">
+<li>If not installed, install the <a href="https://github.com/azwickey-pivotal/cf-php-build-pack">php buildpack</a> into your Pivotal CF environment</li>
+<li>Using the Cloud Foundry CLI, provision a MySQL database and a Riak-CS service<br />
+$ cf create-service p-mysql 100mb-dev drupal-db<br />
+$ cf create-service p-riakcs developer drupal-s3</li>
+<li>Push the application to Cloud Foundry using cf push</li>
+<li>You application is now deployed to the url <a href="http://drupal">http://drupal</a>.&lt;PIVOTAL_CF_DOMAIN&gt;. You can initialize your drupal instance by navigating to <a href="http://drupal">http://drupal</a>.&lt;PIVOTAL_CF_DOMAIN&gt;/install.php and answering a few basic questions.</li>
+</ol>
+<p><img class="aligncenter size-full wp-image-10170" src="http://blog.pivotal.io/wp-content/uploads/2014/08/Screen-Shot-2014-08-03-at-8.50.57-PM.png" alt="Screen Shot 2014-08-03 at 8.50.57 PM" width="1262" height="686" /></p>
+<p>Your drupal application is now running in within Pivotal CF. However, some additional configuration is required to scale past a single application instance. We need to ensure that the S3 content serving functions properly.</p>
+<ol>
+<li>In the previous section a Riak-CS blobstore service named drupal-s3 was created for the application. During this process a unique S3 bucket was initialized for the application along with a unique set of credentials. Retrieve the S3 bucket name created for the Drupal application with the CLI command cf env. The bucket name is the last part of the uri credential for the p-riakcs service.</li>
+</ol>
+<pre style="width: 615px; overflow: scroll; border: 1px solid #CCC; background: #FFF;">$ cf env drupal
+  System-Provided:
+  {
+    "VCAP_SERVICES": {
+      "p-riakcs":[
+        {
+          "name":"drupal-s3",
+          "label":"p-riakcs",
+          "tags":[
+            "riak-cs",
+            "s3"
+          ],
+          "plan":"developer",
+          "credentials":{
+            "uri":"https://XHCE0E1RAVBI99_FJL_5:7AdvdTSBiYwmySKOkoKCyGFkAVHxuaeBg0xTig%3D%3D@p-riakcs.cloudfoundry.dyndns.org/service-instance-423086ed-9167-4026-add2-d734bfb0b2e5",
+            "access_key_id":"XHCE0E1RAVBI99_FJL_5",
+            "secret_access_key":"7AdvdTSBiYwmySKOkoKCyGFkAVHxuaeBg0xTig=="
+          }
+        }
+      ],
+      "p-mysql":[
+        {
+          "name":"drupal-db",
+          "label":"p-mysql",
+          "tags":[
+            "mysql",
+            "relational"
+          ],
+          "plan":"100mb-dev",
+          "credentials":{
+            "hostname":"10.0.0.103",
+            "port":3306,
+            "name":"cf_27742bc8_369a_4050_ad53_e85038aa5a35",
+            "username":"FEotz981XvDEQXLI",
+            "password":"lAXIntesmrowz1hb",
+            "uri":"mysql://FEotz981XvDEQXLI:lAXIntesmrowz1hb@10.0.0.103:3306/cf_27742bc8_369a_4050_ad53_e85038aa5a35?reconnect=true",
+            "jdbcUrl":"jdbc:mysql://FEotz981XvDEQXLI:lAXIntesmrowz1hb@10.0.0.103:3306/cf_27742bc8_369a_4050_ad53_e85038aa5a35"
+          }
+        }
+      ]
+    }
+</pre>
+<ol start="2">
+<li>Input this value into S3_BUCKET env variable in the deployment manifest, <a href="https://github.com/Pivotal-Field-Engineering/Drupal/blob/master/manifest.yml">manifest.yml</a>. Additionally, update the CF_FQND variable to reflect your Cloud Foundry domain.</li>
+</ol>
+<p>env:<br />
+S3_BUCKET: YOUR S3 BUCKET HERE<br />
+CF_FQDN: YOUR CF DOMAIN HERE</p>
+<p>Execute a second application push so that your updated deployment manifest variables take effect.</p>
+<p>$ cf push</p>
+<ol start="3">
+<li>Drupal must address Riak-CS with the format of http://$BUCKET_NAME.$CF_DOMAIN. In order to support this format we must add a Cloudfoundry route to the s3 proxy application that represents our bucket name retrieved in step 1.</li>
+</ol>
+<p>$ cf map-route s3 &lt;PIVOTAL_CF_DOMAIN&gt; -n service-instance-423086ed-9167-4026-add2-d734bfb0b2e5</p>
+<p><img class="aligncenter size-full wp-image-10169" src="http://blog.pivotal.io/wp-content/uploads/2014/08/Screen-Shot-2014-08-03-at-8.51.07-PM.png" alt="Screen Shot 2014-08-03 at 8.51.07 PM" width="1278" height="974" /></p>
+<ol start="4">
+<li>We have the S3 File System module loaded, but we must navigate to Configuration &lt; Media &lt; File System to select S3 as the default storage location.</li>
+<li>Lastly, navigate to Structure &lt; Content Types. Configure the image field in the “Article” content type created by the default Drupal install to upload to S3. You can do this by selecting “manage fields” and editing the “Image” field.</li>
+</ol>
+<p>You now have a scalable, highly available Drupal application ready for content authoring.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/cloud-foundry-pivotal/products/how-to-deploy-drupal-to-pivotal-cf-within-seconds/feed</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+		<item>
+		<title>Introducing the Pivotal App Suite</title>
+		<link>http://blog.pivotal.io/pivotal/products/introducing-the-pivotal-app-suite?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=introducing-the-pivotal-app-suite</link>
+		<comments>http://blog.pivotal.io/pivotal/products/introducing-the-pivotal-app-suite#comments</comments>
+		<pubDate>Tue, 05 Aug 2014 16:07:51 +0000</pubDate>
+		<dc:creator><![CDATA[Dan Carwin]]></dc:creator>
+				<category><![CDATA[Products]]></category>
+		<category><![CDATA[Apache httpd]]></category>
+		<category><![CDATA[Apache Tomcat]]></category>
+		<category><![CDATA[Cloud Foundry]]></category>
+		<category><![CDATA[Grails]]></category>
+		<category><![CDATA[Groovy]]></category>
+		<category><![CDATA[Pivotal App Suite]]></category>
+		<category><![CDATA[Pivotal CF]]></category>
+		<category><![CDATA[RabbitMQ]]></category>
+		<category><![CDATA[Reactor]]></category>
+		<category><![CDATA[Redis]]></category>
+		<category><![CDATA[Spring IO Platform]]></category>
+		<category><![CDATA[tc Server]]></category>
+		<category><![CDATA[Web Server]]></category>
+
+		<guid isPermaLink="false">http://blog.gopivotal.com/?p=8506</guid>
+		<description><![CDATA[Today Pivotal proudly announces the formal availability of the Pivotal App Suite. The Pivotal App Suite brings together Pivotal’s strategic open source investments in Spring IO, Groovy &#038; Grails, RabbitMQ, Redis, Apache Tomcat, and the Apache HTTP Server, and combines them with Pivotal tc Server, Pivotal Web Server, and Pivotal RabbitMQ into a single, flexible platform product offering. Customers adopting the Pivotal App Suite today will also enjoy an easy technical migration into platform as a service in the future, as the components in the Pivotal App Suite are also built into Pivotal CF, the leading PaaS offering based on Cloud Foundry.]]></description>
+				<content:encoded><![CDATA[<p><img class="alignleft size-full wp-image-9930" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/featured-PivotalAppSuite.png" alt="featured-PivotalAppSuite" width="200" height="200" /></p>
+<p>Today Pivotal proudly announces the formal availability of the <a title="Pivotal App Suite" href="https://network.gopivotal.com/products/pivotal-app-suite" target="_blank">Pivotal App Suite</a>. The Pivotal App Suite brings together Pivotal’s strategic open source investments in <a title="Spring IO" href="http://spring.io/" target="_blank">Spring IO</a>, <a title="Groovy" href="http://groovy.codehaus.org/" target="_blank">Groovy</a> &amp; <a title="Grails" href="https://grails.org/" target="_blank">Grails</a>, <a title="RabbitMQ" href="http://www.rabbitmq.com/" target="_blank">RabbitMQ</a>, <a title="Redis" href="http://redis.io/" target="_blank">Redis</a>, <a title="Apache Tomcat" href="http://tomcat.apache.org/" target="_blank">Apache Tomcat</a>, and the <a title="Apache HTTP Server" href="http://httpd.apache.org/" target="_blank">Apache HTTP Server</a>, and combines them with <a title="Pivotal tc Server" href="http://www.gopivotal.com/products/pivotal-tc-server" target="_blank">Pivotal tc Server</a>, <a title="Pivotal Web Server" href="http://www.gopivotal.com/products/pivotal-web-server" target="_blank">Pivotal Web Server</a>, and <a title="Pivotal RabbitMQ" href="http://www.gopivotal.com/products/pivotal-rabbitmq" target="_blank">Pivotal RabbitMQ</a> into a single, flexible platform product offering. Customers adopting the Pivotal App Suite today will also enjoy an easy technical migration into platform as a service in the future, as the components in the Pivotal App Suite are also built into Pivotal CF, the leading PaaS offering based on Cloud Foundry.</p>
+<p>The intent of The Pivotal App Suite is to simplify the process of purchasing an application development platform and middleware by providing a best-of-breed collection of commercial products and open source support, while giving you the flexibility to choose which components you want to run and where you want to run them.  As your architecture needs and runtime environment change over time, the Pivotal App Suite adapts with you by virtue of its transferrable cross-platform licensing and support, including physical, virtual, and cloud environments and by giving you the freedom to change the runtime architecture at will.</p>
+<h3><strong>What’s in the Box?</strong></h3>
+<p>The Pivotal App Suite is a platform based on open standards for developing and deploying modern, highly-scalable applications.  It contains web and Java application servers, cross-platform asynchronous messaging, in-memory data caching, and the latest innovations in JVM-based application development. The Pivotal App Suite includes all of the following:</p>
+<p><b>Commercial Products</b></p>
+<ul>
+<li><a title="Pivotal tc Server" href="http://www.gopivotal.com/products/pivotal-tc-server" target="_blank">Pivotal tc Server</a> &#8211; tc Runtime 7 and 8 with Spring Insight and Gemfire Session and Hibernate caching</li>
+<li><a title="Pivotal RabbitMQ" href="http://www.gopivotal.com/products/pivotal-rabbitmq" target="_blank">Pivotal RabbitMQ</a> &#8211; includes JMS client</li>
+<li><a title="Pivotal Web Server" href="http://www.gopivotal.com/products/pivotal-web-server" target="_blank">Pivotal Web Server</a> &#8211; Based on Apache 2.2 and 2.4</li>
+</ul>
+<p><b>24 x 7 Production Support for open source projects</b></p>
+<ul>
+<li><a title="Spring IO" href="http://spring.io/" target="_blank">Spring IO</a> (includes frameworks and runtimes on <a title="Spring.io" href="http://spring.io/" target="_blank">Spring.io</a> such as <a title="Spring Boot" href="http://projects.spring.io/spring-boot/" target="_blank">Spring Boot</a>, <a title="Spring XD" href="http://projects.spring.io/spring-xd/" target="_blank">Spring XD</a> (now GA), <a title="Spring Batch" href="http://projects.spring.io/spring-batch/" target="_blank">Spring Batch</a>, <a title="Spring Integration" href="http://projects.spring.io/spring-integration/" target="_blank">Spring Integration</a>, <a title="Spring " href="http://projects.spring.io/spring-security/" target="_blank">Spring Security</a>, <a title="Spring Tool Suite" href="http://spring.io/tools/sts" target="_blank">Spring Tool Suite</a>, etc.)</li>
+<li><a title="Reactor" href="http://spring.io/blog/2013/05/13/reactor-a-foundation-for-asynchronous-applications-on-the-jvm" target="_blank">Reactor</a></li>
+<li><a title="Redis" href="http://redis.io/" target="_blank">Redis</a></li>
+<li><a title="Groovy" href="http://groovy.codehaus.org/" target="_blank">Groovy</a> &amp; <a title="Grails" href="https://grails.org/" target="_blank">Grails</a></li>
+<li><a title="Apache Tomcat" href="http://tomcat.apache.org/" target="_blank">Apache Tomcat</a> &#8211; including Tomcat 8</li>
+<li><a title="Apache HTTP Server" href="http://httpd.apache.org/" target="_blank">Apache HTTP Server</a> &#8211; including Apache 2.4</li>
+<li><a title="RabbitMQ" href="http://www.rabbitmq.com/" target="_blank">RabbitMQ</a></li>
+</ul>
+<h3><strong>How is it Sold?</strong></h3>
+<p>Pivotal’s innovative licensing model for the Pivotal App Suite greatly simplifies the purchasing process and enables you to move your licenses across platforms when your environment changes.</p>
+<p>The Pivotal App Suite is licensed to run on three types of compute environments:</p>
+<ul>
+<li>Physical, bare-metal computing environments</li>
+<li>Private virtualized and cloud computing environments such as VMware</li>
+<li>Public Cloud IaaS computing environments such as Amazon Web Services, Google Compute Engine, etc.</li>
+</ul>
+<p>The Pivotal App Suite is sold based on processing power, and the metric is the most granular unit of processing power that translates across all environments—the core equivalent.  On a physical computer this is simply the total count of  CPU cores in the environment.  Similarly in a virtualized environment, such as VMware, this is the count of virtual cores in the environment. (Virtual machines are assigned one or more vCPUs, and if these vCPUs are configured with a single virtual core each then licensing the Pivotal App Suite is a simple count of the vCPUS allocated to the environment.)  The leading public IaaS providers all provide specifications as to the number of virtual cores or vCPUs in the environments they provide, and the Pivotal App Suite is licensed in these environments by counting the total of the most granular processing unit provided—typically vCPUs or Virtual Cores. Examples: <a title="Amazon" href="http://aws.amazon.com/ec2/instance-types/" target="_blank">Amazon</a> , <a title="Google" href="https://developers.google.com/compute/docs/machine-types" target="_blank">Google</a> , <a title="Microsoft" href="http://msdn.microsoft.com/en-us/library/azure/dn197896.aspx" target="_blank">Microsoft</a> , <a title="HP" href="http://www.hpcloud.com/products-services/SUSE" target="_blank">HP</a> , <a title="RackSpace" href="http://www.rackspace.com/cloud/servers/pricing/" target="_blank">RackSpace</a></p>
+<p>Licensing The Pivotal App Suite according to the amount of compute processing power you allocate to the environment enables you to freely move workloads across physical environments and into or out of public or private virtualized cloud environments. Furthermore, because you are licensing strictly according to compute power, there is no restriction as to how few or how many Pivotal App Suite components you can run together in your licensed environment, and you have the freedom to change the mix of runtime components as you see fit in order to accommodate changing workloads and evolving architectures.</p>
+<h3><strong>The Bigger Picture</strong></h3>
+<p>This new way to purchase products is part of Pivotal’s overall agenda to streamline the economics of developing and deploying modern applications that are data-intensive and scale across public and private infrastructure. This is the third major milestone this year toward that end. Earlier this year we <a title="announced the Big Data Suite" href="http://blog.gopivotal.com/pivotal/products/pivotals-new-big-data-suite-redefines-the-economics-of-big-data-including-unlimited-hadoop-to-enterprises" target="_blank">announced the Big Data Suite</a>, allowing a similar type of fluid assignment of licenses under a subscription and including unlimited support for data stored in Hadoop. More recently we released <a title="a new harmonized version of Spring IO" href="http://blog.gopivotal.com/pivotal/news-2/the-consumerization-of-java-announcing-spring-io-platform-v-1-0" target="_blank">a new harmonized version of Spring IO</a>, where all of the major components, including Groovy and Grails, “just work” together without the worry of third-party version dependencies. Finally, this month we are extending this easier way to consume and reallocate licenses to customers for our application fabric platform.</p>
+<h3><strong>Developer Support, Training, and Professional Services</strong></h3>
+<p>In addition to the <a title="24x7 premium support" href="http://www.gopivotal.com/support/offerings" target="_blank">24&#215;7 premium support</a> that is included with the Pivotal App Suite, Pivotal offers developer support which covers all components the Pivotal App Suite and is licensed per named contact.  Pivotal also offers training and professional services for all components in the suite.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/pivotal/products/introducing-the-pivotal-app-suite/feed</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>This Month in Data Science</title>
+		<link>http://blog.pivotal.io/pivotal/features/this-month-in-data-science-6?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=this-month-in-data-science-6</link>
+		<comments>http://blog.pivotal.io/pivotal/features/this-month-in-data-science-6#comments</comments>
+		<pubDate>Thu, 31 Jul 2014 17:43:30 +0000</pubDate>
+		<dc:creator><![CDATA[Paul M. Davis]]></dc:creator>
+				<category><![CDATA[Features]]></category>
+		<category><![CDATA[Big Data]]></category>
+		<category><![CDATA[data for good]]></category>
+		<category><![CDATA[data science]]></category>
+		<category><![CDATA[Facebook]]></category>
+		<category><![CDATA[Greenplum DB]]></category>
+		<category><![CDATA[Hadoop]]></category>
+		<category><![CDATA[healthcare]]></category>
+
+		<guid isPermaLink="false">http://blog.gopivotal.com/?p=9650</guid>
+		<description><![CDATA[Data science was a hot topic of discussion in July, with much debate over Facebook’s experiments with users’ emotions based on their behaviors and likes. Despite this, the role of data scientists enjoyed increasing prominence in the fields of sales, healthcare, and sports. Here’s our monthly roundup of the top data science news of the month, both from Pivotal and the entire industry.]]></description>
+				<content:encoded><![CDATA[<p><a href="http://blog.pivotal.io/wp-content/uploads/2014/07/datascience-july-2014.png"><img class="alignright size-full" src="http://blog.pivotal.io/wp-content/uploads/2014/07/datascience-july-2014-300.png" alt="This Month in Data Science for July 2014" width="300" height="1466" /></a>Data science was a hot topic of discussion in July, with much debate over Facebook’s experiments with users’ emotions based on their behaviors and likes. Despite this, the role of data scientists enjoyed increasing prominence in the fields of sales, healthcare, and sports. Here’s our monthly roundup of the top data science news of the month, both from Pivotal and the entire industry.</p>
+<h2><a href="http://venturebeat.com/2014/07/23/3-reasons-your-sales-team-needs-data-science/">Three Reasons Your Sales Team Needs Data Science</a></h2>
+<p>Michael Howard, chief executive of analytics consultancy C9, explains the increasing importance of data science in sales for VentureBeat. He says that data science can improve clarity in sales communications, reduce the complexity of forecasting, and rein in inconsistency and subjective over-analysis within sales teams.</p>
+<h2><a href="http://innovationinsights.wired.com/insights/2014/07/big-data-isnt-enough-tomorrows-technology-will-built-around-workflows/">Why Big Data Isn’t Enough: Tomorrow’s Technology Will Be Built Around Workflows</a></h2>
+<p>The healthcare industry’s extensive efforts to collect and store patients’ records have yet to yield significant improvements in care, argues Acupera’s Chief Technology Officer Imran Qureshi in Wired. Qureshi uses this as a case illustrating the limitations of data warehousing without yielding actionable insight from these records, explaining how integrating data analysis workflows into patient care could improve the entire cycle of treatment, integrating medical records, sensor data, and social and behavioral assessments to better inform health care practitioners’ care.</p>
+<h2><a href="http://gigaom.com/2014/07/09/data-journalism-could-use-a-jolt-of-data-science-too/">Data Journalism Could Use a Jolt of Data Science, Too</a></h2>
+<p>Data journalism has received plenty of attention this year with the launch of data-driven news sites such as FiveThirtyEight and Vox, with some <a href="http://www.niemanlab.org/2014/07/alberto-cairo-data-journalism-needs-to-up-its-own-standards/">resulting disappointment</a> in the rigor and depth that these sites are delivering. Derrick Harris at GigaOm argues that much current data-driven journalism is merely charting recent report numbers, and that the breadth of sources and techniques that dedicated data scientists bring to the table could bring additional insight to data journalism efforts.</p>
+<h2><a href="http://www.forbes.com/sites/kathryndill/2014/07/17/the-best-jobs-for-work-life-balance/">Forbes Names Data Scientist as The Best Job For Work-Life Balance</a></h2>
+<p>A recent study by Forbes and Glassdoor.com declared data scientist to be the best job for work-life balance, based on salary and employee feedback posted on the site. Reasons cited include the high demand for data scientists, which is leading companies to adopt more flexible schedules and workflows to attract top talent.</p>
+<h2><a href="http://fivethirtyeight.com/features/lionel-messi-is-impossible/">Lionel Messi Is Impossible</a></h2>
+<p>In light of his star performance during the World Cup, Benjamin Morris at FiveThirtyEight performs a deep dive on the performance of Argentinian soccer player Lionel Messi, looking at the scoring stats behind the vaunted “Messi magic.”</p>
+<h2><a href="http://www.cnet.com/news/former-facebook-data-scientist-theyre-always-trying-to-alter-peoples-behavior/">Facebook is Always Trying to Alter People’s Behavior, Says Former Data Scientist</a></h2>
+<p>The revelation that Facebook had experimented with its news feed to affect users’ emotions and behavior ignited a firestorm of debate over how personal data is being used by technology companies, and whether the company and researchers stepped over the line. According to former data scientist Andrew Ledvina, Facebook’s data team has conducted similar experiments with little oversight. Some academic researchers pushed back against the public outrage, such as University of Michigan’s Clifford Lampe, <a href="http://online.wsj.com/articles/facebook-experiments-had-few-limits-1404344378?mod=WSJ_hp_RightTopStories">who stated</a> “Facebook deserves a lot of credit for pushing as much research into the public domain as they do.” Late in the month, <a href="http://blog.okcupid.com/index.php/we-experiment-on-human-beings/">OkCupid’s blog OkTrends supported Facebook</a> by declaring that data scientists frequently experiment with user behavior, and that this is to be expected. Nevertheless, Facebook responded to the uproar with contrition and stated that it is overhauling its internal review process.</p>
+<h2><a href="http://venturebeat.com/2014/07/16/meet-data-for-good-the-hacker-news-for-showing-off-the-best-data-science-to-help-the-world/">Meet Data for Good, the Hacker News for Showing Off Your World-Changing Data Science</a></h2>
+<p>VentureBeat reports on <a href="http://www.dataforgood.co/">Data for Good</a>, a fork of data science news site DataTau focused on data-for-social good projects and initiatives. The site aims to document and model these projects so that others can replicate them in their own regions and communities.</p>
+<h1>This Month in Pivotal Data Science</h1>
+<h2><a href="http://blog.pivotal.io/pivotal/features/data-science-how-to-massively-parallel-in-database-image-processing-part-1">Data Science How To: Massively Parallel, In-Database Image Processing: Part 1</a></h2>
+<p>Better, faster image processing can have a huge effect on a number of industries ranging from neurobiology and cancer detection to cognitive vision and control robotics. In part 1, Image Processing Expert and Pivotal Senior Data Scientist, Ailey Crow, gives a short introduction on how this science is applied and then demonstrates six steps of the process.</p>
+<h2><a href="http://blog.pivotal.io/pivotal/features/pivotal-connects-girls-who-code-with-data-science-and-agile-software-development">Pivotal Connects ‘Girls Who Code’ With Data Science and Agile Software Development</a></h2>
+<p>On July 18th, 28 high school-aged girls arrived at Pivotal’s San Francisco offices for an immersive introduction to Pivotal’s agile software development and data science practices. As part of the Girls Who Code initiative, participants were given an opportunity to try out Pivotal’s pair programming approach while receiving guidance and mentorship from a number of Pivotal’s expert women developers and data scientists.</p>
+<h2><a href="http://blog.pivotal.io/pivotal/products/exploratory-data-science-when-to-use-an-mpp-database-sql-on-hadoop-or-map-reduce">Exploratory Data Science: When To Use An MPP Database, SQL on Hadoop or Map Reduce</a></h2>
+<p>The members of the Pivotal Data Labs team are often asked what tools and platforms they use to analyze large datasets and build cutting edge predictive models. In this post, Ian Huston considers the importance of choosing the right platform and focus on exploratory data science. The team always want to use the right tool for the right job, which means understanding what data processing is needed, performance requirements, and budgetary limitations.</p>
+<h2><a href="http://blog.pivotal.io/pivotal/products/how-to-20-minute-guide-to-get-started-with-pivotalr">How To: 20 Minute Guide to Get Started with PivotalR</a></h2>
+<p>In this article, Pivotal engineer and predictive analytics expert Hai Qian explains how someone new to R can get started performing statistical analysis on data stores in Greenplum Database, Pivotal HD and PostgreSQL in just 20 minutes using PivotalR. First, there is some background on R’s popularity, then the articles dives into important topics such as installation, data loading, and data manipulations for PivotalR.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/pivotal/features/this-month-in-data-science-6/feed</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+		<item>
+		<title>CF Summit Video: Swisscom Discusses Using Cloud Foundry and OpenStack/Piston To Build Future Cloud Platform</title>
+		<link>http://blog.pivotal.io/cloud-foundry-pivotal/case-studies-2/cloud-foundry-openstackpiston-cloud-and-swisscom-executives-discuss-collaborative-results-agility-and-open-source-video-included?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=cloud-foundry-openstackpiston-cloud-and-swisscom-executives-discuss-collaborative-results-agility-and-open-source-video-included</link>
+		<comments>http://blog.pivotal.io/cloud-foundry-pivotal/case-studies-2/cloud-foundry-openstackpiston-cloud-and-swisscom-executives-discuss-collaborative-results-agility-and-open-source-video-included#comments</comments>
+		<pubDate>Wed, 30 Jul 2014 18:01:06 +0000</pubDate>
+		<dc:creator><![CDATA[Adam Bloom]]></dc:creator>
+				<category><![CDATA[Case Studies]]></category>
+		<category><![CDATA[case studies]]></category>
+		<category><![CDATA[CF Summit]]></category>
+		<category><![CDATA[Cloud Foundry]]></category>
+		<category><![CDATA[open source]]></category>
+		<category><![CDATA[OpenStack]]></category>
+		<category><![CDATA[partnership]]></category>
+
+		<guid isPermaLink="false">http://blog.gopivotal.com/?p=9864</guid>
+		<description><![CDATA[In a video taken at the CF Summit, Swisscom is joined by a panel from Cloud Foundry and OpenStack/Piston Cloud to discuss their thoughts on the strategy and goals behind using OpenStack and Cloud Foundry together to build their future cloud platform. Swisscom shares the importance of building agility, collaboration, and open source into the platform in order to help them to deliver value added offerings with the “end user as consumer.” The talk also dives into lessons learned and the concept of developing unique competencies with Piston Cloud, OpenStack, and Cloud Foundry.]]></description>
+				<content:encoded><![CDATA[<p><a href="https://www.youtube.com/watch?v=fNSgltgW8AA"><img class="alignleft wp-image-10133 size-full" src="http://blog.pivotal.io/wp-content/uploads/2014/07/featured-CF-Swisscom.png" alt="featured-CF-Swisscom" width="200" height="200" /></a><a title="Swisscom" href="http://en.wikipedia.org/wiki/Swisscom" target="_blank">Swisscom</a> is using <a title="Cloud Foundry" href="http://cloudfoundry.org" target="_blank">Cloud Foundry</a> and <a href="http://www.openstack.org">OpenStack</a> to build its future cloud platform.</p>
+<p>The company, based in Switzerland, provides telecommunications services to 6.4 million mobile customers, 1 million TV subscribers, and 2 million retail broadband accounts.</p>
+<p>At the recent <a title="Cloud Foundry Summit" href="http://cfsummit.com/" target="_blank">Cloud Foundry Summit</a>, there was a business track <a title="breakout session" href="https://www.youtube.com/watch?v=fNSgltgW8AA" target="_blank">breakout session</a>—a panel with Torsten Boettjer, CEO at <a title="Swisscom" href="http://en.wikipedia.org/wiki/Swisscom" target="_blank">Swisscom</a>, Joshua McKenty, Co-Founder and CTO at <a title="Piston Cloud Computing" href="http://www.pistoncloud.com/" target="_blank">Piston Cloud Computing</a>, and <a title="James Watters" href="http://blog.pivotal.io/author/jwatters" target="_blank">James Watters</a>, VP of Product, Marketing, and Ecosystem for Cloud Foundry at <a title="Pivotal" href="http://gopivotal.com/" target="_blank">Pivotal</a>.</p>
+<p>The session, <a title="available on demand" href="https://www.youtube.com/watch?v=fNSgltgW8AA" target="_blank">available on demand</a>, covered Swisscom’s experience working with both open source cloud platforms, collaboratively.</p>
+<h2>Why Put these Two Together? Agile and Collaborative—Cloud Foundry and OpenStack</h2>
+<p>In a strategic effort to become more efficient and agile, Swisscom decided to build a new, cloud-based IT infrastructure that would deliver a foundation for end user services. In order to achieve their goal, the company saw how the two platforms complemented each other and could act as a set of core components, orchestrating and automating cloud virtualization and runtimes.</p>
+<p>Watters posed the first question on this topic, “Cloud Foundry and OpenStack are part of core of Swisscom’s cloud strategy, and how do these work together?” Highlights of Boettjer’s answers include:</p>
+<ul>
+<li>Both are open source.</li>
+<li>Being in Switzerland, Swisscom needed to enable an ecosystem. The future is not about buying infrastructure and sticking it a data center. We are offering our customers more in terms of hardware, software, and access management.</li>
+<li>Basically, we needed to provide value added services, standardized IT solutions, and ultimately target the end user as a consumer so that we can give the CFO a different way to buy IT services and truly enhance personal productivity versus focusing on the infrastructure and missing the mark on supporting end-user requirements.</li>
+</ul>
+<h2>Video Highlights—Cloud Foundry, Open Stack, and Piston Cloud Computing</h2>
+<p>To see the entire video, watch “<a title="Swisscom, PistonCloud, Pivotal - Delivering Cutting Edge Technology with Swiss Bank Level Security" href="https://www.youtube.com/watch?v=fNSgltgW8AA" target="_blank">Swisscom, PistonCloud, Pivotal &#8211; Delivering Cutting Edge Technology with Swiss Bank Level Security</a>” on our <a title="Youtube channel" href="https://www.youtube.com/channel/UCzd8R3vkpllD4CJn_5g5sKg" target="_blank">Youtube channel</a>.</p>
+<p>Watters navigates the conversation to also cover lessons learned and developing unique competencies.</p>
+<p>He dives into the depth of OpenStack and Cloud Foundry with the Founder and CTO of Piston Cloud Computing, Joshua McKenty. If you don’t know him by name, McKenty was the Technical Architect of NASA&#8217;s Nebula Cloud Computing Platform and the OpenStack compute components. He is also a board member of the <a title="OpenStack Foundation" href="http://www.openstack.org/" target="_blank">OpenStack Foundation</a> and was the team lead for the development of the Netscape Browser v8.</p>
+<p>The talk is full of great insights for anyone looking at running these two platforms together.</p>
+<p><strong>Learn More</strong></p>
+<ul>
+<li>Learn more about the Cloud Foundry ecosystem at <a title="CloudFoundry.org" href="CloudFoundry.org" target="_blank">CloudFoundry.org</a></li>
+<li>Read more on OpenStack at <a title="OpenStack.org" href="OpenStack.org" target="_blank">OpenStack.org</a></li>
+<li>Check out our blog articles on <a title="CloudFoundry" href="http://blog.gopivotal.com/tag/cloud-foundry" target="_blank">CloudFoundry</a> or <a title="openstack.org/blog" href="openstack.org:blog" target="_blank">openstack.org/blog</a></li>
+<li>Watch the <a title="full video" href="https://www.youtube.com/watch?v=fNSgltgW8AA" target="_blank">full video</a> or visit the <a title="entire CF Summit playlist" href="https://www.youtube.com/watch?v=vpE1usqpZX8&amp;list=PLAdzTan_eSPQddps0wSNIMaYNYjMLV73X" target="_blank">entire CF Summit playlist</a>.</li>
+</ul>
+<p><iframe src="//www.youtube.com/embed/fNSgltgW8AA" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/cloud-foundry-pivotal/case-studies-2/cloud-foundry-openstackpiston-cloud-and-swisscom-executives-discuss-collaborative-results-agility-and-open-source-video-included/feed</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Data Science How To: Massively Parallel, In-Database Image Processing: Part 1</title>
+		<link>http://blog.pivotal.io/pivotal/features/data-science-how-to-massively-parallel-in-database-image-processing-part-1?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=data-science-how-to-massively-parallel-in-database-image-processing-part-1</link>
+		<comments>http://blog.pivotal.io/pivotal/features/data-science-how-to-massively-parallel-in-database-image-processing-part-1#comments</comments>
+		<pubDate>Sat, 26 Jul 2014 00:28:00 +0000</pubDate>
+		<dc:creator><![CDATA[Ailey Crow]]></dc:creator>
+				<category><![CDATA[Features]]></category>
+		<category><![CDATA[Big Data]]></category>
+		<category><![CDATA[data science]]></category>
+		<category><![CDATA[Image Processing]]></category>
+
+		<guid isPermaLink="false">http://blog.gopivotal.com/?p=9202</guid>
+		<description><![CDATA[Better, faster image processing can have a huge effect on a number of industries ranging from neurobiology and cancer detection to cognitive vision and control robotics. In part 1, Image Processing Expert and Pivotal Senior Data Scientist, Ailey Crow, gives a short introduction on how this science is applied and then goes into 6 steps: image loading, filtering (smoothing), thresholding, cleanup via morphological operations, object recognition using connected components, and counting.]]></description>
+				<content:encoded><![CDATA[<p><em><img class="alignleft wp-image-10054 size-full" src="http://blog.pivotal.io/wp-content/uploads/2014/07/featured-cell-vision.png" alt="featured-cell-vision" width="200" height="200" />Joint work performed by Ailey Crow, Sarah Aerni, Hulya Farinas, Regunathan Radhakrishnan and Gautam Muralidhar of Pivotal’s Data Science Labs.</em></p>
+<p>Automated image processing can increase efficiency for a diverse range of applications from defect detection in manufacturing, to motion detection in video games or surveillance, to tumor detection in medical images. Advances in computer vision have made a significant impact to a variety of fields including neurobiology, artificial intelligence, pathology, security, automation, and entertainment.</p>
+<p>As imaging systems become more efficient and produce higher resolution images, image processing workflows need to adapt to handle larger image data both in image size and number of images. The <a title="Pivotal Data Science" href="http://www.pivotal.io/agile/pivotal-data-labs" target="_blank">Pivotal Data Science</a> team has recently turned their attention to image processing in the context of big image data, resulting in this series of blog posts on this topic.</p>
+<p>Traditional approaches to image processing often start with loading images, as multidimensional arrays of intensity values, into an application’s memory for performing operations such as smoothing (filtering), segmentation, object detection, and classification. Here, we propose an alternative approach of processing images in-database in a distributed fashion, which offers 2 main advantages. First, in-memory storage is not required so images with high spatial resolution (i.e. medical images or video) can be processed regardless of the <a title="memory capacity of the underlying system" href="http://blog.gopivotal.com/pivotal/products/exploratory-data-science-when-to-use-an-mpp-database-sql-on-hadoop-or-map-reduce" target="_blank">memory capacity of the underlying system</a>. Second, thanks to advances in massively parallel, shared nothing database technology, in-database image processing can be faster than traditional image processing in some contexts—especially when processing a large number of images distributed across the database.</p>
+<p>The challenge lies in representing inherently multidimensional arrays of pixels and their relationships to one another in database.</p>
+<h2>How To Approach Massively Parallel Image Processing</h2>
+<p>In the remainder of this blog post, we will present an in-database solution for a basic image processing problem: counting cells in a digital pathology image, such as the one shown below. Specifically, we will be counting the nuclei (round purple objects in this image of a breast cancer tissue sample) in 6 steps: image loading, filtering (smoothing), thresholding, cleanup via morphological operations, object recognition using connected components, and counting.</p>
+<p>If you want a better understanding of the technology stack we often use, <a title="this article " href="http://blog.gopivotal.com/pivotal/products/exploratory-data-science-when-to-use-an-mpp-database-sql-on-hadoop-or-map-reduce" target="_blank">this article</a> provides more information.</p>
+<p><a href="http://blog.gopivotal.com/wp-content/uploads/2014/07/graph11.png"><img class="alignnone size-full wp-image-10049" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/graph11.png" alt="graph1" width="450" height="430" /></a></p>
+<p style="text-align: none;">Beck et al. <em>Sci Transl Med</em> 2011.</p>
+<h2>Image Representation in Database</h2>
+<p>Images can be represented in a database as a table where each row is a pixel and columns contain position information (i.e. x,y,z or row,col) and intensity information (i.e. grayscale or RGB values).</p>
+<p><code>img_name | row  | col  | r_intensity | g_intensity | b_intensity</code></p>
+<p>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;+&#8212;&#8212;&#8212;&#8212;+&#8212;&#8212;&#8212;&#8212;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</p>
+<p><code>test.jpg |  331 |  188 |     250     |     249     |      255</code><br />
+<code>test.jpg |  332 |  188 |     248     |     250     |      255</code><br />
+<code>test.jpg |  331 |  189 |     249     |     249     |      255</code></p>
+<p>We can then transform an image into tabular format by iterating through each pixel in each image. For example, leveraging the <a title="numpy toolbox in Python" href="http://en.wikipedia.org/wiki/NumPy" target="_blank">numpy toolbox in Python</a> for a 2D image ‘im’, we can write a csv file following the column structure of the above table, as follows:</p>
+<pre class="brush: plain; title: ; notranslate">
+imName = ‘test.jpg’
+OutPath = ‘/ImTable.csv’
+for r in range(0,np.size(im,0)):
+  for c in range(0,np.size(im,1)):
+   S = S + imName + ',' + str(r) + ',' + str(c) + ',' +
+      im[r,c,0].astype('str') + ',' +
+      im[r,c,1].astype('str') + ',' +
+      im[r,c,2].astype('str') + '\n'
+open(OutPath,'a').write(S)
+</pre>
+<p>There are a number of methods available to ingest images into a database that can be implemented at scale. For example, images could be loaded into the database in bytea format and then transformed to tabular format by running the above script in parallel as a user-defined PLpython function.  Alternatively, the above Python script could be setup to run in parallel externally followed by parallel gpfdist processes pointing to the same table.</p>
+<h2>Smoothing (Filtering) Using Procedural Languages</h2>
+<p>Once the images are loaded in the database, we can begin distributed image processing. A common first step in image processing is to smooth the image to remove noise. Let’s apply the most basic filter: a uniform box filter (or local averaging filter), which simply replaces each pixel’s intensity with the mean intensity of all neighboring pixels.</p>
+<p>There are many image processing toolboxes available to facilitate smoothing. We can leverage these in-database with a user-defined function. For example, we can use Python’s numpy and scipy ndimage packages in a PLpython user-defined function and reshape the image into a multidimensional array as follows:</p>
+<pre class="brush: plain; title: ; notranslate">
+create or replace function im_smooth(maxr integer, maxc integer,im_array integer[])
+   returns integer[]
+as $$
+  import numpy as np
+  import scipy.ndimage as ndi
+  smooth = np.reshape(im_array, (maxr+1, maxc+1))
+  smooth = ndi.uniform_filter(smooth, size=3)
+  return np.reshape(smooth.astype(int), (maxr+1)*(maxc+1))
+$$ language plpythonu;
+</pre>
+<p>Then, to smooth the blue channel:</p>
+<pre class="brush: plain; title: ; notranslate">
+SELECT img_name, im_smooth(max(row), max(col),
+  array_agg(b_intensity order by row, col))
+FROM (SELECT * from testim order by row, col) t;
+</pre>
+<p>Note, array_agg on line 2 is used to input all blue intensity values into the function in a pre-specified order that is assumed by the function. The smoothed intensity values will be returned as an array in the same order and would require additional processing to be returned to the tabular format.</p>
+<p>This approach leverages familiar image processing tools, but requires holding the images in memory. If the image size exceeds the memory capacity of the underlying system, often true of satellite or medical images, an alternative approach is required.</p>
+<p>We could downsample the image to make it fit in memory or break the image into tiles for block processing as explained in “<a title="Challenges of Medical Image Processing" href="https://www.google.com/search?q=Scholl+et+al.+Challenges+of+Medical+Image+Processing.+Comput+Sci+Res+Dev+2011&amp;oq=Scholl+et+al.+Challenges+of+Medical+Image+Processing.+Comput+Sci+Res+Dev+2011" target="_blank">Challenges of Medical Image Processing</a>” or at <a title="Mathworks" href="http://www.mathworks.com/products/image/description7.html" target="_blank">Mathworks</a>. Or, we can avoid memory limitations altogether and process the entire image at full resolution by processing in-database.</p>
+<h2>Smoothing (Filtering) with Window Functions</h2>
+<p>For smoothing an image in-database, we will access the neighboring pixel values using a convenient tool described previously in this series about time series and <a title="window functions by Caleb Welton" href="http://blog.gopivotal.com/author/caleb-welton" target="_blank">window functions by Caleb Welton</a>.</p>
+<p>Uniform smoothing of 4-connected pixels (ignore diagonally-connected pixels) for the blue channel can be achieved as follows:</p>
+<pre class="brush: plain; title: ; notranslate">
+SELECT img_name, row, col, madlib.array_mean(b_intensity) b_intensity
+FROM (
+  SELECT img_name, row, col, array[b_intensity,
+   lag(b_intensity) OVER( wdw_col ),
+   lead(b_intensity) OVER( wdw_col ),
+   lag(b_intensity) OVER( wdw_row ),
+   lead(b_intensity) OVER( wdw_row )
+   ] b_intensity
+ FROM testim
+ WINDOW wdw_col AS (partition by col order by row),
+  wdw_row AS (partition by row order by col) )t;
+</pre>
+<p>This SQL query collects an array of the blue intensity values of a given pixel and its 4 immediate neighbors using window functions (lines 3-8). The smoothed value of the pixel is then computed as the mean of the array (line 1) using the <a title="MADlib in-database machine learning and analytics library" href="http://doc.madlib.net/latest/group__grp__array.html" target="_blank">MADlib in-database machine learning and analytics library</a>.</p>
+<p>If we want to include the diagonal pixels as well, we need to define a new coordinate system over which to run our window functions. The new coordinate system is simply rotated 45 degrees from the normal coordinate system and translated from the row, col system as follows:</p>
+<p>Diag1 = row &#8211; col<br />
+Diag2 = row + col</p>
+<p>This is demonstrated for the 4&#215;4 pixel array below:</p>
+<p><a href="http://blog.gopivotal.com/wp-content/uploads/2014/07/Graph21.png"><img class="alignnone size-full wp-image-10050" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/Graph21.png" alt="Graph2" width="450" height="322" /></a></p>
+<p>Now, let’s apply the new coordinate system for uniform smoothing including diagonals (8-connected pixels).</p>
+<p>Uniform smoothing of 8-connected pixels (include diagonally-connected pixels) can be achieved as follows:</p>
+<pre class="brush: plain; title: ; notranslate">
+CREATE TEMP TABLE testim_smooth AS
+SELECT img_name, row, col, madlib.array_mean(b_intensity) b_intensity
+FROM (
+  SELECT img_name, row, col, array[b_intensity,
+   lag(b_intensity) OVER( wdw_col ),
+   lead(b_intensity) OVER( wdw_col ),
+   lag(b_intensity) OVER( wdw_row ),
+   lead(b_intensity) OVER( wdw_row ),
+   lag(b_intensity) OVER( wdw_diag1 ),
+   lead(b_intensity) OVER( wdw_diag1 ),
+   lag(b_intensity) OVER(wdw_diag2 ),
+   lead(b_intensity) OVER( wdw_diag2 )
+  ] b_intensity
+ FROM testim
+ WINDOW wdw_col AS (partition by col order by row),
+  	wdw_row AS (partition by row order by col),
+    wdw_diag1 AS (partition by (row-col) order by col)
+ 	wdw_diag2 AS (partition by (row+col) order by col) )t;
+</pre>
+<p><a href="http://blog.gopivotal.com/wp-content/uploads/2014/07/Graph3.png"><img class="alignnone size-full wp-image-10016" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/Graph3.png" alt="Graph3" width="902" height="426" /></a></p>
+<p>This approach can be extended to more complex filters by computing the inner product of the neighborhood array and a vectorized kernel, such as a 2D Gaussian. In the next post, we will explore the subsequent steps required to count the number of objects (nuclei) in an image with in-database processing.</p>
+<p><strong>To Learn More:</strong></p>
+<ul style="color: #000000;">
+<li>Look for Part II and other data science articles on our <a title="Twitter" href="https://twitter.com/pivotal" target="_blank">Twitter</a>, <a title="LinkedIn" href="http://www.linkedin.com/company/3048967" target="_blank">LinkedIn</a>, <a title="Facebook" href="https://www.facebook.com/pivotalsoftware" target="_blank">Facebook</a>, <a title="Google Plus" href="https://plus.google.com/105320112436428794490/posts" target="_blank">Google Plus</a>, and <a title="Youtube" href="http://www.youtube.com/gopivotal" target="_blank">Youtube</a> where you can learn about related topics like neurobiology, statistics, optimization, machine learning, cognitive vision, artificial intelligence, control robotics, signal processing, optics, security, and smart cameras.</li>
+</ul>
+<ul>
+<li>Pivotal Greenplum Database:
+<ul>
+<li>Product <a title="Overview, Features, and Technology" href="http://www.gopivotal.com/big-data/pivotal-greenplum-database/" target="_blank">Overview, Features, and Technology</a></li>
+<li>Product <a title="Documentation" href="file:///C:\Users\a\Documents\07_PivotalInitiative\8465%20-%20Graph%20Analytics%20-%20Sara%20Aerni\fig-04-connected-component-example-identity-resolution.png" target="_blank">Documentation</a></li>
+<li>Other <a title="blog articles" href="http://blog.gopivotal.com/tag/greenplum" target="_blank">blog articles</a> on Pivotal Greenplum Database</li>
+</ul>
+</li>
+<li>Pivotal Data Science:
+<ul>
+<li><a title="All Articles on Pivotal Data Science" href="http://blog.gopivotal.com/tag/data-science" target="_blank">All Articles on Pivotal Data Science</a></li>
+<li><a title="Article" href="http://blog.gopivotal.com/pivotal/products/a-data-science-approach-to-detecting-insider-security-threats" target="_blank">Article</a>: A Data Science Approach to Detecting Insider Security Threats</li>
+<li><a title="Article" href="http://blog.gopivotal.com/pivotal/products/using-data-science-techniques-for-the-automatic-clustering-of-it-alerts" target="_blank">Article</a>: Using Data Science Techniques for the Automatic Clustering of IT Alerts</li>
+</ul>
+</li>
+<li>Check out <a title="This Month in Data Science" href="http://blog.gopivotal.com/tag/this-month-in-data-science" target="_blank">This Month in Data Science</a></li>
+</ul>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/pivotal/features/data-science-how-to-massively-parallel-in-database-image-processing-part-1/feed</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Strengthening Apache Hadoop in the Enterprise with Apache Ambari</title>
+		<link>http://blog.pivotal.io/pivotal/features/strengthening-hadoop-in-the-enterprise-with-apache-ambari?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=strengthening-hadoop-in-the-enterprise-with-apache-ambari</link>
+		<comments>http://blog.pivotal.io/pivotal/features/strengthening-hadoop-in-the-enterprise-with-apache-ambari#comments</comments>
+		<pubDate>Mon, 28 Jul 2014 10:11:24 +0000</pubDate>
+		<dc:creator><![CDATA[Jamie Buckley]]></dc:creator>
+				<category><![CDATA[Features]]></category>
+		<category><![CDATA[Ambari]]></category>
+		<category><![CDATA[Big Data Suite]]></category>
+		<category><![CDATA[Cloud Foundry]]></category>
+		<category><![CDATA[GemFire XD]]></category>
+		<category><![CDATA[Hadoop]]></category>
+		<category><![CDATA[HAWQ]]></category>
+		<category><![CDATA[partnership]]></category>
+		<category><![CDATA[RabbitMQ]]></category>
+		<category><![CDATA[Redis]]></category>
+		<category><![CDATA[Spring XD]]></category>
+
+		<guid isPermaLink="false">http://blog.gopivotal.com/?p=9837</guid>
+		<description><![CDATA[Today we are excited to announce that Pivotal and Hortonworks will collaborate on the Apache Ambari project to help strengthen Hadoop as an enterprise offering and to further advance the Apache Hadoop ecosystem. We are expanding our open source investment by dedicating Pivotal engineers to contribute installation, configuration and management capabilities to Ambari.  We will collaborate closely with Hortonworks, ASF, and the broader Apache Hadoop community in this effort. At the same time, we will continue to deliver on our commitments to existing customers and work closely with them to benefit from this collaboration.]]></description>
+				<content:encoded><![CDATA[<p><img class="alignleft wp-image-10080 size-full" src="http://blog.pivotal.io/wp-content/uploads/2014/07/featured-elephant-only.png" alt="featured-elephant-only" width="200" height="200" />At Pivotal, we <a title="Open Source is Pivotal" href="http://blog.pivotal.io/pivotal/products/open-source-is-pivotal" target="_blank">strongly support open source software</a>. This, of course, includes significant contributions to important technologies like <a title="Cloud Foundry" href="http://www.pivotal.io/platform-as-a-service/pivotal-cf" target="_blank">Cloud Foundry</a>, <a title="Redis" href="http://www.pivotal.io/big-data/redis" target="_blank">Redis</a>, <a title="Spring XD" href="http://projects.spring.io/spring-xd/" target="_blank">Spring XD</a> and <a title="Rabbit MQ" href="http://www.pivotal.io/products/pivotal-rabbitmq" target="_blank">RabbitMQ</a>, just to name a few. We also have a deep commitment to <a title="Apache Hadoop" href="http://hadoop.apache.org/" target="_blank">Apache Hadoop</a>. We invest heavily in Hadoop and complementary modules like <a title="HAWQ" href="http://www.pivotal.io/big-data/pivotal-hd" target="_blank">HAWQ</a>, <a title="Gemfire XD" href="http://www.pivotal.io/big-data/pivotal-gemfire" target="_blank">GemFire XD</a> and <a title="Pivotal Command Center" href="http://www.pivotal.io/big-data/pivotal-hd" target="_blank">Pivotal Command Center</a>. It is essential to our core, allows us to serve our customers in profound ways, and it is a fundamental part of our innovative <a title="Big Data Suite" href="http://www.pivotal.io/big-data" target="_blank">Big Data Suite</a>. Today we are excited to announce that Pivotal and <a title="Hortonworks" href="http://hortonworks.com/blog/pivotal-hortonworks-shared-vision-operations-enterprise-hadoop/" target="_blank">Hortonworks</a> will collaborate on the <a title="Apache Ambari" href="http://ambari.apache.org/" target="_blank">Apache Ambari </a>project to help strengthen Hadoop as an enterprise offering and to further advance the Apache Hadoop ecosystem.</p>
+<p>Apache Hadoop projects are central to our efforts to drive the most value for the enterprise. An open source, extensible and vendor neutral application to manage services in a standardized way benefits the entire ecosystem. It increases customer agility and reduces operational costs and can ultimately help drive Hadoop adoption.</p>
+<p>We have great respect for the progress that has been made by Hortonworks in this area, specifically around the Ambari project.</p>
+<p>Our Pivotal HD and Big Data Suite customers who favor Ambari—and the broader Apache Hadoop community—will benefit from additional development resources and functionality contributions Pivotal will make to the Ambari project, working closely with Hortonworks and others.</p>
+<p><a href="http://www.pivotal.io/big-data/pivotal-big-data-suite"><img class="alignnone wp-image-7829 size-full" src="http://blog.pivotal.io/wp-content/uploads/2014/04/cta-big-data-suite.png" alt="cta-big-data-suite" width="600" height="135" /></a></p>
+<p><strong>&#8220;Pivotal has a strong record of contribution to open source and has proven their commitment with projects such as Cloud Foundry, Spring, Redis and more.  Collaborating with Hortonworks and others in the Apache Hadoop ecosystem to further invest in Apache Ambari as the standard management tool for Hadoop will be quite powerful,” says Shaun Connolly, VP Strategy at Hortonworks “Pivotal’s track record in open source overall and the breadth of skills they bring will go a long way towards helping enterprises be successful, faster, with Hadoop.”</strong></p>
+<p>We are expanding our open source investment by dedicating Pivotal engineers to contribute installation, configuration and management capabilities to Ambari.  We will collaborate closely with Hortonworks, ASF, and the broader Apache Hadoop community in this effort. At the same time, we will continue to deliver on our commitments to existing customers and work closely with them to benefit from this collaboration.</p>
+<p>Pivotal will continue to drive technology forward, to further the goal of enterprise standard Hadoop.  We are looking forward to Apache Ambari contributions, along with further innovations in our Big Data Suite.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/pivotal/features/strengthening-hadoop-in-the-enterprise-with-apache-ambari/feed</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+		<item>
+		<title>Case Study: How Pivotal Network Does Zero Downtime Deployment on Cloud Foundry</title>
+		<link>http://blog.pivotal.io/cloud-foundry-pivotal/case-studies-2/case-study-how-pivotal-network-does-zero-downtime-deployment-on-cloud-foundry?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=case-study-how-pivotal-network-does-zero-downtime-deployment-on-cloud-foundry</link>
+		<comments>http://blog.pivotal.io/cloud-foundry-pivotal/case-studies-2/case-study-how-pivotal-network-does-zero-downtime-deployment-on-cloud-foundry#comments</comments>
+		<pubDate>Thu, 24 Jul 2014 17:32:22 +0000</pubDate>
+		<dc:creator><![CDATA[Cameron Cundiff]]></dc:creator>
+				<category><![CDATA[Case Studies]]></category>
+		<category><![CDATA[case studies]]></category>
+		<category><![CDATA[Cloud Foundry]]></category>
+		<category><![CDATA[Pivotal Network]]></category>
+
+		<guid isPermaLink="false">http://blog.gopivotal.com/?p=9985</guid>
+		<description><![CDATA[At the end of last quarter, Pivotal Network (the platform for evaluating Pivotal Software) came out of a three week deploy freeze, and yet the team still needed to deliver features. In looking for a way to avoid downtime constraints going forward, they figured out a way to use Cloud Foundry to deploy four times to our production environment in the span of that following week, with no downtime. Today, they can now deploy small features as they are ready, during business hours. In this post, the former technical lead for Pivotal Network shares their experience and outlines the steps they followed to get there.]]></description>
+				<content:encoded><![CDATA[<p><img class="alignleft size-full wp-image-9989" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/featured-fractured-time.png" alt="featured-fractured-time" width="200" height="200" />I’m a developer at Pivotal Labs and former technical lead for <a title="Pivotal Network" href="https://network.gopivotal.com" target="_blank">Pivotal Network</a>. In this post, I’ll walk you through zero-downtime deploys to Cloud Foundry. I’ll use our experience deploying Pivotal Network as a case study.</p>
+<p>At the end of last quarter we came out of a three week deploy freeze (sound familiar?), and we were itching to deliver features. We also wanted a way to avoid downtime constraints going forward. We established the steps I am about to outline, and subsequently deployed four times to our production environment in the span of that following week, with no downtime. We can now deploy small features as they are ready, during business hours. This a big boost to our confidence in delivering and moving quickly, and it means we’re not staying after hours doing late night deploys.</p>
+<h3><b>Deploying individual apps</b></h3>
+<p>Initially, deploy your code to two cf applications (if you have an existing application, create a second one). Then you can swap out one or the other as you please, and the Cloud Foundry router will automatically point to the one that is available!</p>
+<p>Cloud Foundry will automatically bind whatever services you have defined via a manifest file or <a href="https://console.run.pivotal.io">console.run.pivotal.io</a> to each of the apps whenever you deploy.</p>
+<p>The Cloud Foundry <a href="http://docs.cloudfoundry.org/devguide/deploy-apps/blue-green.html">documentation on blue-green deployment</a> describes this process in more detail.<br />
+<img src="http://blog.gopivotal.com/wp-content/uploads/2014/07/map.png" alt="map" width="350" height="246" class="alignnone size-full wp-image-10009" /></p>
+<h3>Example &#8211; Rack App</h3>
+<p>We start with a pair of apps running the same code &#8211; a simple Rack app. This script assumes that both have been pushed with default routes created, and they share a common database service. They also share the route cf-blue-green.cfapps.io.</p>
+<pre>
+# config.ru
+run <span style="color: green;">Proc</span>.new { |env| [<span style="color: red;">'200'</span>, {<span style="color: red;">'Content-Type'</span> =&gt; <span style="color: red;">'text/html'</span>}, [<span style="color: red;">'Hello, world!'</span>]] }
+
+
+# deploy.sh
+
+#!/bin/bash
+cf unmap-route blue-app cfapps.io -n cf-blue-green          # make the app unavailable to requests
+cf push blue-app -c 'bundle exec rackup config.ru -p $PORT' # deploy the code changes to CF
+
+# wait for the blue app to start
+while true; do
+RESP=`curl -sIL -w "%{http_code}" "blue-app.cfapps.io" -o /dev/null`
+if [[ $RESP == "200" ]]
+then break
+else sleep 3 &amp;&amp; echo "Waiting for 200 response"
+fi
+done
+
+# make the blue app available to the router
+cf map-route blue-app cfapps.io -n cf-blue-green
+
+# deploy to the green app
+cf unmap-route green-app cfapps.io -n cf-blue-green
+cf push green-app -c 'bundle exec rackup config.ru -p $PORT'
+cf app green-app
+cf map-route green-app cfapps.io -n cf-blue-green
+</pre>
+<p><a title="Github repo" href="https://github.com/ckundo/cf-blue-green" target="_blank">Github repo</a><br />
+<b><br />
+<h3>Example 2 &#8211; Rails app</h3>
+<p></b><br />
+The same process above works with a Rails application, even when there are migrations—as long as the migrations are not destructive.</p>
+<p>For example, if you write a migration to create a column, deploying the blue app can run that migration against the shared database without disrupting the green app. The green app’s code will not know about the column and will continue normally.</p>
+<p>If we were deploying a Rails app, we’d take the same script from above, and make a minor adjustment to the command argument string:</p>
+<pre><code>cf push blue-app -c 'bundle exec rackup config.ru -p $PORT'</code></pre>
+<p>becomes:</p>
+<pre><code>cf push blue-app -c 'bundle exec rake db:migrate &amp;&amp; bundle exec rails s -p $PORT'</code></pre>
+<p><a href="http://www.gopivotal.com/platform-as-a-service/pivotal-cf"><img class="alignnone wp-image-6241 size-full" src="http://blog.gopivotal.com/wp-content/uploads/2014/02/CTA-PivotalCF.png" alt="CTA-PivotalCF" width="600" height="135" /></a><br />
+<b><br />
+<h3>Rolling back</h3>
+<p></b><br />
+In the event that the blue app fails to deploy, you can simply deploy the version of your code that was on the app prior to the deploy. Then you can have both instances still running while you debug the failure.</p>
+<h2>Conclusion</h2>
+<p>This is a simplified example, but even so it demonstrates the ease with which one can deploy to Cloud Foundry with zero downtime. Now that we’ve automated this process on Pivotal Network, we can deploy features several times a week, and execute hotfixes quickly with low overhead. This creates better feedback loops with our stakeholders and customers, and means we can regularly ship features without worrying about maintenance windows. It feels good!</p>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/cloud-foundry-pivotal/case-studies-2/case-study-how-pivotal-network-does-zero-downtime-deployment-on-cloud-foundry/feed</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Elisabeth Hendrickson on Using PaaS for Continuous Delivery at the Cloud Foundry Summit</title>
+		<link>http://blog.pivotal.io/cloud-foundry-pivotal/case-studies-2/elisabeth-hendrickson-on-using-paas-for-continuous-delivery-at-the-cloud-foundry-summit-2?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=elisabeth-hendrickson-on-using-paas-for-continuous-delivery-at-the-cloud-foundry-summit-2</link>
+		<comments>http://blog.pivotal.io/cloud-foundry-pivotal/case-studies-2/elisabeth-hendrickson-on-using-paas-for-continuous-delivery-at-the-cloud-foundry-summit-2#comments</comments>
+		<pubDate>Thu, 24 Jul 2014 13:18:30 +0000</pubDate>
+		<dc:creator><![CDATA[Paul M. Davis]]></dc:creator>
+				<category><![CDATA[Case Studies]]></category>
+		<category><![CDATA[case studies]]></category>
+		<category><![CDATA[CF Summit]]></category>
+		<category><![CDATA[Cloud Foundry]]></category>
+		<category><![CDATA[continuous delivery]]></category>
+		<category><![CDATA[continuous integration]]></category>
+		<category><![CDATA[PaaS]]></category>
+
+		<guid isPermaLink="false">http://blog.gopivotal.com/?p=9662</guid>
+		<description><![CDATA[During a technical breakout session at the Cloud Foundry Summit 2014, Elisabeth Hendrickson, director of quality engineering for Cloud Foundry, explained the value of continuous delivery and how a PaaS like Cloud Foundry can enable automated deployments with zero downtime for users.
+]]></description>
+				<content:encoded><![CDATA[<p><img class="alignleft wp-image-9893 size-full" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/featured-PaaSContinuousDelivery.png" alt="featured-PaaSContinuousDelivery" width="200" height="200" />During a technical breakout session at the <a title="Why #CFSummit rocked" href="http://blog.gopivotal.com/cloud-foundry-pivotal/p-o-v/field-report-the-3-reasons-why-the-cfsummit-rocked" target="_blank">Cloud Foundry Summit 2014</a>, Elisabeth Hendrickson, director of quality engineering for <a title="Platform as a Service" href="http://www.gopivotal.com/platform-as-a-service/pivotal-cf" target="_blank">Cloud Foundry</a>, explained the value of continuous delivery and how a PaaS like Cloud Foundry can enable automated deployments with zero downtime for users.</p>
+<p>Continuous delivery is a software development practice that allows automated software delivery and frequent releases, with little or no manual intervention. Continuous delivery provides the ability to reliably push software updates to users with no downtime. In her talk, Hendrickson explained how automated deployments are a straightforward process using Cloud Foundry.</p>
+<p>Hendrickson began her talk with a discussion of continuous integration, the practice of merging all developers’ versions into a single version multiple times a day. “What’s interesting about continuous integration,” she said, “is that that you’ve got a bunch of developers who are contributing stuff, and with ever single contribution, before they check in, they’re doing local merge to make sure that everything’s working well.”</p>
+<p>She explained that the challenge of continuous integration isn’t the technical aspect, but rather the culture change it demands. “If you’ve got a bunch of people throwing stuff in,” Hendrickson said, “and they say, ‘it worked on my machine,’ then you’re going to have a problem with your organization.”</p>
+<p>Continuous delivery addresses such roadblocks, she explained, as “It means that your software is production-ready from day one. You theoretically could put this thing in production right now; it’s now a business decision whether or not you’re going to.” Developers know that their software updates will work in production, because they are placing them “in something that looks like production all the time.”</p>
+<p>For continuous delivery to be successful, three requirements must be met:</p>
+<ul>
+<li>fully automated testing</li>
+<li>a continuous integration server that executes those tests and can promote successful deployments</li>
+<li>a scripted automated deployment mechanism with zero downtime</li>
+</ul>
+<p>The final requirement is where Cloud Foundry comes into the picture. “You’re going to go from having a single build to having an entire pipeline with continuous delivery,” she said, “because you’re not going to have a separate phase during which some QA people take over and do a bunch of stuff.” Cloud Foundry includes a number of features that enable automatic deployment while ensuring that working code is consistently being pushed to users. Hendrickson listed some of these key features in her talk:</p>
+<ul>
+<li>same exact code in a different space</li>
+<li>the ability to perform blue-green deployment to ensure zero downtime for users, who “won’t even notice that you’ve been upgrading the code from out under them”</li>
+</ul>
+<p>Hendrickson offered a real-world use case by demonstrating how Cloud Foundry enables continuous delivery for one of its own applications, <a href="http://docs.cloudfoundry.org/">docs.cloudfoundry.org</a>. All of the Cloud Foundry docs run as apps, and the developers do continuous integration and continuous deployment. “It’s a great little use case,” she said, “because we’re using our own stuff to deploy something that’s very much in production and that we very much care about.”</p>
+<p><img class="alignleft wp-image-9977 size-medium" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/Screen-Shot-2014-07-22-at-7.04.50-PM-300x160.png" alt="Screen Shot 2014-07-22 at 7.04.50 PM" width="300" height="160" /></p>
+<p>All of the documentation is modular, she explained, with a large number of GitHub repositories. “As soon as a writer checks in a change to any of those modules,” Hendrickson said, “it kicks off three different builds because we have to publish three different versions of our documentation.” They are building an entire documentation set which cannot have broken links, meaning that the build pipeline assembles the static document files, verifies the links, deploys to a staging site for review, and following review, automatically makes the updates live on the Cloud Foundry site.</p>
+<p>“We’re updating our documentation sites at least once a week,” Hendrickson said. “Once a week sounds like it’s not continuous, but it is, because we could do it at a moment’s notice.”</p>
+<p><strong>Learn more:</strong></p>
+<ul>
+<li>Watch this <a href="https://www.youtube.com/watch?v=Go9lC2cCET8&amp;list=PLAdzTan_eSPQddps0wSNIMaYNYjMLV73X&amp;index=23" target="_blank">video</a> and <a href="https://www.youtube.com/playlist?list=PLAdzTan_eSPQddps0wSNIMaYNYjMLV73X">others</a> from CF Summit</li>
+<li>Learn more about <a href="http://www.gopivotal.com/platform-as-a-service/pivotal-cf">Cloud Foundry and Pivotal CF</a></li>
+</ul>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/cloud-foundry-pivotal/case-studies-2/elisabeth-hendrickson-on-using-paas-for-continuous-delivery-at-the-cloud-foundry-summit-2/feed</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Pivotal Connects &#8216;Girls Who Code&#8217; With Data Science and Agile Software Development</title>
+		<link>http://blog.pivotal.io/pivotal/features/pivotal-connects-girls-who-code-with-data-science-and-agile-software-development?utm_source=rss&#038;utm_medium=rss&#038;utm_campaign=pivotal-connects-girls-who-code-with-data-science-and-agile-software-development</link>
+		<comments>http://blog.pivotal.io/pivotal/features/pivotal-connects-girls-who-code-with-data-science-and-agile-software-development#comments</comments>
+		<pubDate>Tue, 22 Jul 2014 09:28:51 +0000</pubDate>
+		<dc:creator><![CDATA[Paul M. Davis]]></dc:creator>
+				<category><![CDATA[Features]]></category>
+		<category><![CDATA[events]]></category>
+		<category><![CDATA[Girls Who Code]]></category>
+		<category><![CDATA[Pivotal Data Labs]]></category>
+		<category><![CDATA[Pivotal for Good]]></category>
+		<category><![CDATA[Pivotal Labs]]></category>
+
+		<guid isPermaLink="false">http://blog.gopivotal.com/?p=9656</guid>
+		<description><![CDATA[Last Friday, July 18th, 28 high school-aged girls arrived at Pivotal’s San Francisco offices for an immersive introduction to Pivotal’s agile software development and data science practices. As part of the Girls Who Code initiative, participants were given an opportunity to try out Pivotal’s pair programming approach while receiving guidance and mentorship from a number of Pivotal’s expert women developers and data scientists.]]></description>
+				<content:encoded><![CDATA[<p><img class="alignleft size-thumbnail wp-image-9916" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/featured-GirlsWhoCode-150x150.png" alt="featured-GirlsWhoCode" width="150" height="150" />Last Friday, July 18th, 28 high school-aged girls arrived at Pivotal’s San Francisco offices for an immersive introduction to Pivotal’s agile software development and data science practices. As part of the <a href="http://girlswhocode.com/">Girls Who Code</a> initiative, participants were given an opportunity to try out Pivotal’s pair programming approach while receiving guidance and mentorship from a number of Pivotal’s expert developers and data scientists.</p>
+<p><a href="http://girlswhocode.com/programs/">The Girls Who Code Summer Immersion Program</a>, sponsored by Pivotal’s partner GE, is an intensive 7-week course for high school-aged girls. It is an effort to address gender-based inequities within Science, Technology, Engineering, and Math (STEM) education and the tech industry. While 74% of female middle school students express interest in STEM, only 0.3% of high school girls choose computer science as their college major. If anything, gender inequity in tech has increased over time, with women representing only 12% of current computer science graduates, down from 37% in 1984. Moreover, while women comprise half of the American workforce, they hold only 25% of available technical or computing jobs. Girls Who Code aims to give participants a firm foundation in computer science through project-based education and insight into how those skills are utilized at real world technology companies.</p>
+<p><img class="aligncenter size-large wp-image-9939" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/image-10-617x500.jpeg" alt="image (10)" width="617" height="500" /></p>
+<p>At Pivotal’s Girls Who Code event, participants were introduced to the role that computer science plays in the company’s agile development practices, as well as its data science initiatives. The Codeathon kicked off with an introduction from Jen Bossin, Business Development Director at GE, and Annika Jimenez, Vice President of <a href="http://www.gopivotal.com/pivotal-data-labs" target="_blank">Pivotal Data Labs</a>. “What we want to do today,” Jimenez said to the participants, “Is expose you—not just to generic concepts around coding and tech—but what these real careers look like in particular within Pivotal, which has attached a lot to data science and analytics.”</p>
+<p>The introduction was followed with a hands-on collaborative coding exercise facilitated by <a href="http://pivotallabs.com/" target="_blank">Pivotal Labs</a> developers. The girls were challenged to build an interactive rock, paper, scissors game, as a way of practicing behavior-driven development and pair programming. Pivotal Labs developers scaffolded the activity prior to the event with basic UI features and functionality, so the girls could focus on writing the code that determines the winner of the game, depending on which button each user presses. In the provided state, the code failed testing, so the participants were tasked with making the tests pass, confirming that the game was working as expected.</p>
+<p><img class="aligncenter size-large wp-image-9941" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/Screen-Shot-2014-07-21-at-7.37.15-PM-617x500.jpg" alt="Screen Shot 2014-07-21 at 7.37.15 PM" width="617" height="500" /></p>
+<p>Sarah Aerni, Ailey Crow, and Rashmi Raghu of Pivotal Data Labs presented an introduction to the exciting and fast-growing data science field. In their presentation, they explained the factors that are driving the influx of Big Data, and the computer science skills that data scientists devote to those massive datasets. They demystified data science through a presentation of Pivotal Data Labs’ involvement in last fall’s <a href="http://blog.gopivotal.com/pivotal/p-o-v/pivotals-experience-at-the-kaiser-code-a-thon" target="_blank">Kaiser Code-a-Thon</a>, during which a number of teams competed to develop an asthma population management app that correlated air quality data, medication order history, and hospital admissions for asthma sufferers. The Pivotal Data Labs team concluded with a list of skills that potential data scientists should learn, and pointed to publicly accessible data science tools and raw data repositories the girls can experiment with, such as the U.S. Government’s portal Data.gov.</p>
+<p>The Codeathon closed with a frank panel discussion featuring the participating Women of Pivotal, which included Aerni, developers Laura Kogler and Rachel Bobbins, designer Pam Dineva, and Elisabeth Hendrickson, Director of Quality Engineering for Cloud Foundry. The Pivotal women gave more insight into their own educational and professional paths, and identified what they love about their jobs, including working with smart people, travel, pair programming, and opportunities to solve real-world problems that matter. They took questions from the Girls Who Code participants, who asked the panelists what challenges they have faced in the industry because they are women.</p>
+<p><img class="aligncenter size-large wp-image-9940" src="http://blog.gopivotal.com/wp-content/uploads/2014/07/IMG_4265-1-617x500.jpg" alt="IMG_4265 (1)" width="617" height="500" /></p>
+<p>Aerni commented on the “boy’s club” mentality that can still be found in tech education and the industry, and emphasized that rather than women needing to change to fit the industry&#8217;s paradigm, attitudes and priorities need to change. “You don’t have to assimilate,” said Aerni. “It’s important for you to just be yourselves.” Jimenez followed this up with a closing statement that gave a broader look at the inequities women in tech contend with, and offered her own advice. “The women you see on this stage are pioneers themselves, still to this day,” Jimenez said. “As you begin to enter college and pursue your own interests, you’re going to be pioneers as well. In that spirit, be true to yourself and your uniqueness, it’s that strength and uniqueness that people will really value as you start getting into your careers.”</p>
+<p>Thanks to the efforts of organizations such as Girls Who Code, and shifting attitudes and priorities within STEM education and the tech industry, there is a strong push to address tech’s ongoing gender inequities. Hopefully the girls at last Friday’s Codeathon won’t face the same barriers women in tech currently contend with when they enter the tech industry workforce.</p>
+<p><b>Learn More:</b></p>
+<ul>
+<li>Click <a title="here" href="https://www.youtube.com/playlist?list=PLAdzTan_eSPRijpP3yduMx0u8Mtfg7zn5" target="_blank">here</a> to watch videos from Girls Who Code</li>
+</ul>
+]]></content:encoded>
+			<wfw:commentRss>http://blog.pivotal.io/pivotal/features/pivotal-connects-girls-who-code-with-data-science-and-agile-software-development/feed</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+	</channel>
+</rss>

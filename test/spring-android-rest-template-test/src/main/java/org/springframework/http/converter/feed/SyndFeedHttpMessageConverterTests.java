@@ -31,6 +31,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEntry;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndPerson;
 
 /** 
  * @author Roy Clarkson 
@@ -68,6 +69,7 @@ public class SyndFeedHttpMessageConverterTests extends AndroidTestCase {
 		assertTrue(converter.canWrite(SyndFeed.class, new MediaType("application", "atom+xml", utf8)));
 	}
 
+	@SuppressWarnings("unchecked")
 	@MediumTest
 	public void testReadRss() throws IOException {
 		Resource asset = new AssetResource(getContext().getAssets(), "rss.xml");
@@ -78,16 +80,40 @@ public class SyndFeedHttpMessageConverterTests extends AndroidTestCase {
 		assertEquals("http://example.com", feed.getLink());
 		assertEquals("description", feed.getDescription());
 
-		List<?> items = feed.getEntries();
-		assertEquals(2, items.size());
+		List<SyndEntry> entries = feed.getEntries();
+		assertEquals(2, entries.size());
 
-		SyndEntry entry1 = (SyndEntry) items.get(0);
+		SyndEntry entry1 = entries.get(0);
 		assertEquals("title1", entry1.getTitle());
 
-		SyndEntry entry2 = (SyndEntry) items.get(1);
+		SyndEntry entry2 = entries.get(1);
 		assertEquals("title2", entry2.getTitle());
 	}
 
+	@SuppressWarnings("unchecked")
+	@MediumTest
+	public void testReadRssComplex() throws IOException {
+		AssetResource resource = new AssetResource(getContext().getAssets(), "complex-rss.xml");
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(resource.getInputStream());
+		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", utf8));
+		SyndFeed feed = converter.read(SyndFeed.class, inputMessage);
+		assertEquals("Pivotal P.O.V.", feed.getTitle());
+		assertEquals("http://blog.pivotal.io", feed.getLink());
+		assertEquals("The Pivotal blog explores how people are harnessing sophisticated data fabrics and the cloud to build applications that achieve extraordinary things.", feed.getDescription());
+
+		List<SyndEntry> entries = feed.getEntries();
+		assertEquals(10, entries.size());
+
+		SyndEntry entry1 = entries.get(0);
+		assertEquals("Field Report: Hack Midwest Highlights How Developers Are Innovating on the Internet of Things and Big Data in Real-time", entry1.getTitle());
+		assertEquals("http://blog.pivotal.io/pivotal/features/field-report-hack-midwest-highlights-how-developers-are-innovating-on-the-internet-of-things-and-big-data-in-real-time?utm_source=rss&utm_medium=rss&utm_campaign=field-report-hack-midwest-highlights-how-developers-are-innovating-on-the-internet-of-things-and-big-data-in-real-time", entry1.getLink());
+
+		SyndEntry entry2 = entries.get(1);
+		assertEquals("How to Deploy Drupal to Pivotal CF Within Seconds", entry2.getTitle());
+		assertEquals("http://blog.pivotal.io/cloud-foundry-pivotal/products/how-to-deploy-drupal-to-pivotal-cf-within-seconds?utm_source=rss&utm_medium=rss&utm_campaign=how-to-deploy-drupal-to-pivotal-cf-within-seconds", entry2.getLink());
+	}
+
+	@SuppressWarnings("unchecked")
 	@MediumTest
 	public void testReadAtom() throws IOException {
 		Resource asset = new AssetResource(getContext().getAssets(), "atom.xml");
@@ -95,14 +121,38 @@ public class SyndFeedHttpMessageConverterTests extends AndroidTestCase {
 		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", utf8));
 		SyndFeed feed = converter.read(SyndFeed.class, inputMessage);
 		assertEquals("title", feed.getTitle());
-		List<?> entries = feed.getEntries();
+
+		List<SyndEntry> entries = feed.getEntries();
 		assertEquals(2, entries.size());
 
-		SyndEntry entry1 = (SyndEntry) entries.get(0);
+		SyndEntry entry1 = entries.get(0);
 		assertEquals("title1", entry1.getTitle());
 
-		SyndEntry entry2 = (SyndEntry) entries.get(1);
+		SyndEntry entry2 = entries.get(1);
 		assertEquals("title2", entry2.getTitle());
+	}
+
+	@SuppressWarnings("unchecked")
+	@MediumTest
+	public void testReadAtomComplex() throws IOException {
+		AssetResource resource = new AssetResource(getContext().getAssets(), "complex-atom.xml");
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(resource.getInputStream());
+		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", utf8));
+		SyndFeed feed = converter.read(SyndFeed.class, inputMessage);
+		assertEquals("Spring", feed.getTitle());
+
+		List<SyndEntry> entries = feed.getEntries();
+		assertEquals(20, entries.size());
+
+		SyndEntry entry1 = entries.get(0);
+		assertEquals("Spring Boot 1.1.5 released", entry1.getTitle());
+		SyndPerson author1 = (SyndPerson) entry1.getAuthors().get(0);
+		assertEquals("Phil Webb", author1.getName());
+
+		SyndEntry entry2 = entries.get(1);
+		assertEquals("Spring MVC Test HtmlUnit 1.0.0.M2 Released", entry2.getTitle());
+		SyndPerson author2 = (SyndPerson) entry2.getAuthors().get(0);
+		assertEquals("Rob Winch", author2.getName());
 	}
 
 }

@@ -67,7 +67,7 @@ public class RssChannelHttpMessageConverterTests extends AndroidTestCase {
 		assertTrue(converter.canWrite(Channel.class, new MediaType("application", "rss+xml", utf8)));
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	@MediumTest
 	public void testRead() throws IOException {
 		AssetResource resource = new AssetResource(getContext().getAssets(), "rss.xml");
@@ -79,14 +79,40 @@ public class RssChannelHttpMessageConverterTests extends AndroidTestCase {
 		assertEquals("http://example.com", result.getLink());
 		assertEquals("description", result.getDescription());
 
-		List items = result.getItems();
+		List<Item> items = result.getItems();
 		assertEquals(2, items.size());
 
-		Item item1 = (Item) items.get(0);
+		Item item1 = items.get(0);
 		assertEquals("title1", item1.getTitle());
 
-		Item item2 = (Item) items.get(1);
+		Item item2 = items.get(1);
 		assertEquals("title2", item2.getTitle());
+	}
+
+	@SuppressWarnings("unchecked")
+	@MediumTest
+	public void testReadComplex() throws IOException {
+		AssetResource resource = new AssetResource(getContext().getAssets(), "complex-rss.xml");
+		InputStream inputStream = resource.getInputStream();
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(inputStream);
+		inputMessage.getHeaders().setContentType(new MediaType("application", "rss+xml", utf8));
+		Channel result = converter.read(Channel.class, inputMessage);
+		assertEquals("Pivotal P.O.V.", result.getTitle());
+		assertEquals("http://blog.pivotal.io", result.getLink());
+		assertEquals("The Pivotal blog explores how people are harnessing sophisticated data fabrics and the cloud to build applications that achieve extraordinary things.", result.getDescription());
+
+		List<Item> items = result.getItems();
+		assertEquals(10, items.size());
+
+		Item item1 = items.get(0);
+		assertEquals("Field Report: Hack Midwest Highlights How Developers Are Innovating on the Internet of Things and Big Data in Real-time", item1.getTitle());
+		assertEquals("http://blog.pivotal.io/pivotal/features/field-report-hack-midwest-highlights-how-developers-are-innovating-on-the-internet-of-things-and-big-data-in-real-time?utm_source=rss&utm_medium=rss&utm_campaign=field-report-hack-midwest-highlights-how-developers-are-innovating-on-the-internet-of-things-and-big-data-in-real-time", item1.getLink());
+		assertEquals("http://blog.pivotal.io/?p=10209", item1.getGuid().getValue());
+
+		Item item2 = items.get(1);
+		assertEquals("How to Deploy Drupal to Pivotal CF Within Seconds", item2.getTitle());
+		assertEquals("http://blog.pivotal.io/cloud-foundry-pivotal/products/how-to-deploy-drupal-to-pivotal-cf-within-seconds?utm_source=rss&utm_medium=rss&utm_campaign=how-to-deploy-drupal-to-pivotal-cf-within-seconds", item2.getLink());
+		assertEquals("http://blog.gopivotal.com/?p=9983", item2.getGuid().getValue());
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

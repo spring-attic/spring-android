@@ -37,6 +37,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Entry;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Person;
 
 /** 
  * @author Roy Clarkson 
@@ -71,6 +72,7 @@ public class AtomFeedHttpMessageConverterTests extends AndroidTestCase {
 		assertTrue(converter.canWrite(Feed.class, new MediaType("application", "atom+xml", utf8)));
 	}
 
+	@SuppressWarnings("unchecked")
 	@MediumTest
 	public void testRead() throws IOException {
 		AssetResource resource = new AssetResource(getContext().getAssets(), "atom.xml");
@@ -80,17 +82,45 @@ public class AtomFeedHttpMessageConverterTests extends AndroidTestCase {
 		Feed result = converter.read(Feed.class, inputMessage);
 		assertEquals("title", result.getTitle());
 		assertEquals("subtitle", result.getSubtitle().getValue());
-		List<?> entries = result.getEntries();
+
+		List<Entry> entries = result.getEntries();
 		assertEquals(2, entries.size());
 
-		Entry entry1 = (Entry) entries.get(0);
+		Entry entry1 = entries.get(0);
 		assertEquals("id1", entry1.getId());
 		assertEquals("title1", entry1.getTitle());
 
-		Entry entry2 = (Entry) entries.get(1);
+		Entry entry2 = entries.get(1);
 		assertEquals("id2", entry2.getId());
 		assertEquals("title2", entry2.getTitle());
 	}
+
+	@SuppressWarnings("unchecked")
+	@MediumTest
+	public void testReadComplex() throws IOException {
+		AssetResource resource = new AssetResource(getContext().getAssets(), "complex-atom.xml");
+		InputStream inputStream = resource.getInputStream();
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(inputStream);
+		inputMessage.getHeaders().setContentType(new MediaType("application", "atom+xml", utf8));
+		Feed result = converter.read(Feed.class, inputMessage);
+		assertEquals("Spring", result.getTitle());
+
+		List<Entry> entries = result.getEntries();
+		assertEquals(20, entries.size());
+
+		Entry entry1 = entries.get(0);
+		assertEquals("tag:spring.io,2014-08-07:1722", entry1.getId());
+		assertEquals("Spring Boot 1.1.5 released", entry1.getTitle());
+		Person author1 = (Person) entry1.getAuthors().get(0);
+		assertEquals("Phil Webb", author1.getName());
+
+		Entry entry2 = entries.get(1);
+		assertEquals("tag:spring.io,2014-08-06:1721", entry2.getId());
+		assertEquals("Spring MVC Test HtmlUnit 1.0.0.M2 Released", entry2.getTitle());
+		Person author2 = (Person) entry2.getAuthors().get(0);
+		assertEquals("Rob Winch", author2.getName());
+	}
+
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@SmallTest
