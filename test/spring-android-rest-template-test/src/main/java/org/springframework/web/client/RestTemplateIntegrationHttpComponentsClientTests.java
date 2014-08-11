@@ -25,7 +25,7 @@ public class RestTemplateIntegrationHttpComponentsClientTests extends AbstractRe
 	
 	@Override
 	protected RestTemplate getRestTemplate() {
-		return new RestTemplate(true, new HttpComponentsClientHttpRequestFactory());
+		return new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 	}
 
 }

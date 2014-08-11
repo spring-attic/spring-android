@@ -68,8 +68,7 @@ public class RestTemplateTests extends TestCase {
 		response = mock(ClientHttpResponse.class);
 		errorHandler = mock(ResponseErrorHandler.class);
 		converter = mock(HttpMessageConverter.class);
-		template = new RestTemplate();
-		template.setMessageConverters(Collections.<HttpMessageConverter<?>>singletonList(converter));
+		template = new RestTemplate(Collections.<HttpMessageConverter<?>>singletonList(converter));
 		template.setRequestFactory(requestFactory);
 		template.setErrorHandler(errorHandler);
 	}

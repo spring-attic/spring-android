@@ -25,7 +25,7 @@ public class RestTemplateIntegrationSimpleClientTests extends AbstractRestTempla
 	
 	@Override
 	protected RestTemplate getRestTemplate() {
-		return new RestTemplate(true, new SimpleClientHttpRequestFactory());
+		return new RestTemplate(new SimpleClientHttpRequestFactory());
 	}
 
 }
