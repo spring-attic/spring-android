@@ -18,7 +18,7 @@
 		<com.google.code.gson-version>2.2.4</com.google.code.gson-version>
 		<org.simpleframework-version>2.6.9</org.simpleframework-version>
 		<com.google.code.android-rome-feed-reader-version>1.0.0-r2</com.google.code.android-rome-feed-reader-version>
-		<org.mortbay.jetty-version>6.1.9</org.mortbay.jetty-version>
+		<org.mortbay.jetty-version>6.1.26</org.mortbay.jetty-version>
 		<com.squareup.okhttp-version>2.0.0</com.squareup.okhttp-version>
 	</properties>
 
