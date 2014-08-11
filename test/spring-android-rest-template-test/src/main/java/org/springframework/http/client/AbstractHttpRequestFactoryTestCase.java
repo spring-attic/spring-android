@@ -43,9 +43,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
 
-import android.os.Build;
 import android.test.suitebuilder.annotation.MediumTest;
-import android.util.Log;
 
 /** 
  * @author Arjen Poutsma
@@ -53,31 +51,24 @@ import android.util.Log;
  */
 public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
-	private static final String TAG = getTag();
-
-	protected static String getTag() {
-		return AbstractHttpRequestFactoryTestCase.class.getSimpleName();
-	}
-
-	protected ClientHttpRequestFactory factory;
+	protected static final String TAG = AbstractHttpRequestFactoryTestCase.class.getSimpleName();
 
 	protected static String baseUrl;
 
 	private static Server jettyServer;
 
+	protected ClientHttpRequestFactory factory;
+
+	protected abstract ClientHttpRequestFactory createRequestFactory();
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setUpJetty();
 		this.factory = createRequestFactory();
+		setUpJetty();
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		this.factory = null;
-	}
-
-	private void setUpJetty() throws Exception {
+	private static void setUpJetty() throws Exception {
 		if (jettyServer == null) {
 			int port = 8080;
 			jettyServer = new Server(port);
@@ -97,20 +88,18 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		}
 	}
 
-	private void tearDownJetty() throws Exception {
-		if (jettyServer != null) {
-			jettyServer.stop();
-			while (jettyServer.isStopping()) {
-				Log.d(TAG, "Stopping Jetty...");
-			}
-			if (jettyServer.isStopped()) {
-				Log.d(TAG, "Jetty is stopped");
-				jettyServer = null;
-			}
-		}
+	@Override
+	protected void tearDown() throws Exception {
+		this.factory = null;
 	}
 
-	protected abstract ClientHttpRequestFactory createRequestFactory();
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		if (jettyServer != null) {
+			jettyServer.stop();
+		}
+	}
 
 	@MediumTest
 	public void testStatus() throws Exception {
