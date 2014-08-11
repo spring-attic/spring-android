@@ -42,7 +42,8 @@ import org.springframework.http.converter.GenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.feed.SyndFeedHttpMessageConverter;
+import org.springframework.http.converter.feed.AtomFeedHttpMessageConverter;
+import org.springframework.http.converter.feed.RssChannelHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
@@ -122,7 +123,8 @@ import android.util.Log;
  * <tr><td>{@link SimpleXmlHttpMessageConverter}</td><td>Included if the Simple XML serializer is present.</td></tr>
  * <tr><td>{@link MappingJackson2HttpMessageConverter}</td><td>Included if the Jackson 2.x JSON processor is present.</td></tr>
  * <tr><td>{@link GsonHttpMessageConverter}</td><td>Included if the Gson library is present.</td></tr>
- * <tr><td>{@link SyndFeedHttpMessageConverter}</td><td>Included if the Android ROME Feed Reader is present.</td></tr>
+ * <tr><td>{@link AtomFeedHttpMessageConverter}</td><td>Included if the Android ROME Feed Reader is present.</td></tr>
+ * <tr><td>{@link RssChannelHttpMessageConverter}</td><td>Included if the Android ROME Feed Reader is present.</td></tr>
  * </table><br />  
  * 
  * <p>This template uses a {@link org.springframework.http.client.HttpComponentsClientHttpRequestFactory} and a {@link
@@ -763,7 +765,8 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			}
 			
 			if (romePresent) {
-				messageConverters.add(new SyndFeedHttpMessageConverter());
+				messageConverters.add(new AtomFeedHttpMessageConverter());
+				messageConverters.add(new RssChannelHttpMessageConverter());
 			}
 		}
 	}
