@@ -15,9 +15,9 @@ The new [Android Build System] provides a Gradle plugin for building Android app
 
 ```groovy
 dependencies {
-    compile("org.springframework.mobile:spring-android-core:${springAndroidVersion}")
-    compile("org.springframework.mobile:spring-android-rest-template:${springAndroidVersion}")
-    compile("org.springframework.mobile:spring-android-auth:${springAndroidVersion}")
+    compile("org.springframework.android:spring-android-core:${springAndroidVersion}")
+    compile("org.springframework.android:spring-android-rest-template:${springAndroidVersion}")
+    compile("org.springframework.android:spring-android-auth:${springAndroidVersion}")
 }
 repositories {
     maven { url "http://repo.spring.io/release" }
