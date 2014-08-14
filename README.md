@@ -70,6 +70,48 @@ repositories {
 ```
 
 
+### Example Build Configuration
+
+The following is an example `build.gradle` that illustrates how to include the `spring-android-rest-template` module along with the `jackson-databind` library for marshaling JSON data. Note the `packagingOptions` section which filters specific files that can cause APK packaging to fail.
+
+```groovy
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion '20.0.0'
+
+    defaultConfig {
+        applicationId 'org.springframework.demo'
+        minSdkVersion 15
+        targetSdkVersion 20
+        versionCode 1
+        versionName '1.0'
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-v4:20.+'
+    compile 'org.springframework.android:spring-android-rest-template:2.0.0.BUILD-SNAPSHOT'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.1.3'
+}
+
+```
+
 ## Documentation
 
 See the current [Javadoc] and [reference docs].
