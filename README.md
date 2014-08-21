@@ -20,9 +20,9 @@ dependencies {
     compile("org.springframework.android:spring-android-auth:${springAndroidVersion}")
 }
 repositories {
-    maven { url "http://repo.spring.io/release" }
-    maven { url "http://repo.spring.io/milestone" }
-    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/release" }
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://repo.spring.io/snapshot" }
 }
 ```
 
@@ -51,17 +51,17 @@ repositories {
     <repository>
         <id>spring-repo</id>
         <name>Spring Repository</name>
-        <url>http://repo.spring.io/release</url>
+        <url>https://repo.spring.io/release</url>
     </repository>
     <repository>
         <id>spring-milestones</id>
         <name>Spring Milestones</name>
-        <url>http://repo.spring.io/milestone</url>
+        <url>https://repo.spring.io/milestone</url>
     </repository>
     <repository>
         <id>spring-snapshots</id>
         <name>Spring Snapshots</name>
-        <url>http://repo.spring.io/snapshot</url>
+        <url>https://repo.spring.io/snapshot</url>
         <snapshots>
             <enabled>true</enabled>
         </snapshots>
