@@ -27,7 +27,7 @@
 	<title>Overview</title>
 
 	<para>The initial release of the spring-android-auth module provides <ulink url="http://oauth.net/">
- 	<citetitle>OAuth</citetitle></ulink> 1.x and 2.0 support in an Android application by utilizing <ulink url="http://www.springsource.org/spring-social">
+ 	<citetitle>OAuth</citetitle></ulink> 1.x and 2.0 support in an Android application by utilizing <ulink url="http://projects.spring.io/spring-social/">
  	<citetitle>Spring Social</citetitle></ulink>. It includes a <ulink url="http://www.sqlite.org/">
  	<citetitle>SQLite</citetitle></ulink> repository, and Android compatible <ulink url="http://docs.spring.io/spring-security/site/index.html">
  	<citetitle>Spring Security</citetitle></ulink> encryption. The Spring Social project enables your applications to establish Connections with Software-as-a-Service (SaaS) Providers such as <ulink url="http://facebook.com">

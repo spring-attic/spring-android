@@ -57,7 +57,7 @@ def customizePom(pom, gradleProject) {
 			}
 			issueManagement {
 				system = "Jira"
-				url = "https://jira.springsource.org/browse/ANDROID"
+				url = "https://jira.spring.io/browse/ANDROID"
 			}
 		}
 	}

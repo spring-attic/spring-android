@@ -25,12 +25,12 @@
 	
 	<title>Spring Repository</title>
 	
-	<para>The following repositories are available for all SpringSource projects. Much more information is available at the <ulink url="https://github.com/spring-projects/spring-framework/wiki/SpringSource-repository-FAQ">
- 	<citetitle>SpringSource Repository FAQ</citetitle></ulink>.</para>
+	<para>The following repositories are available for all Spring projects. Much more information is available at the <ulink url="https://github.com/spring-projects/spring-framework/wiki/SpringSource-repository-FAQ">
+ 	<citetitle>Spring Repository FAQ</citetitle></ulink>.</para>
 	
 	<para>Release versions, such as 1.0.0.RELEASE, are available through <ulink url="http://search.maven.org/">
  	<citetitle>Maven Central</citetitle></ulink> or via the <ulink url="http://repo.spring.io/">
- 	<citetitle>SpringSource Repository</citetitle></ulink>:
+ 	<citetitle>Spring Repository</citetitle></ulink>:
 
 		<programlisting language="xml"><![CDATA[
 <repository>
@@ -87,11 +87,11 @@
     <version>1.0.1.BUILD-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>spring-android-showcase-client</name>
-    <url>http://www.springsource.org/spring-android</url>
+    <url>http://projects.spring.io/spring-android</url>
     <inceptionYear>2010</inceptionYear>
     <organization>
-        <name>SpringSource</name>
-        <url>http://www.springsource.org</url>
+        <name>Spring</name>
+        <url>http://spring.io</url>
     </organization>
 
     <properties>

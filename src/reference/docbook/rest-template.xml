@@ -567,7 +567,7 @@ $ git clone git://github.com/spring-projects/spring-android-samples.git
 	
 		<title>Basic Usage Example</title>
 		
-		<para>The following example shows a query to google for the search term "SpringSource".</para>
+		<para>The following example shows a query to google for the search term "Spring Framework".</para>
 		
 		<programlisting language="java"><![CDATA[
 String url = "https://ajax.googleapis.com/ajax/services/search/web?v=1.0&q={query}";
@@ -579,7 +579,7 @@ RestTemplate restTemplate = new RestTemplate();
 restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
 
 // Make the HTTP GET request, marshaling the response to a String
-String result = restTemplate.getForObject(url, String.class, "SpringSource");]]>
+String result = restTemplate.getForObject(url, String.class, "Spring Framework");]]>
 		</programlisting>
 		
 	</section>
