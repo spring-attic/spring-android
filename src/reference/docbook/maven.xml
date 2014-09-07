@@ -36,46 +36,46 @@
 <repository>
     <id>spring-repo</id>
     <name>Spring Repository</name>
-    <url>http://repo.spring.io/release</url>
+    <url>https://repo.spring.io/release</url>
 </repository>]]>
 		</programlisting>
 
 	</para>
 
-	<para>If you are developing against a milestone version, such as 1.0.0.RC2, you will need to add the following repository in order to resolve the artifact:
+	<para>If you are developing against a milestone version, such as 2.0.0.M1, you will need to add the following repository in order to resolve the artifact:
 
 		<programlisting language="xml"><![CDATA[
 <repository>
     <id>spring-milestone</id>
     <name>Spring Milestone Repository</name>
-    <url>http://repo.spring.io/milestone</url>
+    <url>https://repo.spring.io/milestone</url>
 </repository>]]>
 		</programlisting>
 
 	</para>
 
-	<para>If you are testing out the latest nightly build version (e.g. 1.0.1.BUILD-SNAPSHOT), you will need to add the following repository:
+	<para>If you are testing out the latest nightly build version (e.g. 2.0.0.BUILD-SNAPSHOT), you will need to add the following repository:
 
 		<programlisting language="xml"><![CDATA[
 <repository>
     <id>spring-snapshot</id>
     <name>Spring Snapshot Repository</name>
-    <url>http://repo.spring.io/snapshot</url>
+    <url>https://repo.spring.io/snapshot</url>
 </repository>]]>
 		</programlisting>
 
 	</para>
 	
   </section>
-  
+
   <section id="maven-example-pom">
-  
+
 	<title>Example POM</title>
 	
 	<para>The following <ulink url="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html">
- 	<citetitle>Maven POM file</citetitle></ulink> from the <ulink url="https://github.com/spring-projects/spring-android-samples">
- 	<citetitle>Spring for Android Showcase</citetitle></ulink> sample application, illustrates how to configure the <ulink url="http://code.google.com/p/maven-android-plugin">
- 	<citetitle>Maven Android Plugin</citetitle></ulink> and associated dependencies for use with Spring for Android and Spring Social.</para>
+	<citetitle>Maven POM file</citetitle></ulink> from the <ulink url="https://github.com/spring-projects/spring-android-samples">
+	<citetitle>Spring for Android Showcase</citetitle></ulink> sample application, illustrates how to configure the <ulink url="http://code.google.com/p/maven-android-plugin">
+	<citetitle>Maven Android Plugin</citetitle></ulink> and associated dependencies for use with Spring for Android and Spring Social.</para>
 	
 	<programlisting language="xml"><![CDATA[
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
