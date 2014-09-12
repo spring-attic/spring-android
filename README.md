@@ -1,24 +1,48 @@
 # Spring for Android
 
-[Spring for Android] is a framework that is designed to provide components of the [Spring Framework] family of projects for use in native [Android] applications.
+[Spring for Android] is a library that is designed to provide components of the [Spring Framework] family of projects for use in native [Android] applications.
+
+
+## Features
+
+* A REST Client for Android
+* Auth support for accessing secure APIs
 
 
 ## Download Artifacts
 
-Spring for Android consists of three modules: Core, Rest Template, and Auth.
-
 The new [Android Build System] provides a Gradle plugin for building Android apps, and [Gradle] itself supports external dependency resolution via Maven repositories. Additionally, the [Android Maven Plugin] makes it possible to build Android applications utilizing the power of [Maven] dependency management. See [downloading Spring artifacts] for [Maven] repository information. 
 
-> **Note:** You do not need to include all three repositories, rather select the one that corresponds to the release type of the dependency. GA releases are also available through Maven Central.
+### Rest Template
 
-### Gradle
+Gradle:
 
 ```groovy
 dependencies {
-    compile("org.springframework.android:spring-android-core:${springAndroidVersion}")
-    compile("org.springframework.android:spring-android-rest-template:${springAndroidVersion}")
-    compile("org.springframework.android:spring-android-auth:${springAndroidVersion}")
+    compile("org.springframework.android:spring-android-rest-template:${version}")
 }
+```
+
+Maven:
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.android</groupId>
+        <artifactId>spring-android-rest-template</artifactId>
+        <version>${org.springframework.android-version}</version>
+    </dependency>    
+</dependencies>
+```
+
+
+### Spring Repositories
+
+The following Maven repositories are available from Spring. You do not need to include all three repositories, rather select the one that corresponds to the release type of the dependency. GA releases are also available through Maven Central.
+
+Gradle:
+
+```groovy
 repositories {
     maven { url "https://repo.spring.io/release" }
     maven { url "https://repo.spring.io/milestone" }
@@ -26,27 +50,9 @@ repositories {
 }
 ```
 
-### Maven
+Maven:
 
 ```xml
-<dependencies>
-    <dependency>
-        <groupId>org.springframework.android</groupId>
-        <artifactId>spring-android-core</artifactId>
-        <version>${org.springframework.android-version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.android</groupId>
-        <artifactId>spring-android-rest-template</artifactId>
-        <version>${org.springframework.android-version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.android</groupId>
-        <artifactId>spring-android-auth</artifactId>
-        <version>${org.springframework.android-version}</version>
-    </dependency>
-</dependencies>
-
 <repositories>
     <repository>
         <id>spring-repo</id>
@@ -68,7 +74,6 @@ repositories {
     </repository>
 </repositories>
 ```
-
 
 ### Example Build Configuration
 
