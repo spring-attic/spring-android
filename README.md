@@ -5,7 +5,7 @@
 
 ## Features
 
-* A REST Client for Android
+* A REST client for Android
 * Auth support for accessing secure APIs
 
 
@@ -14,6 +14,8 @@
 The new [Android Build System] provides a Gradle plugin for building Android apps, and [Gradle] itself supports external dependency resolution via Maven repositories. Additionally, the [Android Maven Plugin] makes it possible to build Android applications utilizing the power of [Maven] dependency management. See [downloading Spring artifacts] for [Maven] repository information. 
 
 ### Rest Template
+
+The Rest Template library can be included in your project using Gradle or Maven.
 
 Gradle:
 
@@ -111,7 +113,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:20.+'
-    compile 'org.springframework.android:spring-android-rest-template:2.0.0.BUILD-SNAPSHOT'
+    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M1'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.1.3'
 }
 
