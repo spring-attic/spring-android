@@ -19,7 +19,6 @@ configure(allprojects) {
 	ext.jackson2Version          = "2.3.4"
 	ext.gsonVersion              = "2.3"
 	ext.simpleXmlVersion         = "2.6.9"
-	ext.androidRomeVersion       = "1.0.0-r2"
 	ext.okHttpVersion            = "2.0.0"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 
@@ -64,7 +63,6 @@ configure(allprojects) {
 
 	repositories {
 		maven { url "http://repo.spring.io/libs-release" }
-		maven { url "https://android-rome-feed-reader.googlecode.com/svn/maven2/releases" }
 	}
 
 	ext.javadocLinks = [
@@ -172,7 +170,6 @@ project("spring-android-rest-template") {
 		optional("org.simpleframework:simple-xml:$simpleXmlVersion") { dep ->
 			transitive = false
 		}
-		optional("com.google.code.android-rome-feed-reader:android-rome-feed-reader:$androidRomeVersion")
 	}
 }
 

@@ -63,15 +63,6 @@
 		
 	</section>
 	
-	<section>
-		
-		<title>RSS and Atom Support</title>
-		
-		<para>RSS and Atom feed support in Spring for Android RestTemplate requires the use of a third party feed reader library. The <ulink url="http://code.google.com/p/android-rome-feed-reader">
- 	<citetitle>Android ROME Feed Reader</citetitle></ulink> is used to provide this functionality.</para>
-		
-	</section>
-	
   </section>
 
   <section id="rest-template-howtoget">
@@ -280,7 +271,6 @@ public void put(String url, Object request, Map<String, ?> urlVariables) throws 
 	
   </section>
 
-
   <section id="rest-template-message-converters">
 
 	<title>HTTP Message Conversion</title>
@@ -335,8 +325,6 @@ public interface HttpMessageConverter<T> {
 				<tr><td><link linkend="SimpleXmlHttpMessageConverter"><classname>SimpleXmlHttpMessageConverter</classname></link></td><td>Included if the Simple XML serializer is present.</td></tr>
 				<tr><td><link linkend="MappingJackson2HttpMessageConverter"><classname>MappingJackson2HttpMessageConverter</classname></link></td><td>Included if the Jackson 2.x JSON processor is present.</td></tr>
 				<tr><td><link linkend="GsonHttpMessageConverter"><classname>GsonHttpMessageConverter</classname></link></td><td>Included if Gson is present. Jackson 2.x takes precedence over Gson if both versions are available on the classpath.</td></tr>
-				<tr><td><link linkend="AtomFeedHttpMessageConverter"><classname>AtomFeedHttpMessageConverter</classname></link></td><td>Included if the Android ROME Feed Reader is present.</td></tr>
-				<tr><td><link linkend="RssChannelHttpMessageConverter"><classname>RssChannelHttpMessageConverter</classname></link></td><td>Included if the Android ROME Feed Reader is present.</td></tr>
 			</tbody>
 		</table>
 	
@@ -486,96 +474,9 @@ dependencies {
 			</programlisting>
 
 		</para>
-
-	</section>
-
-	<section id="SyndFeedHttpMessageConverter">
-
-		<title>SyndFeedHttpMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS and Atom feeds from the HTTP request and response using <ulink url="http://code.google.com/p/android-rome-feed-reader">
- 	<citetitle>Android ROME Feed Reader</citetitle></ulink>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed</classname>. By default, this converter supports <literal>application/rss+xml</literal> and <literal>application/atom+xml</literal>.</para>
-		
-		<para>Add the following dependencies to your classpath to enable the <classname>SyndFeedHttpMessageConverter</classname>, <classname>RssChannelHttpMessageConverter</classname>, or <classname>AtomFeedHttpMessageConverter</classname>. This library depends on a forked version of JDOM to work on Android 2.1 and earlier. The JDOM library addresses a <ulink url="http://www.jdom.org/pipermail/jdom-interest/2009-July/016345.html">
- 	<citetitle>bug</citetitle></ulink> in the Android XML parser.
-
-			<para>Gradle:</para>
-			<programlisting language="groovy"><![CDATA[
-dependencies {
-    compile 'com.google.code.android-rome-feed-reader:android-rome-feed-reader:${version}'
-}]]>
-			</programlisting>
-
-			<programlisting language="groovy"><![CDATA[
-dependencies {
-    compile 'org.jdom:jdom:${version}'
-}]]>
-			</programlisting>
-
-			<para>Maven:</para>
-
-			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>com.google.code.android-rome-feed-reader</groupId>
-    <artifactId>android-rome-feed-reader</artifactId>
-    <version>${android-rome-version}</version>
-</dependency>]]>
-			</programlisting>
-		
-			<programlisting language="xml"><![CDATA[
-<dependency>
-    <groupId>org.jdom</groupId>
-    <artifactId>jdom</artifactId>
-    <version>${jdom-fork-version}</version>
-</dependency>]]>
-			</programlisting>
-			
-		</para>
-		
-		<para>The Android ROME Feed Reader is not available through Maven Central. When using Maven, you will need to include the following repository in your POM.
-		
-			<programlisting language="xml"><![CDATA[
-<!-- For developing with Android ROME Feed Reader -->
-<repository>
-    <id>android-rome-feed-reader-repository</id>
-    <name>Android ROME Feed Reader Repository</name>
-    <url>https://android-rome-feed-reader.googlecode.com/svn/maven2/releases</url>
-</repository>]]>
-			</programlisting>
-		
-		</para>
-
-	</section>
 	
-	<section id="RssChannelHttpMessageConverter">
-
-		<title>RssChannelHttpMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write RSS feeds from the HTTP request and response using <ulink url="http://code.google.com/p/android-rome-feed-reader">
- 	<citetitle>Android ROME Feed Reader</citetitle></ulink>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.rss.Channel</classname>. By default, this converter supports <literal>application/rss+xml</literal>.</para>
-		
-		<para>The <classname>SyndFeedHttpMessageConverter</classname> provides a higher level of abstraction around RSS and Atom feeds, the <classname>RssChannelHttpMessageConverter</classname> is not included in the default set of message converters when you create a new <classname>RestTemplate</classname> instance. If you prefer to use this message converter then you have to manually add it to the <classname>RestTemplate</classname> instance.
-		</para>
-		
-		<para>See the <link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link> section for information about the required <ulink url="http://code.google.com/p/android-rome-feed-reader">Android ROME Feed Reader</ulink> dependencies.</para>
-		
 	</section>
-	
-	<section id="AtomFeedHttpMessageConverter">
 
-		<title>AtomFeedHttpMessageConverter</title>
-
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write Atom feeds from the HTTP request and response using <ulink url="http://code.google.com/p/android-rome-feed-reader">
- 	<citetitle>Android ROME Feed Reader</citetitle></ulink>. The data is read from and written into a <classname>com.google.code.rome.android.repackaged.com.sun.syndication.feed.atom.Feed</classname>. By default, this converter supports <literal>application/atom+xml</literal>.</para>
-		
-		<para>Because the <classname>SyndFeedHttpMessageConverter</classname> provides a higher level of abstraction around RSS and Atom feeds, the <classname>AtomFeedHttpMessageConverter</classname> is not included in the default set of message converters when you create a new <classname>RestTemplate</classname> instance. If you prefer to use this message converter then you have to manually add it to the <classname>RestTemplate</classname> instance.
-		</para>
-		
-		<para>See the <link linkend="SyndFeedHttpMessageConverter"><classname>SyndFeedHttpMessageConverter</classname></link> section for information about the required <ulink url="http://code.google.com/p/android-rome-feed-reader">
- 	<citetitle>Android ROME Feed Reader</citetitle></ulink> dependencies.</para>
-		
-	</section>
-	
 	</section>
 
   </section>
@@ -895,39 +796,6 @@ RestTemplate restTemplate = new RestTemplate();
 ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 String result = responseEntity.getBody();]]>
 		</programlisting>
-	</section>
-	
-	<section>
-		
-		<title>Retrieve RSS or Atom feed</title>
-		
-		<para>The following is a basic example of loading an RSS feed:</para>
-		
-		<programlisting language="java"><![CDATA[
-// Create a new RestTemplate instance
-RestTemplate restTemplate = new RestTemplate();
-
-// Make the HTTP GET request, marshaling the response to a SyndFeed object
-SyndFeed = restTemplate.getForObject(url, SyndFeed.class);]]>
-		</programlisting>
-		
-		<para>It is possible that you need to adjust the Media Type associated with the <classname>SyndFeedHttpMessageConverter</classname>. By default, the converter is associated with <literal>application/rss+xml</literal> and <literal>application/atom+xml</literal>.  An RSS feed might instead have a media type of <literal>text/xml</literal>, for example. The following code illustrates how to set the media type.</para>
-		
-		<programlisting language="java"><![CDATA[
-// Set the alternate mime type for the message converter
-SyndFeedHttpMessageConverter syndFeedConverter = new SyndFeedHttpMessageConverter();
-syndFeedConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.TEXT_XML));
-
-// Create a new RestTemplate instance
-RestTemplate restTemplate = new RestTemplate();
-
-// Add the ROME message converter
-restTemplate.getMessageConverters().add(syndFeedConverter);
-
-// Make the HTTP GET request, marshaling the response to a SyndFeed object
-SyndFeed feed = restTemplate.getForObject(url, SyndFeed.class);]]>
-		</programlisting>
-		
 	</section>
 	
 	<section>

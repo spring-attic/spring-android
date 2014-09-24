@@ -42,8 +42,6 @@ import org.springframework.http.converter.GenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.feed.AtomFeedHttpMessageConverter;
-import org.springframework.http.converter.feed.RssChannelHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
@@ -127,8 +125,6 @@ import android.util.Log;
  * <tr><td>{@link SimpleXmlHttpMessageConverter}</td><td>Included if the Simple XML serializer is present.</td></tr>
  * <tr><td>{@link MappingJackson2HttpMessageConverter}</td><td>Included if the Jackson 2.x JSON processor is present.</td></tr>
  * <tr><td>{@link GsonHttpMessageConverter}</td><td>Included if Gson is present, and only included if Jackson is not available.</td></tr>
- * <tr><td>{@link AtomFeedHttpMessageConverter}</td><td>Included if the Android ROME Feed Reader is present.</td></tr>
- * <tr><td>{@link RssChannelHttpMessageConverter}</td><td>Included if the Android ROME Feed Reader is present.</td></tr>
  * </table><br />  
  * 
  * <p>This template uses a {@link org.springframework.http.client.SimpleClientHttpRequestFactory} and a
@@ -777,14 +773,11 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 		private static final boolean gsonPresent =
 				ClassUtils.isPresent("com.google.gson.Gson", RestTemplate.class.getClassLoader());
 
-		private static final boolean romePresent =
-				ClassUtils.isPresent("com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed", RestTemplate.class.getClassLoader());
-
 		public static void init(List<HttpMessageConverter<?>> messageConverters) {
 			messageConverters.add(new ByteArrayHttpMessageConverter());
 			messageConverters.add(new StringHttpMessageConverter());
 			messageConverters.add(new ResourceHttpMessageConverter());
-			
+
 			// if javax.xml.transform is not available, fall back to standard Form message converter
 			if (javaxXmlTransformPresent) {
 				messageConverters.add(new SourceHttpMessageConverter<Source>());
@@ -792,20 +785,14 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			} else {
 				messageConverters.add(new FormHttpMessageConverter());
 			}
-			
 			if (simpleXmlPresent) {
 				messageConverters.add(new SimpleXmlHttpMessageConverter());
 			}
-			
 			if (jackson2Present) {
 				messageConverters.add(new MappingJackson2HttpMessageConverter());
-			} else if (gsonPresent) {
+			} 
+			else if (gsonPresent) {
 				messageConverters.add(new GsonHttpMessageConverter());
-			}
-			
-			if (romePresent) {
-				messageConverters.add(new AtomFeedHttpMessageConverter());
-				messageConverters.add(new RssChannelHttpMessageConverter());
 			}
 		}
 	}
