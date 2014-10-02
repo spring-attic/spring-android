@@ -21,8 +21,12 @@ import java.lang.reflect.Type;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.springframework.core.io.Resource;
+import org.springframework.tests.sample.objects.GenericObject;
 
 /**
  * @author Serge Bogatyrjov
@@ -30,6 +34,7 @@ import java.util.Set;
  */
 public class GenericCollectionTypeResolverTests extends AbstractGenericsTests {
 
+	@Override
 	protected void setUp() throws Exception {
 		this.targetClass = Foo.class;
 		this.methods = new String[] {"a", "b", "b2", "b3", "c", "d", "d2", "d3", "e", "e2", "e3"};
@@ -38,6 +43,7 @@ public class GenericCollectionTypeResolverTests extends AbstractGenericsTests {
 			Integer.class, Integer.class, Integer.class, Integer.class, Integer.class};
 	}
 
+	@Override
 	protected Type getType(Method method) {
 		return GenericCollectionTypeResolver.getMapValueReturnType(method);
 	}
@@ -86,15 +92,15 @@ public class GenericCollectionTypeResolverTests extends AbstractGenericsTests {
 		executeTest();
 	}
 
-//	public void testProgrammaticListIntrospection() throws Exception {
-//		Method setter = GenericBean.class.getMethod("setResourceList", List.class);
-//		Assert.assertEquals(Resource.class,
-//				GenericCollectionTypeResolver.getCollectionParameterType(new MethodParameter(setter, 0)));
-//
-//		Method getter = GenericBean.class.getMethod("getResourceList");
-//		Assert.assertEquals(Resource.class,
-//				GenericCollectionTypeResolver.getCollectionReturnType(getter));
-//	}
+	public void testProgrammaticListIntrospection() throws Exception {
+		Method setter = GenericObject.class.getMethod("setResourceList", List.class);
+		assertEquals(Resource.class,
+				GenericCollectionTypeResolver.getCollectionParameterType(new MethodParameter(setter, 0)));
+
+		Method getter = GenericObject.class.getMethod("getResourceList");
+		assertEquals(Resource.class,
+				GenericCollectionTypeResolver.getCollectionReturnType(getter));
+	}
 
 	public void testClassResolution() {
 		assertEquals(String.class, GenericCollectionTypeResolver.getCollectionType(CustomSet.class));
@@ -115,7 +121,6 @@ public class GenericCollectionTypeResolverTests extends AbstractGenericsTests {
 	}
 
 
-	@SuppressWarnings("rawtypes")
 	private interface Foo {
 
 		Map<String, Integer> a();
