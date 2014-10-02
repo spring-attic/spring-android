@@ -23,8 +23,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 
 import android.os.Build;
 import android.util.Log;
@@ -45,13 +47,20 @@ public abstract class HttpAccessor {
 
 	private static final String TAG = HttpAccessor.class.getSimpleName();
 
+	private static final boolean httpClient43Present =
+			ClassUtils.isPresent("org.apache.http.impl.client.CloseableHttpClient", HttpAccessor.class.getClassLoader());
+
 	private ClientHttpRequestFactory requestFactory;
 
 
 	protected HttpAccessor() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+		if (httpClient43Present) {
+			this.requestFactory = new HttpComponentsClientHttpRequestFactory();
+		}
+		else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			this.requestFactory = new SimpleClientHttpRequestFactory();
-		} else {
+		}
+		else {
 			this.requestFactory = new HttpComponentsAndroidClientHttpRequestFactory();
 		}
 	}

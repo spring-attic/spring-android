@@ -19,6 +19,7 @@ package org.springframework.http.client;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +45,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 
 import android.test.suitebuilder.annotation.MediumTest;
 
@@ -114,7 +117,12 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		assertEquals("Invalid HTTP method", HttpMethod.GET, request.getMethod());
 		assertEquals("Invalid HTTP URI", uri, request.getURI());
 		ClientHttpResponse response = request.execute();
-		assertEquals("Invalid status code", HttpStatus.NOT_FOUND, response.getStatusCode());
+		try {
+			assertEquals("Invalid status code", HttpStatus.NOT_FOUND, response.getStatusCode());
+		}
+		finally {
+			response.close();
+		}
 	}
 
 	@MediumTest
@@ -126,9 +134,21 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		request.getHeaders().add(headerName, headerValue1);
 		String headerValue2 = "value2";
 		request.getHeaders().add(headerName, headerValue2);
-		byte[] body = "Hello World".getBytes("UTF-8");
+		final byte[] body = "Hello World".getBytes("UTF-8");
 		request.getHeaders().setContentLength(body.length);
-		FileCopyUtils.copy(body, request.getBody());
+		if (request instanceof StreamingHttpOutputMessage) {
+			StreamingHttpOutputMessage streamingRequest =
+					(StreamingHttpOutputMessage) request;
+			streamingRequest.setBody(new StreamingHttpOutputMessage.Body() {
+				@Override
+				public void writeTo(OutputStream outputStream) throws IOException {
+					StreamUtils.copy(body, outputStream);
+				}
+			});
+		}
+		else {
+			StreamUtils.copy(body, request.getBody());
+		}
 		ClientHttpResponse response = request.execute();
 		try {
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
@@ -152,8 +172,20 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		request.getHeaders().add(headerName, headerValue1);
 		String headerValue2 = "value2";
 		request.getHeaders().add(headerName, headerValue2);
-		byte[] body = "Hello World".getBytes("UTF-8");
-		FileCopyUtils.copy(body, request.getBody());
+		final byte[] body = "Hello World".getBytes("UTF-8");
+		if (request instanceof StreamingHttpOutputMessage) {
+			StreamingHttpOutputMessage streamingRequest =
+					(StreamingHttpOutputMessage) request;
+			streamingRequest.setBody(new StreamingHttpOutputMessage.Body() {
+				@Override
+				public void writeTo(OutputStream outputStream) throws IOException {
+					StreamUtils.copy(body, outputStream);
+				}
+			});
+		}
+		else {
+			StreamUtils.copy(body, request.getBody());
+		}
 		ClientHttpResponse response = request.execute();
 		try {
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
@@ -172,8 +204,21 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 	public void testMultipleWrites() throws Exception {
 		try {
 			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
-			byte[] body = "Hello World".getBytes("UTF-8");
-			FileCopyUtils.copy(body, request.getBody());
+			final byte[] body = "Hello World".getBytes("UTF-8");
+			if (request instanceof StreamingHttpOutputMessage) {
+				StreamingHttpOutputMessage streamingRequest =
+						(StreamingHttpOutputMessage) request;
+				streamingRequest.setBody(new StreamingHttpOutputMessage.Body() {
+					@Override
+					public void writeTo(OutputStream outputStream) throws IOException {
+						StreamUtils.copy(body, outputStream);
+					}
+				});
+			}
+			else {
+				StreamUtils.copy(body, request.getBody());
+			}
+
 			ClientHttpResponse response = request.execute();
 			try {
 				FileCopyUtils.copy(body, request.getBody());
@@ -191,12 +236,25 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		try {
 			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
 			request.getHeaders().add("Content-Encoding", "gzip");
-			byte[] body = "Hello World".getBytes("UTF-8");
-			FileCopyUtils.copy(body, request.getBody());
+			final byte[] body = "Hello World".getBytes("UTF-8");
+			if (request instanceof StreamingHttpOutputMessage) {
+				StreamingHttpOutputMessage streamingRequest =
+						(StreamingHttpOutputMessage) request;
+				streamingRequest.setBody(new StreamingHttpOutputMessage.Body() {
+					@Override
+					public void writeTo(OutputStream outputStream) throws IOException {
+						StreamUtils.copy(body, outputStream);
+					}
+				});
+			}
+			else {
+				StreamUtils.copy(body, request.getBody());
+			}
+
 			ClientHttpResponse response = request.execute();
 			try {
 				FileCopyUtils.copy(body, request.getBody());
-			} 
+			}
 			finally {
 				response.close();
 			}
@@ -245,7 +303,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertTrue("Header not found", response.getHeaders().containsKey("Content-Encoding"));
 			assertEquals("Header value not found", Arrays.asList("gzip"), response.getHeaders().get("Content-Encoding"));
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+			final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 					.getBytes("UTF-8");
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
@@ -270,7 +328,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			assertNotNull(response.getStatusText());
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertFalse("Header found", response.getHeaders().containsKey("Content-Encoding"));
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+			final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 					.getBytes("UTF-8");
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
@@ -289,7 +347,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			assertNotNull(response.getStatusText());
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertFalse("Header found", response.getHeaders().containsKey("Content-Encoding"));
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+			final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 					.getBytes("UTF-8");
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
@@ -305,9 +363,24 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/gzip"), HttpMethod.POST);
 		assertEquals("Invalid HTTP method", HttpMethod.POST, request.getMethod());
 		request.getHeaders().add("Content-Encoding", "gzip");
-		byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+		final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 				.getBytes("UTF-8");
-		FileCopyUtils.copy(body, request.getBody());
+		if (request instanceof StreamingHttpOutputMessage) {
+			StreamingHttpOutputMessage streamingRequest =
+					(StreamingHttpOutputMessage) request;
+			streamingRequest.setBody(new StreamingHttpOutputMessage.Body() {
+				@Override
+				public void writeTo(OutputStream outputStream) throws IOException {
+					GZIPOutputStream gzipOutputStream = new GZIPOutputStream(outputStream);
+					StreamUtils.copy(body, gzipOutputStream);
+					gzipOutputStream.close();
+				}
+			});
+		}
+		else {
+			StreamUtils.copy(body, request.getBody());
+		}
+
 		ClientHttpResponse response = request.execute();
 		try {
 			assertNotNull(response.getStatusText());
@@ -350,9 +423,22 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/identity"), HttpMethod.POST);
 		assertEquals("Invalid HTTP method", HttpMethod.POST, request.getMethod());
 		request.getHeaders().add("Content-Encoding", "identity");
-		byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+		final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 				.getBytes("UTF-8");
-		FileCopyUtils.copy(body, request.getBody());
+		if (request instanceof StreamingHttpOutputMessage) {
+			StreamingHttpOutputMessage streamingRequest =
+					(StreamingHttpOutputMessage) request;
+			streamingRequest.setBody(new StreamingHttpOutputMessage.Body() {
+				@Override
+				public void writeTo(OutputStream outputStream) throws IOException {
+					StreamUtils.copy(body, outputStream);
+				}
+			});
+		}
+		else {
+			StreamUtils.copy(body, request.getBody());
+		}
+
 		ClientHttpResponse response = request.execute();
 		try {
 			assertNotNull(response.getStatusText());
@@ -463,7 +549,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+			final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 					.getBytes("UTF-8");
 			assertTrue(containsHeaderValue(req, "Accept-Encoding", "gzip"));
 			res.setStatus(HttpServletResponse.SC_OK);
@@ -479,7 +565,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
 		@Override
 		protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+			final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 					.getBytes("UTF-8");
 			assertTrue(containsHeaderValue(req, "Content-Encoding", "gzip"));
 			res.setStatus(HttpServletResponse.SC_OK);
@@ -506,7 +592,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+			final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 					.getBytes("UTF-8");
 			assertTrue(containsHeaderValue(req, "Accept-Encoding", "identity"));
 			res.setStatus(HttpServletResponse.SC_OK);
@@ -516,7 +602,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
 		@Override
 		protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+			final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 					.getBytes("UTF-8");
 			assertTrue(containsHeaderValue(req, "Content-Encoding", "identity"));
 			res.setStatus(HttpServletResponse.SC_OK);
@@ -532,7 +618,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
 		@Override
 		protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+			final byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 					.getBytes("UTF-8");
 			res.setStatus(HttpServletResponse.SC_OK);
 			if (containsHeaderValue(req, "Accept-Encoding", "gzip")) {

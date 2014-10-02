@@ -19,11 +19,9 @@ package org.springframework.http.client.support;
 import junit.framework.TestCase;
 
 import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import android.os.Build;
 import android.test.suitebuilder.annotation.SmallTest;
 
 public class HttpAccessorTests extends TestCase {
@@ -43,11 +41,7 @@ public class HttpAccessorTests extends TestCase {
 	@SmallTest
 	public void testConstructor() {
 		ClientHttpRequestFactory factory = restTemplate.getRequestFactory();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-			assertTrue(factory instanceof SimpleClientHttpRequestFactory);
-		} else {
-			assertTrue(factory instanceof HttpComponentsAndroidClientHttpRequestFactory);
-		}
+		assertTrue(factory instanceof HttpComponentsClientHttpRequestFactory);
 	}
 
 }

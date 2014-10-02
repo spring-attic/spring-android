@@ -20,6 +20,7 @@ configure(allprojects) {
 	ext.gsonVersion              = "2.3"
 	ext.simpleXmlVersion         = "2.6.9"
 	ext.okHttpVersion            = "2.0.0"
+	ext.httpclientVersion        = "4.3.5"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 
 	apply plugin: 'propdeps'
@@ -157,6 +158,7 @@ project("spring-android-rest-template") {
 	dependencies {
 		provided("com.google.android:android:$androidVersion")
 		compile(project(":spring-android-core"))
+		optional("org.apache.httpcomponents:httpclient-android:$httpclientVersion")
 		optional("com.squareup.okhttp:okhttp-urlconnection:$okHttpVersion")
 		optional("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion")
 		optional("com.fasterxml.jackson.core:jackson-databind:$jackson2Version")
