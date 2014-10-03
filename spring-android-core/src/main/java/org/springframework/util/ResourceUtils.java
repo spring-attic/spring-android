@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Utility methods for resolving resource locations to files in the
@@ -29,10 +30,16 @@ import java.net.URL;
  *
  * <p>Consider using Spring's Resource abstraction in the core package
  * for handling all kinds of file resources in a uniform manner.
- * {@link org.springframework.core.io.ResourceLoader}'s <code>getResource</code>
+ * {@link org.springframework.core.io.ResourceLoader}'s {@code getResource()}
  * method can resolve any location to a {@link org.springframework.core.io.Resource}
- * object, which in turn allows to obtain a <code>java.io.File</code> in the
- * file system through its <code>getFile()</code> method.
+ * object, which in turn allows one to obtain a {@code java.io.File} in the
+ * file system through its {@code getFile()} method.
+ *
+ * <p>The main reason for these utility methods for resource location handling
+ * is to support {@link Log4jConfigurer}, which must be able to resolve
+ * resource locations <i>before the logging system has been initialized</i>.
+ * Spring's {@code Resource} abstraction in the core package, on the other hand,
+ * already expects the logging system to be available.
  *
  * @author Juergen Hoeller
  * @since 1.0
@@ -59,14 +66,17 @@ public abstract class ResourceUtils {
 	/** URL protocol for an entry from a zip file: "zip" */
 	public static final String URL_PROTOCOL_ZIP = "zip";
 
+	/** URL protocol for an entry from a WebSphere jar file: "wsjar" */
+	public static final String URL_PROTOCOL_WSJAR = "wsjar";
+
 	/** URL protocol for an entry from a JBoss jar file: "vfszip" */
 	public static final String URL_PROTOCOL_VFSZIP = "vfszip";
 
-	/** URL protocol for a JBoss VFS resource: "vfs" */
-	public static final String URL_PROTOCOL_VFS = "vfs";
+	/** URL protocol for a JBoss file system resource: "vfsfile" */
+	public static final String URL_PROTOCOL_VFSFILE = "vfsfile";
 
-	/** URL protocol for an entry from a WebSphere jar file: "wsjar" */
-	public static final String URL_PROTOCOL_WSJAR = "wsjar";
+	/** URL protocol for a general JBoss VFS resource: "vfs" */
+	public static final String URL_PROTOCOL_VFS = "vfs";
 
 	/** URL protocol for an entry from an OC4J jar file: "code-source" */
 	public static final String URL_PROTOCOL_CODE_SOURCE = "code-source";
@@ -100,7 +110,7 @@ public abstract class ResourceUtils {
 	}
 
 	/**
-	 * Resolve the given resource location to a <code>java.net.URL</code>.
+	 * Resolve the given resource location to a {@code java.net.URL}.
 	 * <p>Does not check whether the URL actually exists; simply returns
 	 * the URL that the given location would correspond to.
 	 * @param resourceLocation the resource location to resolve: either a
@@ -112,7 +122,8 @@ public abstract class ResourceUtils {
 		Assert.notNull(resourceLocation, "Resource location must not be null");
 		if (resourceLocation.startsWith(CLASSPATH_URL_PREFIX)) {
 			String path = resourceLocation.substring(CLASSPATH_URL_PREFIX.length());
-			URL url = ClassUtils.getDefaultClassLoader().getResource(path);
+			ClassLoader cl = ClassUtils.getDefaultClassLoader();
+			URL url = (cl != null ? cl.getResource(path) : ClassLoader.getSystemResource(path));
 			if (url == null) {
 				String description = "class path resource [" + path + "]";
 				throw new FileNotFoundException(
@@ -137,9 +148,9 @@ public abstract class ResourceUtils {
 	}
 
 	/**
-	 * Resolve the given resource location to a <code>java.io.File</code>,
+	 * Resolve the given resource location to a {@code java.io.File},
 	 * i.e. to a file in the file system.
-	 * <p>Does not check whether the fil actually exists; simply returns
+	 * <p>Does not check whether the file actually exists; simply returns
 	 * the File that the given location would correspond to.
 	 * @param resourceLocation the resource location to resolve: either a
 	 * "classpath:" pseudo URL, a "file:" URL, or a plain file path
@@ -152,7 +163,8 @@ public abstract class ResourceUtils {
 		if (resourceLocation.startsWith(CLASSPATH_URL_PREFIX)) {
 			String path = resourceLocation.substring(CLASSPATH_URL_PREFIX.length());
 			String description = "class path resource [" + path + "]";
-			URL url = ClassUtils.getDefaultClassLoader().getResource(path);
+			ClassLoader cl = ClassUtils.getDefaultClassLoader();
+			URL url = (cl != null ? cl.getResource(path) : ClassLoader.getSystemResource(path));
 			if (url == null) {
 				throw new FileNotFoundException(
 						description + " cannot be resolved to absolute file path " +
@@ -171,7 +183,7 @@ public abstract class ResourceUtils {
 	}
 
 	/**
-	 * Resolve the given resource URL to a <code>java.io.File</code>,
+	 * Resolve the given resource URL to a {@code java.io.File},
 	 * i.e. to a file in the file system.
 	 * @param resourceUrl the resource URL to resolve
 	 * @return a corresponding File object
@@ -183,7 +195,7 @@ public abstract class ResourceUtils {
 	}
 
 	/**
-	 * Resolve the given resource URL to a <code>java.io.File</code>,
+	 * Resolve the given resource URL to a {@code java.io.File},
 	 * i.e. to a file in the file system.
 	 * @param resourceUrl the resource URL to resolve
 	 * @param description a description of the original resource that
@@ -209,7 +221,7 @@ public abstract class ResourceUtils {
 	}
 
 	/**
-	 * Resolve the given resource URI to a <code>java.io.File</code>,
+	 * Resolve the given resource URI to a {@code java.io.File},
 	 * i.e. to a file in the file system.
 	 * @param resourceUri the resource URI to resolve
 	 * @return a corresponding File object
@@ -221,7 +233,7 @@ public abstract class ResourceUtils {
 	}
 
 	/**
-	 * Resolve the given resource URI to a <code>java.io.File</code>,
+	 * Resolve the given resource URI to a {@code java.io.File},
 	 * i.e. to a file in the file system.
 	 * @param resourceUri the resource URI to resolve
 	 * @param description a description of the original resource that
@@ -242,29 +254,29 @@ public abstract class ResourceUtils {
 
 	/**
 	 * Determine whether the given URL points to a resource in the file system,
-	 * that is, has protocol "file" or "vfs".
+	 * that is, has protocol "file", "vfsfile" or "vfs".
 	 * @param url the URL to check
 	 * @return whether the URL has been identified as a file system URL
 	 */
 	public static boolean isFileURL(URL url) {
 		String protocol = url.getProtocol();
-		return (URL_PROTOCOL_FILE.equals(protocol) || protocol.startsWith(URL_PROTOCOL_VFS));
+		return (URL_PROTOCOL_FILE.equals(protocol) || URL_PROTOCOL_VFSFILE.equals(protocol) ||
+				URL_PROTOCOL_VFS.equals(protocol));
 	}
 
 	/**
 	 * Determine whether the given URL points to a resource in a jar file,
-	 * that is, has protocol "jar", "zip", "wsjar" or "code-source".
-	 * <p>"zip" and "wsjar" are used by BEA WebLogic Server and IBM WebSphere, respectively,
-	 * but can be treated like jar files. The same applies to "code-source" URLs on Oracle
+	 * that is, has protocol "jar", "zip", "vfszip", "wsjar" or "code-source".
+	 * <p>"zip" and "wsjar" are used by WebLogic Server and WebSphere, respectively,
+	 * but can be treated like jar files. The same applies to "code-source" URLs on
 	 * OC4J, provided that the path contains a jar separator.
 	 * @param url the URL to check
 	 * @return whether the URL has been identified as a JAR URL
 	 */
 	public static boolean isJarURL(URL url) {
 		String protocol = url.getProtocol();
-		return (URL_PROTOCOL_JAR.equals(protocol) ||
-				URL_PROTOCOL_ZIP.equals(protocol) ||
-				URL_PROTOCOL_WSJAR.equals(protocol) ||
+		return (URL_PROTOCOL_JAR.equals(protocol) || URL_PROTOCOL_ZIP.equals(protocol) ||
+				URL_PROTOCOL_VFSZIP.equals(protocol) || URL_PROTOCOL_WSJAR.equals(protocol) ||
 				(URL_PROTOCOL_CODE_SOURCE.equals(protocol) && url.getPath().contains(JAR_URL_SEPARATOR)));
 	}
 
@@ -299,9 +311,9 @@ public abstract class ResourceUtils {
 
 	/**
 	 * Create a URI instance for the given URL,
-	 * replacing spaces with "%20" quotes first.
+	 * replacing spaces with "%20" URI encoding first.
 	 * <p>Furthermore, this method works on JDK 1.4 as well,
-	 * in contrast to the <code>URL.toURI()</code> method.
+	 * in contrast to the {@code URL.toURI()} method.
 	 * @param url the URL to convert into a URI instance
 	 * @return the URI instance
 	 * @throws URISyntaxException if the URL wasn't a valid URI
@@ -313,13 +325,23 @@ public abstract class ResourceUtils {
 
 	/**
 	 * Create a URI instance for the given location String,
-	 * replacing spaces with "%20" quotes first.
+	 * replacing spaces with "%20" URI encoding first.
 	 * @param location the location String to convert into a URI instance
 	 * @return the URI instance
 	 * @throws URISyntaxException if the location wasn't a valid URI
 	 */
 	public static URI toURI(String location) throws URISyntaxException {
 		return new URI(StringUtils.replace(location, " ", "%20"));
+	}
+
+	/**
+	 * Set the {@link URLConnection#setUseCaches "useCaches"} flag on the
+	 * given connection, preferring {@code false} but leaving the
+	 * flag at {@code true} for JNLP based resources.
+	 * @param con the URLConnection to set the flag on
+	 */
+	public static void useCachesIfNecessary(URLConnection con) {
+		con.setUseCaches(con.getClass().getSimpleName().startsWith("JNLP"));
 	}
 
 }
