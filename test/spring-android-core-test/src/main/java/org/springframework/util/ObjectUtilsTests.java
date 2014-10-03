@@ -32,6 +32,7 @@ import android.util.AndroidRuntimeException;
  * @author Rod Johnson
  * @author Juergen Hoeller
  * @author Rick Evans
+ * @author Roy Clarkson
  */
 public class ObjectUtilsTests extends TestCase {
 
@@ -50,51 +51,32 @@ public class ObjectUtilsTests extends TestCase {
 	public void testIsCompatibleWithThrowsClause() {
 		Class<?>[] empty = new Class[0];
 		Class<?>[] exception = new Class[] { Exception.class };
-		Class<?>[] sqlAndIO = new Class[] { SQLException.class,
-				IOException.class };
+		Class<?>[] sqlAndIO = new Class[] { SQLException.class, IOException.class };
 		Class<?>[] throwable = new Class[] { Throwable.class };
 
-		assertTrue(ObjectUtils
-				.isCompatibleWithThrowsClause(new RuntimeException()));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(
-				new RuntimeException(), empty));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(
-				new RuntimeException(), exception));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(
-				new RuntimeException(), sqlAndIO));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(
-				new RuntimeException(), throwable));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new RuntimeException()));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new RuntimeException(), empty));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new RuntimeException(),	exception));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new RuntimeException(), sqlAndIO));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new RuntimeException(), throwable));
 
 		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Exception()));
-		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Exception(),
-				empty));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new Exception(),
-				exception));
-		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Exception(),
-				sqlAndIO));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new Exception(),
-				throwable));
+		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Exception(), empty));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new Exception(), exception));
+		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Exception(), sqlAndIO));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new Exception(), throwable));
 
-		assertFalse(ObjectUtils
-				.isCompatibleWithThrowsClause(new SQLException()));
-		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(
-				new SQLException(), empty));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new SQLException(),
-				exception));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new SQLException(),
-				sqlAndIO));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new SQLException(),
-				throwable));
+		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new SQLException()));
+		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new SQLException(), empty));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new SQLException(), exception));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new SQLException(), sqlAndIO));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new SQLException(), throwable));
 
 		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Throwable()));
-		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Throwable(),
-				empty));
-		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Throwable(),
-				exception));
-		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Throwable(),
-				sqlAndIO));
-		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new Throwable(),
-				throwable));
+		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Throwable(), empty));
+		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Throwable(), exception));
+		assertFalse(ObjectUtils.isCompatibleWithThrowsClause(new Throwable(), sqlAndIO));
+		assertTrue(ObjectUtils.isCompatibleWithThrowsClause(new Throwable(), throwable));
 	}
 
 	public void testToObjectArray() {
@@ -122,7 +104,8 @@ public class ObjectUtilsTests extends TestCase {
 		try {
 			ObjectUtils.toObjectArray("Not an []");
 			fail("Must have thrown an IllegalArgumentException by this point.");
-		} catch (IllegalArgumentException expected) {
+		}
+		catch (IllegalArgumentException expected) {
 		}
 	}
 
@@ -180,10 +163,8 @@ public class ObjectUtilsTests extends TestCase {
 	}
 
 	public void testNullSafeEqualsWithArrays() throws Exception {
-		assertTrue(ObjectUtils.nullSafeEquals(new String[] { "a", "b", "c" },
-				new String[] { "a", "b", "c" }));
-		assertTrue(ObjectUtils.nullSafeEquals(new int[] { 1, 2, 3 }, new int[] {
-				1, 2, 3 }));
+		assertTrue(ObjectUtils.nullSafeEquals(new String[] { "a", "b", "c" }, new String[] { "a", "b", "c" }));
+		assertTrue(ObjectUtils.nullSafeEquals(new int[] { 1, 2, 3 }, new int[] { 1, 2, 3 }));
 	}
 
 	public void testHashCodeWithBooleanFalse() {
@@ -543,8 +524,7 @@ public class ObjectUtilsTests extends TestCase {
 
 	public void testNullSafeToStringWithDoubleArray() {
 		double[] array = { 8594.93, 8594023.95 };
-		assertEquals("{8594.93, 8594023.95}",
-				ObjectUtils.nullSafeToString(array));
+		assertEquals("{8594.93, 8594023.95}", ObjectUtils.nullSafeToString(array));
 	}
 
 	public void testNullSafeToStringWithDoubleArrayBeingEmpty() {
@@ -600,8 +580,7 @@ public class ObjectUtilsTests extends TestCase {
 
 	public void testNullSafeToStringWithPlainOldString() {
 		assertEquals("I shoh love tha taste of mangoes",
-				ObjectUtils
-						.nullSafeToString("I shoh love tha taste of mangoes"));
+				ObjectUtils.nullSafeToString("I shoh love tha taste of mangoes"));
 	}
 
 	public void testNullSafeToStringWithObjectArray() {
@@ -647,26 +626,17 @@ public class ObjectUtilsTests extends TestCase {
 	}
 
 	public void testContainsConstant() {
-		assertThat(ObjectUtils.containsConstant(Tropes.values(), "FOO"),
-				is(true));
-		assertThat(ObjectUtils.containsConstant(Tropes.values(), "foo"),
-				is(true));
-		assertThat(ObjectUtils.containsConstant(Tropes.values(), "BaR"),
-				is(true));
-		assertThat(ObjectUtils.containsConstant(Tropes.values(), "bar"),
-				is(true));
-		assertThat(ObjectUtils.containsConstant(Tropes.values(), "BAZ"),
-				is(true));
-		assertThat(ObjectUtils.containsConstant(Tropes.values(), "baz"),
-				is(true));
+		assertThat(ObjectUtils.containsConstant(Tropes.values(), "FOO"), is(true));
+		assertThat(ObjectUtils.containsConstant(Tropes.values(), "foo"), is(true));
+		assertThat(ObjectUtils.containsConstant(Tropes.values(), "BaR"), is(true));
+		assertThat(ObjectUtils.containsConstant(Tropes.values(), "bar"), is(true));
+		assertThat(ObjectUtils.containsConstant(Tropes.values(), "BAZ"), is(true));
+		assertThat(ObjectUtils.containsConstant(Tropes.values(), "baz"), is(true));
 
-		assertThat(ObjectUtils.containsConstant(Tropes.values(), "BOGUS"),
-				is(false));
+		assertThat(ObjectUtils.containsConstant(Tropes.values(), "BOGUS"), is(false));
 
-		assertThat(ObjectUtils.containsConstant(Tropes.values(), "FOO", true),
-				is(true));
-		assertThat(ObjectUtils.containsConstant(Tropes.values(), "foo", true),
-				is(false));
+		assertThat(ObjectUtils.containsConstant(Tropes.values(), "FOO", true), is(true));
+		assertThat(ObjectUtils.containsConstant(Tropes.values(), "foo", true), is(false));
 	}
 
 	public void testCaseInsensitiveValueOf() {
@@ -677,9 +647,9 @@ public class ObjectUtilsTests extends TestCase {
 		try {
 			ObjectUtils.caseInsensitiveValueOf(Tropes.values(), "bogus");
 			fail("expected IllegalArgumentException");
-		} catch (IllegalArgumentException ex) {
-			assertThat(
-					ex.getMessage(),
+		}
+		catch (IllegalArgumentException ex) {
+			assertThat(ex.getMessage(),
 					is("constant [bogus] does not exist in enum type "
 							+ "org.springframework.util.ObjectUtilsTests$Tropes"));
 		}
