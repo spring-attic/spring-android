@@ -1161,7 +1161,7 @@ public abstract class ClassUtils {
 	 * @return the common ancestor (i.e. common superclass, one interface
 	 * extending the other), or {@code null} if none found. If any of the
 	 * given classes is {@code null}, the other class will be returned.
-	 * @since 3.2.6
+	 * @since 2.0
 	 */
 	public static Class<?> determineCommonAncestor(Class<?> clazz1, Class<?> clazz2) {
 		if (clazz1 == null) {
