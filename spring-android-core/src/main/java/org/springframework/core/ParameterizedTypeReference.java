@@ -23,7 +23,7 @@ import java.lang.reflect.Type;
 
 /**
  * The purpose of this class is to enable capturing and passing a generic
- * {@link java.lang.reflect.Type}. In order to capture the generic type and retain it at runtime,
+ * {@link Type}. In order to capture the generic type and retain it at runtime,
  * you need to create a subclass as follows:
  *
  * <pre class="code">
@@ -31,7 +31,7 @@ import java.lang.reflect.Type;
  * </pre>
  *
  * <p>The resulting {@code typeReference} instance can then be used to obtain a
- * {@link java.lang.reflect.Type} instance that carries parameterized type information.
+ * {@link Type} instance that carries parameterized type information.
  * For more information on "super type tokens" see the link to Neal Gafter's blog post.
  *
  * @author Arjen Poutsma
