@@ -21,6 +21,8 @@ import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import android.os.Build;
+import android.os.Build.VERSION;
 import junit.framework.TestCase;
 
 /**
@@ -177,6 +179,10 @@ public class NumberUtilsTests extends TestCase {
 
 	public void testParseLocalizedBigDecimalNumber3() {
 		String bigDecimalAsString = "3.14159265358979323846";
+		if (Build.VERSION.SDK_INT == Build.VERSION_CODES.FROYO) {
+			// Android 2.2 is truncating the significant digits when using NumberFormat to parse a BigDecimal
+			bigDecimalAsString = "3.141592653589793";
+		}
 		NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
 		Number bigDecimal = NumberUtils.parseNumber(bigDecimalAsString, BigDecimal.class, numberFormat);
 		assertEquals(new BigDecimal(bigDecimalAsString), bigDecimal);

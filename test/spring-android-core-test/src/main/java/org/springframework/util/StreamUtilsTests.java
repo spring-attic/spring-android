@@ -61,7 +61,7 @@ public class StreamUtilsTests extends DexCacheInstrumentationTestCase {
 
 	public void testCopyToString() throws Exception {
 		Charset charset = Charset.defaultCharset();
-		InputStream inputStream = spy(new ByteArrayInputStream(string.getBytes(charset)));
+		InputStream inputStream = spy(new ByteArrayInputStream(string.getBytes(charset.displayName())));
 		String actual = StreamUtils.copyToString(inputStream, charset);
 		assertThat(actual, equalTo(string));
 		verify(inputStream, never()).close();
@@ -78,7 +78,7 @@ public class StreamUtilsTests extends DexCacheInstrumentationTestCase {
 		Charset charset = Charset.defaultCharset();
 		ByteArrayOutputStream out = spy(new ByteArrayOutputStream());
 		StreamUtils.copy(string, charset, out);
-		assertThat(out.toByteArray(), equalTo(string.getBytes(charset)));
+		assertThat(out.toByteArray(), equalTo(string.getBytes(charset.displayName())));
 		verify(out, never()).close();
 	}
 
