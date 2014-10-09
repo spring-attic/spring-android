@@ -51,9 +51,9 @@ public class Base64UtilsTests extends AndroidTestCase {
 		Assert.assertArrayEquals(expected, actual);
 	}
 
-	public void testDecodeString() throws UnsupportedEncodingException {
+	public void testDecodeFromString() throws UnsupportedEncodingException {
 		byte[] expected = SOURCE.getBytes(UTF8);
-		byte[] actual = Base64Utils.decode(ENCODED);
+		byte[] actual = Base64Utils.decodeFromString(ENCODED);
 		Assert.assertArrayEquals(expected, actual);
 	}
 

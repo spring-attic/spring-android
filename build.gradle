@@ -20,6 +20,7 @@ configure(allprojects) {
 	ext.gsonVersion              = "2.3"
 	ext.simpleXmlVersion         = "2.6.9"
 	ext.okHttpVersion            = "2.0.0"
+	ext.commonsCodecVersion      = "1.9"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 
 	apply plugin: 'propdeps'
@@ -133,6 +134,7 @@ project("spring-android-core") {
 	
 	dependencies {
 		compile("com.google.android:android:$androidVersion", provided)
+		optional("commons-codec:commons-codec:$commonsCodecVersion")
 	}
 }
 

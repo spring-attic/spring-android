@@ -18,6 +18,11 @@
 			<artifactId>spring-android-core</artifactId>
 			<version>${org.springframework.android-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.9</version>
+		</dependency>
 	</dependencies>
 
 </project>
