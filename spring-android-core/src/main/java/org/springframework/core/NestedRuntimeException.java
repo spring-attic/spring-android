@@ -17,11 +17,11 @@
 package org.springframework.core;
 
 /**
- * Handy class for wrapping runtime <code>Exceptions</code> with a root cause.
+ * Handy class for wrapping runtime {@code Exceptions} with a root cause.
  *
- * <p>This class is <code>abstract</code> to force the programmer to extend
- * the class. <code>getMessage</code> will include nested exception
- * information; <code>printStackTrace</code> and other like methods will
+ * <p>This class is {@code abstract} to force the programmer to extend
+ * the class. {@code getMessage} will include nested exception
+ * information; {@code printStackTrace} and other like methods will
  * delegate to the wrapped exception, if any.
  *
  * <p>The similarity between this class and the {@link NestedCheckedException}
@@ -48,7 +48,7 @@ public abstract class NestedRuntimeException extends RuntimeException {
 
 
 	/**
-	 * Construct a <code>NestedRuntimeException</code> with the specified detail message.
+	 * Construct a {@code NestedRuntimeException} with the specified detail message.
 	 * @param msg the detail message
 	 */
 	public NestedRuntimeException(String msg) {
@@ -56,7 +56,7 @@ public abstract class NestedRuntimeException extends RuntimeException {
 	}
 
 	/**
-	 * Construct a <code>NestedRuntimeException</code> with the specified detail message
+	 * Construct a {@code NestedRuntimeException} with the specified detail message
 	 * and nested exception.
 	 * @param msg the detail message
 	 * @param cause the nested exception
@@ -78,7 +78,7 @@ public abstract class NestedRuntimeException extends RuntimeException {
 
 	/**
 	 * Retrieve the innermost cause of this exception, if any.
-	 * @return the innermost exception, or <code>null</code> if none
+	 * @return the innermost exception, or {@code null} if none
 	 */
 	public Throwable getRootCause() {
 		Throwable rootCause = null;
@@ -95,7 +95,7 @@ public abstract class NestedRuntimeException extends RuntimeException {
 	 * either the innermost cause (root cause) or this exception itself.
 	 * <p>Differs from {@link #getRootCause()} in that it falls back
 	 * to the present exception if there is no root cause.
-	 * @return the most specific cause (never <code>null</code>)
+	 * @return the most specific cause (never {@code null})
 	 */
 	public Throwable getMostSpecificCause() {
 		Throwable rootCause = getRootCause();
@@ -109,7 +109,7 @@ public abstract class NestedRuntimeException extends RuntimeException {
 	 * @param exType the exception type to look for
 	 * @return whether there is a nested exception of the specified type
 	 */
-	public boolean contains(Class<?> exType) {
+	public boolean contains(Class exType) {
 		if (exType == null) {
 			return false;
 		}
