@@ -41,14 +41,14 @@ public class MethodParameterTests extends TestCase {
 		longParameter = new MethodParameter(method, 1);
 		intReturnType = new MethodParameter(method, -1);
 	}
-	
+
 	@Override
 	public void tearDown() {
 		stringParameter = null;
 		longParameter = null;
 		intReturnType = null;
 	}
-	
+
 	@SmallTest
 	public void testEquals() throws NoSuchMethodException {
 		assertEquals(stringParameter, stringParameter);
