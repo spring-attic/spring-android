@@ -30,14 +30,15 @@ import org.springframework.util.StringUtils;
  * {@link Resource} implementation for class path resources.
  * Uses either a given ClassLoader or a given Class for loading resources.
  *
- * <p>Supports resolution as <code>java.io.File</code> if the class path
+ * <p>Supports resolution as {@code java.io.File} if the class path
  * resource resides in the file system, but not for resources in a JAR.
  * Always supports resolution as URL.
  *
  * @author Juergen Hoeller
+ * @author Sam Brannen
  * @since 1.0
- * @see java.lang.ClassLoader#getResourceAsStream(String)
- * @see java.lang.Class#getResourceAsStream(String)
+ * @see ClassLoader#getResourceAsStream(String)
+ * @see Class#getResourceAsStream(String)
  */
 public class ClassPathResource extends AbstractFileResolvingResource {
 
@@ -49,9 +50,9 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 
 
 	/**
-	 * Create a new ClassPathResource for ClassLoader usage.
-	 * A leading slash will be removed, as the ClassLoader
-	 * resource access methods will not accept it.
+	 * Create a new {@code ClassPathResource} for {@code ClassLoader} usage.
+	 * A leading slash will be removed, as the ClassLoader resource access
+	 * methods will not accept it.
 	 * <p>The thread context class loader will be used for
 	 * loading the resource.
 	 * @param path the absolute path within the class path
@@ -63,13 +64,13 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	}
 
 	/**
-	 * Create a new ClassPathResource for ClassLoader usage.
-	 * A leading slash will be removed, as the ClassLoader
-	 * resource access methods will not accept it.
+	 * Create a new {@code ClassPathResource} for {@code ClassLoader} usage.
+	 * A leading slash will be removed, as the ClassLoader resource access
+	 * methods will not accept it.
 	 * @param path the absolute path within the classpath
 	 * @param classLoader the class loader to load the resource with,
-	 * or <code>null</code> for the thread context class loader
-	 * @see java.lang.ClassLoader#getResourceAsStream(String)
+	 * or {@code null} for the thread context class loader
+	 * @see ClassLoader#getResourceAsStream(String)
 	 */
 	public ClassPathResource(String path, ClassLoader classLoader) {
 		Assert.notNull(path, "Path must not be null");
@@ -82,9 +83,9 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	}
 
 	/**
-	 * Create a new ClassPathResource for Class usage.
-	 * The path can be relative to the given class,
-	 * or absolute within the classpath via a leading slash.
+	 * Create a new {@code ClassPathResource} for {@code Class} usage.
+	 * The path can be relative to the given class, or absolute within
+	 * the classpath via a leading slash.
 	 * @param path relative or absolute path within the class path
 	 * @param clazz the class to load resources with
 	 * @see java.lang.Class#getResourceAsStream
@@ -96,8 +97,8 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	}
 
 	/**
-	 * Create a new ClassPathResource with optional ClassLoader and Class.
-	 * Only for internal usage.
+	 * Create a new {@code ClassPathResource} with optional {@code ClassLoader}
+	 * and {@code Class}. Only for internal usage.
 	 * @param path relative or absolute path within the classpath
 	 * @param classLoader the class loader to load the resource with, if any
 	 * @param clazz the class to load resources with, if any
@@ -120,7 +121,7 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	 * Return the ClassLoader that this resource will be obtained from.
 	 */
 	public final ClassLoader getClassLoader() {
-		return (this.classLoader != null ? this.classLoader : this.clazz.getClassLoader());
+		return (this.clazz != null ? this.clazz.getClassLoader() : this.classLoader);
 	}
 
 
@@ -131,14 +132,23 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	 */
 	@Override
 	public boolean exists() {
-		URL url;
+		return (resolveURL() != null);
+	}
+
+	/**
+	 * Resolves a URL for the underlying class path resource.
+	 * @return the resolved URL, or {@code null} if not resolvable
+	 */
+	protected URL resolveURL() {
 		if (this.clazz != null) {
-			url = this.clazz.getResource(this.path);
+			return this.clazz.getResource(this.path);
+		}
+		else if (this.classLoader != null) {
+			return this.classLoader.getResource(this.path);
 		}
 		else {
-			url = this.classLoader.getResource(this.path);
+			return ClassLoader.getSystemResource(this.path);
 		}
-		return (url != null);
 	}
 
 	/**
@@ -151,33 +161,29 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 		if (this.clazz != null) {
 			is = this.clazz.getResourceAsStream(this.path);
 		}
-		else {
+		else if (this.classLoader != null) {
 			is = this.classLoader.getResourceAsStream(this.path);
 		}
+		else {
+			is = ClassLoader.getSystemResourceAsStream(this.path);
+		}
 		if (is == null) {
-			throw new FileNotFoundException(
-					getDescription() + " cannot be opened because it does not exist");
+			throw new FileNotFoundException(getDescription() + " cannot be opened because it does not exist");
 		}
 		return is;
 	}
 
 	/**
-	 * This implementation returns a URL for the underlying class path resource.
+	 * This implementation returns a URL for the underlying class path resource,
+	 * if available.
 	 * @see java.lang.ClassLoader#getResource(String)
 	 * @see java.lang.Class#getResource(String)
 	 */
 	@Override
 	public URL getURL() throws IOException {
-		URL url;
-		if (this.clazz != null) {
-			url = this.clazz.getResource(this.path);
-		}
-		else {
-			url = this.classLoader.getResource(this.path);
-		}
+		URL url = resolveURL();
 		if (url == null) {
-			throw new FileNotFoundException(
-					getDescription() + " cannot be resolved to URL because it does not exist");
+			throw new FileNotFoundException(getDescription() + " cannot be resolved to URL because it does not exist");
 		}
 		return url;
 	}
@@ -208,17 +214,18 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	 */
 	public String getDescription() {
 		StringBuilder builder = new StringBuilder("class path resource [");
-
-		if (this.clazz != null) {
+		String pathToUse = path;
+		if (this.clazz != null && !pathToUse.startsWith("/")) {
 			builder.append(ClassUtils.classPackageAsResourcePath(this.clazz));
 			builder.append('/');
 		}
-
-		builder.append(this.path);
+		if (pathToUse.startsWith("/")) {
+			pathToUse = pathToUse.substring(1);
+		}
+		builder.append(pathToUse);
 		builder.append(']');
 		return builder.toString();
 	}
-
 
 	/**
 	 * This implementation compares the underlying class path locations.

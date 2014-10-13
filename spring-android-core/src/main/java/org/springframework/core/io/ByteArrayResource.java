@@ -22,12 +22,12 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 /**
- * {@link Resource} implementation for a given byte array. Creates a ByteArrayInputStreams for the given byte array.
- * 
- * <p>
- * Useful for loading content from any given byte array, without having to resort to a single-use
- * {@link InputStreamResource}.
- * 
+ * {@link Resource} implementation for a given byte array.
+ * Creates a ByteArrayInputStreams for the given byte array.
+ *
+ * <p>Useful for loading content from any given byte array,
+ * without having to resort to a single-use {@link InputStreamResource}.
+ *
  * @author Juergen Hoeller
  * @since 1.0
  * @see java.io.ByteArrayInputStream
@@ -70,7 +70,7 @@ public class ByteArrayResource extends AbstractResource {
 
 
 	/**
-	 * This implementation always returns <code>true</code>.
+	 * This implementation always returns {@code true}.
 	 */
 	@Override
 	public boolean exists() {
@@ -86,7 +86,8 @@ public class ByteArrayResource extends AbstractResource {
 	}
 
 	/**
-	 * This implementation returns a ByteArrayInputStream for the underlying byte array.
+	 * This implementation returns a ByteArrayInputStream for the
+	 * underlying byte array.
 	 * @see java.io.ByteArrayInputStream
 	 */
 	public InputStream getInputStream() throws IOException {
@@ -107,11 +108,13 @@ public class ByteArrayResource extends AbstractResource {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return (obj == this || (obj instanceof ByteArrayResource && Arrays.equals(((ByteArrayResource) obj).byteArray, this.byteArray)));
+		return (obj == this ||
+			(obj instanceof ByteArrayResource && Arrays.equals(((ByteArrayResource) obj).byteArray, this.byteArray)));
 	}
 
 	/**
-	 * This implementation returns the hash code based on the underlying byte array.
+	 * This implementation returns the hash code based on the
+	 * underlying byte array.
 	 */
 	@Override
 	public int hashCode() {

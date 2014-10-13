@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.springframework.core.NestedIOException;
+import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 
 /**
@@ -64,14 +65,14 @@ public abstract class AbstractResource implements Resource {
 	}
 
 	/**
-	 * This implementation always returns <code>true</code>.
+	 * This implementation always returns {@code true}.
 	 */
 	public boolean isReadable() {
 		return true;
 	}
 
 	/**
-	 * This implementation always returns <code>false</code>.
+	 * This implementation always returns {@code false}.
 	 */
 	public boolean isOpen() {
 		return false;
@@ -108,12 +109,31 @@ public abstract class AbstractResource implements Resource {
 	}
 
 	/**
-	 * This implementation checks the length of the underlying File, 
-	 * if available.
-	 * @see #getFile()
+	 * This implementation reads the entire InputStream to calculate the
+	 * content length. Subclasses will almost always be able to provide
+	 * a more optimal version of this, e.g. checking a File length.
+	 * @see #getInputStream()
+	 * @throws IllegalStateException if {@link #getInputStream()} returns null.
 	 */
 	public long contentLength() throws IOException {
-		return getFile().length();
+		InputStream is = this.getInputStream();
+		Assert.state(is != null, "resource input stream must not be null");
+		try {
+			long size = 0;
+			byte[] buf = new byte[255];
+			int read;
+			while ((read = is.read(buf)) != -1) {
+				size += read;
+			}
+			return size;
+		}
+		finally {
+			try {
+				is.close();
+			}
+			catch (IOException ex) {
+			}
+		}
 	}
 
 	/**
@@ -133,7 +153,7 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * Determine the File to use for timestamp checking.
 	 * <p>The default implementation delegates to {@link #getFile()}.
-	 * @return the File to use for timestamp checking (never <code>null</code>)
+	 * @return the File to use for timestamp checking (never {@code null})
 	 * @throws IOException if the resource cannot be resolved as absolute
 	 * file path, i.e. if the resource is not available in a file system
 	 */
@@ -150,11 +170,11 @@ public abstract class AbstractResource implements Resource {
 	}
 
 	/**
-	 * This implementation always throws IllegalStateException,
-	 * assuming that the resource does not have a filename.
+	 * This implementation always returns {@code null},
+	 * assuming that this resource type does not have a filename.
 	 */
-	public String getFilename() throws IllegalStateException {
-		throw new IllegalStateException(getDescription() + " does not have a filename");
+	public String getFilename() {
+		return null;
 	}
 
 
@@ -174,7 +194,7 @@ public abstract class AbstractResource implements Resource {
 	@Override
 	public boolean equals(Object obj) {
 		return (obj == this ||
-		    (obj instanceof Resource && ((Resource) obj).getDescription().equals(getDescription())));
+			(obj instanceof Resource && ((Resource) obj).getDescription().equals(getDescription())));
 	}
 
 	/**
