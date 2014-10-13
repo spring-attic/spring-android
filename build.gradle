@@ -57,7 +57,7 @@ configure(allprojects) {
 		"-Xlint:try",
 		"-Xlint:-options",     // intentionally disabled
 		"-Xlint:-fallthrough", // intentionally disabled
-		"-Xlint:rawtypes",
+		"-Xlint:-rawtypes",    // TODO enable and fix warnings
 		"-Xlint:deprecation",
 		"-Xlint:unchecked"
 	]
