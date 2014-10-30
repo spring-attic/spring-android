@@ -203,7 +203,7 @@ public abstract class ClassUtils {
 	 * @throws LinkageError if the class file could not be loaded
 	 * @see Class#forName(String, boolean, ClassLoader)
 	 * @see #getDefaultClassLoader()
-	 * @deprecated as of Spring 3.0, in favor of specifying a ClassLoader explicitly:
+	 * @deprecated in favor of specifying a ClassLoader explicitly:
 	 * see {@link #forName(String, ClassLoader)}
 	 */
 	@Deprecated
@@ -332,7 +332,7 @@ public abstract class ClassUtils {
 	 * one of its dependencies is not present or cannot be loaded.
 	 * @param className the name of the class to check
 	 * @return whether the specified class is present
-	 * @deprecated as of Spring 2.5, in favor of {@link #isPresent(String, ClassLoader)}
+	 * @deprecated in favor of {@link #isPresent(String, ClassLoader)}
 	 */
 	@Deprecated
 	public static boolean isPresent(String className) {
@@ -763,7 +763,7 @@ public abstract class ClassUtils {
 	 * Call {@link org.springframework.core.BridgeMethodResolver#findBridgedMethod}
 	 * if bridge method resolution is desirable (e.g. for obtaining metadata from
 	 * the original method definition).
-	 * <p><b>NOTE:</b> Since Spring 3.1.1, if Java security settings disallow reflective
+	 * <p><b>NOTE:</b> If Java security settings disallow reflective
 	 * access (e.g. calls to {@code Class#getDeclaredMethods} etc, this implementation
 	 * will fall back to returning the originally provided method.
 	 * @param method the method to be invoked, which may come from an interface
