@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package org.springframework.tests.sample.objects;
+package org.springframework.core.convert.support;
 
+import org.springframework.core.convert.converter.Converter;
 
-public interface ITestInterface {
+/**
+ * Simply calls {@link Object#toString()} to convert a source Object to a String.
+ *
+ * @author Keith Donald
+ * @since 2.0
+ */
+final class ObjectToStringConverter implements Converter<Object, String> {
 
-	void absquatulate();
+	public String convert(Object source) {
+		return source.toString();
+	}
 
 }
