@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 	<name>spring-android-test</name>
 	<description>Spring for Android Tests</description>
-	<url>https://github.com/spring-project/spring-android</url>
+	<url>https://github.com/spring-projects/spring-android</url>
 	<inceptionYear>2010</inceptionYear>
 
 	<organization>
