@@ -133,7 +133,7 @@ project("spring-android-core") {
 	ext.mavenTestDir = "../test/spring-android-core-test/pom.xml"
 	
 	dependencies {
-		compile("com.google.android:android:$androidVersion", provided)
+		provided("com.google.android:android:$androidVersion")
 		optional("commons-codec:commons-codec:$commonsCodecVersion")
 	}
 }
@@ -159,9 +159,9 @@ project("spring-android-auth") {
 
 project("spring-android-rest-template") {
 	description = "Spring for Android Rest Template"
-	
+
 	ext.mavenTestDir = "../test/spring-android-rest-template-test/pom.xml"
-	
+
 	dependencies {
 		provided("com.google.android:android:$androidVersion")
 		compile(project(":spring-android-core"))
