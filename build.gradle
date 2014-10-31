@@ -32,14 +32,8 @@ configure(allprojects) {
 	apply plugin: "idea"
 	apply plugin: "javadocHotfix"
 
-	compileJava {
-		sourceCompatibility=1.5
-		targetCompatibility=1.5
-	}
-	compileTestJava {
-		sourceCompatibility=1.5
-		targetCompatibility=1.5
-	}
+	sourceCompatibility=1.6
+	targetCompatibility=1.6
 
 	[compileJava, compileTestJava]*.options*.compilerArgs = [
 		"-Xlint:serial",
