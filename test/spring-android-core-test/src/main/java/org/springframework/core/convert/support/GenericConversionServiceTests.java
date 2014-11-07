@@ -45,6 +45,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import android.graphics.Color;
+import android.os.Build;
 
 /**
  * @author Keith Donald
@@ -713,10 +714,14 @@ public class GenericConversionServiceTests extends TestCase {
 
 	public void testEnumWithInterfaceToStringConversion() {
 		// SPR-9692
-		conversionService.addConverter(new EnumToStringConverter(conversionService));
-		conversionService.addConverter(new MyEnumInterfaceToStringConverter<MyEnum>());
-		String result = conversionService.convert(MyEnum.A, String.class);
-		assertEquals("1", result);
+		// Android 2.2 has some issues with reflection
+		// see https://code.google.com/p/android/issues/detail?id=6636
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+			conversionService.addConverter(new EnumToStringConverter(conversionService));
+			conversionService.addConverter(new MyEnumInterfaceToStringConverter<MyEnum>());
+			String result = conversionService.convert(MyEnum.A, String.class);
+			assertEquals("1", result);
+		}
 	}
 
 	public void testConvertNullAnnotatedStringToString() throws Exception {

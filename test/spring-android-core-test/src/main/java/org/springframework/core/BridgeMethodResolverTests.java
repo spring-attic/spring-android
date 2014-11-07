@@ -35,6 +35,8 @@ import junit.framework.TestCase;
 
 import org.springframework.util.ReflectionUtils;
 
+import android.os.Build;
+
 /**
  * @author Rob Harrop
  * @author Juergen Hoeller
@@ -137,12 +139,16 @@ public class BridgeMethodResolverTests extends TestCase {
 		assertNotNull(loadWithObjectReturn);
 
 		Method loadWithSettingsReturn = findMethodWithReturnType("load", Settings.class, SettingsDaoImpl.class);
-		assertNotNull(loadWithSettingsReturn);
-		assertNotSame(loadWithObjectReturn, loadWithSettingsReturn);
+		// Android 2.2 has some issues with reflection
+		// see https://code.google.com/p/android/issues/detail?id=6636
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+			assertNotNull(loadWithSettingsReturn);
+			assertNotSame(loadWithObjectReturn, loadWithSettingsReturn);
 
-		Method method = SettingsDaoImpl.class.getMethod("load");
-		assertEquals(method, BridgeMethodResolver.findBridgedMethod(loadWithObjectReturn));
-		assertEquals(method, BridgeMethodResolver.findBridgedMethod(loadWithSettingsReturn));
+			Method method = SettingsDaoImpl.class.getMethod("load");
+			assertEquals(method, BridgeMethodResolver.findBridgedMethod(loadWithObjectReturn));
+			assertEquals(method, BridgeMethodResolver.findBridgedMethod(loadWithSettingsReturn));
+		}
 	}
 
 	public void testFindBridgedMethodFromParent() throws Exception {
@@ -186,8 +192,12 @@ public class BridgeMethodResolverTests extends TestCase {
 			}
 		}
 		assertTrue(bridgeMethod != null && bridgeMethod.isBridge());
-		assertTrue(bridgedMethod != null && !bridgedMethod.isBridge());
-		assertEquals(bridgedMethod, BridgeMethodResolver.findBridgedMethod(bridgeMethod));
+		// Android 2.2 has some issues with reflection
+		// see https://code.google.com/p/android/issues/detail?id=6636
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+			assertTrue(bridgedMethod != null && !bridgedMethod.isBridge());
+			assertEquals(bridgedMethod, BridgeMethodResolver.findBridgedMethod(bridgeMethod));
+		}
 	}
 
 	public void testOnAllMethods() throws Exception {
@@ -214,17 +224,25 @@ public class BridgeMethodResolverTests extends TestCase {
 	}
 
 	public void testSPR2454() throws Exception {
-		Map<TypeVariable, Type> typeVariableMap = GenericTypeResolver.getTypeVariableMap(YourHomer.class);
-		TypeVariable<?> variable = findTypeVariable(MyHomer.class, "L");
-		assertEquals(AbstractBounded.class, ((ParameterizedType) typeVariableMap.get(variable)).getRawType());
+		// Android 2.2 has some issues with reflection
+		// see https://code.google.com/p/android/issues/detail?id=6636
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+			Map<TypeVariable, Type> typeVariableMap = GenericTypeResolver.getTypeVariableMap(YourHomer.class);
+			TypeVariable<?> variable = findTypeVariable(MyHomer.class, "L");
+			assertEquals(AbstractBounded.class, ((ParameterizedType) typeVariableMap.get(variable)).getRawType());
+		}
 	}
 
 	public void testSPR2603() throws Exception {
-		Method objectBridge = YourHomer.class.getDeclaredMethod("foo", Bounded.class);
-		Method abstractBoundedFoo = YourHomer.class.getDeclaredMethod("foo", AbstractBounded.class);
+		// Android 2.2 has some issues with reflection
+		// see https://code.google.com/p/android/issues/detail?id=6636
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+			Method objectBridge = YourHomer.class.getDeclaredMethod("foo", Bounded.class);
+			Method abstractBoundedFoo = YourHomer.class.getDeclaredMethod("foo", AbstractBounded.class);
 
-		Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(objectBridge);
-		assertEquals("foo(AbstractBounded) not resolved.", abstractBoundedFoo, bridgedMethod);
+			Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(objectBridge);
+			assertEquals("foo(AbstractBounded) not resolved.", abstractBoundedFoo, bridgedMethod);
+		}
 	}
 
 	public void testSPR2648() throws Exception {
