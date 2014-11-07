@@ -758,9 +758,9 @@ public abstract class ClassUtils {
 	 * if there is one. E.g. the method may be {@code IFoo.bar()} and the
 	 * target class may be {@code DefaultFoo}. In this case, the method may be
 	 * {@code DefaultFoo.bar()}. This enables attributes on that method to be found.
-	 * <p><b>NOTE:</b> In contrast to {@link org.springframework.aop.support.AopUtils#getMostSpecificMethod},
-	 * this method does <i>not</i> resolve Java 5 bridge methods automatically.
-	 * Call {@link org.springframework.core.BridgeMethodResolver#findBridgedMethod}
+	 * <p><b>NOTE:</b> This method does <i>not</i> resolve Java 5 bridge methods
+	 * automatically. Call
+	 * {@link org.springframework.core.BridgeMethodResolver#findBridgedMethod}
 	 * if bridge method resolution is desirable (e.g. for obtaining metadata from
 	 * the original method definition).
 	 * <p><b>NOTE:</b> If Java security settings disallow reflective
@@ -1211,7 +1211,6 @@ public abstract class ClassUtils {
 	/**
 	 * Check whether the given object is a CGLIB proxy.
 	 * @param object the object to check
-	 * @see org.springframework.aop.support.AopUtils#isCglibProxy(Object)
 	 */
 	public static boolean isCglibProxy(Object object) {
 		return ClassUtils.isCglibProxyClass(object.getClass());
