@@ -22,56 +22,26 @@ import java.nio.charset.Charset;
 import android.util.Base64;
 
 /**
- * A simple utility class for Base64 encoding and decoding.
- *
- * <p>Adapts to either Android's {@link android.util.Base64} class or Apache
- * Commons Codec's {@link org.apache.commons.codec.binary.Base64} class.
- * With neither Android's Base64 nor Commons Codec present, encode/decode 
- * calls will fail with an IllegalStateException.
+ * A simple utility class for Base64 encoding and decoding that delegates to Android's
+ * {@link android.util.Base64} class.
  *
  * @author Juergen Hoeller
  * @author Roy Clarkson
  * @since 1.0
- * @see org.apache.commons.codec.binary.Base64
  */
 public abstract class Base64Utils {
 
 	private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-
-	private static final Base64Delegate delegate;
-
-	static {
-		Base64Delegate delegateToUse = null;
-		// Androids's android.util.Base64 class present?
-		if (ClassUtils.isPresent("android.util.Base64", Base64Utils.class.getClassLoader())) {
-			delegateToUse = new AndroidBase64Delegate();
-		}
-		// Apache Commons Codec present on the classpath?
-		else if (ClassUtils.isPresent("org.apache.commons.codec.binary.Base64", Base64Utils.class.getClassLoader())) {
-			delegateToUse = new CommonsCodecBase64Delegate();
-		}
-		delegate = delegateToUse;
-	}
-
-	/**
-	 * Assert that Base64 encoding is actually supported.
-	 * @throws IllegalStateException if neither Android Base64 nor Apache Commons Codec is present
-	 */
-	private static void assertSupported() {
-		Assert.state(delegate != null, "Neither Android Base64 nor Apache Commons Codec found - Base64 encoding not supported");
-	}
+	private static final Base64Delegate delegate = new AndroidBase64Delegate();
 
 
 	/**
 	 * Base64-encode the given byte array.
 	 * @param src the original byte array (may be {@code null})
 	 * @return the encoded byte array (or {@code null} if the input was {@code null})
-	 * @throws IllegalStateException if Base64 encoding is not supported,
-	 * i.e. neither Android Base64 nor Apache Commons Codec is present at runtime
 	 */
 	public static byte[] encode(byte[] src) {
-		assertSupported();
 		return delegate.encode(src);
 	}
 
@@ -80,11 +50,8 @@ public abstract class Base64Utils {
 	 * @param src the original byte array (may be {@code null})
 	 * @return the encoded byte array as a UTF-8 String
 	 * (or {@code null} if the input was {@code null})
-	 * @throws IllegalStateException if Base64 encoding is not supported,
-	 * i.e. neither Android Base64 nor Apache Commons Codec is present at runtime
 	 */
 	public static String encodeToString(byte[] src) {
-		assertSupported();
 		if (src == null) {
 			return null;
 		}
@@ -105,11 +72,8 @@ public abstract class Base64Utils {
 	 * Base64-decode the given byte array.
 	 * @param src the encoded byte array (may be {@code null})
 	 * @return the original byte array (or {@code null} if the input was {@code null})
-	 * @throws IllegalStateException if Base64 encoding is not supported,
-	 * i.e. neither Android Base64 nor Apache Commons Codec is present at runtime
 	 */
 	public static byte[] decode(byte[] src) {
-		assertSupported();
 		return delegate.decode(src);
 	}
 
@@ -117,10 +81,9 @@ public abstract class Base64Utils {
 	 * Base64-decode the given byte array from an UTF-8 String.
 	 * @param src the encoded UTF-8 String (may be {@code null})
 	 * @return the original byte array (or {@code null} if the input was {@code null})
-	 * @throws IllegalStateException if Base64 encoding is not supported,
-	 * i.e. neither Android Base64 nor Apache Commons Codec is present at runtime
 	 * @deprecated in favor of {@link #decodeFromString(String)}
 	 */
+	@Deprecated
 	public static byte[] decode(String src) {
 		return decodeFromString(src);
 	}
@@ -129,12 +92,9 @@ public abstract class Base64Utils {
 	 * Base64-decode the given byte array from an UTF-8 String.
 	 * @param src the encoded UTF-8 String (may be {@code null})
 	 * @return the original byte array (or {@code null} if the input was {@code null})
-	 * @throws IllegalStateException if Base64 encoding is not supported,
-	 * i.e. neither Android Base64 nor Apache Commons Codec is present at runtime
 	 * @since 2.0
 	 */
 	public static byte[] decodeFromString(String src) {
-		assertSupported();
 		if (src == null) {
 			return null;
 		}
@@ -174,20 +134,6 @@ public abstract class Base64Utils {
 				return src;
 			}
 			return Base64.decode(src, Base64.DEFAULT | Base64.NO_WRAP);
-		}
-	}
-
-
-	private static class CommonsCodecBase64Delegate implements Base64Delegate {
-
-		private final org.apache.commons.codec.binary.Base64 base64 = new org.apache.commons.codec.binary.Base64();
-
-		public byte[] encode(byte[] src) {
-			return this.base64.encode(src);
-		}
-
-		public byte[] decode(byte[] src) {
-			return this.base64.decode(src);
 		}
 	}
 
