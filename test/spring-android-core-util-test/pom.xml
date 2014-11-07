@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.android</groupId>
+		<artifactId>spring-android-test</artifactId>
+		<version>0.0.1</version>
+	</parent>
+
+	<artifactId>spring-android-core-util-test</artifactId>
+	<packaging>apk</packaging>
+	<name>spring-android-core-util-test</name>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.android</groupId>
+			<artifactId>spring-android-core</artifactId>
+			<version>${org.springframework.android-version}</version>
+		</dependency>
+	</dependencies>
+
+</project>

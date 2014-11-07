@@ -18,6 +18,7 @@
 
 	<modules>
 		<module>/spring-android-core-test</module>
+		<module>/spring-android-core-util-test</module>
 		<module>/spring-android-rest-template-test</module>
 		<module>/spring-android-auth-test</module>
 	</modules>
