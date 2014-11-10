@@ -30,11 +30,11 @@ import android.os.Build;
 import android.util.Log;
 
 /**
- * Base class for {@link org.springframework.web.client.RestTemplate} and other HTTP accessing gateway helpers, defining
- * common properties such as the {@link ClientHttpRequestFactory} to operate on.
- * 
- * <p>
- * Not intended to be used directly. See {@link org.springframework.web.client.RestTemplate}.
+ * Base class for {@link org.springframework.web.client.RestTemplate}
+ * and other HTTP accessing gateway helpers, defining common properties
+ * such as the {@link ClientHttpRequestFactory} to operate on.
+ *
+ * <p>Not intended to be used directly. See {@link org.springframework.web.client.RestTemplate}.
  * 
  * @author Arjen Poutsma
  * @author Roy Clarkson
