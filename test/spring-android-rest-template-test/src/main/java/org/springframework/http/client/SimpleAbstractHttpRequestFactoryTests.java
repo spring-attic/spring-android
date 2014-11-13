@@ -17,15 +17,12 @@
 package org.springframework.http.client;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.net.ProtocolException;
 import java.net.URI;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.zip.GZIPOutputStream;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
 
@@ -34,36 +31,21 @@ import android.test.suitebuilder.annotation.MediumTest;
 
 public abstract class SimpleAbstractHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
 
-	// SPR-8809
-	@MediumTest
-	public void testInterceptor() throws Exception {
-		final String headerName = "MyHeader";
-		final String headerValue = "MyValue";
-		ClientHttpRequestInterceptor interceptor = new ClientHttpRequestInterceptor() {
-			public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-				request.getHeaders().add(headerName, headerValue);
-				return execution.execute(request, body);
-			}
-		};
-		InterceptingClientHttpRequestFactory factory = new InterceptingClientHttpRequestFactory(createRequestFactory(), Collections.singletonList(interceptor));
-
-		ClientHttpResponse response = null;
+	@Override
+	public void testHttpMethods() throws Exception {
+		super.testHttpMethods();
 		try {
-			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.GET);
-			response = request.execute();
-			assertEquals("Invalid response status", HttpStatus.OK, response.getStatusCode());
-			HttpHeaders responseHeaders = response.getHeaders();
-			assertEquals("Custom header invalid", headerValue, responseHeaders.getFirst(headerName));
-		} finally {
-			if (response != null) {
-				response.close();
-			}
+			assertHttpMethod("patch", HttpMethod.PATCH);
+		}
+		catch (ProtocolException ex) {
+			// Currently HttpURLConnection does not support HTTP PATCH
 		}
 	}
-	
+
 	@MediumTest
+	@Override
 	public void testGetAcceptEncodingNone() throws Exception {
-		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/gzip"), HttpMethod.GET);
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/noencoding"), HttpMethod.GET);
 		assertEquals("Invalid HTTP method", HttpMethod.GET, request.getMethod());
 		ClientHttpResponse response = request.execute();
 		try {
@@ -80,15 +62,19 @@ public abstract class SimpleAbstractHttpRequestFactoryTests extends AbstractHttp
 			byte[] compressedBody = byteArrayOutputStream.toByteArray();
 			long contentLength = response.getHeaders().getContentLength();
 			// Gingerbread and newer seamlessly request and handle gzip responses from the server 
-			if (Build.VERSION.SDK_INT >= 17) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 				// content-length is not being set in Jelly Bean 4.2, 4.3, and KitKat 4.4!!!
 				assertEquals(-1, contentLength);
-			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			}
+			else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+				// content-length is being set to the length of the compressed data
 				assertEquals("Invalid content-length", compressedBody.length, contentLength);
-			} else {
+			}
+			else {
 				assertEquals("Invalid content-length", body.length, contentLength);
 			}
-		} finally {
+		}
+		finally {
 			response.close();
 		}
 	}

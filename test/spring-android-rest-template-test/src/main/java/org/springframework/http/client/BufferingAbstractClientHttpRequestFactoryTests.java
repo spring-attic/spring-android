@@ -47,14 +47,17 @@ public abstract class BufferingAbstractClientHttpRequestFactoryTests extends Abs
 			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
 			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
 
-			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders().get(headerName));
-			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders().get(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2),
+					response.getHeaders().get(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2),
+					response.getHeaders().get(headerName));
 
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
 			FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
-		} finally {
+		}
+		finally {
 			response.close();
 		}
 	}

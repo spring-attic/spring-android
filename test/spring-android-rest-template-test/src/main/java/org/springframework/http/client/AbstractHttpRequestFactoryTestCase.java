@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.zip.GZIPInputStream;
@@ -39,7 +40,9 @@ import junit.framework.TestCase;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
 
@@ -76,6 +79,8 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			Context jettyContext = new Context(jettyServer, "/");
 			jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/echo");
 			jettyContext.addServlet(new ServletHolder(new GzipServlet()), "/gzip");
+			jettyContext.addServlet(new ServletHolder(new IdentityServlet()), "/identity");
+			jettyContext.addServlet(new ServletHolder(new NoEncodingServlet()), "/noencoding");
 			jettyContext.addServlet(new ServletHolder(new StatusServlet(200)), "/status/ok");
 			jettyContext.addServlet(new ServletHolder(new StatusServlet(404)), "/status/notfound");
 			jettyContext.addServlet(new ServletHolder(new MethodServlet("DELETE")), "/methods/delete");
@@ -84,6 +89,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			jettyContext.addServlet(new ServletHolder(new MethodServlet("OPTIONS")), "/methods/options");
 			jettyContext.addServlet(new ServletHolder(new PostServlet()), "/methods/post");
 			jettyContext.addServlet(new ServletHolder(new MethodServlet("PUT")), "/methods/put");
+			jettyContext.addServlet(new ServletHolder(new MethodServlet("PATCH")), "/methods/patch");
 			jettyServer.start();
 		}
 	}
@@ -125,14 +131,14 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		FileCopyUtils.copy(body, request.getBody());
 		ClientHttpResponse response = request.execute();
 		try {
-			assertNotNull(response.getStatusText());
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
-			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders()
-					.get(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2),
+					response.getHeaders().get(headerName));
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
-		} finally {
+		}
+		finally {
 			response.close();
 		}
 	}
@@ -150,21 +156,20 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		FileCopyUtils.copy(body, request.getBody());
 		ClientHttpResponse response = request.execute();
 		try {
-			assertNotNull(response.getStatusText());
 			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
 			assertTrue("Header not found", response.getHeaders().containsKey(headerName));
-			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2), response.getHeaders()
-					.get(headerName));
+			assertEquals("Header value not found", Arrays.asList(headerValue1, headerValue2),
+					response.getHeaders().get(headerName));
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
-		} finally {
+		}
+		finally {
 			response.close();
 		}
 	}
 
 	@MediumTest
 	public void testMultipleWrites() throws Exception {
-		boolean success = false;
 		try {
 			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
 			byte[] body = "Hello World".getBytes("UTF-8");
@@ -172,18 +177,17 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			ClientHttpResponse response = request.execute();
 			try {
 				FileCopyUtils.copy(body, request.getBody());
-			} finally {
+			}
+			finally {
 				response.close();
 			}
+			fail("Expected IllegalStateException");
 		} catch (IllegalStateException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalStateException", success);
 	}
 
 	@MediumTest
 	public void testMultipleWritesContentEncodingGzip() throws Exception {
-		boolean success = false;
 		try {
 			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
 			request.getHeaders().add("Content-Encoding", "gzip");
@@ -192,18 +196,17 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			ClientHttpResponse response = request.execute();
 			try {
 				FileCopyUtils.copy(body, request.getBody());
-			} finally {
+			} 
+			finally {
 				response.close();
 			}
+			fail("Expected IllegalStateException");
 		} catch (IllegalStateException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalStateException", success);
 	}
 
 	@MediumTest
 	public void testHeadersAfterExecute() throws Exception {
-		boolean success = false;
 		try {
 			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
 			request.getHeaders().add("MyHeader", "value");
@@ -212,13 +215,13 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			ClientHttpResponse response = request.execute();
 			try {
 				request.getHeaders().add("MyHeader", "value");
-			} finally {
+			}
+			finally {
 				response.close();
 			}
+			fail("Expected UnsupportedOperationException");
 		} catch (UnsupportedOperationException e) {
-			success = true;
 		}
-		assertTrue("Expected UnsupportedOperationException", success);
 	}
 
 	@MediumTest
@@ -258,7 +261,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 
 	@MediumTest
 	public void testGetAcceptEncodingIdentity() throws Exception {
-		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/gzip"), HttpMethod.GET);
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/identity"), HttpMethod.GET);
 		assertEquals("Invalid HTTP method", HttpMethod.GET, request.getMethod());
 		// setting the following header in Gingerbread and newer disables automatic gzip compression
 		request.getHeaders().add("Accept-Encoding", "identity");
@@ -271,8 +274,28 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 					.getBytes("UTF-8");
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
-			assertEquals("Invalid content-length", response.getHeaders().getContentLength(), body.length);
+			assertEquals("Invalid content-length", body.length, response.getHeaders().getContentLength());
 		} finally {
+			response.close();
+		}
+	}
+
+	@MediumTest
+	public void testGetAcceptEncodingNone() throws Exception {
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/noencoding"), HttpMethod.GET);
+		assertEquals("Invalid HTTP method", HttpMethod.GET, request.getMethod());
+		ClientHttpResponse response = request.execute();
+		try {
+			assertNotNull(response.getStatusText());
+			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
+			assertFalse("Header found", response.getHeaders().containsKey("Content-Encoding"));
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
+			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
+			assertTrue("Invalid body", Arrays.equals(body, result));
+			assertEquals("Invalid content-length", body.length, response.getHeaders().getContentLength());
+		}
+		finally {
 			response.close();
 		}
 	}
@@ -294,14 +317,60 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		}
 	}
 
-	private void assertHttpMethod(String path, HttpMethod method) throws Exception {
+	// SPR-8809
+	@MediumTest
+	public void testInterceptor() throws Exception {
+		final String headerName = "MyHeader";
+		final String headerValue = "MyValue";
+		ClientHttpRequestInterceptor interceptor = new ClientHttpRequestInterceptor() {
+			public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+				request.getHeaders().add(headerName, headerValue);
+				return execution.execute(request, body);
+			}
+		};
+		InterceptingClientHttpRequestFactory factory = new InterceptingClientHttpRequestFactory(createRequestFactory(), Collections.singletonList(interceptor));
+
+		ClientHttpResponse response = null;
+		try {
+			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.GET);
+			response = request.execute();
+			assertEquals("Invalid response status", HttpStatus.OK, response.getStatusCode());
+			HttpHeaders responseHeaders = response.getHeaders();
+			assertEquals("Custom header invalid", headerValue, responseHeaders.getFirst(headerName));
+		}
+		finally {
+			if (response != null) {
+				response.close();
+			}
+		}
+	}
+
+	@MediumTest
+	public void testPostContentEncodingIdentity() throws Exception {
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/identity"), HttpMethod.POST);
+		assertEquals("Invalid HTTP method", HttpMethod.POST, request.getMethod());
+		request.getHeaders().add("Content-Encoding", "identity");
+		byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+				.getBytes("UTF-8");
+		FileCopyUtils.copy(body, request.getBody());
+		ClientHttpResponse response = request.execute();
+		try {
+			assertNotNull(response.getStatusText());
+			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
+		} finally {
+			response.close();
+		}
+	}
+
+	protected void assertHttpMethod(String path, HttpMethod method) throws Exception {
 		ClientHttpResponse response = null;
 		try {
 			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/methods/" + path), method);
 			response = request.execute();
 			assertEquals("Invalid response status", HttpStatus.OK, response.getStatusCode());
 			assertEquals("Invalid method", path.toUpperCase(Locale.ENGLISH), request.getMethod().name());
-		} finally {
+		}
+		finally {
 			if (response != null) {
 				response.close();
 			}
@@ -311,9 +380,8 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 	/**
 	 * Servlet that sets a given status code.
 	 */
+	@SuppressWarnings("serial")
 	private static class StatusServlet extends GenericServlet {
-
-		private static final long serialVersionUID = 1L;
 
 		private final int sc;
 
@@ -322,14 +390,13 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		}
 
 		@Override
-		public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
-			((HttpServletResponse) resp).setStatus(sc);
+		public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+			((HttpServletResponse) response).setStatus(sc);
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private static class MethodServlet extends GenericServlet {
-
-		private static final long serialVersionUID = 1L;
 
 		private final String method;
 
@@ -338,25 +405,24 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		}
 
 		@Override
-		public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
+		public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
 			HttpServletRequest httpReq = (HttpServletRequest) req;
 			assertEquals("Invalid HTTP method", method, httpReq.getMethod());
-			resp.setContentLength(0);
-			((HttpServletResponse) resp).setStatus(200);
+			res.setContentLength(0);
+			((HttpServletResponse) res).setStatus(200);
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private static class PostServlet extends MethodServlet {
-
-		private static final long serialVersionUID = 1L;
 
 		private PostServlet() {
 			super("POST");
 		}
 
 		@Override
-		public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
-			super.service(req, resp);
+		public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+			super.service(req, res);
 			long contentLength = req.getContentLength();
 			if (contentLength != -1) {
 				InputStream in = req.getInputStream();
@@ -371,25 +437,19 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private static class EchoServlet extends HttpServlet {
 
-		private static final long serialVersionUID = 1L;
-
 		@Override
-		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			echo(req, resp);
-		}
-
-		@Override
-		protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			echo(req, resp);
+		protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+			echo(req, res);
 		}
 
 		private void echo(HttpServletRequest request, HttpServletResponse response) throws IOException {
 			response.setStatus(HttpServletResponse.SC_OK);
-			for (Enumeration<?> e1 = request.getHeaderNames(); e1.hasMoreElements();) {
+			for (Enumeration e1 = request.getHeaderNames(); e1.hasMoreElements();) {
 				String headerName = (String) e1.nextElement();
-				for (Enumeration<?> e2 = request.getHeaders(headerName); e2.hasMoreElements();) {
+				for (Enumeration e2 = request.getHeaders(headerName); e2.hasMoreElements();) {
 					String headerValue = (String) e2.nextElement();
 					response.addHeader(headerName, headerValue);
 				}
@@ -398,66 +458,111 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private static class GzipServlet extends HttpServlet {
 
-		private static final long serialVersionUID = 1L;
-
 		@Override
-		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
 					.getBytes("UTF-8");
-			resp.setStatus(HttpServletResponse.SC_OK);
-			if (containsHeader(req, "Accept-Encoding", "gzip")) {
-				resp.addHeader("Content-Encoding", "gzip");
+			assertTrue(containsHeaderValue(req, "Accept-Encoding", "gzip"));
+			res.setStatus(HttpServletResponse.SC_OK);
+			res.addHeader("Content-Encoding", "gzip");
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(body.length);
+			GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
+			FileCopyUtils.copy(body, gzipOutputStream);
+			gzipOutputStream.close();
+			byte[] compressedBody = byteArrayOutputStream.toByteArray();
+			FileCopyUtils.copy(compressedBody, res.getOutputStream());
+			res.setContentLength(compressedBody.length);
+		}
+
+		@Override
+		protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
+			assertTrue(containsHeaderValue(req, "Content-Encoding", "gzip"));
+			res.setStatus(HttpServletResponse.SC_OK);
+			res.setContentLength(0);
+			GZIPInputStream gzipInputStream = new GZIPInputStream(req.getInputStream());
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			int byteCount = 0;
+			byte[] buffer = new byte[4096];
+			int bytesRead = -1;
+			while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
+				byteArrayOutputStream.write(buffer, 0, bytesRead);
+				byteCount += bytesRead;
+			}
+			byteArrayOutputStream.flush();
+			gzipInputStream.close();
+			assertEquals("Content length does not match", body.length, byteCount);
+			assertTrue("Invalid body", Arrays.equals(byteArrayOutputStream.toByteArray(), body));
+		}
+
+	}
+
+	@SuppressWarnings("serial")
+	private static class IdentityServlet extends HttpServlet {
+
+		@Override
+		protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
+			assertTrue(containsHeaderValue(req, "Accept-Encoding", "identity"));
+			res.setStatus(HttpServletResponse.SC_OK);
+			FileCopyUtils.copy(body, res.getOutputStream());
+			res.setContentLength(body.length);
+		}
+
+		@Override
+		protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
+			assertTrue(containsHeaderValue(req, "Content-Encoding", "identity"));
+			res.setStatus(HttpServletResponse.SC_OK);
+			res.setContentLength(0);
+			byte[] decompressedBody = FileCopyUtils.copyToByteArray(req.getInputStream());
+			assertTrue("Invalid body", Arrays.equals(decompressedBody, body));
+		}
+
+	}
+
+	@SuppressWarnings("serial")
+	private static class NoEncodingServlet extends HttpServlet {
+
+		@Override
+		protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
+					.getBytes("UTF-8");
+			res.setStatus(HttpServletResponse.SC_OK);
+			if (containsHeaderValue(req, "Accept-Encoding", "gzip")) {
+				res.addHeader("Content-Encoding", "gzip");
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(body.length);
 				GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);
 				FileCopyUtils.copy(body, gzipOutputStream);
 				byte[] compressedBody = byteArrayOutputStream.toByteArray();
-				FileCopyUtils.copy(compressedBody, resp.getOutputStream());
-				resp.addHeader("Content-Length", String.valueOf(compressedBody.length));
-			} else {
-				FileCopyUtils.copy(body, resp.getOutputStream());
-				resp.addHeader("Content-Length", String.valueOf(body.length));
+				FileCopyUtils.copy(compressedBody, res.getOutputStream());
+				res.setContentLength(compressedBody.length);
+			}
+			else {
+				FileCopyUtils.copy(body, res.getOutputStream());
+				res.setContentLength(body.length);
 			}
 		}
 
-		@Override
-		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			byte[] body = "gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip gzip "
-					.getBytes("UTF-8");
-			resp.setStatus(HttpServletResponse.SC_OK);
-			if (containsHeader(req, "Content-Encoding", "gzip")) {
-				GZIPInputStream gzipInputStream = new GZIPInputStream(req.getInputStream());
-				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-				int byteCount = 0;
-				byte[] buffer = new byte[4096];
-				int bytesRead = -1;
-				while ((bytesRead = gzipInputStream.read(buffer)) != -1) {
-					byteArrayOutputStream.write(buffer, 0, bytesRead);
-					byteCount += bytesRead;
-				}
-				byteArrayOutputStream.flush();
-				gzipInputStream.close();
-				assertEquals("Content length does not match", body.length, byteCount);
-				assertTrue("Invalid body", Arrays.equals(byteArrayOutputStream.toByteArray(), body));
-			} else {
-				byte[] decompressedBody = FileCopyUtils.copyToByteArray(req.getInputStream());
-				assertTrue("Invalid body", Arrays.equals(decompressedBody, body));
-			}
-		}
+	}
 
-		private boolean containsHeader(HttpServletRequest req, String name, String value) {
-			for (Enumeration<?> e1 = req.getHeaderNames(); e1.hasMoreElements();) {
-				String headerName = (String) e1.nextElement();
-				for (Enumeration<?> e2 = req.getHeaders(headerName); e2.hasMoreElements();) {
-					String headerValue = (String) e2.nextElement();
-					if (headerName.equals(name) && headerValue.equals(value)) {
-						return true;
-					}
+	private static boolean containsHeaderValue(HttpServletRequest req, String name, String value) {
+		for (Enumeration<?> e1 = req.getHeaderNames(); e1.hasMoreElements();) {
+			String headerName = (String) e1.nextElement();
+			for (Enumeration<?> e2 = req.getHeaders(headerName); e2.hasMoreElements();) {
+				String headerValue = (String) e2.nextElement();
+				if (headerName.equals(name) && headerValue.equals(value)) {
+					return true;
 				}
 			}
-			return false;
 		}
+		return false;
 	}
 
 }

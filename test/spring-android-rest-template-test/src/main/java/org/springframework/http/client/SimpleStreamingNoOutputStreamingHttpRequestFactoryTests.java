@@ -16,13 +16,13 @@
 
 package org.springframework.http.client;
 
-public class SimpleStreamingHttpRequestFactoryTests extends SimpleAbstractHttpRequestFactoryTests {
+public class SimpleStreamingNoOutputStreamingHttpRequestFactoryTests extends SimpleAbstractHttpRequestFactoryTests {
 
 	@Override
 	protected ClientHttpRequestFactory createRequestFactory() {
 		SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
 		factory.setBufferRequestBody(false);
+		factory.setOutputStreaming(false);
 		return factory;
 	}
-
 }

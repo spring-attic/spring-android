@@ -16,14 +16,10 @@
 
 package org.springframework.http.client;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
-import java.util.Collections;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.FileCopyUtils;
 
@@ -38,6 +34,7 @@ import android.util.Log;
 public class OkHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
 
 	private static final String TAG = "OkHttpRequestFctryTests";
+
 
 	@Override
 	protected ClientHttpRequestFactory createRequestFactory() {
@@ -59,41 +56,16 @@ public class OkHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCas
 	protected void runTest() throws Throwable {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
 			assertTrue(true);
-		} else {
+		}
+		else {
 			super.runTest();
 		}
 	}
 
-	// SPR-8809
 	@MediumTest
-	public void testInterceptor() throws Exception {
-		final String headerName = "MyHeader";
-		final String headerValue = "MyValue";
-		ClientHttpRequestInterceptor interceptor = new ClientHttpRequestInterceptor() {
-			public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-				request.getHeaders().add(headerName, headerValue);
-				return execution.execute(request, body);
-			}
-		};
-		InterceptingClientHttpRequestFactory factory = new InterceptingClientHttpRequestFactory(createRequestFactory(), Collections.singletonList(interceptor));
-
-		ClientHttpResponse response = null;
-		try {
-			ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.GET);
-			response = request.execute();
-			assertEquals("Invalid response status", HttpStatus.OK, response.getStatusCode());
-			HttpHeaders responseHeaders = response.getHeaders();
-			assertEquals("Custom header invalid", headerValue, responseHeaders.getFirst(headerName));
-		} finally {
-			if (response != null) {
-				response.close();
-			}
-		}
-	}
-
-	@MediumTest
+	@Override
 	public void testGetAcceptEncodingNone() throws Exception {
-		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/gzip"), HttpMethod.GET);
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/noencoding"), HttpMethod.GET);
 		assertEquals("Invalid HTTP method", HttpMethod.GET, request.getMethod());
 		ClientHttpResponse response = request.execute();
 		try {
@@ -105,9 +77,10 @@ public class OkHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCas
 			byte[] result = FileCopyUtils.copyToByteArray(response.getBody());
 			assertTrue("Invalid body", Arrays.equals(body, result));
 			long contentLength = response.getHeaders().getContentLength();
-			// OkHttp is not setting a content-length
+			// OkHttp is not setting a content-length when the response is gzip encoded
 			assertEquals(-1, contentLength);
-		} finally {
+		}
+		finally {
 			response.close();
 		}
 	}
