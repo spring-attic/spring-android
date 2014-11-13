@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 
 /**
  * Abstract base for {@link ClientHttpRequest} that makes sure that headers and body are not written multiple times.
- * 
+ *
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
@@ -38,7 +38,7 @@ public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 
 	private boolean executed = false;
 
-	private OutputStream compressedBody;
+	private GZIPOutputStream compressedBody;
 
 
 	public final HttpHeaders getHeaders() {
@@ -58,27 +58,12 @@ public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 	public final ClientHttpResponse execute() throws IOException {
 		checkExecuted();
 		if (this.compressedBody != null) {
-			this.compressedBody.close();
+			this.compressedBody. close();
 		}
 		ClientHttpResponse result = executeInternal(this.headers);
 		this.executed = true;
 		return result;
 	}
-
-	/**
-	 * Abstract template method that returns the body.
-	 * @param headers the HTTP headers
-	 * @return the body output stream
-	 */
-	protected abstract OutputStream getBodyInternal(HttpHeaders headers) throws IOException;
-
-	/**
-	 * Abstract template method that writes the given headers and content to the HTTP request.
-	 * @param headers the HTTP headers
-	 * @return the response object for the executed request
-	 */
-	protected abstract ClientHttpResponse executeInternal(HttpHeaders headers) throws IOException;
-
 
 	private void checkExecuted() {
 		Assert.state(!this.executed, "ClientHttpRequest already executed");
@@ -100,5 +85,20 @@ public abstract class AbstractClientHttpRequest implements ClientHttpRequest {
 		}
 		return this.compressedBody;
 	}
+
+
+	/**
+	 * Abstract template method that returns the body.
+	 * @param headers the HTTP headers
+	 * @return the body output stream
+	 */
+	protected abstract OutputStream getBodyInternal(HttpHeaders headers) throws IOException;
+
+	/**
+	 * Abstract template method that writes the given headers and content to the HTTP request.
+	 * @param headers the HTTP headers
+	 * @return the response object for the executed request
+	 */
+	protected abstract ClientHttpResponse executeInternal(HttpHeaders headers) throws IOException;
 
 }

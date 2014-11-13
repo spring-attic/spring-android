@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.http.HttpMethod;
-import org.springframework.util.Assert;
 
 /**
  * Wrapper for a {@link ClientHttpRequestFactory} that has support for {@link ClientHttpRequestInterceptor}s.
@@ -40,9 +39,8 @@ public class InterceptingClientHttpRequestFactory extends AbstractClientHttpRequ
 	 * @param interceptors the interceptors that are to be applied. Can be {@code null}.
 	 */
 	public InterceptingClientHttpRequestFactory(ClientHttpRequestFactory requestFactory,
-			List<ClientHttpRequestInterceptor> interceptors) {
+												List<ClientHttpRequestInterceptor> interceptors) {
 		super(requestFactory);
-		Assert.notNull(requestFactory, "'requestFactory' must not be null");
 		this.interceptors = interceptors != null ? interceptors : Collections.<ClientHttpRequestInterceptor>emptyList();
 	}
 

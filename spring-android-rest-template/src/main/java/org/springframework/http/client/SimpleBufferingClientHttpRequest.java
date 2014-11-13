@@ -28,9 +28,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.FileCopyUtils;
 
 /**
- * {@link ClientHttpRequest} implementation that uses standard J2SE facilities to execute buffered requests. Created via
- * the {@link SimpleClientHttpRequestFactory}.
- * 
+ * {@link ClientHttpRequest} implementation that uses standard J2SE facilities to execute buffered requests.
+ * Created via the {@link SimpleClientHttpRequestFactory}.
+ *
  * @author Arjen Poutsma
  * @since 1.0
  * @see SimpleClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
@@ -39,9 +39,12 @@ final class SimpleBufferingClientHttpRequest extends AbstractBufferingClientHttp
 
 	private final HttpURLConnection connection;
 
+	private final boolean outputStreaming;
 
-	SimpleBufferingClientHttpRequest(HttpURLConnection connection) {
+
+	SimpleBufferingClientHttpRequest(HttpURLConnection connection, boolean outputStreaming) {
 		this.connection = connection;
+		this.outputStreaming = outputStreaming;
 	}
 
 
@@ -52,7 +55,8 @@ final class SimpleBufferingClientHttpRequest extends AbstractBufferingClientHttp
 	public URI getURI() {
 		try {
 			return this.connection.getURL().toURI();
-		} catch (URISyntaxException ex) {
+		}
+		catch (URISyntaxException ex) {
 			throw new IllegalStateException("Could not get HttpURLConnection URI: " + ex.getMessage(), ex);
 		}
 	}
@@ -66,7 +70,7 @@ final class SimpleBufferingClientHttpRequest extends AbstractBufferingClientHttp
 			}
 		}
 
-		if (this.connection.getDoOutput()) {
+		if (this.connection.getDoOutput() && this.outputStreaming) {
 			this.connection.setFixedLengthStreamingMode(bufferedOutput.length);
 		}
 		this.connection.connect();

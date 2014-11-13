@@ -22,7 +22,7 @@ import java.io.InputStream;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 
 /**
  * Simple implementation of {@link ClientHttpResponse} that reads the request's body into memory,
@@ -46,7 +46,7 @@ final class BufferingClientHttpResponseWrapper implements ClientHttpResponse {
 	public HttpStatus getStatusCode() throws IOException {
 		return this.response.getStatusCode();
 	}
-	
+
 	public int getRawStatusCode() throws IOException {
 		return this.response.getRawStatusCode();
 	}
@@ -61,7 +61,7 @@ final class BufferingClientHttpResponseWrapper implements ClientHttpResponse {
 
 	public InputStream getBody() throws IOException {
 		if (this.body == null) {
-			this.body = FileCopyUtils.copyToByteArray(this.response.getBody());
+			this.body = StreamUtils.copyToByteArray(this.response.getBody());
 		}
 		return new ByteArrayInputStream(this.body);
 	}

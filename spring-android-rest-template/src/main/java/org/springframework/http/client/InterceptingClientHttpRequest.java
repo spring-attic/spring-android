@@ -24,7 +24,7 @@ import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 
 /**
  * Wrapper for a {@link ClientHttpRequest} that has support for {@link ClientHttpRequestInterceptor}s.
@@ -43,9 +43,9 @@ class InterceptingClientHttpRequest extends AbstractBufferingClientHttpRequest {
 	private URI uri;
 
 	protected InterceptingClientHttpRequest(ClientHttpRequestFactory requestFactory,
-			List<ClientHttpRequestInterceptor> interceptors,
-			URI uri,
-			HttpMethod method) {
+											List<ClientHttpRequestInterceptor> interceptors,
+											URI uri,
+											HttpMethod method) {
 		this.requestFactory = requestFactory;
 		this.interceptors = interceptors;
 		this.method = method;
@@ -63,7 +63,7 @@ class InterceptingClientHttpRequest extends AbstractBufferingClientHttpRequest {
 	@Override
 	protected final ClientHttpResponse executeInternal(HttpHeaders headers, byte[] bufferedOutput) throws IOException {
 		RequestExecution requestExecution = new RequestExecution();
-		
+
 		return requestExecution.execute(this, bufferedOutput);
 	}
 
@@ -86,7 +86,7 @@ class InterceptingClientHttpRequest extends AbstractBufferingClientHttpRequest {
 				delegate.getHeaders().putAll(request.getHeaders());
 
 				if (body.length > 0) {
-					FileCopyUtils.copy(body, delegate.getBody());
+					StreamUtils.copy(body, delegate.getBody());
 				}
 				return delegate.execute();
 			}

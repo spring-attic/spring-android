@@ -23,13 +23,12 @@ import java.net.URI;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 
 /**
  * Simple implementation of {@link ClientHttpRequest} that wraps another request.
- * 
+ *
  * @author Arjen Poutsma
- * @author Roy Clarkson
  * @since 1.0
  */
 final class BufferingClientHttpRequestWrapper extends AbstractBufferingClientHttpRequest {
@@ -55,7 +54,7 @@ final class BufferingClientHttpRequestWrapper extends AbstractBufferingClientHtt
 	protected ClientHttpResponse executeInternal(HttpHeaders headers, byte[] bufferedOutput) throws IOException {
 		OutputStream body = this.request.getBody();
 		this.request.getHeaders().putAll(headers);
-		FileCopyUtils.copy(bufferedOutput, body);
+		StreamUtils.copy(bufferedOutput, body);
 		ClientHttpResponse response = this.request.execute();
 		return new BufferingClientHttpResponseWrapper(response);
 	}

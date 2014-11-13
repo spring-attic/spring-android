@@ -16,6 +16,7 @@
 
 package org.springframework.http.client;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import org.springframework.http.HttpInputMessage;
@@ -24,13 +25,13 @@ import org.springframework.http.HttpStatus;
 /**
  * Represents a client-side HTTP response. Obtained via an calling of the {@link ClientHttpRequest#execute()}.
  *
- * <p>A <code>ClientHttpResponse</code> must be {@linkplain #close() closed}, typically in a
- * <code>finally</code> block.
+ * <p>A {@code ClientHttpResponse} must be {@linkplain #close() closed}, typically in a
+ * {@code finally} block.
  *
  * @author Arjen Poutsma
  * @since 1.0
  */
-public interface ClientHttpResponse extends HttpInputMessage {
+public interface ClientHttpResponse extends HttpInputMessage, Closeable {
 
 	/**
 	 * Return the HTTP status code of the response.
@@ -38,7 +39,7 @@ public interface ClientHttpResponse extends HttpInputMessage {
 	 * @throws IOException in case of I/O errors
 	 */
 	HttpStatus getStatusCode() throws IOException;
-	
+
 	/**
 	 * Return the HTTP status code of the response as integer
 	 * @return the HTTP status as an integer

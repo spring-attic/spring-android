@@ -36,33 +36,35 @@ import org.springframework.util.StringUtils;
 final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 
 	private static final String AUTH_ERROR = "Received authentication challenge is null";
-	
+
 	private static final String AUTH_ERROR_JELLY_BEAN = "No authentication challenges found";
-	
+
 	private static final String PROXY_AUTH_ERROR = "Received HTTP_PROXY_AUTH (407) code while not using proxy";
 
 	private final HttpURLConnection connection;
 
 	private HttpHeaders headers;
 
+
 	SimpleClientHttpResponse(HttpURLConnection connection) {
 		this.connection = connection;
 	}
-	
+
+
 	public int getRawStatusCode() throws IOException {
 		try {
-			return this.connection.getResponseCode();
+		return this.connection.getResponseCode();
 		} catch (IOException ex) {
-			return handleIOException(ex);			
+			return handleIOException(ex);
 		}
 	}
-	
-	/** 
-	 * If credentials are incorrect or not provided for Basic Auth, then Android 
-	 * may throw this exception when an HTTP 401 is received. A separate exception 
-	 * is thrown for proxy authentication errors. Checking for this response and 
+
+	/**
+	 * If credentials are incorrect or not provided for Basic Auth, then Android
+	 * may throw this exception when an HTTP 401 is received. A separate exception
+	 * is thrown for proxy authentication errors. Checking for this response and
 	 * returning the proper status.
-	 * @param ex the exception raised from Android 
+	 * @param ex the exception raised from Android
 	 * @return HTTP Status Code
 	 */
 	private int handleIOException(IOException ex) throws IOException {
@@ -75,15 +77,10 @@ final class SimpleClientHttpResponse extends AbstractClientHttpResponse {
 		}
 	}
 
-	@Override
-	public HttpStatus getStatusCode() throws IOException {
-		return HttpStatus.valueOf(getRawStatusCode());
-	}
-
 	public String getStatusText() throws IOException {
 		try {
-			return this.connection.getResponseMessage();
-		} catch (IOException ex) {			
+		return this.connection.getResponseMessage();
+		} catch (IOException ex) {
 			return HttpStatus.valueOf(handleIOException(ex)).getReasonPhrase();
 		}
 	}

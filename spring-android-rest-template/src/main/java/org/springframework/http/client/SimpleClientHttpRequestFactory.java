@@ -30,16 +30,18 @@ import android.os.Build;
 
 /**
  * {@link ClientHttpRequestFactory} implementation that uses standard J2SE facilities.
- * 
+ *
  * @author Arjen Poutsma
  * @author Roy Clarkson
- * @see java.net.HttpURLConnection
+ * @author Juergen Hoeller
  * @since 1.0
+ * @see java.net.HttpURLConnection
  */
 public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory {
 
 	// Specifying 0 results in the Android system default chunk length
 	private static final int DEFAULT_CHUNK_SIZE = 0;
+
 
 	private Proxy proxy;
 
@@ -51,8 +53,11 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 
 	private int readTimeout = -1;
 
+	private boolean outputStreaming = true;
+
+
 	/**
-	 * Sets the {@link Proxy} to use for this request factory.
+	 * Set the {@link Proxy} to use for this request factory.
 	 */
 	public void setProxy(Proxy proxy) {
 		this.proxy = proxy;
@@ -61,13 +66,11 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 	/**
 	 * Indicates whether this request factory should buffer the {@linkplain ClientHttpRequest#getBody() request body}
 	 * internally.
-	 * <p>
-	 * Default is {@code true}. When sending large amounts of data via POST or PUT, it is recommended to change this
-	 * property to {@code false}, so as not to run out of memory. This will result in a {@link ClientHttpRequest} that
-	 * either streams directly to the underlying {@link HttpURLConnection} (if the
-	 * {@link org.springframework.http.HttpHeaders#getContentLength() Content-Length} is known in advance), or that will
-	 * use "Chunked transfer encoding" (if the {@code Content-Length} is not known in advance).
-	 * 
+	 * <p>Default is {@code true}. When sending large amounts of data via POST or PUT, it is recommended
+	 * to change this property to {@code false}, so as not to run out of memory. This will result in a
+	 * {@link ClientHttpRequest} that either streams directly to the underlying {@link HttpURLConnection}
+	 * (if the {@link org.springframework.http.HttpHeaders#getContentLength() Content-Length} is known in advance),
+	 * or that will use "Chunked transfer encoding" (if the {@code Content-Length} is not known in advance).
 	 * @see #setChunkSize(int)
 	 * @see HttpURLConnection#setFixedLengthStreamingMode(int)
 	 */
@@ -78,24 +81,19 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 	/**
 	 * Sets the number of bytes to write in each chunk when not buffering request bodies locally. The default value
 	 * is 0, which indicates to Android to use the system default chunk size.
-	 * <p>
-	 * Note that this parameter is only used when {@link #setBufferRequestBody(boolean) bufferRequestBody} is set to
-	 * {@code false}, and the {@link org.springframework.http.HttpHeaders#getContentLength() Content-Length} is not
-	 * known in advance.
-	 * 
+	 * <p>Note that this parameter is only used when {@link #setBufferRequestBody(boolean) bufferRequestBody} is set
+	 * to {@code false}, and the {@link org.springframework.http.HttpHeaders#getContentLength() Content-Length}
+	 * is not known in advance.
 	 * @see #setBufferRequestBody(boolean)
-	 * @see {@link HttpURLConnection#setChunkedStreamingMode(int)}
 	 */
 	public void setChunkSize(int chunkSize) {
 		this.chunkSize = chunkSize;
 	}
 
 	/**
-	 * Set the underlying URLConnection's connect timeout (in milliseconds). A timeout value of 0 specifies an infinite
-	 * timeout.
-	 * <p>
-	 * Default is the system's default timeout.
-	 * 
+	 * Set the underlying URLConnection's connect timeout (in milliseconds).
+	 * A timeout value of 0 specifies an infinite timeout.
+	 * <p>Default is the system's default timeout.
 	 * @see URLConnection#setConnectTimeout(int)
 	 */
 	public void setConnectTimeout(int connectTimeout) {
@@ -103,33 +101,47 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 	}
 
 	/**
-	 * Set the underlying URLConnection's read timeout (in milliseconds). A timeout value of 0 specifies an infinite
-	 * timeout.
-	 * <p>
-	 * Default is the system's default timeout.
-	 * 
+	 * Set the underlying URLConnection's read timeout (in milliseconds).
+	 * A timeout value of 0 specifies an infinite timeout.
+	 * <p>Default is the system's default timeout.
 	 * @see URLConnection#setReadTimeout(int)
 	 */
 	public void setReadTimeout(int readTimeout) {
 		this.readTimeout = readTimeout;
 	}
 
+	/**
+	 * Set if the underlying URLConnection can be set to 'output streaming' mode. When
+	 * output streaming is enabled, authentication and redirection cannot be handled
+	 * automatically. If output streaming is disabled the
+	 * {@link HttpURLConnection#setFixedLengthStreamingMode(int)
+	 * setFixedLengthStreamingMode} and
+	 * {@link HttpURLConnection#setChunkedStreamingMode(int) setChunkedStreamingMode}
+	 * methods of the underlying connection will never be called.
+	 * <p>Default is {@code true}.
+	 * @param outputStreaming if output streaming is enabled
+	 */
+	public void setOutputStreaming(boolean outputStreaming) {
+		this.outputStreaming = outputStreaming;
+	}
+
+
 	public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
 		HttpURLConnection connection = openConnection(uri.toURL(), this.proxy);
 		prepareConnection(connection, httpMethod.name());
 		if (this.bufferRequestBody) {
-			return new SimpleBufferingClientHttpRequest(connection);
-		} else {
-			return new SimpleStreamingClientHttpRequest(connection, this.chunkSize);
+			return new SimpleBufferingClientHttpRequest(connection, this.outputStreaming);
+		}
+		else {
+			return new SimpleStreamingClientHttpRequest(connection, this.chunkSize,
+					this.outputStreaming);
 		}
 	}
 
 	/**
 	 * Opens and returns a connection to the given URL.
-	 * <p>
-	 * The default implementation uses the given {@linkplain #setProxy(java.net.Proxy) proxy} - if any - to open a
-	 * connection.
-	 * 
+	 * <p>The default implementation uses the given {@linkplain #setProxy(java.net.Proxy) proxy} -
+	 * if any - to open a connection.
 	 * @param url the URL to open a connection to
 	 * @param proxy the proxy to use, may be {@code null}
 	 * @return the opened connection
@@ -147,9 +159,7 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 
 	/**
 	 * Template method for preparing the given {@link HttpURLConnection}.
-	 * <p>
-	 * The default implementation prepares the connection for input and output, and sets the HTTP method.
-	 * 
+	 * <p>The default implementation prepares the connection for input and output, and sets the HTTP method.
 	 * @param connection the connection to prepare
 	 * @param httpMethod the HTTP request method ({@code GET}, {@code POST}, etc.)
 	 * @throws IOException in case of I/O errors
@@ -164,12 +174,14 @@ public class SimpleClientHttpRequestFactory implements ClientHttpRequestFactory 
 		connection.setDoInput(true);
 		if ("GET".equals(httpMethod)) {
 			connection.setInstanceFollowRedirects(true);
-		} else {
+		}
+		else {
 			connection.setInstanceFollowRedirects(false);
 		}
-		if ("PUT".equals(httpMethod) || "POST".equals(httpMethod)) {
+		if ("PUT".equals(httpMethod) || "POST".equals(httpMethod) || "PATCH".equals(httpMethod)) {
 			connection.setDoOutput(true);
-		} else {
+		}
+		else {
 			connection.setDoOutput(false);
 		}
 		connection.setRequestMethod(httpMethod);

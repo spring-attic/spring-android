@@ -16,7 +16,6 @@
 
 package org.springframework.http.client;
 
-import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -27,13 +26,14 @@ import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.util.StreamUtils;
 
 import android.os.Build;
 
 /**
- * {@link ClientHttpRequest} implementation that uses standard J2SE facilities to execute streaming requests. Created
- * via the {@link SimpleClientHttpRequestFactory}.
- * 
+ * {@link ClientHttpRequest} implementation that uses standard J2SE facilities to execute streaming requests.
+ * Created via the {@link SimpleClientHttpRequestFactory}.
+ *
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
@@ -49,10 +49,15 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 
 	private OutputStream body;
 
-	SimpleStreamingClientHttpRequest(HttpURLConnection connection, int chunkSize) {
+	private final boolean outputStreaming;
+
+
+	SimpleStreamingClientHttpRequest(HttpURLConnection connection, int chunkSize, boolean outputStreaming) {
 		this.connection = connection;
 		this.chunkSize = chunkSize;
+		this.outputStreaming = outputStreaming;
 	}
+
 
 	public HttpMethod getMethod() {
 		return HttpMethod.valueOf(this.connection.getRequestMethod());
@@ -61,7 +66,8 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 	public URI getURI() {
 		try {
 			return this.connection.getURL().toURI();
-		} catch (URISyntaxException ex) {
+		}
+		catch (URISyntaxException ex) {
 			throw new IllegalStateException("Could not get HttpURLConnection URI: " + ex.getMessage(), ex);
 		}
 	}
@@ -69,32 +75,20 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 	@Override
 	protected OutputStream getBodyInternal(HttpHeaders headers) throws IOException {
 		if (this.body == null) {
-			int contentLength = (int) headers.getContentLength();
-			if (contentLength >= 0 && !olderThanFroyo) {
-				this.connection.setFixedLengthStreamingMode(contentLength);
-			} else {
-				this.connection.setChunkedStreamingMode(this.chunkSize);
+			if (this.outputStreaming) {
+				int contentLength = (int) headers.getContentLength();
+				if (contentLength >= 0 && !olderThanFroyo) {
+					this.connection.setFixedLengthStreamingMode(contentLength);
+				}
+				else {
+					this.connection.setChunkedStreamingMode(this.chunkSize);
+				}
 			}
 			writeHeaders(headers);
 			this.connection.connect();
 			this.body = this.connection.getOutputStream();
 		}
-		return new NonClosingOutputStream(this.body);
-	}
-
-	@Override
-	protected ClientHttpResponse executeInternal(HttpHeaders headers) throws IOException {
-		try {
-			if (this.body != null) {
-				this.body.close();
-			} else {
-				writeHeaders(headers);
-				this.connection.connect();
-			}
-		} catch (IOException ex) {
-			// ignore
-		}
-		return new SimpleClientHttpResponse(this.connection);
+		return StreamUtils.nonClosing(this.body);
 	}
 
 	private void writeHeaders(HttpHeaders headers) {
@@ -116,15 +110,21 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 		return true;
 	}
 
-	private static class NonClosingOutputStream extends FilterOutputStream {
-
-		private NonClosingOutputStream(OutputStream out) {
-			super(out);
+	@Override
+	protected ClientHttpResponse executeInternal(HttpHeaders headers) throws IOException {
+		try {
+			if (this.body != null) {
+				this.body.close();
+			}
+			else {
+				writeHeaders(headers);
+				this.connection.connect();
+			}
 		}
-
-		@Override
-		public void close() throws IOException {
+		catch (IOException ex) {
+			// ignore
 		}
+		return new SimpleClientHttpResponse(this.connection);
 	}
 
 }

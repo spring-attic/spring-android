@@ -34,6 +34,7 @@ public abstract class AbstractClientHttpResponse implements ClientHttpResponse {
 
 	private InputStream compressedBody;
 
+
 	public HttpStatus getStatusCode() throws IOException {
 		return HttpStatus.valueOf(getRawStatusCode());
 	}
@@ -66,13 +67,14 @@ public abstract class AbstractClientHttpResponse implements ClientHttpResponse {
 		}
 		return false;
 	}
-	
+
 	private InputStream getCompressedBody(InputStream body) throws IOException {
 		if (this.compressedBody == null) {
 			this.compressedBody = new GZIPInputStream(body);
 		}
 		return this.compressedBody;
 	}
+
 
 	/**
 	 * Abstract template method that returns the body.
