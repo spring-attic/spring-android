@@ -36,16 +36,16 @@ public class StringHttpMessageConverterAltCharsetTests extends AbstractStringHtt
 
 	@SmallTest
 	public void testWriteDefaultCharset() throws IOException {
-		Charset utf8 = Charset.forName("UTF-16");
+		Charset utf16 = Charset.forName("UTF-16");
 		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
 		String body = "H\u00e9llo W\u00f6rld";
 		this.converter.write(body, null, outputMessage);
-		assertEquals("Invalid result", body, outputMessage.getBodyAsString(utf8));
-		assertEquals("Invalid content-type", new MediaType("text", "plain", utf8), outputMessage.getHeaders()
+		assertEquals("Invalid result", body, outputMessage.getBodyAsString(utf16));
+		assertEquals("Invalid content-type", new MediaType("text", "plain", utf16), outputMessage.getHeaders()
 				.getContentType());
-		assertEquals("Invalid content-length", body.getBytes(utf8.displayName()).length, outputMessage.getHeaders()
+		assertEquals("Invalid content-length", body.getBytes(utf16.displayName()).length, outputMessage.getHeaders()
 				.getContentLength());
 		assertFalse("Invalid accept-charset", outputMessage.getHeaders().getAcceptCharset().isEmpty());
 	}
-	
+
 }

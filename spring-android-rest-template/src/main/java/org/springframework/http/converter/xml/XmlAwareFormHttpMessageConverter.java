@@ -24,7 +24,10 @@ import org.springframework.http.converter.FormHttpMessageConverter;
  *
  * @author Juergen Hoeller
  * @since 1.0
+ * @deprecated in favor of
+ * {@link org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter}
  */
+@Deprecated
 public class XmlAwareFormHttpMessageConverter extends FormHttpMessageConverter {
 
 	public XmlAwareFormHttpMessageConverter() {

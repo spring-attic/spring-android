@@ -93,9 +93,9 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	/**
 	 * Returns true if any of the {@linkplain #setSupportedMediaTypes(List) supported media types}
 	 * include the given media type.
-	 * @param mediaType the media type to read, can be {@code null} if not specified. 
+	 * @param mediaType the media type to read, can be {@code null} if not specified.
 	 * Typically the value of a {@code Content-Type} header.
-	 * @return true if the supported media types include the media type, 
+	 * @return {@code true} if the supported media types include the media type,
 	 * or if the media type is {@code null}
 	 */
 	protected boolean canRead(MediaType mediaType) {
@@ -117,14 +117,14 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	 */
 	public boolean canWrite(Class<?> clazz, MediaType mediaType) {
 		return supports(clazz) && canWrite(mediaType);
-		}
+	}
 
 	/**
-	 * Returns true if the given media type includes any of the
+	 * Returns {@code true} if the given media type includes any of the
 	 * {@linkplain #setSupportedMediaTypes(List) supported media types}.
-	 * @param mediaType the media type to write, can be {@code null} if not specified. 
+	 * @param mediaType the media type to write, can be {@code null} if not specified.
 	 * Typically the value of an {@code Accept} header.
-	 * @return true if the supported media types are compatible with the media type, 
+	 * @return {@code true} if the supported media types are compatible with the media type,
 	 * or if the media type is {@code null}
 	 */
 	protected boolean canWrite(MediaType mediaType) {
@@ -157,11 +157,12 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 
 		HttpHeaders headers = outputMessage.getHeaders();
 		if (headers.getContentType() == null) {
+			MediaType contentTypeToUse = contentType;
 			if (contentType == null || contentType.isWildcardType() || contentType.isWildcardSubtype()) {
-				contentType = getDefaultContentType(t);
+				contentTypeToUse = getDefaultContentType(t);
 			}
-			if (contentType != null) {
-				headers.setContentType(contentType);
+			if (contentTypeToUse != null) {
+				headers.setContentType(contentTypeToUse);
 			}
 		}
 		if (headers.getContentLength() == -1) {
@@ -181,7 +182,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	 * {@link #setSupportedMediaTypes(List) supportedMediaTypes} property, if any.
 	 * Can be overridden in subclasses.
 	 * @param t the type to return the content type for
-	 * @return the content type, or <code>null</code> if not known
+	 * @return the content type, or {@code null} if not known
 	 */
 	protected MediaType getDefaultContentType(T t) throws IOException {
 		List<MediaType> mediaTypes = getSupportedMediaTypes();
@@ -203,12 +204,12 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	/**
 	 * Indicates whether the given class is supported by this converter.
 	 * @param clazz the class to test for support
-	 * @return <code>true</code> if supported; <code>false</code> otherwise
+	 * @return {@code true} if supported; {@code false} otherwise
 	 */
 	protected abstract boolean supports(Class<?> clazz);
 
 	/**
-	 * Abstract template method that reads the actualy object. Invoked from {@link #read}.
+	 * Abstract template method that reads the actual object. Invoked from {@link #read}.
 	 * @param clazz the type of object to return
 	 * @param inputMessage the HTTP input message to read from
 	 * @return the converted object
@@ -221,7 +222,7 @@ public abstract class AbstractHttpMessageConverter<T> implements HttpMessageConv
 	/**
 	 * Abstract template method that writes the actual body. Invoked from {@link #write}.
 	 * @param t the object to write to the output message
-	 * @param outputMessage the message to write to
+	 * @param outputMessage the HTTP output message to write to
 	 * @throws IOException in case of I/O errors
 	 * @throws HttpMessageNotWritableException in case of conversion errors
 	 */

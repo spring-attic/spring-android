@@ -17,21 +17,23 @@
 package org.springframework.http.converter;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 
 /**
  * Implementation of {@link HttpMessageConverter} that can read and write {@link Resource Resources}.
- * 
+ *
  * <p>
  * By default, this converter can read all media types. {@code application/octet-stream} is used to determine the
  * {@code Content-Type} of written resources.
- * 
+ *
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 1.0
@@ -49,28 +51,40 @@ public class ResourceHttpMessageConverter extends AbstractHttpMessageConverter<R
 	}
 
 	@Override
-	protected Resource readInternal(Class<? extends Resource> clazz, HttpInputMessage inputMessage) 
+	protected Resource readInternal(Class<? extends Resource> clazz, HttpInputMessage inputMessage)
 			throws IOException, HttpMessageNotReadableException {
 
-		byte[] body = FileCopyUtils.copyToByteArray(inputMessage.getBody());
+		byte[] body = StreamUtils.copyToByteArray(inputMessage.getBody());
 		return new ByteArrayResource(body);
 	}
 
 	@Override
 	protected MediaType getDefaultContentType(Resource resource) {
-		return MediaType.APPLICATION_OCTET_STREAM;
-	}
+			return MediaType.APPLICATION_OCTET_STREAM;
+		}
 
 	@Override
 	protected Long getContentLength(Resource resource, MediaType contentType) throws IOException {
-		return resource.contentLength();
+		// Don't try to determine contentLength on InputStreamResource - cannot be read afterwards...
+		// Note: custom InputStreamResource subclasses could provide a pre-calculated content length!
+		return (InputStreamResource.class.equals(resource.getClass()) ? null : resource.contentLength());
 	}
 
 	@Override
-	protected void writeInternal(Resource resource, HttpOutputMessage outputMessage) 
+	protected void writeInternal(Resource resource, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException {
 
-		FileCopyUtils.copy(resource.getInputStream(), outputMessage.getBody());
+		InputStream in = resource.getInputStream();
+		try {
+			StreamUtils.copy(in, outputMessage.getBody());
+		}
+		finally {
+			try {
+				in.close();
+			}
+			catch (IOException ex) {
+			}
+		}
 		outputMessage.getBody().flush();
 	}
 

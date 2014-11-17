@@ -18,16 +18,14 @@ package org.springframework.http.converter;
 
 /**
  * Thrown by {@link org.springframework.http.converter.HttpMessageConverter} implementations when the
- * {@link org.springframework.http.converter.HttpMessageConverter#write(Object, org.springframework.http.MediaType, 
+ * {@link org.springframework.http.converter.HttpMessageConverter#write(Object, org.springframework.http.MediaType,
  * org.springframework.http.HttpOutputMessage) write} method fails.
  *
  * @author Arjen Poutsma
- * @author Roy Clarkson
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class HttpMessageNotWritableException extends HttpMessageConversionException {
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create a new HttpMessageNotWritableException.

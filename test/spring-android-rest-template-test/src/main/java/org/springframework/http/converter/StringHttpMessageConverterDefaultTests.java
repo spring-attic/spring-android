@@ -33,7 +33,7 @@ public class StringHttpMessageConverterDefaultTests extends AbstractStringHttpMe
 	protected StringHttpMessageConverter getStringHttpMessageConverter() {
 		return new StringHttpMessageConverter();
 	}
-	
+
 	@SmallTest
 	public void testWriteDefaultCharset() throws IOException {
 		Charset iso88591 = Charset.forName("ISO-8859-1");

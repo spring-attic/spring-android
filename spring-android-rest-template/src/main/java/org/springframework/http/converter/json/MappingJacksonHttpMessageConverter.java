@@ -27,6 +27,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.type.TypeFactory;
 import org.codehaus.jackson.type.JavaType;
+
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -46,7 +47,6 @@ import org.springframework.util.Assert;
  * {@link #setSupportedMediaTypes supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
- * @author Roy Clarkson
  * @since 1.0
  * @deprecated In favor of {@link MappingJackson2HttpMessageConverter}
  */
@@ -230,7 +230,7 @@ public class MappingJacksonHttpMessageConverter extends AbstractHttpMessageConve
 	 */
 	protected JavaType getJavaType(Type type, Class<?> contextClass) {
 		return (contextClass != null) ?
-			TypeFactory.type(type, TypeFactory.type(contextClass)) : TypeFactory.type(type);
+				TypeFactory.type(type, TypeFactory.type(contextClass)) : TypeFactory.type(type);
 	}
 
 	/**

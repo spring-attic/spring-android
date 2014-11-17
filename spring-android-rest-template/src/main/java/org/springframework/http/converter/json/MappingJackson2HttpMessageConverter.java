@@ -46,18 +46,17 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  *
  * <p>By default, this converter supports {@code application/json}. This can be overridden by setting the
  * {@link #setSupportedMediaTypes(List) supportedMediaTypes} property.
- * 
+ *
  * <p>Tested against Jackson 2.3; compatible with Jackson 2.0 and higher. Note that tests failed with Jackson 2.4
  * on Android 2.2 (API Level 8) and older versions. Jackson 2.4 uses APIs not available on those platforms.
  *
  * @author Arjen Poutsma
  * @author Keith Donald
  * @author Rossen Stoyanchev
- * @author Roy Clarkson
  * @since 1.0.1
  */
-public class MappingJackson2HttpMessageConverter extends AbstractHttpMessageConverter<Object> implements
-		GenericHttpMessageConverter<Object> {
+public class MappingJackson2HttpMessageConverter extends AbstractHttpMessageConverter<Object>
+		implements GenericHttpMessageConverter<Object> {
 
 	public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
@@ -73,8 +72,7 @@ public class MappingJackson2HttpMessageConverter extends AbstractHttpMessageConv
 	 * Construct a new {@code MappingJackson2HttpMessageConverter}.
 	 */
 	public MappingJackson2HttpMessageConverter() {
-		super(new MediaType("application", "json", DEFAULT_CHARSET), 
-				new MediaType("application", "*+json", DEFAULT_CHARSET));
+		super(new MediaType("application", "json", DEFAULT_CHARSET), new MediaType("application", "*+json", DEFAULT_CHARSET));
 	}
 
 	/**
@@ -187,7 +185,6 @@ public class MappingJackson2HttpMessageConverter extends AbstractHttpMessageConv
 	}
 
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void writeInternal(Object object, HttpOutputMessage outputMessage)
 			throws IOException, HttpMessageNotWritableException {
@@ -236,8 +233,8 @@ public class MappingJackson2HttpMessageConverter extends AbstractHttpMessageConv
 	 */
 	protected JavaType getJavaType(Type type, Class<?> contextClass) {
 		return (contextClass != null) ?
-			this.objectMapper.getTypeFactory().constructType(type, contextClass) :
-			this.objectMapper.constructType(type);
+				this.objectMapper.getTypeFactory().constructType(type, contextClass) :
+				this.objectMapper.constructType(type);
 	}
 
 	/**

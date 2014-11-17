@@ -17,8 +17,10 @@
 package org.springframework.http.converter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.springframework.core.io.AssetResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
@@ -61,7 +63,7 @@ public class ResourceHttpMessageConverterTests extends AndroidTestCase {
 
 	@MediumTest
 	public void testRead() throws IOException {
-	    Resource asset = new AssetResource(getContext().getAssets(), "logo.jpg");
+		Resource asset = new AssetResource(getContext().getAssets(), "logo.jpg");
 		byte[] body = FileCopyUtils.copyToByteArray(asset.getInputStream());
 		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body);
 		inputMessage.getHeaders().setContentType(MediaType.IMAGE_JPEG);
@@ -75,6 +77,17 @@ public class ResourceHttpMessageConverterTests extends AndroidTestCase {
 		converter.write(asset, null, outputMessage);
 		assertEquals("Invalid content-type", MediaType.APPLICATION_OCTET_STREAM, outputMessage.getHeaders().getContentType());
 		assertEquals("Invalid content-length", asset.contentLength(), outputMessage.getHeaders().getContentLength());
+	}
+
+	// SPR-10848
+
+	@SmallTest
+	public void writeByteArrayNullMediaType() throws IOException {
+		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
+		byte[] byteArray = {1, 2, 3};
+		Resource body = new ByteArrayResource(byteArray);
+		converter.write(body, null, outputMessage);
+		assertTrue(Arrays.equals(byteArray, outputMessage.getBodyAsBytes()));
 	}
 
 }

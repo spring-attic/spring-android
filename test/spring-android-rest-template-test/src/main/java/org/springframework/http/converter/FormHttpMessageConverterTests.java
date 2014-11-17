@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
 import org.springframework.http.MockHttpOutputMessage;
-import org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter;
+import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -47,13 +47,13 @@ public class FormHttpMessageConverterTests extends TestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		if (javaxXmlTransformPresent) {
-			converter = new XmlAwareFormHttpMessageConverter();
+			converter = new AllEncompassingFormHttpMessageConverter();
 		} else {
 			// javax.xml.transform not available on this version of Android
 			converter = new FormHttpMessageConverter();
 		}
 	}
-	
+
 	@Override
 	public void tearDown() {
 		converter = null;
@@ -112,6 +112,7 @@ public class FormHttpMessageConverterTests extends TestCase {
 //		parts.add("name 1", "value 1");
 //		parts.add("name 2", "value 2+1");
 //		parts.add("name 2", "value 2+2");
+//		parts.add("name 3", null);
 //
 //		Resource logo = new ClassPathResource("/org/springframework/http/converter/logo.jpg");
 //		parts.add("logo", logo);
@@ -157,6 +158,7 @@ public class FormHttpMessageConverterTests extends TestCase {
 //		item = (FileItem) items.get(4);
 //		assertEquals("xml", item.getFieldName());
 //		assertEquals("text/xml", item.getContentType());
+//		verify(outputMessage.getBody(), never()).close();
 //	}
 
 //	private static class MockHttpOutputMessageRequestContext implements RequestContext {
@@ -167,24 +169,27 @@ public class FormHttpMessageConverterTests extends TestCase {
 //			this.outputMessage = outputMessage;
 //		}
 //
+//		@Override
 //		public String getCharacterEncoding() {
 //			MediaType contentType = outputMessage.getHeaders().getContentType();
 //			return contentType != null && contentType.getCharSet() != null ? contentType.getCharSet().name() : null;
 //		}
 //
+//		@Override
 //		public String getContentType() {
 //			MediaType contentType = outputMessage.getHeaders().getContentType();
 //			return contentType != null ? contentType.toString() : null;
 //		}
 //
+//		@Override
 //		public int getContentLength() {
 //			return outputMessage.getBodyAsBytes().length;
 //		}
 //
+//		@Override
 //		public InputStream getInputStream() throws IOException {
 //			return new ByteArrayInputStream(outputMessage.getBodyAsBytes());
 //		}
 //	}
-
 
 }

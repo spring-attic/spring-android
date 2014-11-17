@@ -22,14 +22,14 @@ import java.io.IOException;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 
 /**
  * Implementation of {@link HttpMessageConverter} that can read and write byte arrays.
  *
- * <p>By default, this converter supports all media types (<code>&#42;&#47;&#42;</code>), and writes with a {@code
- * Content-Type} of {@code application/octet-stream}. This can be overridden by setting the {@link
- * #setSupportedMediaTypes(java.util.List) supportedMediaTypes} property.
+ * <p>By default, this converter supports all media types ({@code &#42;&#47;&#42;}), and
+ * writes with a {@code Content-Type} of {@code application/octet-stream}. This can be
+ * overridden by setting the {@link #setSupportedMediaTypes supportedMediaTypes} property.
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
@@ -50,14 +50,10 @@ public class ByteArrayHttpMessageConverter extends AbstractHttpMessageConverter<
 	@Override
 	public byte[] readInternal(Class<? extends byte[]> clazz, HttpInputMessage inputMessage) throws IOException {
 		long contentLength = inputMessage.getHeaders().getContentLength();
-		if (contentLength >= 0) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream((int) contentLength);
-			FileCopyUtils.copy(inputMessage.getBody(), bos);
-			return bos.toByteArray();
-		}
-		else {
-			return FileCopyUtils.copyToByteArray(inputMessage.getBody());
-		}
+		ByteArrayOutputStream bos =
+				new ByteArrayOutputStream(contentLength >= 0 ? (int) contentLength : StreamUtils.BUFFER_SIZE);
+		StreamUtils.copy(inputMessage.getBody(), bos);
+		return bos.toByteArray();
 	}
 
 	@Override
@@ -67,7 +63,7 @@ public class ByteArrayHttpMessageConverter extends AbstractHttpMessageConverter<
 
 	@Override
 	protected void writeInternal(byte[] bytes, HttpOutputMessage outputMessage) throws IOException {
-		FileCopyUtils.copy(bytes, outputMessage.getBody());
+		StreamUtils.copy(bytes, outputMessage.getBody());
 	}
 
 }

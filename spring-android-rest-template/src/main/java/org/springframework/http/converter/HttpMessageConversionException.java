@@ -22,12 +22,10 @@ import org.springframework.core.NestedRuntimeException;
  * Thrown by {@link HttpMessageConverter} implementations when the conversion fails.
  *
  * @author Arjen Poutsma
- * @author Roy Clarkson
  * @since 1.0
  */
+@SuppressWarnings("serial")
 public class HttpMessageConversionException extends NestedRuntimeException {
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create a new HttpMessageConversionException.

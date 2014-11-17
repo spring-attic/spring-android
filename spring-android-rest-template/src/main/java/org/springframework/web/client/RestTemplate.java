@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.transform.Source;
 
 import org.springframework.core.ParameterizedTypeReference;
@@ -44,6 +43,7 @@ import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
 import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter;
@@ -781,8 +781,9 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 			// if javax.xml.transform is not available, fall back to standard Form message converter
 			if (javaxXmlTransformPresent) {
 				messageConverters.add(new SourceHttpMessageConverter<Source>());
-				messageConverters.add(new XmlAwareFormHttpMessageConverter());
-			} else {
+				messageConverters.add(new AllEncompassingFormHttpMessageConverter());
+			}
+			else {
 				messageConverters.add(new FormHttpMessageConverter());
 			}
 			if (simpleXmlPresent) {

@@ -47,7 +47,8 @@ public class OkHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCas
 			if (Log.isLoggable(TAG, Log.INFO)) {
 				Log.i(TAG, "OkHttp is only supported on Android 2.3 and above");
 			}
-		} else {
+		} 
+		else {
 			super.setUp();
 		}
 	}

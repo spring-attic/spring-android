@@ -78,13 +78,15 @@ public abstract class AbstractStringHttpMessageConverterTests extends TestCase {
 		converter.write(body, contentType, outputMessage);
 		assertEquals("Invalid result", body, outputMessage.getBodyAsString(utf8));
 		assertEquals("Invalid content-type", contentType, outputMessage.getHeaders().getContentType());
-		assertEquals("Invalid content-length", body.getBytes(utf8.displayName()).length, outputMessage.getHeaders()
-				.getContentLength());
+		assertEquals("Invalid content-length", body.getBytes(utf8.displayName()).length,
+				outputMessage.getHeaders().getContentLength());
 		assertFalse("Invalid accept-charset", outputMessage.getHeaders().getAcceptCharset().isEmpty());
 	}
 
+	// SPR-8867
+
 	@SmallTest
-	public void writeOverrideRequestedContentType() throws IOException {
+	public void testWriteOverrideRequestedContentType() throws IOException {
 		Charset utf8 = Charset.forName("UTF-8");
 		MediaType requestedContentType = new MediaType("text", "html");
 		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
@@ -94,8 +96,8 @@ public abstract class AbstractStringHttpMessageConverterTests extends TestCase {
 		converter.write(body, requestedContentType, outputMessage);
 		assertEquals("Invalid result", body, outputMessage.getBodyAsString(utf8));
 		assertEquals("Invalid content-type", contentType, outputMessage.getHeaders().getContentType());
-		assertEquals("Invalid content-length", body.getBytes(utf8).length, outputMessage.getHeaders()
-				.getContentLength());
+		assertEquals("Invalid content-length", body.getBytes(utf8.displayName()).length,
+				outputMessage.getHeaders().getContentLength());
 		assertFalse("Invalid accept-charset", outputMessage.getHeaders().getAcceptCharset().isEmpty());
 	}
 

@@ -50,7 +50,7 @@ public class HttpMessageConverterTests extends TestCase {
 		assertFalse(converter.canRead(MyType.class, new MediaType("foo", "*")));
 		assertFalse(converter.canRead(MyType.class, MediaType.ALL));
 	}
-	
+
 	@SmallTest
 	public void testCanWrite() {
 		AbstractHttpMessageConverter<MyType> converter = new MyHttpMessageConverter<MyType>(MEDIA_TYPE) {
