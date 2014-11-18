@@ -16,6 +16,8 @@
 
 package org.springframework.http;
 
+import static org.hamcrest.MatcherAssert.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.GregorianCalendar;
@@ -34,6 +37,7 @@ import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
+import org.hamcrest.Matchers;
 import org.springframework.util.Base64Utils;
 
 import android.test.suitebuilder.annotation.SmallTest;
@@ -69,6 +73,16 @@ public class HttpHeadersTests extends TestCase {
 		assertEquals("Invalid Accept header", "text/html, text/plain", headers.getFirst("Accept"));
 	}
 
+	// SPR-9655
+
+	@SmallTest
+	public void testAcceptiPlanet() {
+		headers.add("Accept", "text/html");
+		headers.add("Accept", "text/plain");
+		List<MediaType> expected = Arrays.asList(new MediaType("text", "html"), new MediaType("text", "plain"));
+		assertEquals("Invalid Accept header", expected, headers.getAccept());
+	}
+
 	@SmallTest
 	public void testAcceptCharsets() {
 		Charset charset1 = Charset.forName("UTF-8");
@@ -84,7 +98,8 @@ public class HttpHeadersTests extends TestCase {
 	@SmallTest
 	public void testAcceptCharsetWildcard() {
 		headers.set("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-		assertEquals("Invalid Accept header", Arrays.asList(Charset.forName("ISO-8859-1"), Charset.forName("UTF-8")), headers.getAcceptCharset());
+		assertEquals("Invalid Accept header", Arrays.asList(Charset.forName("ISO-8859-1"), Charset.forName("UTF-8")),
+				headers.getAcceptCharset());
 	}
 
 	@SmallTest
@@ -129,16 +144,14 @@ public class HttpHeadersTests extends TestCase {
 
 	@SmallTest
 	public void testIllegalETag() {
-		boolean success = false;
 		try {
 			String eTag = "v2.6";
 			headers.setETag(eTag);
 			assertEquals("Invalid ETag header", eTag, headers.getETag());
 			assertEquals("Invalid ETag header", "\"v2.6\"", headers.getFirst("ETag"));
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
@@ -171,20 +184,19 @@ public class HttpHeadersTests extends TestCase {
 		assertEquals("Invalid Date header", calendar.getTime(), getDateFromHeader(headers, "date"));
 
 		// RFC 850
+		// Android does not parse 'CET' properly, so must use 'GMT+01:00'
 		headers.set("Date", "Thursday, 18-Dec-08 11:20:00 GMT+01:00");
 		assertEquals("Invalid Date header", date, headers.getDate());
 	}
 
 	@SmallTest
 	public void testDateInvalid() {
-		boolean success = false;
 		try {
 			headers.set("Date", "Foo Bar Baz");
 			headers.getDate();
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
@@ -198,7 +210,8 @@ public class HttpHeadersTests extends TestCase {
 			headers.setDate(date);
 			assertEquals("Invalid Date header", calendar.getTime(), getDateFromHeader(headers, "date"));
 			assertEquals("Invalid Date header", date, headers.getDate());
-		} finally {
+		}
+		finally {
 			Locale.setDefault(defaultLocale);
 		}
 	}
@@ -221,6 +234,14 @@ public class HttpHeadersTests extends TestCase {
 		headers.setExpires(date);
 		assertEquals("Invalid Expires header", date, headers.getExpires());
 		assertEquals("Invalid Date header", calendar.getTime(), getDateFromHeader(headers, "expires"));
+	}
+
+	// SPR-10648 (example is from INT-3063)
+
+	@SmallTest
+	public void testExpiresInvalidDate() {
+		headers.set("Expires", "-1");
+		assertEquals(-1, headers.getExpires());
 	}
 
 	@SmallTest
@@ -252,10 +273,12 @@ public class HttpHeadersTests extends TestCase {
 	@SmallTest
 	public void testContentDisposition() {
 		headers.setContentDispositionFormData("name", null);
-		assertEquals("Invalid Content-Disposition header", "form-data; name=\"name\"", headers.getFirst("Content-Disposition"));
+		assertEquals("Invalid Content-Disposition header", "form-data; name=\"name\"",
+				headers.getFirst("Content-Disposition"));
 
 		headers.setContentDispositionFormData("name", "filename");
-		assertEquals("Invalid Content-Disposition header", "form-data; name=\"name\"; filename=\"filename\"", headers.getFirst("Content-Disposition"));
+		assertEquals("Invalid Content-Disposition header", "form-data; name=\"name\"; filename=\"filename\"", 
+				headers.getFirst("Content-Disposition"));
 	}
 
 	@SmallTest
@@ -322,9 +345,18 @@ public class HttpHeadersTests extends TestCase {
 				"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/A.B (KHTML, like Gecko) Chrome/X.Y.Z.W Safari/A.B.",
 				headers.getUserAgent());
 	}
-	
+
+	// SPR-11917
+
+	@SmallTest
+	public void testGetAllowEmptySet() {
+		headers.setAllow(Collections.<HttpMethod> emptySet());
+
+		assertThat(headers.getAllow(), Matchers.emptyCollectionOf(HttpMethod.class));
+	}
+
 	// helpers
-	
+
 	private Date getDateFromHeader(HttpHeaders headers, String key) {
 		String headerDate = headers.getFirst(key);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);

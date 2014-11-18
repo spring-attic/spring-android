@@ -64,6 +64,11 @@
 			<version>${org.hamcrest-version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<version>${org.hamcrest-version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>${org.mockito-version}</version>
@@ -102,6 +107,7 @@
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 					<deviceThreads>4</deviceThreads>
+					<extractDuplicates>true</extractDuplicates>
 				</configuration>
 				<extensions>true</extensions>
 			</plugin>
