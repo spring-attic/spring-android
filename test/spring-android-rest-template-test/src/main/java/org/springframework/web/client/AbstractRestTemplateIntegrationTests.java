@@ -39,7 +39,6 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.android.test.Assert;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.ContentCodingType;
 import org.springframework.http.HttpBasicAuthentication;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -304,24 +303,25 @@ public abstract class AbstractRestTemplateIntegrationTests extends AndroidTestCa
 	}
 
 	// ANDROID-81
-	public void testMultipleHttpsRequests() throws Exception {
-		HttpHeaders requestHeaders = new HttpHeaders();
-		requestHeaders.setAcceptEncoding(ContentCodingType.GZIP);
-		requestHeaders.set("Connection", "Close");
-		requestHeaders.set("Cache-Control", "no-cache");
-		requestHeaders.set("Pragma", "no-cache");
-		HttpEntity<Void> requestEntity = new HttpEntity<Void>(requestHeaders);
-		String url = "https://github.com/spring-guides/gs-consuming-rest-android";
-		try {
-			restTemplate.exchange(url, HttpMethod.GET, requestEntity, byte[].class);
-		} catch (HttpClientErrorException e) {
-			if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
-				throw e;
-			}
-		}
-		url = "https://github.com/spring-guides/gs-consuming-rest-xml-android";
-		restTemplate.exchange(url, HttpMethod.GET, requestEntity, byte[].class);
-	}
+	// ignoring since this test makes a request to an external address
+//	public void testMultipleHttpsRequests() throws Exception {
+//		HttpHeaders requestHeaders = new HttpHeaders();
+//		requestHeaders.setAcceptEncoding(ContentCodingType.GZIP);
+//		requestHeaders.set("Connection", "Close");
+//		requestHeaders.set("Cache-Control", "no-cache");
+//		requestHeaders.set("Pragma", "no-cache");
+//		HttpEntity<Void> requestEntity = new HttpEntity<Void>(requestHeaders);
+//		String url = "https://github.com/spring-guides/gs-consuming-rest-android";
+//		try {
+//			restTemplate.exchange(url, HttpMethod.GET, requestEntity, byte[].class);
+//		} catch (HttpClientErrorException e) {
+//			if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
+//				throw e;
+//			}
+//		}
+//		url = "https://github.com/spring-guides/gs-consuming-rest-xml-android";
+//		restTemplate.exchange(url, HttpMethod.GET, requestEntity, byte[].class);
+//	}
 
 	/** Servlet that sets the given status code. */
 	private static class StatusCodeServlet extends GenericServlet {
