@@ -22,12 +22,12 @@ import java.io.IOException;
  * Exception thrown when an I/O error occurs.
  *
  * @author Arjen Poutsma
- * @author Roy Clarkson
  * @since 1.0
  */
 public class ResourceAccessException extends RestClientException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8513182514355844870L;
+
 
 	/**
 	 * Construct a new {@code HttpIOException} with the given message.

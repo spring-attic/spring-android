@@ -23,20 +23,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 /**
- * Abstract base class for exceptions based on an {@link HttpStatus}.
+ * Exception thrown when an unknown (or custom) HTTP status code is received.
  *
- * @author Arjen Poutsma
- * @author Chris Beams
- * @since 1.0
+ * @author Rossen Stoyanchev
+ * @since 2.0
  */
-public abstract class HttpStatusCodeException extends RestClientException {
+public class UnknownHttpStatusCodeException extends RestClientException {
 
-	private static final long serialVersionUID = -5807494703720513267L;
+	private static final long serialVersionUID = 4702443689088991600L;
 
 	private static final String DEFAULT_CHARSET = "ISO-8859-1";
 
-
-	private final HttpStatus statusCode;
+	private final int rawStatusCode;
 
 	private final String statusText;
 
@@ -49,53 +47,18 @@ public abstract class HttpStatusCodeException extends RestClientException {
 
 	/**
 	 * Construct a new instance of {@code HttpStatusCodeException} based on an
-	 * {@link HttpStatus}.
-	 * @param statusCode the status code
-	 */
-	protected HttpStatusCodeException(HttpStatus statusCode) {
-		this(statusCode, statusCode.name(), null, null, null);
-	}
-
-	/**
-	 * Construct a new instance of {@code HttpStatusCodeException} based on an
-	 * {@link HttpStatus} and status text.
-	 * @param statusCode the status code
-	 * @param statusText the status text
-	 */
-	protected HttpStatusCodeException(HttpStatus statusCode, String statusText) {
-		this(statusCode, statusText, null, null, null);
-	}
-
-	/**
-	 * Construct a new instance of {@code HttpStatusCodeException} based on an
 	 * {@link HttpStatus}, status text, and response body content.
-	 * @param statusCode the status code
-	 * @param statusText the status text
-	 * @param responseBody the response body content, may be {@code null}
-	 * @param responseCharset the response body charset, may be {@code null}
-	 * @since 2.0
-	 */
-	protected HttpStatusCodeException(
-			HttpStatus statusCode, String statusText, byte[] responseBody, Charset responseCharset) {
-
-		this(statusCode, statusText, null, responseBody, responseCharset);
-	}
-
-	/**
-	 * Construct a new instance of {@code HttpStatusCodeException} based on an
-	 * {@link HttpStatus}, status text, and response body content.
-	 * @param statusCode the status code
+	 * @param rawStatusCode the raw status code value
 	 * @param statusText the status text
 	 * @param responseHeaders the response headers, may be {@code null}
 	 * @param responseBody the response body content, may be {@code null}
 	 * @param responseCharset the response body charset, may be {@code null}
-	 * @since 2.0
 	 */
-	protected HttpStatusCodeException(HttpStatus statusCode, String statusText,
-									  HttpHeaders responseHeaders, byte[] responseBody, Charset responseCharset) {
+	public UnknownHttpStatusCodeException(int rawStatusCode, String statusText,
+										  HttpHeaders responseHeaders, byte[] responseBody, Charset responseCharset) {
 
-		super(statusCode.value() + " " + statusText);
-		this.statusCode = statusCode;
+		super("Unknown status code [" + String.valueOf(rawStatusCode) + "]" + " " + statusText);
+		this.rawStatusCode = rawStatusCode;
 		this.statusText = statusText;
 		this.responseHeaders = responseHeaders;
 		this.responseBody = responseBody != null ? responseBody : new byte[0];
@@ -104,10 +67,10 @@ public abstract class HttpStatusCodeException extends RestClientException {
 
 
 	/**
-	 * Return the HTTP status code.
+	 * Return the raw HTTP status code value.
 	 */
-	public HttpStatus getStatusCode() {
-		return this.statusCode;
+	public int getRawStatusCode() {
+		return this.rawStatusCode;
 	}
 
 	/**
@@ -119,7 +82,6 @@ public abstract class HttpStatusCodeException extends RestClientException {
 
 	/**
 	 * Return the HTTP response headers.
-	 * @since 2.0
 	 */
 	public HttpHeaders getResponseHeaders() {
 		return this.responseHeaders;

@@ -30,8 +30,8 @@ import org.springframework.util.Assert;
 import android.util.Log;
 
 /**
- * Response extractor that uses the given {@linkplain HttpMessageConverter entity converters} to convert the response
- * into a type <code>T</code>.
+ * Response extractor that uses the given {@linkplain HttpMessageConverter entity
+ * converters} to convert the response into a type {@code T}.
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
