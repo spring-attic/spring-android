@@ -17,6 +17,7 @@
 package org.springframework.http;
 
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
@@ -33,25 +34,26 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.util.StringUtils;
+import org.springframework.util.comparator.CompoundComparator;
 
 /**
  * Represents an Internet Media Type, as defined in the HTTP specification.
- * 
- * <p>
- * Consists of a {@linkplain #getType() type} and a {@linkplain #getSubtype() subtype}. Also has functionality to parse
- * media types from a string using {@link #parseMediaType(String)}, or multiple comma-separated media types using
- * {@link #parseMediaTypes(String)}.
- * 
+ *
+ * <p>Consists of a {@linkplain #getType() type} and a {@linkplain #getSubtype() subtype}.
+ * Also has functionality to parse media types from a string using {@link #parseMediaType(String)},
+ * or multiple comma-separated media types using {@link #parseMediaTypes(String)}.
+ *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
  * @author Roy Clarkson
+ * @author Rossen Stoyanchev
  * @since 1.0
  * @see <a href="http://tools.ietf.org/html/rfc2616#section-3.7">HTTP 1.1, section 3.7</a>
  */
 public class MediaType implements Comparable<MediaType> {
 
 	/**
-	 * Public constant media type that includes all media ranges (i.e. <code>&#42;/&#42;</code>).
+	 * Public constant media type that includes all media ranges (i.e. {@code &#42;/&#42;}).
 	 */
 	public static final MediaType ALL;
 
@@ -82,7 +84,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Public constant media type for {@code application/x-www-form-urlencoded}.
-	 * */
+	 *  */
 	public final static MediaType APPLICATION_FORM_URLENCODED;
 
 	/**
@@ -102,7 +104,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Public constant media type for {@code application/octet-stream}.
-	 * */
+	 *  */
 	public final static MediaType APPLICATION_OCTET_STREAM;
 
 	/**
@@ -112,7 +114,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Public constant media type for {@code application/xhtml+xml}.
-	 * */
+	 *  */
 	public final static MediaType APPLICATION_XHTML_XML;
 
 	/**
@@ -172,7 +174,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Public constant media type for {@code multipart/form-data}.
-	 */
+	 *  */
 	public final static MediaType MULTIPART_FORM_DATA;
 
 	/**
@@ -182,7 +184,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Public constant media type for {@code text/html}.
-	 */
+	 *  */
 	public final static MediaType TEXT_HTML;
 
 	/**
@@ -192,7 +194,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Public constant media type for {@code text/plain}.
-	 */
+	 *  */
 	public final static MediaType TEXT_PLAIN;
 
 	/**
@@ -202,7 +204,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Public constant media type for {@code text/xml}.
-	 */
+	 *  */
 	public final static MediaType TEXT_XML;
 
 	/**
@@ -230,7 +232,7 @@ public class MediaType implements Comparable<MediaType> {
 	static {
 		// variable names refer to RFC 2616, section 2.2
 		BitSet ctl = new BitSet(128);
-		for (int i = 0; i <= 31; i++) {
+		for (int i=0; i <= 31; i++) {
 			ctl.set(i);
 		}
 		ctl.set(127);
@@ -282,8 +284,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Create a new {@code MediaType} for the given primary type.
-	 * <p>
-	 * The {@linkplain #getSubtype() subtype} is set to <code>&#42;</code>, parameters empty.
+	 * <p>The {@linkplain #getSubtype() subtype} is set to {@code &#42;}, parameters empty.
 	 * @param type the primary type
 	 * @throws IllegalArgumentException if any of the parameters contain illegal characters
 	 */
@@ -293,30 +294,28 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Create a new {@code MediaType} for the given primary type and subtype.
-	 * <p>
-	 * The parameters are empty.
+	 * <p>The parameters are empty.
 	 * @param type the primary type
 	 * @param subtype the subtype
 	 * @throws IllegalArgumentException if any of the parameters contain illegal characters
 	 */
 	public MediaType(String type, String subtype) {
-		this(type, subtype, Collections.<String, String> emptyMap());
+		this(type, subtype, Collections.<String, String>emptyMap());
 	}
 
 	/**
 	 * Create a new {@code MediaType} for the given type, subtype, and character set.
 	 * @param type the primary type
 	 * @param subtype the subtype
-	 * @param charSet the character set
+	 * @param charset the character set
 	 * @throws IllegalArgumentException if any of the parameters contain illegal characters
 	 */
-	public MediaType(String type, String subtype, Charset charSet) {
-		this(type, subtype, Collections.singletonMap(PARAM_CHARSET, charSet.displayName()));
+	public MediaType(String type, String subtype, Charset charset) {
+		this(type, subtype, Collections.singletonMap(PARAM_CHARSET, charset.name()));
 	}
 
 	/**
 	 * Create a new {@code MediaType} for the given type, subtype, and quality value.
-	 * 
 	 * @param type the primary type
 	 * @param subtype the subtype
 	 * @param qualityValue the quality value
@@ -327,10 +326,10 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Copy-constructor that copies the type and subtype of the given {@code MediaType}, and allows for different
-	 * parameter.
+	 * Copy-constructor that copies the type and subtype of the given {@code MediaType},
+	 * and allows for different parameter.
 	 * @param other the other media type
-	 * @param parameters the parameters, may be <code>null</code>
+	 * @param parameters the parameters, may be {@code null}
 	 * @throws IllegalArgumentException if any of the parameters contain illegal characters
 	 */
 	public MediaType(MediaType other, Map<String, String> parameters) {
@@ -341,12 +340,12 @@ public class MediaType implements Comparable<MediaType> {
 	 * Create a new {@code MediaType} for the given type, subtype, and parameters.
 	 * @param type the primary type
 	 * @param subtype the subtype
-	 * @param parameters the parameters, may be <code>null</code>
+	 * @param parameters the parameters, may be {@code null}
 	 * @throws IllegalArgumentException if any of the parameters contain illegal characters
 	 */
 	public MediaType(String type, String subtype, Map<String, String> parameters) {
-		Assert.hasLength(type, "'type' must not be empty");
-		Assert.hasLength(subtype, "'subtype' must not be empty");
+		Assert.hasLength(type, "type must not be empty");
+		Assert.hasLength(subtype, "subtype must not be empty");
 		checkToken(type);
 		checkToken(subtype);
 		this.type = type.toLowerCase(Locale.ENGLISH);
@@ -360,7 +359,8 @@ public class MediaType implements Comparable<MediaType> {
 				m.put(attribute, value);
 			}
 			this.parameters = Collections.unmodifiableMap(m);
-		} else {
+		}
+		else {
 			this.parameters = Collections.emptyMap();
 		}
 	}
@@ -370,11 +370,11 @@ public class MediaType implements Comparable<MediaType> {
 	 * @throws IllegalArgumentException in case of illegal characters
 	 * @see <a href="http://tools.ietf.org/html/rfc2616#section-2.2">HTTP 1.1, section 2.2</a>
 	 */
-	private void checkToken(String s) {
-		for (int i = 0; i < s.length(); i++) {
-			char ch = s.charAt(i);
+	private void checkToken(String token) {
+		for (int i=0; i < token.length(); i++ ) {
+			char ch = token.charAt(i);
 			if (!TOKEN.get(ch)) {
-				throw new IllegalArgumentException("Invalid token character '" + ch + "' in token \"" + s + "\"");
+				throw new IllegalArgumentException("Invalid token character '" + ch + "' in token \"" + token + "\"");
 			}
 		}
 	}
@@ -386,17 +386,25 @@ public class MediaType implements Comparable<MediaType> {
 		if (PARAM_QUALITY_FACTOR.equals(attribute)) {
 			value = unquote(value);
 			double d = Double.parseDouble(value);
-			Assert.isTrue(d >= 0D && d <= 1D, "Invalid quality value \"" + value + "\": should be between 0.0 and 1.0");
-		} else if (PARAM_CHARSET.equals(attribute)) {
+			Assert.isTrue(d >= 0D && d <= 1D,
+					"Invalid quality value \"" + value + "\": should be between 0.0 and 1.0");
+		}
+		else if (PARAM_CHARSET.equals(attribute)) {
 			value = unquote(value);
 			Charset.forName(value);
-		} else if (!isQuotedString(value)) {
+		}
+		else if (!isQuotedString(value)) {
 			checkToken(value);
 		}
 	}
 
 	private boolean isQuotedString(String s) {
-		return s.length() > 1 && s.startsWith("\"") && s.endsWith("\"");
+		if (s.length() < 2) {
+			return false;
+		}
+		else {
+			return ((s.startsWith("\"") && s.endsWith("\"")) || (s.startsWith("'") && s.endsWith("'")));
+		}
 	}
 
 	private String unquote(String s) {
@@ -414,7 +422,7 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Indicates whether the {@linkplain #getType() type} is the wildcard character <code>&#42;</code> or not.
+	 * Indicates whether the {@linkplain #getType() type} is the wildcard character {@code &#42;} or not.
 	 */
 	public boolean isWildcardType() {
 		return WILDCARD_TYPE.equals(type);
@@ -428,16 +436,17 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Indicates whether the {@linkplain #getSubtype() subtype} is the wildcard character <code>&#42;</code> or not.
-	 * @return whether the subtype is <code>&#42;</code>
+	 * Indicates whether the {@linkplain #getSubtype() subtype} is the wildcard character {@code &#42;}
+	 * or the wildcard character followed by a sufiix (e.g. {@code &#42;+xml}), or not.
+	 * @return whether the subtype is {@code &#42;}
 	 */
 	public boolean isWildcardSubtype() {
-		return WILDCARD_TYPE.equals(subtype);
+		return WILDCARD_TYPE.equals(subtype) || subtype.startsWith("*+");
 	}
 
 	/**
-	 * Indicates whether this media type is concrete, i.e. whether neither the type or subtype is a wildcard character
-	 * <code>&#42;</code>.
+	 * Indicates whether this media type is concrete, i.e. whether neither the type or subtype is a wildcard
+	 * character {@code &#42;}.
 	 * @return whether this media type is concrete
 	 */
 	public boolean isConcrete() {
@@ -445,8 +454,8 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Return the character set, as indicated by a <code>charset</code> parameter, if any.
-	 * @return the character set; or <code>null</code> if not available
+	 * Return the character set, as indicated by a {@code charset} parameter, if any.
+	 * @return the character set; or {@code null} if not available
 	 */
 	public Charset getCharSet() {
 		String charSet = getParameter(PARAM_CHARSET);
@@ -454,7 +463,8 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Return the quality value, as indicated by a <code>q</code> parameter, if any. Defaults to <code>1.0</code>.
+	 * Return the quality value, as indicated by a {@code q} parameter, if any.
+	 * Defaults to {@code 1.0}.
 	 * @return the quality factory
 	 */
 	public double getQualityValue() {
@@ -465,27 +475,26 @@ public class MediaType implements Comparable<MediaType> {
 	/**
 	 * Return a generic parameter value, given a parameter name.
 	 * @param name the parameter name
-	 * @return the parameter value; or <code>null</code> if not present
+	 * @return the parameter value; or {@code null} if not present
 	 */
 	public String getParameter(String name) {
 		return this.parameters.get(name);
 	}
-	
+
 	/**
 	 * Return all generic parameter values.
-	 * @return a read-only map, possibly empty, never <code>null</code>
+	 * @return a read-only map, possibly empty, never {@code null}
 	 */
 	public Map<String, String> getParameters() {
-	        return parameters;
+		return parameters;
 	}
 
 	/**
-	 * Indicates whether this {@code MediaType} includes the given media type.
-	 * <p>
-	 * For instance, {@code text/*} includes {@code text/plain} and {@code text/html}, and {@code application/*+xml}
+	 * Indicate whether this {@code MediaType} includes the given media type.
+	 * <p>For instance, {@code text/*} includes {@code text/plain} and {@code text/html}, and {@code application/*+xml}
 	 * includes {@code application/soap+xml}, etc. This method is <b>not</b> symmetric.
 	 * @param other the reference media type with which to compare
-	 * @return <code>true</code> if this media type includes the given media type; <code>false</code> otherwise
+	 * @return {@code true} if this media type includes the given media type; {@code false} otherwise
 	 */
 	public boolean includes(MediaType other) {
 		if (other == null) {
@@ -494,19 +503,28 @@ public class MediaType implements Comparable<MediaType> {
 		if (this.isWildcardType()) {
 			// */* includes anything
 			return true;
-		} else if (this.type.equals(other.type)) {
-			if (this.subtype.equals(other.subtype) || this.isWildcardSubtype()) {
+		}
+		else if (this.type.equals(other.type)) {
+			if (this.subtype.equals(other.subtype)) {
 				return true;
 			}
-			// application/*+xml includes application/soap+xml
-			int thisPlusIdx = this.subtype.indexOf('+');
-			int otherPlusIdx = other.subtype.indexOf('+');
-			if (thisPlusIdx != -1 && otherPlusIdx != -1) {
-				String thisSubtypeNoSuffix = this.subtype.substring(0, thisPlusIdx);
-				String thisSubtypeSuffix = this.subtype.substring(thisPlusIdx + 1);
-				String otherSubtypeSuffix = other.subtype.substring(otherPlusIdx + 1);
-				if (thisSubtypeSuffix.equals(otherSubtypeSuffix) && WILDCARD_TYPE.equals(thisSubtypeNoSuffix)) {
+			if (this.isWildcardSubtype()) {
+				// wildcard with suffix, e.g. application/*+xml
+				int thisPlusIdx = this.subtype.indexOf('+');
+				if (thisPlusIdx == -1) {
 					return true;
+				}
+				else {
+					// application/*+xml includes application/soap+xml
+					int otherPlusIdx = other.subtype.indexOf('+');
+					if (otherPlusIdx != -1) {
+						String thisSubtypeNoSuffix = this.subtype.substring(0, thisPlusIdx);
+						String thisSubtypeSuffix = this.subtype.substring(thisPlusIdx + 1);
+						String otherSubtypeSuffix = other.subtype.substring(otherPlusIdx + 1);
+						if (thisSubtypeSuffix.equals(otherSubtypeSuffix) && WILDCARD_TYPE.equals(thisSubtypeNoSuffix)) {
+							return true;
+						}
+					}
 				}
 			}
 		}
@@ -514,13 +532,11 @@ public class MediaType implements Comparable<MediaType> {
 	}
 
 	/**
-	 * Indicates whether this {@code MediaType} is compatible with the given media type.
-	 * <p>
-	 * For instance, {@code text/*} is compatible with {@code text/plain}, {@code text/html}, and vice versa. In effect,
-	 * this method is similar to {@link #includes(MediaType)}, except that it <b>is</b> symmetric.
+	 * Indicate whether this {@code MediaType} is compatible with the given media type.
+	 * <p>For instance, {@code text/*} is compatible with {@code text/plain}, {@code text/html}, and vice versa.
+	 * In effect, this method is similar to {@link #includes(MediaType)}, except that it <b>is</b> symmetric.
 	 * @param other the reference media type with which to compare
-	 * @return <code>true</code> if this media type is compatible with the given media type; <code>false</code>
-	 *         otherwise
+	 * @return {@code true} if this media type is compatible with the given media type; {@code false} otherwise
 	 */
 	public boolean isCompatibleWith(MediaType other) {
 		if (other == null) {
@@ -528,26 +544,61 @@ public class MediaType implements Comparable<MediaType> {
 		}
 		if (isWildcardType() || other.isWildcardType()) {
 			return true;
-		} else if (this.type.equals(other.type)) {
-			if (this.subtype.equals(other.subtype) || this.isWildcardSubtype() || other.isWildcardSubtype()) {
+		}
+		else if (this.type.equals(other.type)) {
+			if (this.subtype.equals(other.subtype)) {
 				return true;
 			}
-			// application/*+xml is compatible with application/soap+xml, and vice-versa
-			int thisPlusIdx = this.subtype.indexOf('+');
-			int otherPlusIdx = other.subtype.indexOf('+');
-			if (thisPlusIdx != -1 && otherPlusIdx != -1) {
-				String thisSubtypeNoSuffix = this.subtype.substring(0, thisPlusIdx);
-				String otherSubtypeNoSuffix = other.subtype.substring(0, otherPlusIdx);
+			// wildcard with suffix? e.g. application/*+xml
+			if (this.isWildcardSubtype() || other.isWildcardSubtype()) {
 
-				String thisSubtypeSuffix = this.subtype.substring(thisPlusIdx + 1);
-				String otherSubtypeSuffix = other.subtype.substring(otherPlusIdx + 1);
+				int thisPlusIdx = this.subtype.indexOf('+');
+				int otherPlusIdx = other.subtype.indexOf('+');
 
-				if (thisSubtypeSuffix.equals(otherSubtypeSuffix) && (WILDCARD_TYPE.equals(thisSubtypeNoSuffix) || WILDCARD_TYPE.equals(otherSubtypeNoSuffix))) {
+				if (thisPlusIdx == -1 && otherPlusIdx == -1) {
 					return true;
+				}
+				else if (thisPlusIdx != -1 && otherPlusIdx != -1) {
+					String thisSubtypeNoSuffix = this.subtype.substring(0, thisPlusIdx);
+					String otherSubtypeNoSuffix = other.subtype.substring(0, otherPlusIdx);
+
+					String thisSubtypeSuffix = this.subtype.substring(thisPlusIdx + 1);
+					String otherSubtypeSuffix = other.subtype.substring(otherPlusIdx + 1);
+
+					if (thisSubtypeSuffix.equals(otherSubtypeSuffix) &&
+							(WILDCARD_TYPE.equals(thisSubtypeNoSuffix) || WILDCARD_TYPE.equals(otherSubtypeNoSuffix))) {
+						return true;
+					}
 				}
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Return a replica of this instance with the quality value of the given MediaType.
+	 * @return the same instance if the given MediaType doesn't have a quality value, or a new one otherwise
+	 */
+	public MediaType copyQualityValue(MediaType mediaType) {
+		if (!mediaType.parameters.containsKey(PARAM_QUALITY_FACTOR)) {
+			return this;
+		}
+		Map<String, String> params = new LinkedHashMap<String, String>(this.parameters);
+		params.put(PARAM_QUALITY_FACTOR, mediaType.parameters.get(PARAM_QUALITY_FACTOR));
+		return new MediaType(this, params);
+	}
+
+	/**
+	 * Return a replica of this instance with its quality value removed.
+	 * @return the same instance if the media type doesn't contain a quality value, or a new one otherwise
+	 */
+	public MediaType removeQualityValue() {
+		if (!this.parameters.containsKey(PARAM_QUALITY_FACTOR)) {
+			return this;
+		}
+		Map<String, String> params = new LinkedHashMap<String, String>(this.parameters);
+		params.remove(PARAM_QUALITY_FACTOR);
+		return new MediaType(this, params);
 	}
 
 	/**
@@ -603,7 +654,8 @@ public class MediaType implements Comparable<MediaType> {
 			return false;
 		}
 		MediaType otherType = (MediaType) other;
-		return (this.type.equalsIgnoreCase(otherType.type) && this.subtype.equalsIgnoreCase(otherType.subtype) && this.parameters.equals(otherType.parameters));
+		return (this.type.equalsIgnoreCase(otherType.type) && this.subtype.equalsIgnoreCase(otherType.subtype) &&
+				this.parameters.equals(otherType.parameters));
 	}
 
 	@Override
@@ -639,7 +691,9 @@ public class MediaType implements Comparable<MediaType> {
 
 
 	/**
-	 * Parse the given String value into a {@code MediaType} object.
+	 * Parse the given String value into a {@code MediaType} object,
+	 * with this method name following the 'valueOf' naming convention
+	 * (as supported by {@link org.springframework.core.convert.ConversionService}.
 	 * @see #parseMediaType(String)
 	 */
 	public static MediaType valueOf(String value) {
@@ -650,7 +704,7 @@ public class MediaType implements Comparable<MediaType> {
 	 * Parse the given String into a single {@code MediaType}.
 	 * @param mediaType the string to parse
 	 * @return the media type
-	 * @throws IllegalArgumentException if the string cannot be parsed
+	 * @throws InvalidMediaTypeException if the string cannot be parsed
 	 */
 	public static MediaType parseMediaType(String mediaType) {
 		Assert.hasLength(mediaType, "'mediaType' must not be empty");
@@ -663,15 +717,15 @@ public class MediaType implements Comparable<MediaType> {
 		}
 		int subIndex = fullType.indexOf('/');
 		if (subIndex == -1) {
-			throw new IllegalArgumentException("\"" + mediaType + "\" does not contain '/'");
+			throw new InvalidMediaTypeException(mediaType, "does not contain '/'");
 		}
 		if (subIndex == fullType.length() - 1) {
-			throw new IllegalArgumentException("\"" + mediaType + "\" does not contain subtype after '/'");
+			throw new InvalidMediaTypeException(mediaType, "does not contain subtype after '/'");
 		}
 		String type = fullType.substring(0, subIndex);
 		String subtype = fullType.substring(subIndex + 1, fullType.length());
 		if (WILDCARD_TYPE.equals(type) && !WILDCARD_TYPE.equals(subtype)) {
-			throw new IllegalArgumentException("A wildcard type is legal only in '*/*' (all media types).");
+			throw new InvalidMediaTypeException(mediaType, "wildcard type is legal only in '*/*' (all media types)");
 		}
 
 		Map<String, String> parameters = null;
@@ -688,14 +742,21 @@ public class MediaType implements Comparable<MediaType> {
 			}
 		}
 
-		return new MediaType(type, subtype, parameters);
+		try {
+			return new MediaType(type, subtype, parameters);
+		}
+		catch (UnsupportedCharsetException ex) {
+			throw new InvalidMediaTypeException(mediaType, "unsupported charset '" + ex.getCharsetName() + "'");
+		}
+		catch (IllegalArgumentException ex) {
+			throw new InvalidMediaTypeException(mediaType, ex.getMessage());
+		}
 	}
 
 
 	/**
 	 * Parse the given, comma-separated string into a list of {@code MediaType} objects.
-	 * <p>
-	 * This method can be used to parse an Accept or Content-Type header.
+	 * <p>This method can be used to parse an Accept or Content-Type header.
 	 * @param mediaTypes the string to parse
 	 * @return the list of media types
 	 * @throws IllegalArgumentException if the string cannot be parsed
@@ -714,8 +775,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Return a string representation of the given list of {@code MediaType} objects.
-	 * <p>
-	 * This method can be used to for an {@code Accept} or {@code Content-Type} header.
+	 * <p>This method can be used to for an {@code Accept} or {@code Content-Type} header.
 	 * @param mediaTypes the string to parse
 	 * @return the list of media types
 	 * @throws IllegalArgumentException if the String cannot be parsed
@@ -734,8 +794,7 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Sorts the given list of {@code MediaType} objects by specificity.
-	 * <p>
-	 * Given two media types:
+	 * <p>Given two media types:
 	 * <ol>
 	 * <li>if either media type has a {@linkplain #isWildcardType() wildcard type}, then the media type without the
 	 * wildcard is ordered before the other.</li>
@@ -743,17 +802,19 @@ public class MediaType implements Comparable<MediaType> {
 	 * remain their current order.</li>
 	 * <li>if either media type has a {@linkplain #isWildcardSubtype() wildcard subtype}, then the media type without
 	 * the wildcard is sorted before the other.</li>
-	 * <li>if the two media types have different {@linkplain #getSubtype() subtypes}, then they are considered equal and
-	 * remain their current order.</li>
-	 * <li>if the two media types have different {@linkplain #getQualityValue() quality value}, then the media type with
-	 * the highest quality value is ordered before the other.</li>
+	 * <li>if the two media types have different {@linkplain #getSubtype() subtypes}, then they are considered equal
+	 * and remain their current order.</li>
+	 * <li>if the two media types have different {@linkplain #getQualityValue() quality value}, then the media type
+	 * with the highest quality value is ordered before the other.</li>
 	 * <li>if the two media types have a different amount of {@linkplain #getParameter(String) parameters}, then the
 	 * media type with the most parameters is ordered before the other.</li>
 	 * </ol>
-	 * <p>
-	 * For example: <blockquote>audio/basic &lt; audio/* &lt; *&#047;*</blockquote> <blockquote>audio/* &lt;
-	 * audio/*;q=0.7; audio/*;q=0.3</blockquote> <blockquote>audio/basic;level=1 &lt; audio/basic</blockquote>
-	 * <blockquote>audio/basic == text/html</blockquote> <blockquote>audio/basic == audio/wave</blockquote>
+	 * <p>For example:
+	 * <blockquote>audio/basic &lt; audio/* &lt; *&#047;*</blockquote>
+	 * <blockquote>audio/* &lt; audio/*;q=0.7; audio/*;q=0.3</blockquote>
+	 * <blockquote>audio/basic;level=1 &lt; audio/basic</blockquote>
+	 * <blockquote>audio/basic == text/html</blockquote>
+	 * <blockquote>audio/basic == audio/wave</blockquote>
 	 * @param mediaTypes the list of media types to be sorted
 	 * @see <a href="http://tools.ietf.org/html/rfc2616#section-14.1">HTTP 1.1, section 14.1</a>
 	 */
@@ -766,19 +827,18 @@ public class MediaType implements Comparable<MediaType> {
 
 	/**
 	 * Sorts the given list of {@code MediaType} objects by quality value.
-	 * <p>
-	 * Given two media types:
+	 * <p>Given two media types:
 	 * <ol>
-	 * <li>if the two media types have different {@linkplain #getQualityValue() quality value}, then the media type with
-	 * the highest quality value is ordered before the other.</li>
+	 * <li>if the two media types have different {@linkplain #getQualityValue() quality value}, then the media type
+	 * with the highest quality value is ordered before the other.</li>
 	 * <li>if either media type has a {@linkplain #isWildcardType() wildcard type}, then the media type without the
 	 * wildcard is ordered before the other.</li>
 	 * <li>if the two media types have different {@linkplain #getType() types}, then they are considered equal and
 	 * remain their current order.</li>
 	 * <li>if either media type has a {@linkplain #isWildcardSubtype() wildcard subtype}, then the media type without
 	 * the wildcard is sorted before the other.</li>
-	 * <li>if the two media types have different {@linkplain #getSubtype() subtypes}, then they are considered equal and
-	 * remain their current order.</li>
+	 * <li>if the two media types have different {@linkplain #getSubtype() subtypes}, then they are considered equal
+	 * and remain their current order.</li>
 	 * <li>if the two media types have a different amount of {@linkplain #getParameter(String) parameters}, then the
 	 * media type with the most parameters is ordered before the other.</li>
 	 * </ol>
@@ -792,6 +852,20 @@ public class MediaType implements Comparable<MediaType> {
 		}
 	}
 
+	/**
+	 * Sorts the given list of {@code MediaType} objects by specificity as the
+	 * primary criteria and quality value the secondary.
+	 * @see MediaType#sortBySpecificity(List)
+	 * @see MediaType#sortByQualityValue(List)
+	 */
+	public static void sortBySpecificityAndQuality(List<MediaType> mediaTypes) {
+		Assert.notNull(mediaTypes, "'mediaTypes' must not be null");
+		if (mediaTypes.size() > 1) {
+			Collections.sort(mediaTypes, new CompoundComparator<MediaType>(
+					MediaType.SPECIFICITY_COMPARATOR, MediaType.QUALITY_VALUE_COMPARATOR));
+		}
+	}
+
 
 	/**
 	 * Comparator used by {@link #sortBySpecificity(List)}.
@@ -801,28 +875,34 @@ public class MediaType implements Comparable<MediaType> {
 		public int compare(MediaType mediaType1, MediaType mediaType2) {
 			if (mediaType1.isWildcardType() && !mediaType2.isWildcardType()) { // */* < audio/*
 				return 1;
-			} else if (mediaType2.isWildcardType() && !mediaType1.isWildcardType()) { // audio/* > */*
+			}
+			else if (mediaType2.isWildcardType() && !mediaType1.isWildcardType()) { // audio/* > */*
 				return -1;
-			} else if (!mediaType1.getType().equals(mediaType2.getType())) { // audio/basic == text/html
+			}
+			else if (!mediaType1.getType().equals(mediaType2.getType())) { // audio/basic == text/html
 				return 0;
-			} else { // mediaType1.getType().equals(mediaType2.getType())
+			}
+			else { // mediaType1.getType().equals(mediaType2.getType())
 				if (mediaType1.isWildcardSubtype() && !mediaType2.isWildcardSubtype()) { // audio/* < audio/basic
 					return 1;
-				} else if (mediaType2.isWildcardSubtype() && !mediaType1.isWildcardSubtype()) { // audio/basic > audio/*
+				}
+				else if (mediaType2.isWildcardSubtype() && !mediaType1.isWildcardSubtype()) { // audio/basic > audio/*
 					return -1;
-				} else if (!mediaType1.getSubtype().equals(mediaType2.getSubtype())) { // audio/basic == audio/wave
+				}
+				else if (!mediaType1.getSubtype().equals(mediaType2.getSubtype())) { // audio/basic == audio/wave
 					return 0;
-				} else { // mediaType2.getSubtype().equals(mediaType2.getSubtype())
+				}
+				else { // mediaType2.getSubtype().equals(mediaType2.getSubtype())
 					double quality1 = mediaType1.getQualityValue();
 					double quality2 = mediaType2.getQualityValue();
 					int qualityComparison = Double.compare(quality2, quality1);
 					if (qualityComparison != 0) {
-						return qualityComparison; // audio/*;q=0.7 < audio/*;q=0.3
-					} else {
+						return qualityComparison;  // audio/*;q=0.7 < audio/*;q=0.3
+					}
+					else {
 						int paramsSize1 = mediaType1.parameters.size();
 						int paramsSize2 = mediaType2.parameters.size();
-						return (paramsSize2 < paramsSize1 ? -1 : (paramsSize2 == paramsSize1 ? 0 : 1)); // audio/basic;level=1
-																										// < audio/basic
+						return (paramsSize2 < paramsSize1 ? -1 : (paramsSize2 == paramsSize1 ? 0 : 1)); // audio/basic;level=1 < audio/basic
 					}
 				}
 			}
@@ -840,25 +920,31 @@ public class MediaType implements Comparable<MediaType> {
 			double quality2 = mediaType2.getQualityValue();
 			int qualityComparison = Double.compare(quality2, quality1);
 			if (qualityComparison != 0) {
-				return qualityComparison; // audio/*;q=0.7 < audio/*;q=0.3
-			} else if (mediaType1.isWildcardType() && !mediaType2.isWildcardType()) { // */* < audio/*
+				return qualityComparison;  // audio/*;q=0.7 < audio/*;q=0.3
+			}
+			else if (mediaType1.isWildcardType() && !mediaType2.isWildcardType()) { // */* < audio/*
 				return 1;
-			} else if (mediaType2.isWildcardType() && !mediaType1.isWildcardType()) { // audio/* > */*
+			}
+			else if (mediaType2.isWildcardType() && !mediaType1.isWildcardType()) { // audio/* > */*
 				return -1;
-			} else if (!mediaType1.getType().equals(mediaType2.getType())) { // audio/basic == text/html
+			}
+			else if (!mediaType1.getType().equals(mediaType2.getType())) { // audio/basic == text/html
 				return 0;
-			} else { // mediaType1.getType().equals(mediaType2.getType())
+			}
+			else { // mediaType1.getType().equals(mediaType2.getType())
 				if (mediaType1.isWildcardSubtype() && !mediaType2.isWildcardSubtype()) { // audio/* < audio/basic
 					return 1;
-				} else if (mediaType2.isWildcardSubtype() && !mediaType1.isWildcardSubtype()) { // audio/basic > audio/*
+				}
+				else if (mediaType2.isWildcardSubtype() && !mediaType1.isWildcardSubtype()) { // audio/basic > audio/*
 					return -1;
-				} else if (!mediaType1.getSubtype().equals(mediaType2.getSubtype())) { // audio/basic == audio/wave
+				}
+				else if (!mediaType1.getSubtype().equals(mediaType2.getSubtype())) { // audio/basic == audio/wave
 					return 0;
-				} else {
+				}
+				else {
 					int paramsSize1 = mediaType1.parameters.size();
 					int paramsSize2 = mediaType2.parameters.size();
-					return (paramsSize2 < paramsSize1 ? -1 : (paramsSize2 == paramsSize1 ? 0 : 1)); // audio/basic;level=1
-																									// < audio/basic
+					return (paramsSize2 < paramsSize1 ? -1 : (paramsSize2 == paramsSize1 ? 0 : 1)); // audio/basic;level=1 < audio/basic
 				}
 			}
 		}

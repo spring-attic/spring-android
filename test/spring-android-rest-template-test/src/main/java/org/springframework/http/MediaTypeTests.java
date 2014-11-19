@@ -24,6 +24,10 @@ import java.util.List;
 import java.util.Random;
 
 import junit.framework.TestCase;
+
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
+
 import android.test.suitebuilder.annotation.SmallTest;
 
 /**
@@ -57,7 +61,7 @@ public class MediaTypeTests extends TestCase {
 		assertTrue(applicationWildcardXml.includes(applicationSoapXml));
 		assertFalse(applicationSoapXml.includes(applicationWildcardXml));
 	}
-	
+
 	@SmallTest
 	public void testIsCompatible() throws Exception {
 		MediaType textPlain = MediaType.TEXT_PLAIN;
@@ -92,26 +96,22 @@ public class MediaTypeTests extends TestCase {
 
 	@SmallTest
 	public void testSlashInType() {
-		boolean success = false;
 		try {
 			new MediaType("text/plain");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testSlashInSubtype() {
-		boolean success = false;
 		try {
 			new MediaType("text", "/");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
-	
+
 	@SmallTest
 	public void testGetDefaultQualityValue() {
 		MediaType mediaType = new MediaType("text", "plain");
@@ -129,122 +129,101 @@ public class MediaTypeTests extends TestCase {
 
 	@SmallTest
 	public void testParseMediaTypeNoSubtype() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testParseMediaTypeNoSubtypeSlash() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio/");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
+	@SmallTest
 	public void testParseMediaTypeTypeRange() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("*/json");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testParseMediaTypeIllegalType() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio(/basic");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testParseMediaTypeIllegalSubtype() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio/basic)");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testParseMediaTypeEmptyParameterAttribute() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio/*;=value");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testParseMediaTypeEmptyParameterValue() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio/*;attr=");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testParseMediaTypeIllegalParameterAttribute() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio/*;attr<=value");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testParseMediaTypeIllegalParameterValue() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio/*;attr=v>alue");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testParseMediaTypeIllegalQualityFactor() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio/basic;q=1.1");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
 	public void testParseMediaTypeIllegalCharset() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("text/html; charset=foo-bar");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
@@ -254,13 +233,11 @@ public class MediaTypeTests extends TestCase {
 
 	@SmallTest
 	public void testParseMediaTypeIllegalQuotedParameterValue() {
-		boolean success = false;
 		try {
 			MediaType.parseMediaType("audio/*;attr=\"");
+			fail("Expected IllegalArgumentException");
 		} catch (IllegalArgumentException e) {
-			success = true;
 		}
-		assertTrue("Expected IllegalArgumentException", success);
 	}
 
 	@SmallTest
@@ -382,6 +359,7 @@ public class MediaTypeTests extends TestCase {
 		MediaType audio07 = new MediaType("audio", "*", 0.7);
 		MediaType audioBasicLevel = new MediaType("audio", "basic", Collections.singletonMap("level", "1"));
 		MediaType textHtml = new MediaType("text", "html");
+		MediaType allXml = new MediaType("application", "*+xml");
 		MediaType all = MediaType.ALL;
 
 		Comparator<MediaType> comp = MediaType.SPECIFICITY_COMPARATOR;
@@ -397,9 +375,11 @@ public class MediaTypeTests extends TestCase {
 		assertTrue("Invalid comparison result", comp.compare(audioBasic, audio) < 0);
 		assertTrue("Invalid comparison result", comp.compare(audioBasic, all) < 0);
 		assertTrue("Invalid comparison result", comp.compare(audio, all) < 0);
+		assertTrue("Invalid comparison result", comp.compare(MediaType.APPLICATION_XHTML_XML, allXml) < 0);
 
 		// unspecific to specific
 		assertTrue("Invalid comparison result", comp.compare(audio, audioBasic) > 0);
+		assertTrue("Invalid comparison result", comp.compare(allXml, MediaType.APPLICATION_XHTML_XML) > 0);
 		assertTrue("Invalid comparison result", comp.compare(all, audioBasic) > 0);
 		assertTrue("Invalid comparison result", comp.compare(all, audio) > 0);
 
@@ -483,6 +463,7 @@ public class MediaTypeTests extends TestCase {
 		MediaType audio07 = new MediaType("audio", "*", 0.7);
 		MediaType audioBasicLevel = new MediaType("audio", "basic", Collections.singletonMap("level", "1"));
 		MediaType textHtml = new MediaType("text", "html");
+		MediaType allXml = new MediaType("application", "*+xml");
 		MediaType all = MediaType.ALL;
 
 		Comparator<MediaType> comp = MediaType.QUALITY_VALUE_COMPARATOR;
@@ -498,11 +479,13 @@ public class MediaTypeTests extends TestCase {
 		assertTrue("Invalid comparison result", comp.compare(audioBasic, audio) < 0);
 		assertTrue("Invalid comparison result", comp.compare(audioBasic, all) < 0);
 		assertTrue("Invalid comparison result", comp.compare(audio, all) < 0);
+		assertTrue("Invalid comparison result", comp.compare(MediaType.APPLICATION_XHTML_XML, allXml) < 0);
 
 		// unspecific to specific
 		assertTrue("Invalid comparison result", comp.compare(audio, audioBasic) > 0);
 		assertTrue("Invalid comparison result", comp.compare(all, audioBasic) > 0);
 		assertTrue("Invalid comparison result", comp.compare(all, audio) > 0);
+		assertTrue("Invalid comparison result", comp.compare(allXml, MediaType.APPLICATION_XHTML_XML) > 0);
 
 		// qualifiers
 		assertTrue("Invalid comparison result", comp.compare(audio, audio07) < 0);
@@ -554,7 +537,7 @@ public class MediaTypeTests extends TestCase {
 			}
 		}
 	}
-	
+
 	@SmallTest
 	public void testSortByQualityUnrelated() {
 		MediaType audioBasic = new MediaType("audio", "basic");
@@ -574,7 +557,14 @@ public class MediaTypeTests extends TestCase {
 		}
 	}
 
-	
+	@SmallTest
+	public void testWithConversionService() {
+		ConversionService conversionService = new DefaultConversionService();
+		assertTrue(conversionService.canConvert(String.class, MediaType.class));
+		MediaType mediaType = MediaType.parseMediaType("application/xml");
+		assertEquals(mediaType, conversionService.convert("application/xml", MediaType.class));
+	}
+
 	@SmallTest
 	public void testIsConcrete() {
 		assertTrue("text/plain not concrete", MediaType.TEXT_PLAIN.isConcrete());
