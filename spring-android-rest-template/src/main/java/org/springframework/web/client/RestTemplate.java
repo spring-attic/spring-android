@@ -46,7 +46,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
 import org.springframework.http.converter.xml.SimpleXmlHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
-import org.springframework.http.converter.xml.XmlAwareFormHttpMessageConverter;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.util.UriTemplate;
@@ -120,7 +119,7 @@ import android.util.Log;
  * <tr><td>{@link ResourceHttpMessageConverter}</td></tr>
  * <tr><td>{@link SourceHttpMessageConverter}</td><td rowspan=2 valign=top>Included on Android 2.2 (Froyo) or newer, 
  * where {@link javax.xml.transform.Source} is available.</td></tr>
- * <tr><td>{@link XmlAwareFormHttpMessageConverter}</td></tr>
+ * <tr><td>{@link AllEncompassingFormHttpMessageConverter}</td></tr>
  * <tr><td>{@link FormHttpMessageConverter}</td><td>Included on Android 2.1 (Eclair) and older.</td></tr>
  * <tr><td>{@link SimpleXmlHttpMessageConverter}</td><td>Included if the Simple XML serializer is present.</td></tr>
  * <tr><td>{@link MappingJackson2HttpMessageConverter}</td><td>Included if the Jackson 2.x JSON processor is present.</td></tr>
