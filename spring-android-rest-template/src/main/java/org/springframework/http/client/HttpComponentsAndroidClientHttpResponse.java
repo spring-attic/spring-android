@@ -25,24 +25,25 @@ import org.apache.http.HttpResponse;
 import org.springframework.http.HttpHeaders;
 
 /**
- * {@link org.springframework.http.client.ClientHttpResponse} implementation that uses Apache HttpClient 4.0 to execute
- * requests.
+ * {@link org.springframework.http.client.ClientHttpResponse} implementation that uses
+ * Android native Apache HttpClient 4.0 to execute requests.
  * 
- * <p>
- * Created via the {@link HttpComponentsClientHttpRequest}.
+ * <p>Created via the {@link HttpComponentsAndroidClientHttpRequest}.
  * 
  * @author Oleg Kalnichevski
  * @author Roy Clarkson
- * @since 1.0
- * @see HttpComponentsClientHttpRequest#execute()
+ * @since 2.0
+ * @see HttpComponentsAndroidClientHttpRequest#execute()
+ * @deprecated
  */
-final class HttpComponentsClientHttpResponse extends AbstractClientHttpResponse {
+@Deprecated
+final class HttpComponentsAndroidClientHttpResponse extends AbstractClientHttpResponse {
 
 	private final HttpResponse httpResponse;
 
 	private HttpHeaders headers;
 
-	HttpComponentsClientHttpResponse(HttpResponse httpResponse) {
+	HttpComponentsAndroidClientHttpResponse(HttpResponse httpResponse) {
 		this.httpResponse = httpResponse;
 	}
 

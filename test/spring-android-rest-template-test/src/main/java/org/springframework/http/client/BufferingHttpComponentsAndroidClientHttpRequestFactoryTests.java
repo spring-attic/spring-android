@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package org.springframework.web.client;
+package org.springframework.http.client;
 
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+public class BufferingHttpComponentsAndroidClientHttpRequestFactoryTests extends BufferingAbstractClientHttpRequestFactoryTests {
 
-/**
- * @author Roy Clarkson
- */
-public class RestTemplateIntegrationHttpComponentsClientTests extends AbstractRestTemplateIntegrationTests {
-	
 	@Override
-	protected RestTemplate getRestTemplate() {
-		return new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+	protected ClientHttpRequestFactory createRequestFactory() {
+		return new BufferingClientHttpRequestFactory(new HttpComponentsAndroidClientHttpRequestFactory());
 	}
 
 }

@@ -179,7 +179,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	 * Create a new instance of the {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
 	 * @param requestFactory HTTP request factory to use
 	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
-	 * @see org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+	 * @see org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory
 	 * @see org.springframework.http.client.OkHttpRequestFactory
 	 */
 	public RestTemplate(ClientHttpRequestFactory requestFactory) {
@@ -197,7 +197,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	 * @param requestFactory HTTP request factory to use
 	 * @see HttpMessageConverter
 	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
-	 * @see org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+	 * @see org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory
 	 * @see org.springframework.http.client.OkHttpRequestFactory
 	 * @deprecated in favor of {@link #RestTemplate(List)} and {@link #setRequestFactory(ClientHttpRequestFactory)}
 	 */

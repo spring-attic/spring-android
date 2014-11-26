@@ -47,18 +47,21 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
 
 /**
- * {@link org.springframework.http.client.ClientHttpRequestFactory} implementation that uses <a
- * href="http://hc.apache.org/httpcomponents-client-ga/httpclient/">Http Components HttpClient</a> to create requests.
+ * {@link org.springframework.http.client.ClientHttpRequestFactory} implementation that
+ * uses Android native
+ * <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/">Apache
+ * HttpClient 4.0</a> to create requests.
  * 
- * <p>
- * Allows to use a pre-configured {@link HttpClient} instance - potentially with authentication, HTTP connection
+ * <p>Allows to use a pre-configured {@link HttpClient} instance - potentially with authentication, HTTP connection
  * pooling, etc.
  * 
  * @author Oleg Kalnichevski
  * @author Roy Clarkson
- * @since 1.0
+ * @since 2.0
+ * @deprecated
  */
-public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequestFactory, DisposableBean {
+@Deprecated
+public class HttpComponentsAndroidClientHttpRequestFactory implements ClientHttpRequestFactory, DisposableBean {
 
 	private static final int DEFAULT_MAX_TOTAL_CONNECTIONS = 100;
 
@@ -69,10 +72,10 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
 	private HttpClient httpClient;
 
 	/**
-	 * Create a new instance of the {@code HttpComponentsClientHttpRequestFactory} with a default {@link HttpClient}
+	 * Create a new instance of the {@code HttpComponentsAndroidClientHttpRequestFactory} with a default {@link HttpClient}
 	 * that uses a default {@link ThreadSafeClientConnManager}.
 	 */
-	public HttpComponentsClientHttpRequestFactory() {
+	public HttpComponentsAndroidClientHttpRequestFactory() {
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
 		schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 		schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
@@ -87,10 +90,10 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
 	}
 
 	/**
-	 * Create a new instance of the HttpComponentsClientHttpRequestFactory with the given {@link HttpClient} instance.
+	 * Create a new instance of the HttpComponentsAndroidClientHttpRequestFactory with the given {@link HttpClient} instance.
 	 * @param httpClient the HttpClient instance to use for this factory
 	 */
-	public HttpComponentsClientHttpRequestFactory(HttpClient httpClient) {
+	public HttpComponentsAndroidClientHttpRequestFactory(HttpClient httpClient) {
 		Assert.notNull(httpClient, "HttpClient must not be null");
 		this.httpClient = httpClient;
 	}
@@ -131,7 +134,7 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
 	public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) throws IOException {
 		HttpUriRequest httpRequest = createHttpRequest(httpMethod, uri);
 		postProcessHttpRequest(httpRequest);
-		return new HttpComponentsClientHttpRequest(getHttpClient(), httpRequest, createHttpContext(httpMethod, uri));
+		return new HttpComponentsAndroidClientHttpRequest(getHttpClient(), httpRequest, createHttpContext(httpMethod, uri));
 	}
 
 	/**
@@ -164,7 +167,7 @@ public class HttpComponentsClientHttpRequestFactory implements ClientHttpRequest
 
 	/**
 	 * Template method that allows for manipulating the {@link HttpUriRequest} before it is returned as part of a
-	 * {@link HttpComponentsClientHttpRequest}.
+	 * {@link HttpComponentsAndroidClientHttpRequest}.
 	 * <p>
 	 * The default implementation is empty.
 	 * 

@@ -33,18 +33,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 
 /**
- * {@link org.springframework.http.client.ClientHttpRequest} implementation that uses Apache HttpClient 4.0 to execute
- * requests.
+ * {@link org.springframework.http.client.ClientHttpRequest} implementation that uses
+ * Android native Apache HttpClient 4.0 to execute requests.
  * 
- * <p>
- * Created via the {@link HttpComponentsClientHttpRequestFactory}.
+ * <p>Created via the {@link HttpComponentsAndroidClientHttpRequestFactory}.
  * 
  * @author Oleg Kalnichevski
  * @author Roy Clarkson
- * @since 1.0
- * @see HttpComponentsClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
+ * @since 2.0
+ * @see HttpComponentsAndroidClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
+ * @deprecated
  */
-final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpRequest {
+@Deprecated
+final class HttpComponentsAndroidClientHttpRequest extends AbstractBufferingClientHttpRequest {
 
 	private final HttpClient httpClient;
 
@@ -52,7 +53,7 @@ final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpR
 
 	private final HttpContext httpContext;
 
-	public HttpComponentsClientHttpRequest(HttpClient httpClient, HttpUriRequest httpRequest, HttpContext httpContext) {
+	public HttpComponentsAndroidClientHttpRequest(HttpClient httpClient, HttpUriRequest httpRequest, HttpContext httpContext) {
 		this.httpClient = httpClient;
 		this.httpRequest = httpRequest;
 		this.httpContext = httpContext;
@@ -82,7 +83,7 @@ final class HttpComponentsClientHttpRequest extends AbstractBufferingClientHttpR
 			entityEnclosingReq.setEntity(requestEntity);
 		}
 		HttpResponse httpResponse = httpClient.execute(this.httpRequest, this.httpContext);
-		return new HttpComponentsClientHttpResponse(httpResponse);
+		return new HttpComponentsAndroidClientHttpResponse(httpResponse);
 	}
 
 }

@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-package org.springframework.http.client;
+package org.springframework.web.client;
 
-import org.springframework.http.HttpMethod;
+import org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory;
 
-public class HttpComponentsClientHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
-
+/**
+ * @author Roy Clarkson
+ */
+public class RestTemplateIntegrationHttpComponentsAndroidClientTests extends AbstractRestTemplateIntegrationTests {
+	
 	@Override
-	protected ClientHttpRequestFactory createRequestFactory() {
-		return new HttpComponentsClientHttpRequestFactory();
-	}
-
-	@Override
-	public void testHttpMethods() throws Exception {
-		super.testHttpMethods();
-		try {
-			assertHttpMethod("patch", HttpMethod.PATCH);
-		}
-		catch (IllegalArgumentException ex) {
-			// The native Android HttpComponents client does not support HTTP PATCH
-		}
+	protected RestTemplate getRestTemplate() {
+		return new RestTemplate(new HttpComponentsAndroidClientHttpRequestFactory());
 	}
 
 }

@@ -22,7 +22,7 @@ import java.net.URI;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Assert;
 
@@ -52,7 +52,7 @@ public abstract class HttpAccessor {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			this.requestFactory = new SimpleClientHttpRequestFactory();
 		} else {
-			this.requestFactory = new HttpComponentsClientHttpRequestFactory();
+			this.requestFactory = new HttpComponentsAndroidClientHttpRequestFactory();
 		}
 	}
 

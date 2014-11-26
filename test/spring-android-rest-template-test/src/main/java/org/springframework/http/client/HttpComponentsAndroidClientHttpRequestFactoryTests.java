@@ -16,11 +16,24 @@
 
 package org.springframework.http.client;
 
-public class BufferingHttpComponentsClientHttpRequestFactoryTests extends BufferingAbstractClientHttpRequestFactoryTests {
+import org.springframework.http.HttpMethod;
+
+public class HttpComponentsAndroidClientHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
 
 	@Override
 	protected ClientHttpRequestFactory createRequestFactory() {
-		return new BufferingClientHttpRequestFactory(new HttpComponentsClientHttpRequestFactory());
+		return new HttpComponentsAndroidClientHttpRequestFactory();
+	}
+
+	@Override
+	public void testHttpMethods() throws Exception {
+		super.testHttpMethods();
+		try {
+			assertHttpMethod("patch", HttpMethod.PATCH);
+		}
+		catch (IllegalArgumentException ex) {
+			// The native Android HttpComponents client does not support HTTP PATCH
+		}
 	}
 
 }
