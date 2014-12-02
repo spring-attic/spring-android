@@ -30,9 +30,8 @@ import org.springframework.util.StreamUtils;
 /**
  * Implementation of {@link HttpMessageConverter} that can read and write {@link Resource Resources}.
  *
- * <p>
- * By default, this converter can read all media types. {@code application/octet-stream} is used to determine the
- * {@code Content-Type} of written resources.
+ * <p>By default, this converter can read all media types. Written resources use
+ * {@code application/octet-stream} for the {@code Content-Type}.
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson

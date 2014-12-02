@@ -17,11 +17,17 @@
 package org.springframework.http.converter;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import junit.framework.TestCase;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
+import org.springframework.core.io.AssetResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.MockHttpInputMessage;
 import org.springframework.http.MockHttpOutputMessage;
@@ -30,13 +36,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import android.os.Build;
+import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 /** 
  * @author Arjen Poutsma
  * @author Roy Clarkson 
  */
-public class FormHttpMessageConverterTests extends TestCase {
+public class FormHttpMessageConverterTests extends AndroidTestCase {
 	
 	private static final boolean javaxXmlTransformPresent = 
 		(Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO);
@@ -69,6 +76,7 @@ public class FormHttpMessageConverterTests extends TestCase {
 	public void testCanWrite() {
 		assertTrue(converter.canWrite(MultiValueMap.class, new MediaType("application", "x-www-form-urlencoded")));
 		assertTrue(converter.canWrite(MultiValueMap.class, new MediaType("multipart", "form-data")));
+		assertTrue(converter.canWrite(MultiValueMap.class, MediaType.valueOf("multipart/form-data; charset=utf-8")));
 		assertTrue(converter.canWrite(MultiValueMap.class, MediaType.ALL));
 	}
 
@@ -106,60 +114,60 @@ public class FormHttpMessageConverterTests extends TestCase {
 				outputMessage.getHeaders().getContentLength());
 	}
 
-//	@SmallTest
-//	public void testWriteMultipart() throws Exception {
-//		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-//		parts.add("name 1", "value 1");
-//		parts.add("name 2", "value 2+1");
-//		parts.add("name 2", "value 2+2");
-//		parts.add("name 3", null);
-//
-//		Resource logo = new ClassPathResource("/org/springframework/http/converter/logo.jpg");
-//		parts.add("logo", logo);
-//		Source xml = new StreamSource(new StringReader("<root><child/></root>"));
-//		HttpHeaders entityHeaders = new HttpHeaders();
-//		entityHeaders.setContentType(MediaType.TEXT_XML);
-//		HttpEntity<Source> entity = new HttpEntity<Source>(xml, entityHeaders);
-//		parts.add("xml", entity);
-//
-//		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
-//		converter.write(parts, MediaType.MULTIPART_FORM_DATA, outputMessage);
-//
-//		final MediaType contentType = outputMessage.getHeaders().getContentType();
-//		assertNotNull("No boundary found", contentType.getParameter("boundary"));
-//
+	@SmallTest
+	public void testWriteMultipart() throws Exception {
+		MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+		parts.add("name 1", "value 1");
+		parts.add("name 2", "value 2+1");
+		parts.add("name 2", "value 2+2");
+		parts.add("name 3", null);
+
+		Resource logo = new AssetResource(getContext().getAssets(), "logo.jpg");
+		parts.add("logo", logo);
+		Source xml = new StreamSource(new StringReader("<root><child/></root>"));
+		HttpHeaders entityHeaders = new HttpHeaders();
+		entityHeaders.setContentType(MediaType.TEXT_XML);
+		HttpEntity<Source> entity = new HttpEntity<Source>(xml, entityHeaders);
+		parts.add("xml", entity);
+
+		MockHttpOutputMessage outputMessage = new MockHttpOutputMessage();
+		converter.write(parts, new MediaType("multipart", "form-data", Charset.forName("UTF-8")), outputMessage);
+
+		final MediaType contentType = outputMessage.getHeaders().getContentType();
+		assertNotNull("No boundary found", contentType.getParameter("boundary"));
+
 //		// see if Commons FileUpload can read what we wrote
 //		FileItemFactory fileItemFactory = new DiskFileItemFactory();
 //		FileUpload fileUpload = new FileUpload(fileItemFactory);
-//		List items = fileUpload.parseRequest(new MockHttpOutputMessageRequestContext(outputMessage));
+//		List<FileItem> items = fileUpload.parseRequest(new MockHttpOutputMessageRequestContext(outputMessage));
 //		assertEquals(5, items.size());
-//		FileItem item = (FileItem) items.get(0);
+//		FileItem item = items.get(0);
 //		assertTrue(item.isFormField());
 //		assertEquals("name 1", item.getFieldName());
 //		assertEquals("value 1", item.getString());
 //
-//		item = (FileItem) items.get(1);
+//		item = items.get(1);
 //		assertTrue(item.isFormField());
 //		assertEquals("name 2", item.getFieldName());
 //		assertEquals("value 2+1", item.getString());
 //
-//		item = (FileItem) items.get(2);
+//		item = items.get(2);
 //		assertTrue(item.isFormField());
 //		assertEquals("name 2", item.getFieldName());
 //		assertEquals("value 2+2", item.getString());
 //
-//		item = (FileItem) items.get(3);
+//		item = items.get(3);
 //		assertFalse(item.isFormField());
 //		assertEquals("logo", item.getFieldName());
 //		assertEquals("logo.jpg", item.getName());
 //		assertEquals("image/jpeg", item.getContentType());
 //		assertEquals(logo.getFile().length(), item.getSize());
 //
-//		item = (FileItem) items.get(4);
+//		item = items.get(4);
 //		assertEquals("xml", item.getFieldName());
 //		assertEquals("text/xml", item.getContentType());
 //		verify(outputMessage.getBody(), never()).close();
-//	}
+	}
 
 //	private static class MockHttpOutputMessageRequestContext implements RequestContext {
 //
