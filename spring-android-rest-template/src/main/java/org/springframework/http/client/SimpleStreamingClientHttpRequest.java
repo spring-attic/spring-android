@@ -28,11 +28,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.StreamUtils;
 
-import android.os.Build;
-
 /**
- * {@link ClientHttpRequest} implementation that uses standard J2SE facilities to execute streaming requests.
- * Created via the {@link SimpleClientHttpRequestFactory}.
+ * {@link ClientHttpRequest} implementation that uses standard J2SE facilities to
+ * execute streaming requests. Created via the {@link SimpleClientHttpRequestFactory}.
  *
  * @author Arjen Poutsma
  * @author Roy Clarkson
@@ -40,8 +38,6 @@ import android.os.Build;
  * @see SimpleClientHttpRequestFactory#createRequest(java.net.URI, HttpMethod)
  */
 final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
-
-	private static final Boolean olderThanFroyo = (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO);
 
 	private final HttpURLConnection connection;
 
@@ -51,11 +47,15 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 
 	private final boolean outputStreaming;
 
+	private final boolean reuseConnection;
 
-	SimpleStreamingClientHttpRequest(HttpURLConnection connection, int chunkSize, boolean outputStreaming) {
+
+	SimpleStreamingClientHttpRequest(HttpURLConnection connection, int chunkSize,
+									 boolean outputStreaming, boolean reuseConnection) {
 		this.connection = connection;
 		this.chunkSize = chunkSize;
 		this.outputStreaming = outputStreaming;
+		this.reuseConnection = reuseConnection;
 	}
 
 
@@ -77,12 +77,15 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 		if (this.body == null) {
 			if (this.outputStreaming) {
 				int contentLength = (int) headers.getContentLength();
-				if (contentLength >= 0 && !olderThanFroyo) {
+				if (contentLength >= 0) {
 					this.connection.setFixedLengthStreamingMode(contentLength);
 				}
 				else {
 					this.connection.setChunkedStreamingMode(this.chunkSize);
 				}
+			}
+			if (this.reuseConnection == false) {
+				headers.setConnection("close");
 			}
 			writeHeaders(headers);
 			this.connection.connect();
@@ -95,19 +98,9 @@ final class SimpleStreamingClientHttpRequest extends AbstractClientHttpRequest {
 		for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
 			String headerName = entry.getKey();
 			for (String headerValue : entry.getValue()) {
-				if (shouldAllowConnectionReuse(headerName, headerValue)) {
-					this.connection.addRequestProperty(headerName, headerValue);
-				}
+				this.connection.addRequestProperty(headerName, headerValue);
 			}
 		}
-	}
-
-	private boolean shouldAllowConnectionReuse(String headerName, String headerValue) {
-		// Bugs with reusing connections in Android versions older than Froyo (2.2)
-		if (olderThanFroyo && headerName.equals("Connection") && headerValue.equals("Keep-Alive")) {
-			return false;
-		}
-		return true;
 	}
 
 	@Override
