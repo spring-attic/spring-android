@@ -105,17 +105,11 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		
 	@SmallTest
 	public void testReadSimpleNonAnnotated() throws IOException {
-		boolean success = false;
-		try {
-			String body = "<root><string>Example message</string><number>123</number></root>";
-			MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes(UTF_8.displayName()));
-			SimpleNonAnnotatedObject result = (SimpleNonAnnotatedObject) converter.read(SimpleNonAnnotatedObject.class, inputMessage);
-			assertEquals("Invalid result", "Example message", result.getString());
-			assertEquals("Invalid result", 123, result.getNumber());
-		} catch (HttpMessageNotReadableException e) {
-			success = true;
-		}
-		assertTrue(success);
+		String body = "<root><string>Example message</string><number>123</number></root>";
+		MockHttpInputMessage inputMessage = new MockHttpInputMessage(body.getBytes(UTF_8.displayName()));
+		SimpleNonAnnotatedObject result = (SimpleNonAnnotatedObject) converter.read(SimpleNonAnnotatedObject.class, inputMessage);
+		assertEquals("Invalid result", "Example message", result.getString());
+		assertEquals("Invalid result", 123, result.getNumber());
 	}
 	
 	@SmallTest
