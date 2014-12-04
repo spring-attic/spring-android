@@ -39,9 +39,9 @@ import android.test.suitebuilder.annotation.SmallTest;
 public class SimpleXmlHttpMessageConverterTests extends TestCase {
 
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
-	
+
 	private static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
-	
+
 	private SimpleXmlHttpMessageConverter converter;
 
 	@Override
@@ -49,32 +49,32 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		super.setUp();
 		this.converter = new SimpleXmlHttpMessageConverter();
 	}
-	
+
 	@Override
 	public void tearDown() {
 		converter = null;
 	}
-		
+
 	@SmallTest
 	public void testCanRead() {
 		assertTrue("Converter does not support reading @Root", converter.canRead(SimpleObject.class, new MediaType("application", "xml")));
 		assertTrue("Converter does not support reading @Root", converter.canRead(SimpleObject.class, new MediaType("text", "xml")));
 		assertTrue("Converter does not support reading @Root", converter.canRead(SimpleObject.class, new MediaType("application", "*+xml")));
 	}
-	
+
 	@SmallTest
 	public void testCanWrite() {
 		assertTrue("Converter does not support writing @Root", converter.canWrite(SimpleObject.class, new MediaType("application", "xml")));
 		assertTrue("Converter does not support writing @Root", converter.canWrite(SimpleObject.class, new MediaType("text", "xml")));
 		assertTrue("Converter does not support writing @Root", converter.canWrite(SimpleObject.class, new MediaType("application", "*+xml")));
 	}
-	
+
 	@SmallTest
 	public void testCanReadNoRootAnnotation() {
 		// @Root annotation not required for reading
 		assertTrue("Converter does not support reading @Root", converter.canRead(SimpleNoRootAnnotationObject.class, new MediaType("application", "xml")));
 	}
-	
+
 	@SmallTest
 	public void testCanWriteNoRootAnnotation() {
 		// @Root annotation is required for writing
@@ -89,7 +89,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		assertEquals("Invalid result", 123, result.getNumber());
 		assertEquals("Invalid result", "Example message", result.getString());
 	}
-	
+
 	@SmallTest
 	public void testReadComplex() throws IOException {
 		String body = "<root number=\"123\"><string>Example message</string><fraction>42.0</fraction><array length=\"2\"><string>Foo</string><string>Bar</string></array><bool>true</bool></root>";
@@ -102,7 +102,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		assertTrue(result.isBool());
 		assertNull(result.getNullstring());
 	}
-		
+
 	@SmallTest
 	public void testReadSimpleNonAnnotated() throws IOException {
 		String body = "<root><string>Example message</string><number>123</number></root>";
@@ -111,7 +111,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		assertEquals("Invalid result", "Example message", result.getString());
 		assertEquals("Invalid result", 123, result.getNumber());
 	}
-	
+
 	@SmallTest
 	public void testReadSimpleNoRootAnnotation() throws IOException {
 		String body = "<root><string>Example message</string><number>123</number></root>";
@@ -120,7 +120,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		assertEquals("Invalid result", "Example message", result.getString());
 		assertEquals("Invalid result", 123, result.getNumber());
 	}
-	
+
 	@SmallTest
 	public void testReadSimple_ISO_8859_1() throws IOException {
 		String body = "<root number=\"123\"><string>&#160;&#161;&#162;&#163;&#164;&#165;</string></root>";
@@ -131,7 +131,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		Assert.assertArrayEquals("Invalid result", bytes, result.getString().getBytes(ISO_8859_1.displayName()));
 		assertEquals("Invalid result", new String(bytes, ISO_8859_1.displayName()), result.getString());
 	}
-	
+
 	@SmallTest
 	public void testWriteSimple() throws IOException {
 		SimpleObject body = new SimpleObject();
@@ -144,7 +144,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		assertTrue(result.contains("number=\"123\""));
 		assertEquals("Invalid content-type", new MediaType("application", "xml"), outputMessage.getHeaders().getContentType());
 	}
-	
+
 	@SmallTest
 	public void testWriteComplex() throws IOException {
 		ComplexObject body = new ComplexObject();
@@ -164,7 +164,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		assertFalse(result.contains("<nullstring>"));
 		assertEquals("Invalid content-type", new MediaType("application", "xml"), outputMessage.getHeaders().getContentType());
 	}
-	
+
 	@SmallTest
 	public void testWrite_ISO_8859_1() throws IOException {
 		MediaType contentType = new MediaType("text", "xml", ISO_8859_1);
@@ -175,10 +175,10 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		assertEquals("Invalid result", "<string>" + body + "</string>", outputMessage.getBodyAsString(ISO_8859_1));
 		assertEquals("Invalid content-type", contentType, outputMessage.getHeaders().getContentType());
 	}
-		
-	
+
+
 	// helpers
-		
+
 	@Root
 	private static class SimpleObject {
 
@@ -203,14 +203,14 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		public int getNumber() {
 			return number;
 		}
-		
+
 	}
 
 	@SuppressWarnings("unused")
 	private static class SimpleNonAnnotatedObject {
-		
+
 		private String string;
-		
+
 		private int number;
 
 		public void setString(String string) {
@@ -228,15 +228,15 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		public int getNumber() {
 			return number;
 		}
-		
+
 	}
-	
+
 	@SuppressWarnings("unused")
 	private static class SimpleNoRootAnnotationObject {
-		
+
 		@Element
 		private String string;
-		
+
 		@Element
 		private int number;
 
@@ -247,7 +247,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		public String getString() {
 			return string;
 		}
-		
+
 		public void setNumber(int number) {
 			this.number = number;
 		}
@@ -255,9 +255,9 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		public int getNumber() {
 			return number;
 		}
-		
+
 	}
-	
+
 	@Root
 	private static class ComplexObject {
 
@@ -326,7 +326,7 @@ public class SimpleXmlHttpMessageConverterTests extends TestCase {
 		public String getNullstring() {
 			return nullstring;
 		}
-		
-	}	
-	
+
+	}
+
 }
