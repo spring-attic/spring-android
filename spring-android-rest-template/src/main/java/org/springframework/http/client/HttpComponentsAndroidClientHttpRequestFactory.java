@@ -58,7 +58,7 @@ import org.springframework.util.Assert;
  * @author Oleg Kalnichevski
  * @author Roy Clarkson
  * @since 2.0
- * @deprecated
+ * @deprecated in favor of HttpClient 4.3 and {@link org.springframework.http.client.HttpComponentsClientHttpRequestFactory}
  */
 @Deprecated
 public class HttpComponentsAndroidClientHttpRequestFactory implements ClientHttpRequestFactory, DisposableBean {
