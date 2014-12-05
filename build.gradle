@@ -66,6 +66,7 @@ configure(allprojects) {
 		"http://fasterxml.github.com/jackson-core/javadoc/2.3.0/",
 		"http://fasterxml.github.com/jackson-databind/javadoc/2.3.0/",
 		"http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/",
+		"http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/"
 	] as String[]
 
 	// servlet-api (2.5) and tomcat-servlet-api (3.0) classpath entries should not be

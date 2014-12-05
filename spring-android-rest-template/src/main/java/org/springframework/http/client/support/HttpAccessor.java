@@ -22,7 +22,6 @@ import java.net.URI;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Assert;
@@ -53,6 +52,7 @@ public abstract class HttpAccessor {
 	private ClientHttpRequestFactory requestFactory;
 
 
+	@SuppressWarnings("deprecation")
 	protected HttpAccessor() {
 		if (httpClient43Present) {
 			this.requestFactory = new HttpComponentsClientHttpRequestFactory();
@@ -61,7 +61,7 @@ public abstract class HttpAccessor {
 			this.requestFactory = new SimpleClientHttpRequestFactory();
 		}
 		else {
-			this.requestFactory = new HttpComponentsAndroidClientHttpRequestFactory();
+			this.requestFactory = new org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory();
 		}
 	}
 

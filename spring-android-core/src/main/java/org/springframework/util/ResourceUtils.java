@@ -30,16 +30,6 @@ import java.net.URLConnection;
  *
  * <p>Consider using Spring's Resource abstraction in the core package
  * for handling all kinds of file resources in a uniform manner.
- * {@link org.springframework.core.io.ResourceLoader}'s {@code getResource()}
- * method can resolve any location to a {@link org.springframework.core.io.Resource}
- * object, which in turn allows one to obtain a {@code java.io.File} in the
- * file system through its {@code getFile()} method.
- *
- * <p>The main reason for these utility methods for resource location handling
- * is to support {@link Log4jConfigurer}, which must be able to resolve
- * resource locations <i>before the logging system has been initialized</i>.
- * Spring's {@code Resource} abstraction in the core package, on the other hand,
- * already expects the logging system to be available.
  *
  * @author Juergen Hoeller
  * @since 1.0
@@ -47,7 +37,6 @@ import java.net.URLConnection;
  * @see org.springframework.core.io.ClassPathResource
  * @see org.springframework.core.io.FileSystemResource
  * @see org.springframework.core.io.UrlResource
- * @see org.springframework.core.io.ResourceLoader
  */
 public abstract class ResourceUtils {
 
