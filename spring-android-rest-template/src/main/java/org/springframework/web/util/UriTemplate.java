@@ -17,9 +17,7 @@
 package org.springframework.web.util;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -32,19 +30,17 @@ import org.springframework.util.Assert;
 
 /**
  * Represents a URI template. A URI template is a URI-like String that contains variables enclosed
- * by braces (<code>{</code>, <code>}</code>), which can be expanded to produce an actual URI.
+ * by braces ({@code {}}), which can be expanded to produce an actual URI.
  *
  * <p>See {@link #expand(Map)}, {@link #expand(Object[])}, and {@link #match(String)} for example usages.
  *
  * @author Arjen Poutsma
  * @author Juergen Hoeller
- * @author Roy Clarkson
  * @since 1.0
  * @see <a href="http://bitworking.org/projects/URI-Templates/">URI Templates</a>
  */
+@SuppressWarnings("serial")
 public class UriTemplate implements Serializable {
-
-	private static final long serialVersionUID = 1L;
 
 	/** Captures URI template variable names. */
 	private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)\\}");
@@ -60,6 +56,7 @@ public class UriTemplate implements Serializable {
 
 	private final String uriTemplate;
 
+
 	/**
 	 * Construct a new {@code UriTemplate} with the given URI String.
 	 * @param uriTemplate the URI template string
@@ -72,6 +69,7 @@ public class UriTemplate implements Serializable {
 		this.uriComponents = UriComponentsBuilder.fromUriString(uriTemplate).build();
 	}
 
+
 	/**
 	 * Return the names of the variables in the template, in order.
 	 * @return the template variable names
@@ -79,8 +77,6 @@ public class UriTemplate implements Serializable {
 	public List<String> getVariableNames() {
 		return this.variableNames;
 	}
-
-	// expanding
 
 	/**
 	 * Given the Map of variables, expands this template into a URI. The Map keys represent variable names,
@@ -90,17 +86,17 @@ public class UriTemplate implements Serializable {
 	 * UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
 	 * Map&lt;String, String&gt; uriVariables = new HashMap&lt;String, String&gt;();
 	 * uriVariables.put("booking", "42");
-	 * uriVariables.put("hotel", "1");
+	 * uriVariables.put("hotel", "Rest & Relax");
 	 * System.out.println(template.expand(uriVariables));
 	 * </pre>
-	 * will print: <blockquote><code>http://example.com/hotels/1/bookings/42</code></blockquote>
+	 * will print: <blockquote>{@code http://example.com/hotels/Rest%20%26%20Relax/bookings/42}</blockquote>
 	 * @param uriVariables the map of URI variables
 	 * @return the expanded URI
-	 * @throws IllegalArgumentException if <code>uriVariables</code> is <code>null</code>;
+	 * @throws IllegalArgumentException if {@code uriVariables} is {@code null};
 	 * or if it does not contain values for all the variable names
 	 */
 	public URI expand(Map<String, ?> uriVariables) {
-		UriComponents expandedComponents = uriComponents.expand(uriVariables);
+		UriComponents expandedComponents = this.uriComponents.expand(uriVariables);
 		UriComponents encodedComponents = expandedComponents.encode();
 		return encodedComponents.toUri();
 	}
@@ -111,26 +107,24 @@ public class UriTemplate implements Serializable {
 	 * <p>Example:
 	 * <pre class="code">
 	 * UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
-	 * System.out.println(template.expand("1", "42));
+	 * System.out.println(template.expand("Rest & Relax", "42));
 	 * </pre>
-	 * will print: <blockquote><code>http://example.com/hotels/1/bookings/42</code></blockquote>
+	 * will print: <blockquote>{@code http://example.com/hotels/Rest%20%26%20Relax/bookings/42}</blockquote>
 	 * @param uriVariableValues the array of URI variables
 	 * @return the expanded URI
-	 * @throws IllegalArgumentException if <code>uriVariables</code> is <code>null</code>
+	 * @throws IllegalArgumentException if {@code uriVariables} is {@code null}
 	 * or if it does not contain sufficient variables
 	 */
 	public URI expand(Object... uriVariableValues) {
-		UriComponents expandedComponents = uriComponents.expand(uriVariableValues);
+		UriComponents expandedComponents = this.uriComponents.expand(uriVariableValues);
 		UriComponents encodedComponents = expandedComponents.encode();
 		return encodedComponents.toUri();
 	}
 
-	// matching
-
 	/**
 	 * Indicate whether the given URI matches this template.
 	 * @param uri the URI to match to
-	 * @return <code>true</code> if it matches; <code>false</code> otherwise
+	 * @return {@code true} if it matches; {@code false} otherwise
 	 */
 	public boolean matches(String uri) {
 		if (uri == null) {
@@ -148,7 +142,7 @@ public class UriTemplate implements Serializable {
 	 * UriTemplate template = new UriTemplate("http://example.com/hotels/{hotel}/bookings/{booking}");
 	 * System.out.println(template.match("http://example.com/hotels/1/bookings/42"));
 	 * </pre>
-	 * will print: <blockquote><code>{hotel=1, booking=42}</code></blockquote>
+	 * will print: <blockquote>{@code {hotel=1, booking=42}}</blockquote>
 	 * @param uri the URI to match to
 	 * @return a map of variable values
 	 */
@@ -166,30 +160,11 @@ public class UriTemplate implements Serializable {
 		return result;
 	}
 
-	/**
-	 * Encodes the given String as URL.
-	 * <p>Defaults to {@link UriUtils#encodeUri(String, String)}.
-	 * @param uri the URI to encode
-	 * @return the encoded URI
-	 * @deprecated No longer in use, with no direct replacement
-	 */
-	@Deprecated
-	protected URI encodeUri(String uri) {
-		try {
-			String encoded = UriUtils.encodeUri(uri, "UTF-8");
-			return new URI(encoded);
-		} catch (UnsupportedEncodingException ex) {
-			// should not happen, UTF-8 is always supported
-			throw new IllegalStateException(ex);
-		} catch (URISyntaxException ex) {
-			throw new IllegalArgumentException("Could not create URI from [" + uri + "]: " + ex, ex);
-		}
-	}
-
 	@Override
 	public String toString() {
 		return this.uriTemplate;
 	}
+
 
 	/**
 	 * Static inner class to parse URI template strings into a matching regular expression.
@@ -202,18 +177,20 @@ public class UriTemplate implements Serializable {
 
 		private Parser(String uriTemplate) {
 			Assert.hasText(uriTemplate, "'uriTemplate' must not be null");
-			Matcher m = NAMES_PATTERN.matcher(uriTemplate);
+			Matcher matcher = NAMES_PATTERN.matcher(uriTemplate);
 			int end = 0;
-			while (m.find()) {
-				this.patternBuilder.append(quote(uriTemplate, end, m.start()));
-				String match = m.group(1);
+			while (matcher.find()) {
+				this.patternBuilder.append(quote(uriTemplate, end, matcher.start()));
+				String match = matcher.group(1);
 				int colonIdx = match.indexOf(':');
 				if (colonIdx == -1) {
 					this.patternBuilder.append(DEFAULT_VARIABLE_PATTERN);
 					this.variableNames.add(match);
-				} else {
+				}
+				else {
 					if (colonIdx + 1 == match.length()) {
-						throw new IllegalArgumentException("No custom regular expression specified after ':' in \"" + match + "\"");
+						throw new IllegalArgumentException(
+								"No custom regular expression specified after ':' in \"" + match + "\"");
 					}
 					String variablePattern = match.substring(colonIdx + 1, match.length());
 					this.patternBuilder.append('(');
@@ -222,7 +199,7 @@ public class UriTemplate implements Serializable {
 					String variableName = match.substring(0, colonIdx);
 					this.variableNames.add(variableName);
 				}
-				end = m.end();
+				end = matcher.end();
 			}
 			this.patternBuilder.append(quote(uriTemplate, end, uriTemplate.length()));
 			int lastIdx = this.patternBuilder.length() - 1;
