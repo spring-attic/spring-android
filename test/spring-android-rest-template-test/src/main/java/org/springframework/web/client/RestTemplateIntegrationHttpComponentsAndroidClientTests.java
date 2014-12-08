@@ -22,7 +22,7 @@ import org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFac
  * @author Roy Clarkson
  */
 public class RestTemplateIntegrationHttpComponentsAndroidClientTests extends AbstractRestTemplateIntegrationTests {
-	
+
 	@Override
 	protected RestTemplate getRestTemplate() {
 		return new RestTemplate(new HttpComponentsAndroidClientHttpRequestFactory());
