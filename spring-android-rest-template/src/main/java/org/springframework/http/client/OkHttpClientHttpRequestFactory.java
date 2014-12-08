@@ -22,10 +22,10 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.springframework.util.Assert;
-
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
+
+import org.springframework.util.Assert;
 
 /**
  * {@link ClientHttpRequestFactory} implementation that uses <a
@@ -35,7 +35,7 @@ import com.squareup.okhttp.OkUrlFactory;
  * @see com.squareup.okhttp.OkHttpClient
  * @since 2.0
  */
-public class OkHttpRequestFactory extends SimpleClientHttpRequestFactory {
+public class OkHttpClientHttpRequestFactory extends SimpleClientHttpRequestFactory {
 
 	private OkHttpClient okHttpClient = new OkHttpClient();
 

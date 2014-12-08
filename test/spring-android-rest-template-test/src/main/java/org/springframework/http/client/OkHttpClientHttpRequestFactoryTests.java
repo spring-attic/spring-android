@@ -31,14 +31,14 @@ import android.util.Log;
  * @author Stéphane Nicolas
  * @author Roy Clarkson
  */
-public class OkHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
+public class OkHttpClientHttpRequestFactoryTests extends AbstractHttpRequestFactoryTestCase {
 
 	private static final String TAG = "OkHttpRequestFctryTests";
 
 
 	@Override
 	protected ClientHttpRequestFactory createRequestFactory() {
-		return new OkHttpRequestFactory();
+		return new OkHttpClientHttpRequestFactory();
 	}
 
 	@Override
