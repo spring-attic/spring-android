@@ -13,11 +13,8 @@
   <section id="maven-example-introduction">
   
 	<title>Introduction</title>
-	
-	<para>An alternative to downloading the individual library jars yourself is to use Maven for dependency management. The <ulink url="http://code.google.com/p/maven-android-plugin">
- 	<citetitle>Android Maven Plugin</citetitle></ulink> allows developers to utilize Maven's dependency management capabilities within an Android application. Additionally, the <ulink url="http://rgladwell.github.com/m2e-android/">
- 	<citetitle>Android Configurator for M2E</citetitle></ulink> bridges the Maven Android Plugin and the <ulink url="http://developer.android.com/sdk/eclipse-adt.html">
- 	<citetitle>Android Development Tools (ADT)</citetitle></ulink> to allow the use of dependency management within Eclipse.</para>
+
+    <para>Android Studio and the new Android build system support the use of Maven dependencies through Gradle. Alternatively, the <ulink url="http://code.google.com/p/maven-android-plugin"><citetitle>Android Maven Plugin</citetitle></ulink> can also be used to build an Android application.</para>
 	
   </section>
 
@@ -28,21 +25,33 @@
 	<para>The following repositories are available for all Spring projects. Much more information is available at the <ulink url="https://github.com/spring-projects/spring-framework/wiki/SpringSource-repository-FAQ">
  	<citetitle>Spring Repository FAQ</citetitle></ulink>.</para>
 	
-	<para>Release versions, such as 1.0.0.RELEASE, are available through <ulink url="http://search.maven.org/">
+	<para>Release versions are available through <ulink url="http://search.maven.org/">
  	<citetitle>Maven Central</citetitle></ulink> or via the <ulink url="http://repo.spring.io/">
  	<citetitle>Spring Repository</citetitle></ulink>:
 
-		<programlisting language="xml"><![CDATA[
+		<programlisting language="groovy"><![CDATA[
+repositories {
+    maven { url "https://repo.spring.io/release" }
+}]]>
+		</programlisting>
+
+        <programlisting language="xml"><![CDATA[
 <repository>
     <id>spring-repo</id>
     <name>Spring Repository</name>
     <url>https://repo.spring.io/release</url>
 </repository>]]>
-		</programlisting>
+        </programlisting>
 
-	</para>
+    </para>
 
-	<para>If you are developing against a milestone version, such as 2.0.0.M1, you will need to add the following repository in order to resolve the artifact:
+	<para>If you are developing against the latest milestone version, you will need to add the following repository in order to resolve the artifact:
+
+        <programlisting language="groovy"><![CDATA[
+repositories {
+    maven { url "https://repo.spring.io/milestone" }
+}]]>
+        </programlisting>
 
 		<programlisting language="xml"><![CDATA[
 <repository>
@@ -54,13 +63,22 @@
 
 	</para>
 
-	<para>If you are testing out the latest nightly build version (e.g. 2.0.0.BUILD-SNAPSHOT), you will need to add the following repository:
+	<para>If you are testing with the latest build snapshot, you will need to add the following repository:
+
+        <programlisting language="groovy"><![CDATA[
+repositories {
+    maven { url "https://repo.spring.io/snapshot" }
+}]]>
+        </programlisting>
 
 		<programlisting language="xml"><![CDATA[
 <repository>
     <id>spring-snapshot</id>
     <name>Spring Snapshot Repository</name>
     <url>https://repo.spring.io/snapshot</url>
+    <snapshots>
+        <enabled>true</enabled>
+    </snapshots>
 </repository>]]>
 		</programlisting>
 
@@ -68,14 +86,59 @@
 	
   </section>
 
+  <section id="gradle-example">
+
+    <title>Example build.gradle</title>
+
+    <para>The following is an example build.gradle for use with Android Studio and the new Android build system.</para>
+
+    <programlisting language="groovy"><![CDATA[
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion '21.1.1'
+
+    defaultConfig {
+        applicationId 'org.springframework.demo'
+        minSdkVersion 15
+        targetSdkVersion 21
+        versionCode 1
+        versionName '1.0'
+    }
+    buildTypes {
+        release {
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice.txt'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-v4:20.+'
+    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M2'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
+}]]>
+    </programlisting>
+
+  </section>
+
   <section id="maven-example-pom">
 
 	<title>Example POM</title>
 	
 	<para>The following <ulink url="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html">
-	<citetitle>Maven POM file</citetitle></ulink> from the <ulink url="https://github.com/spring-projects/spring-android-samples">
-	<citetitle>Spring for Android Showcase</citetitle></ulink> sample application, illustrates how to configure the <ulink url="http://code.google.com/p/maven-android-plugin">
-	<citetitle>Maven Android Plugin</citetitle></ulink> and associated dependencies for use with Spring for Android and Spring Social.</para>
+	<citetitle>Maven POM file</citetitle></ulink> illustrates how to configure the <ulink url="http://code.google.com/p/maven-android-plugin">
+	<citetitle>Maven Android Plugin</citetitle></ulink> and associated dependencies for use with Spring for Android.</para>
 	
 	<programlisting language="xml"><![CDATA[
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -83,10 +146,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.springframework.android</groupId>
-    <artifactId>spring-android-showcase-client</artifactId>
-    <version>1.0.1.BUILD-SNAPSHOT</version>
+    <artifactId>spring-android-client</artifactId>
+    <version>0.1.0.SNAPSHOT</version>
     <packaging>apk</packaging>
-    <name>spring-android-showcase-client</name>
+    <name>spring-android-client</name>
     <url>http://projects.spring.io/spring-android</url>
     <inceptionYear>2010</inceptionYear>
     <organization>
@@ -95,18 +158,14 @@
     </organization>
 
     <properties>
-        <android-platform>16</android-platform>
-        <android-maven-plugin-version>3.4.0</android-maven-plugin-version>
-        <maven-compiler-plugin-version>2.5.1</maven-compiler-plugin-version>
+        <android-platform>21</android-platform>
+        <android-maven-plugin-version>3.9.0-rc.2</android-maven-plugin-version>
+        <maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
         <java-version>1.6</java-version>
-        <maven-eclipse-plugin-version>2.8</maven-eclipse-plugin-version>
         <com.google.android-version>4.1.1.4</com.google.android-version>
-        <!-- Available Android versions: 1.5_r3, 1.5_r4, 1.6_r2, 2.1.2, 2.1_r1, 
-            2.2.1, 2.3.1, 2.3.3, 4.0.1.2, 4.1.1.4 -->
-        <org.springframework.android-version>1.0.1.BUILD-SNAPSHOT</org.springframework.android-version>
-        <com.fasterxml.jackson-version>2.1.2</com.fasterxml.jackson-version>
-        <com.google.code.gson-version>2.2.2</com.google.code.gson-version>
-        <org.simpleframework-version>2.6.9</org.simpleframework-version>
+        <org.springframework.android-version>2.0.0.M2</org.springframework.android-version>
+		<org.apache.httpcomponents-version>4.3.5</org.apache.httpcomponents-version>
+        <com.fasterxml.jackson-version>2.3.4</com.fasterxml.jackson-version>
     </properties>
 
     <dependencies>
@@ -121,50 +180,23 @@
             <artifactId>spring-android-rest-template</artifactId>
             <version>${org.springframework.android-version}</version>
         </dependency>
-        
-        <!-- Jackson JSON Processor -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-android</artifactId>
+            <version>${org.apache.httpcomponents-version}</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${com.fasterxml.jackson-version}</version>
         </dependency>
-        
-        <!-- Gson JSON Processor -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${com.google.code.gson-version}</version>
-        </dependency>
-        
-        <!-- Simple XML Processor -->
-        <dependency>
-            <groupId>org.simpleframework</groupId>
-            <artifactId>simple-xml</artifactId>
-            <version>${org.simpleframework-version}</version>
-            <exclusions>
-                <!-- StAX is not available on Android -->
-                <exclusion>
-                    <artifactId>stax</artifactId>
-                    <groupId>stax</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>stax-api</artifactId>
-                    <groupId>stax</groupId>
-                </exclusion>
-                <!-- Provided by Android -->
-                <exclusion>
-                    <artifactId>xpp3</artifactId>
-                    <groupId>xpp3</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
     </dependencies>
 
     <repositories>
         <repository>
-            <id>spring-snapshot</id>
-            <name>Spring Snapshot Repository</name>
-            <url>http://repo.spring.io/libs-snapshot</url>
+            <id>spring-milestone</id>
+            <name>Spring Milestones</name>
+            <url>http://repo.spring.io/libs-milestone</url>
         </repository>
     </repositories>
 
@@ -192,15 +224,6 @@
                 <configuration>
                     <source>${java-version}</source>
                     <target>${java-version}</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>${maven-eclipse-plugin-version}</version>
-                <configuration>
-                    <downloadSources>true</downloadSources>
-                    <downloadJavadocs>true</downloadJavadocs>
                 </configuration>
             </plugin>
         </plugins>

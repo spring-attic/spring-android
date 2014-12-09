@@ -22,6 +22,13 @@
     <title>How to get</title>
 	<para>
 		Add the spring-android-core artifact to your classpath:
+
+        <programlisting language="groovy"><![CDATA[
+dependencies {
+    compile 'org.springframework.android:spring-android-core:$version'
+}]]>
+        </programlisting>
+
 		<programlisting language="xml"><![CDATA[
 <dependency>
     <groupId>org.springframework.android</groupId>
