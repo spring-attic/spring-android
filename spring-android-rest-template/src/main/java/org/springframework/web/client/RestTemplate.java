@@ -114,13 +114,11 @@ import android.util.Log;
  * 
  * <p><table border=1 cellpadding=2 cellspacing=0>
  * <tr><th>Message Body Converter</th><th>Rule</th></tr>
- * <tr><td>{@link ByteArrayHttpMessageConverter}</td><td rowspan=3 valign=top>Always included</td></tr>
+ * <tr><td>{@link ByteArrayHttpMessageConverter}</td><td rowspan=5 valign=top>Always included</td></tr>
  * <tr><td>{@link StringHttpMessageConverter}</td></tr>
  * <tr><td>{@link ResourceHttpMessageConverter}</td></tr>
- * <tr><td>{@link SourceHttpMessageConverter}</td><td rowspan=2 valign=top>Included on Android 2.2 (Froyo) or newer, 
- * where {@link javax.xml.transform.Source} is available.</td></tr>
+ * <tr><td>{@link SourceHttpMessageConverter}</td></tr>
  * <tr><td>{@link AllEncompassingFormHttpMessageConverter}</td></tr>
- * <tr><td>{@link FormHttpMessageConverter}</td><td>Included on Android 2.1 (Eclair) and older.</td></tr>
  * <tr><td>{@link SimpleXmlHttpMessageConverter}</td><td>Included if the Simple XML serializer is present.</td></tr>
  * <tr><td>{@link MappingJackson2HttpMessageConverter}</td><td>Included if the Jackson 2.x JSON processor is present.</td></tr>
  * <tr><td>{@link GsonHttpMessageConverter}</td><td>Included if Gson is present, and only included if Jackson is not available.</td></tr>
@@ -179,8 +177,9 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	 * Create a new instance of the {@link RestTemplate} based on the given {@link ClientHttpRequestFactory}.
 	 * @param requestFactory HTTP request factory to use
 	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
-	 * @see org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory
+	 * @see org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 	 * @see org.springframework.http.client.OkHttpClientHttpRequestFactory
+	 * @see org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory
 	 */
 	public RestTemplate(ClientHttpRequestFactory requestFactory) {
 		this();
@@ -197,8 +196,9 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	 * @param requestFactory HTTP request factory to use
 	 * @see HttpMessageConverter
 	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
-	 * @see org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory
+	 * @see org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 	 * @see org.springframework.http.client.OkHttpClientHttpRequestFactory
+	 * @see org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory
 	 * @deprecated in favor of {@link #RestTemplate(List)} and {@link #setRequestFactory(ClientHttpRequestFactory)}
 	 */
 	@Deprecated
