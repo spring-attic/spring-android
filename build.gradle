@@ -19,7 +19,7 @@ configure(allprojects) {
 	ext.jackson2Version          = "2.3.4"
 	ext.gsonVersion              = "2.3.1"
 	ext.simpleXmlVersion         = "2.7.1"
-	ext.okHttpVersion            = "2.1.0"
+	ext.okHttpVersion            = "2.4.0"
 	ext.httpclientVersion        = "4.3.5"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 

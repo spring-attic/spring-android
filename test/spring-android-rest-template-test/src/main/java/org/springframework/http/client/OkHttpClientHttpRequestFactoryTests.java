@@ -63,6 +63,12 @@ public class OkHttpClientHttpRequestFactoryTests extends AbstractHttpRequestFact
 		}
 	}
 
+	@Override
+	public void testHttpMethods() throws Exception {
+		super.testHttpMethods();
+		assertHttpMethod("patch", HttpMethod.PATCH);
+	}
+
 	@MediumTest
 	@Override
 	public void testGetAcceptEncodingNone() throws Exception {

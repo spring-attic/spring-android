@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2014 the original author or authors.
+ * Copyright 2002-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,38 +16,96 @@
 
 package org.springframework.http.client;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.OkUrlFactory;
 
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.Assert;
 
 /**
- * {@link ClientHttpRequestFactory} implementation that uses <a
- * href="https://square.github.io/okhttp/">OkHttp</a> to create requests.
- * 
+ * {@link ClientHttpRequestFactory} implementation that uses
+ * <a href="http://square.github.io/okhttp/">OkHttp</a> to create requests.
+ *
  * @author Stéphane Nicolas
- * @see com.squareup.okhttp.OkHttpClient
+ * @author Luciano Leggieri
+ * @author Arjen Poutsma
+ * @author Roy Clarkson
  * @since 2.0
  */
-public class OkHttpClientHttpRequestFactory extends SimpleClientHttpRequestFactory {
+public class OkHttpClientHttpRequestFactory implements ClientHttpRequestFactory, DisposableBean {
 
-	private OkHttpClient okHttpClient = new OkHttpClient();
+	private final OkHttpClient client;
 
-	@Override
-	protected HttpURLConnection openConnection(URL url, Proxy proxy) throws IOException {
-		if (proxy != null) {
-			this.okHttpClient.setProxy(proxy);
-		}
-		OkUrlFactory okUrlFactory = new OkUrlFactory(this.okHttpClient);
-		URLConnection urlConnection = okUrlFactory.open(url);
-		Assert.isInstanceOf(HttpURLConnection.class, urlConnection);
-		return (HttpURLConnection) urlConnection;
+	private final boolean defaultClient;
+
+
+	/**
+	 * Create a factory with a default {@link OkHttpClient} instance.
+	 */
+	public OkHttpClientHttpRequestFactory() {
+		this.client = new OkHttpClient();
+		this.defaultClient = true;
 	}
 
+	/**
+	 * Create a factory with the given {@link OkHttpClient} instance.
+	 * @param client the client to use
+	 */
+	public OkHttpClientHttpRequestFactory(OkHttpClient client) {
+		Assert.notNull(client, "'client' must not be null");
+		this.client = client;
+		this.defaultClient = false;
+	}
+
+
+	/**
+	 * Sets the underlying read timeout in milliseconds.
+	 * A value of 0 specifies an infinite timeout.
+	 * @see OkHttpClient#setReadTimeout(long, TimeUnit)
+	 */
+	public void setReadTimeout(int readTimeout) {
+		this.client.setReadTimeout(readTimeout, TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * Sets the underlying write timeout in milliseconds.
+	 * A value of 0 specifies an infinite timeout.
+	 * @see OkHttpClient#setWriteTimeout(long, TimeUnit)
+	 */
+	public void setWriteTimeout(int writeTimeout) {
+		this.client.setWriteTimeout(writeTimeout, TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * Sets the underlying connect timeout in milliseconds.
+	 * A value of 0 specifies an infinite timeout.
+	 * @see OkHttpClient#setConnectTimeout(long, TimeUnit)
+	 */
+	public void setConnectTimeout(int connectTimeout) {
+		this.client.setConnectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
+	}
+
+
+	@Override
+	public ClientHttpRequest createRequest(URI uri, HttpMethod httpMethod) {
+		return createRequestInternal(uri, httpMethod);
+	}
+
+	private OkHttpClientHttpRequest createRequestInternal(URI uri, HttpMethod httpMethod) {
+		return new OkHttpClientHttpRequest(this.client, uri, httpMethod);
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		if (this.defaultClient) {
+			// Clean up the client if we created it in the constructor
+			if (this.client.getCache() != null) {
+				this.client.getCache().close();
+			}
+			this.client.getDispatcher().getExecutorService().shutdown();
+		}
+	}
 }
