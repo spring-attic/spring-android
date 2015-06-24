@@ -15,7 +15,6 @@ configure(allprojects) {
 	ext.androidVersion           = "4.1.1.4"
 	ext.springSocialVersion      = "1.1.0.RELEASE"
 	ext.springSecurityVersion    = "3.1.3.RELEASE"
-	ext.jacksonVersion           = "1.9.13"
 	ext.jackson2Version          = "2.5.4"
 	ext.gsonVersion              = "2.3.1"
 	ext.simpleXmlVersion         = "2.7.1"
@@ -62,7 +61,6 @@ configure(allprojects) {
 
 	ext.javadocLinks = [
 		"http://docs.jboss.org/jbossas/javadoc/4.0.5/connector/",
-		"http://jackson.codehaus.org/1.9.4/javadoc/",
 		"http://fasterxml.github.com/jackson-core/javadoc/2.3.0/",
 		"http://fasterxml.github.com/jackson-databind/javadoc/2.3.0/",
 		"http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs/",
@@ -161,7 +159,6 @@ project("spring-android-rest-template") {
 		compile(project(":spring-android-core"))
 		optional("org.apache.httpcomponents:httpclient-android:$httpclientVersion")
 		optional("com.squareup.okhttp:okhttp-urlconnection:$okHttpVersion")
-		optional("org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion")
 		optional("com.fasterxml.jackson.core:jackson-databind:$jackson2Version")
 		optional("com.google.code.gson:gson:$gsonVersion")
 		optional("org.simpleframework:simple-xml:$simpleXmlVersion") { dep ->
