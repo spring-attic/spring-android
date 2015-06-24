@@ -23,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.OkHttpClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -49,6 +50,9 @@ public abstract class HttpAccessor {
 	private static final boolean httpClient43Present =
 			ClassUtils.isPresent("org.apache.http.impl.client.CloseableHttpClient", HttpAccessor.class.getClassLoader());
 
+	private static final boolean okHttpPresent =
+			ClassUtils.isPresent("com.squareup.okhttp.OkHttpClient", HttpAccessor.class.getClassLoader());
+
 	private ClientHttpRequestFactory requestFactory;
 
 
@@ -56,6 +60,9 @@ public abstract class HttpAccessor {
 	protected HttpAccessor() {
 		if (httpClient43Present) {
 			this.requestFactory = new HttpComponentsClientHttpRequestFactory();
+		}
+		else if (okHttpPresent) {
+			this.requestFactory = new OkHttpClientHttpRequestFactory();
 		}
 		else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			this.requestFactory = new SimpleClientHttpRequestFactory();
