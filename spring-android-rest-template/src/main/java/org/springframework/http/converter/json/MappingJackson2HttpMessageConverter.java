@@ -21,6 +21,14 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
@@ -30,25 +38,16 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 /**
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter HttpMessageConverter}
- * that can read and write JSON using <a href="http://jackson.codehaus.org/">Jackson 2's</a> {@link ObjectMapper}.
+ * that can read and write JSON using <a href="http://wiki.fasterxml.com/JacksonHome">Jackson 2.x's</a>  {@link ObjectMapper}.
  *
  * <p>This converter can be used to bind to typed beans, or untyped {@link java.util.HashMap HashMap} instances.
  *
  * <p>By default, this converter supports {@code application/json}. This can be overridden by setting the
  * {@link #setSupportedMediaTypes(List) supportedMediaTypes} property.
  *
- * <p>Tested against Jackson 2.3; compatible with Jackson 2.0 and higher. Note that tests failed with Jackson 2.4
- * on Android 2.2 (API Level 8) and older versions. Jackson 2.4 uses APIs not available on those platforms.
+ * <p>Compatible with Jackson 2.1 and higher.
  *
  * @author Arjen Poutsma
  * @author Keith Donald
@@ -79,7 +78,7 @@ public class MappingJackson2HttpMessageConverter extends AbstractHttpMessageConv
 	 * Set the {@code ObjectMapper} for this view. If not set, a default
 	 * {@link ObjectMapper#ObjectMapper() ObjectMapper} is used.
 	 * <p>Setting a custom-configured {@code ObjectMapper} is one way to take further control of the JSON
-	 * serialization process. For example, an extended {@link org.codehaus.jackson.map.SerializerFactory}
+	 * serialization process. For example, an extended {@link com.fasterxml.jackson.databind.ser.SerializerFactory}
 	 * can be configured that provides custom serializers for specific types. The other option for refining
 	 * the serialization process is to use Jackson's provided annotations on the types to be serialized,
 	 * in which case a custom-configured ObjectMapper is unnecessary.
@@ -190,8 +189,7 @@ public class MappingJackson2HttpMessageConverter extends AbstractHttpMessageConv
 			throws IOException, HttpMessageNotWritableException {
 
 		JsonEncoding encoding = getJsonEncoding(outputMessage.getHeaders().getContentType());
-		JsonGenerator jsonGenerator =
-				this.objectMapper.getJsonFactory().createJsonGenerator(outputMessage.getBody(), encoding);
+		JsonGenerator jsonGenerator = this.objectMapper.getFactory().createGenerator(outputMessage.getBody(), encoding);
 
 		// A workaround for JsonGenerators not applying serialization features
 		// https://github.com/FasterXML/jackson-databind/issues/12
