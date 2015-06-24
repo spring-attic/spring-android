@@ -20,7 +20,7 @@ configure(allprojects) {
 	ext.gsonVersion              = "2.3.1"
 	ext.simpleXmlVersion         = "2.7.1"
 	ext.okHttpVersion            = "2.4.0"
-	ext.httpclientVersion        = "4.3.5"
+	ext.httpclientVersion        = "4.3.5.1"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 
 	apply plugin: 'propdeps'
