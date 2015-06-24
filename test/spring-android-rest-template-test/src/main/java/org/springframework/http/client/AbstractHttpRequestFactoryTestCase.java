@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -41,6 +42,7 @@ import junit.framework.TestCase;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
@@ -81,6 +83,7 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			baseUrl = "http://localhost:" + port;
 			Context jettyContext = new Context(jettyServer, "/");
 			jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/echo");
+			jettyContext.addServlet(new ServletHolder(new ParameterServlet()), "/params");
 			jettyContext.addServlet(new ServletHolder(new GzipServlet()), "/gzip");
 			jettyContext.addServlet(new ServletHolder(new IdentityServlet()), "/identity");
 			jettyContext.addServlet(new ServletHolder(new NoEncodingServlet()), "/noencoding");
@@ -313,6 +316,20 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 			if (response != null) {
 				response.close();
 			}
+		}
+	}
+
+	@MediumTest
+	public void testQueryParameters() throws Exception {
+		URI uri = new URI(baseUrl + "/params?param1=value&param2=value1&param2=value2");
+		ClientHttpRequest request = factory.createRequest(uri, HttpMethod.GET);
+
+		ClientHttpResponse response = request.execute();
+		try {
+			assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
+		}
+		finally {
+			response.close();
 		}
 	}
 
@@ -550,6 +567,28 @@ public abstract class AbstractHttpRequestFactoryTestCase extends TestCase {
 				}
 			}
 			FileCopyUtils.copy(request.getInputStream(), response.getOutputStream());
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private static class ParameterServlet extends HttpServlet {
+
+		@Override
+		protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			Map<String, String[]> parameters = req.getParameterMap();
+			assertEquals(2, parameters.size());
+
+			String[] values = parameters.get("param1");
+			assertEquals(1, values.length);
+			assertEquals("value", values[0]);
+
+			values = parameters.get("param2");
+			assertEquals(2, values.length);
+			assertEquals("value1", values[0]);
+			assertEquals("value2", values[1]);
+
+			resp.setStatus(200);
+			resp.setContentLength(0);
 		}
 	}
 
