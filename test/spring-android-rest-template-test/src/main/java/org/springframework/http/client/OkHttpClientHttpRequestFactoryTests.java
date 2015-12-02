@@ -92,4 +92,13 @@ public class OkHttpClientHttpRequestFactoryTests extends AbstractHttpRequestFact
 		}
 	}
 
+	@MediumTest
+	public void testPostWithAbsentBody() throws Exception {
+		ClientHttpRequest request = factory.createRequest(new URI(baseUrl + "/echo"), HttpMethod.POST);
+
+		ClientHttpResponse response = request.execute();
+
+		assertEquals("Invalid status code", HttpStatus.OK, response.getStatusCode());
+	}
+
 }
