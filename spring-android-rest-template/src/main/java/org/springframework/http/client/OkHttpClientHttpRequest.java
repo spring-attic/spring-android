@@ -50,6 +50,8 @@ class OkHttpClientHttpRequest extends AbstractBufferingClientHttpRequest
 
 	private static final String PROXY_AUTH_ERROR = "Received HTTP_PROXY_AUTH (407) code while not using proxy";
 
+	private static final byte[] NO_BODY = new byte[0];
+
 	private final OkHttpClient client;
 
 	private final URI uri;
@@ -77,8 +79,16 @@ class OkHttpClientHttpRequest extends AbstractBufferingClientHttpRequest
 	@Override
 	protected ClientHttpResponse executeInternal(HttpHeaders headers, byte[] content) throws IOException {
 
-		MediaType contentType = getContentType(headers);
-		RequestBody body = (content.length > 0 ? RequestBody.create(contentType, content) : null);
+		boolean requiresBody = method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH;
+
+		RequestBody body;
+
+		if (requiresBody && content.length == 0) {
+			body = RequestBody.create(null, NO_BODY);
+		} else {
+			MediaType contentType = getContentType(headers);
+			body = (content.length > 0 ? RequestBody.create(contentType, content) : null);
+		}
 
 		URL url = this.uri.toURL();
 		String methodName = this.method.name();
