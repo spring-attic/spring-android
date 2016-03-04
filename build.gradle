@@ -18,7 +18,8 @@ configure(allprojects) {
 	ext.jackson2Version          = "2.5.4"
 	ext.gsonVersion              = "2.3.1"
 	ext.simpleXmlVersion         = "2.7.1"
-	ext.okHttpVersion            = "2.4.0"
+	ext.okHttp3Version           = "3.2.0"
+	ext.okHttpVersion            = "2.7.5"
 	ext.httpclientVersion        = "4.3.5.1"
 	ext.gradleScriptDir          = "${rootProject.projectDir}/gradle"
 
@@ -158,6 +159,7 @@ project("spring-android-rest-template") {
 		provided("com.google.android:android:$androidVersion")
 		compile(project(":spring-android-core"))
 		optional("org.apache.httpcomponents:httpclient-android:$httpclientVersion")
+		optional("com.squareup.okhttp3:okhttp-urlconnection:$okHttp3Version")
 		optional("com.squareup.okhttp:okhttp-urlconnection:$okHttpVersion")
 		optional("com.fasterxml.jackson.core:jackson-databind:$jackson2Version")
 		optional("com.google.code.gson:gson:$gsonVersion")

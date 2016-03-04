@@ -178,6 +178,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	 * @param requestFactory HTTP request factory to use
 	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
 	 * @see org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+	 * @see org.springframework.http.client.OkHttp3ClientHttpRequestFactory
 	 * @see org.springframework.http.client.OkHttpClientHttpRequestFactory
 	 * @see org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory
 	 */
@@ -197,6 +198,7 @@ public class RestTemplate extends InterceptingHttpAccessor implements RestOperat
 	 * @see HttpMessageConverter
 	 * @see org.springframework.http.client.SimpleClientHttpRequestFactory
 	 * @see org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+	 * @see org.springframework.http.client.OkHttp3ClientHttpRequestFactory
 	 * @see org.springframework.http.client.OkHttpClientHttpRequestFactory
 	 * @see org.springframework.http.client.HttpComponentsAndroidClientHttpRequestFactory
 	 * @deprecated in favor of {@link #RestTemplate(List)} and {@link #setRequestFactory(ClientHttpRequestFactory)}

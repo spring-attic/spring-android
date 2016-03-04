@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2014 the original author or authors.
+ * Copyright 2002-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.http.client.OkHttpClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.Assert;
@@ -50,6 +51,9 @@ public abstract class HttpAccessor {
 	private static final boolean httpClient43Present =
 			ClassUtils.isPresent("org.apache.http.impl.client.CloseableHttpClient", HttpAccessor.class.getClassLoader());
 
+	private static final boolean okHttp3Present =
+			ClassUtils.isPresent("okhttp3.OkHttpClient", HttpAccessor.class.getClassLoader());
+
 	private static final boolean okHttpPresent =
 			ClassUtils.isPresent("com.squareup.okhttp.OkHttpClient", HttpAccessor.class.getClassLoader());
 
@@ -60,6 +64,9 @@ public abstract class HttpAccessor {
 	protected HttpAccessor() {
 		if (httpClient43Present) {
 			this.requestFactory = new HttpComponentsClientHttpRequestFactory();
+		}
+		else if (okHttp3Present) {
+			this.requestFactory = new OkHttp3ClientHttpRequestFactory();
 		}
 		else if (okHttpPresent) {
 			this.requestFactory = new OkHttpClientHttpRequestFactory();

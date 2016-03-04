@@ -19,29 +19,28 @@ package org.springframework.http.client;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.squareup.okhttp.Response;
+import okhttp3.Response;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.Assert;
 
 /**
- * {@link org.springframework.http.client.ClientHttpResponse} implementation that uses
- * OkHttp.
+ * {@link ClientHttpResponse} implementation that uses
+ * OkHttp 3.x.
  *
  * @author Luciano Leggieri
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 2.0
  */
-@Deprecated
-class OkHttpClientHttpResponse extends AbstractClientHttpResponse {
+class OkHttp3ClientHttpResponse extends AbstractClientHttpResponse {
 
 	private final Response response;
 
 	private HttpHeaders headers;
 
 
-	public OkHttpClientHttpResponse(Response response) {
+	public OkHttp3ClientHttpResponse(Response response) {
 		Assert.notNull(response, "'response' must not be null");
 		this.response = response;
 	}
@@ -78,11 +77,6 @@ class OkHttpClientHttpResponse extends AbstractClientHttpResponse {
 
 	@Override
 	public void closeInternal() {
-		try {
-			this.response.body().close();
-		}
-		catch (IOException ex) {
-			// Ignore
-		}
+		this.response.body().close();
 	}
 }

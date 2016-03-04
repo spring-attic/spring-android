@@ -23,11 +23,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,17 +36,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
 /**
- * {@link ClientHttpRequest} implementation that uses OkHttp to execute requests.
+ * {@link ClientHttpRequest} implementation that uses OkHttp 3.x to execute requests.
  *
- * <p>Created via the {@link OkHttpClientHttpRequestFactory}.
+ * <p>Created via the {@link OkHttp3ClientHttpRequestFactory}.
  *
  * @author Luciano Leggieri
  * @author Arjen Poutsma
  * @author Roy Clarkson
  * @since 2.0
  */
-@Deprecated
-class OkHttpClientHttpRequest extends AbstractBufferingClientHttpRequest
+class OkHttp3ClientHttpRequest extends AbstractBufferingClientHttpRequest
 		implements ClientHttpRequest {
 
 	private static final String PROXY_AUTH_ERROR = "Received HTTP_PROXY_AUTH (407) code while not using proxy";
@@ -60,7 +59,7 @@ class OkHttpClientHttpRequest extends AbstractBufferingClientHttpRequest
 	private final HttpMethod method;
 
 
-	public OkHttpClientHttpRequest(OkHttpClient client, URI uri, HttpMethod method) {
+	public OkHttp3ClientHttpRequest(OkHttpClient client, URI uri, HttpMethod method) {
 		this.client = client;
 		this.uri = uri;
 		this.method = method;
@@ -114,7 +113,7 @@ class OkHttpClientHttpRequest extends AbstractBufferingClientHttpRequest
 				throw e;
 			}
 		}
-		return new OkHttpClientHttpResponse(response);
+		return new OkHttp3ClientHttpResponse(response);
 	}
 
 	private MediaType getContentType(HttpHeaders headers) {
