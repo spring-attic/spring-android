@@ -1,5 +1,11 @@
 # Contributor Guidelines
 
+## Code of Conduct
+
+This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
+By participating, you are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+
+
 ## Sign the contributor license agreement
 
 Before we can accept your Spring for Android contribution, it is very important that you sign the Contributor License Agreement (CLA). Signing the contributor's agreement does not grant anyone commit rights to the main repository, but it does mean that we can accept your contributions and you will receive author credit. Active contributors might be asked to join the core team and provided the ability to merge pull requests. In order to read and sign the CLA, please visit:

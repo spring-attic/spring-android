@@ -2,6 +2,11 @@
 
 [Spring for Android] is a library that is designed to provide components of the [Spring Framework] family of projects for use in native [Android] applications.
 
+## Code of Conduct
+
+This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.adoc).
+By participating, you are expected to uphold this code. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+
 
 ## Features
 
