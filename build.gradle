@@ -13,7 +13,7 @@ configure(allprojects) {
 	group = "org.springframework.android"
 
 	ext.androidVersion           = "4.1.1.4"
-	ext.springSocialVersion      = "1.1.0.RELEASE"
+	ext.springSocialVersion      = "1.1.4.RELEASE"
 	ext.springSecurityVersion    = "3.1.3.RELEASE"
 	ext.jackson2Version          = "2.7.2"
 	ext.gsonVersion              = "2.6.2"
