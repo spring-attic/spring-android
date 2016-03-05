@@ -159,8 +159,8 @@ project("spring-android-rest-template") {
 		provided("com.google.android:android:$androidVersion")
 		compile(project(":spring-android-core"))
 		optional("org.apache.httpcomponents:httpclient-android:$httpclientVersion")
-		optional("com.squareup.okhttp3:okhttp-urlconnection:$okHttp3Version")
-		optional("com.squareup.okhttp:okhttp-urlconnection:$okHttpVersion")
+		optional("com.squareup.okhttp3:okhttp:$okHttp3Version")
+		optional("com.squareup.okhttp:okhttp:$okHttpVersion")
 		optional("com.fasterxml.jackson.core:jackson-databind:$jackson2Version")
 		optional("com.google.code.gson:gson:$gsonVersion")
 		optional("org.simpleframework:simple-xml:$simpleXmlVersion") { dep ->
