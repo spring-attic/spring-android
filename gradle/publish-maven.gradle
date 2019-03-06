@@ -34,12 +34,12 @@ def customizePom(pom, gradleProject) {
 			url = "https://github.com/spring-projects/spring-android"
 			organization {
 				name = "Spring IO"
-				url = "http://projects.spring.io/spring-android"
+				url = "https://projects.spring.io/spring-android"
 			}
 			licenses {
 				license {
 					name "The Apache Software License, Version 2.0"
-					url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+					url "https://www.apache.org/licenses/LICENSE-2.0.txt"
 					distribution "repo"
 				}
 			}
