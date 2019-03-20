@@ -5,8 +5,8 @@
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
-        http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-        http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+        http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+        http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 	
   <title>Auth Module</title>
 
@@ -14,10 +14,10 @@
 	
     <title>Introduction</title>
 
-    <para>Many mobile applications today connect to external web services to access some type of data. These web services may be a third-party data provider, such as <ulink url="http://twitter.com">
+    <para>Many mobile applications today connect to external web services to access some type of data. These web services may be a third-party data provider, such as <ulink url="https://twitter.com">
  	<citetitle>Twitter</citetitle></ulink>, or it may be an in house service for connecting to a corporate calendar, for example. In many of these cases, to access that data through the web service, you must authenticate and authorize an application on your mobile device. The goal of the spring-android-auth module is to address the need of an Android application to gain authorization to a web service.</para>
 
-  	<para>There are many types of authorization methods and protocols, some custom and proprietary, while others are open standards. One protocol that is rapidly growing in popularity is <ulink url="http://oauth.net/">
+  	<para>There are many types of authorization methods and protocols, some custom and proprietary, while others are open standards. One protocol that is rapidly growing in popularity is <ulink url="https://oauth.net/">
  	<citetitle>OAuth</citetitle></ulink>. OAuth is an open protocol that allows users to give permission to a third-party application or web site to access restricted resources on another web site or service. The third-party application receives an access token with which it can make requests to the protected service. By using this access token strategy, a user's login credentials are never stored within an application, and are only required when authenticating to the service.</para>
 
   </section>
@@ -26,28 +26,28 @@
 
 	<title>Overview</title>
 
-	<para>The initial release of the spring-android-auth module provides <ulink url="http://oauth.net/">
- 	<citetitle>OAuth</citetitle></ulink> 1.x and 2.0 support in an Android application by utilizing <ulink url="http://projects.spring.io/spring-social/">
- 	<citetitle>Spring Social</citetitle></ulink>. It includes a <ulink url="http://www.sqlite.org/">
- 	<citetitle>SQLite</citetitle></ulink> repository, and Android compatible <ulink url="http://docs.spring.io/spring-security/site/index.html">
- 	<citetitle>Spring Security</citetitle></ulink> encryption. The Spring Social project enables your applications to establish Connections with Software-as-a-Service (SaaS) Providers such as <ulink url="http://facebook.com">
- 	<citetitle>Facebook</citetitle></ulink> and <ulink url="http://twitter.com">
+	<para>The initial release of the spring-android-auth module provides <ulink url="https://oauth.net/">
+ 	<citetitle>OAuth</citetitle></ulink> 1.x and 2.0 support in an Android application by utilizing <ulink url="https://projects.spring.io/spring-social/">
+ 	<citetitle>Spring Social</citetitle></ulink>. It includes a <ulink url="https://www.sqlite.org/">
+ 	<citetitle>SQLite</citetitle></ulink> repository, and Android compatible <ulink url="https://docs.spring.io/spring-security/site/index.html">
+ 	<citetitle>Spring Security</citetitle></ulink> encryption. The Spring Social project enables your applications to establish Connections with Software-as-a-Service (SaaS) Providers such as <ulink url="https://facebook.com">
+ 	<citetitle>Facebook</citetitle></ulink> and <ulink url="https://twitter.com">
  	<citetitle>Twitter</citetitle></ulink> to invoke Service APIs on behalf of Users. In order to make use of Spring Social on Android the following classes are available.</para>
 	
 	<section>
 		
 		<title>SQLite Connection Repository</title>
 		
-		<para>The <ulink url="http://docs.spring.io/spring-android/docs/1.0.x/api/org/springframework/social/connect/sqlite/SQLiteConnectionRepository.html">
+		<para>The <ulink url="https://docs.spring.io/spring-android/docs/1.0.x/api/org/springframework/social/connect/sqlite/SQLiteConnectionRepository.html">
  	<citetitle>
  		<classname>SQLiteConnectionRepository</classname>
- 	</citetitle></ulink> class implements the <ulink url="http://docs.spring.io/spring-social/docs/1.0.x/api/org/springframework/social/connect/ConnectionRepository.html">
+ 	</citetitle></ulink> class implements the <ulink url="https://docs.spring.io/spring-social/docs/1.0.x/api/org/springframework/social/connect/ConnectionRepository.html">
  	<citetitle>
  		<interfacename>ConnectionRepository</interfacename>
- 	</citetitle></ulink> interface from Spring Social. It is used to persist the connection information to a <ulink url="http://www.sqlite.org/">
+ 	</citetitle></ulink> interface from Spring Social. It is used to persist the connection information to a <ulink url="https://www.sqlite.org/">
  	<citetitle>SQLite</citetitle></ulink> database on the Android device. This connection repository is designed for a single user who accesses multiple service providers and may even have multiple accounts on each service provider.</para>
 		
-		<para>If your device and application are used by multiple people, then a <ulink url="http://docs.spring.io/spring-android/docs/1.0.x/api/index.html?org/springframework/social/connect/sqlite/SQLiteConnectionRepository.html">
+		<para>If your device and application are used by multiple people, then a <ulink url="https://docs.spring.io/spring-android/docs/1.0.x/api/index.html?org/springframework/social/connect/sqlite/SQLiteConnectionRepository.html">
  	<citetitle>
  		<classname>SQLiteUsersConnectionRepository</classname>
  	</citetitle></ulink> class is available for storing multiple user accounts, where each user account may have multiple connections per provider. This scenario is probably not as typical, however, as many people do not share their phones or devices.</para>
@@ -58,10 +58,10 @@
 		
 		<title>Encryption</title>
 		
-		<para>The Spring Security Crypto library is not currently supported on Android. To take advantage of the encryption tools in Spring Security, the Android specific class, <ulink url="http://docs.spring.io/spring-android/docs/1.0.x/api/org/springframework/security/crypto/encrypt/AndroidEncryptors.html">
+		<para>The Spring Security Crypto library is not currently supported on Android. To take advantage of the encryption tools in Spring Security, the Android specific class, <ulink url="https://docs.spring.io/spring-android/docs/1.0.x/api/org/springframework/security/crypto/encrypt/AndroidEncryptors.html">
  	<citetitle>
  		<classname>AndroidEncryptors</classname>
- 	</citetitle></ulink> has been provided in Spring for Android. This class uses an Android compatible <ulink url="http://developer.android.com/reference/java/security/SecureRandom.html">
+ 	</citetitle></ulink> has been provided in Spring for Android. This class uses an Android compatible <ulink url="https://developer.android.com/reference/java/security/SecureRandom.html">
  	<citetitle>
  		<classname>SecureRandom</classname>
  	</citetitle></ulink> provider for generating byte array based keys using the SHA1PRNG algorithm.</para>
@@ -80,7 +80,7 @@
 
 		<title>Standard Installation</title>
 
-		<para>In order to use RestTemplate in your Android application, you must include the following Spring jars in the <literal>libs/</literal> folder. These are available from the SpringSource <ulink url="http://www.springsource.org/download/community">
+		<para>In order to use RestTemplate in your Android application, you must include the following Spring jars in the <literal>libs/</literal> folder. These are available from the SpringSource <ulink url="https://www.springsource.org/download/community">
  	<citetitle>Community Downloads</citetitle></ulink> page.
 
 			<itemizedlist>
@@ -93,7 +93,7 @@
 
 		</para>
 		
-		<para>Each <ulink url="http://www.springsource.org/spring-social">
+		<para>Each <ulink url="https://www.springsource.org/spring-social">
  	<citetitle>Spring Social</citetitle></ulink> provider may have additional dependencies. For example, to use Spring Social Twitter, the following jars are required.
 
 			<itemizedlist>
@@ -218,7 +218,7 @@
 		
 		</para>
 	
-		<para>Both the Spring Social Twitter and Facebook libraries transitively depend on the <ulink url="http://jackson.codehaus.org/">
+		<para>Both the Spring Social Twitter and Facebook libraries transitively depend on the <ulink url="https://jackson.codehaus.org/">
  	<citetitle>Jackson JSON processor</citetitle></ulink>. Again, if you are not using Maven, you will need to include these in your <literal>libs/</literal> folder.
 	
 			<programlisting language="xml"><![CDATA[
@@ -258,16 +258,16 @@ $ git clone git://github.com/spring-projects/spring-android-samples.git
 	
 		<title>Initializing the SQLite Database</title>
 		
-		<para><ulink url="http://docs.spring.io/spring-android/docs/1.0.x/api/org/springframework/social/connect/sqlite/support/SQLiteConnectionRepositoryHelper.html">
+		<para><ulink url="https://docs.spring.io/spring-android/docs/1.0.x/api/org/springframework/social/connect/sqlite/support/SQLiteConnectionRepositoryHelper.html">
 	<citetitle>
 		<classname>SQLiteConnectionRepositoryHelper</classname>
-	</citetitle></ulink> extends <ulink url="http://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html">
+	</citetitle></ulink> extends <ulink url="https://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html">
  	<citetitle>
  		<classname>SQLiteOpenHelper</classname>
- 	</citetitle></ulink>.  Create a new instance by passing a <ulink url="http://developer.android.com/reference/android/content/Context.html">
+ 	</citetitle></ulink>.  Create a new instance by passing a <ulink url="https://developer.android.com/reference/android/content/Context.html">
  	<citetitle>
  		<classname>context</classname>
- 	</citetitle></ulink> reference. Depending on your implementation, and to avoid <ulink url="http://developer.android.com/resources/articles/avoiding-memory-leaks.html">
+ 	</citetitle></ulink> reference. Depending on your implementation, and to avoid <ulink url="https://developer.android.com/resources/articles/avoiding-memory-leaks.html">
  	<citetitle>memory leaks</citetitle></ulink>, you will probably want to use the Application Context when creating a new instance of <classname>SQLiteConnectionRepositoryHelper</classname>. The name of the database file created is <literal>spring_social_connection_repository.sqlite</literal>, and is created the first time the application attempts to open it.</para>
 		
 		<programlisting language="java"><![CDATA[
@@ -291,7 +291,7 @@ SQLiteOpenHelper repositoryHelper;
 ConnectionRepository connectionRepository;]]>
 		</programlisting>
 			
-		<para>The <ulink url="http://docs.spring.io/spring-social/docs/1.0.x/api/org/springframework/social/connect/support/ConnectionFactoryRegistry.html">
+		<para>The <ulink url="https://docs.spring.io/spring-social/docs/1.0.x/api/org/springframework/social/connect/support/ConnectionFactoryRegistry.html">
  	<citetitle>
  		<classname>ConnectionFactoryRegistry</classname>
  	</citetitle></ulink> stores the different Spring Social connections to be used in the application.</para>
@@ -300,7 +300,7 @@ ConnectionRepository connectionRepository;]]>
 connectionFactoryRegistry = new ConnectionFactoryRegistry();]]>
 		</programlisting>
 
-		<para>You can create a <ulink url="http://docs.spring.io/spring-social-facebook/docs/1.0.x/api/org/springframework/social/facebook/connect/FacebookConnectionFactory.html">
+		<para>You can create a <ulink url="https://docs.spring.io/spring-social-facebook/docs/1.0.x/api/org/springframework/social/facebook/connect/FacebookConnectionFactory.html">
  	<citetitle>
  		<classname>FacebookConnectionFactory</classname>
  	</citetitle></ulink>, if your application requires Facebook connectivity.</para>
@@ -315,7 +315,7 @@ FacebookConnectionFactory facebookConnectionFactory;
 facebookConnectionFactory = new FacebookConnectionFactory(appId, appSecret);]]>
 		</programlisting>
 
-		<para>Similarly, you can also create a <ulink url="http://docs.spring.io/spring-social-twitter/docs/1.0.x/api/org/springframework/social/twitter/connect/TwitterConnectionFactory.html">
+		<para>Similarly, you can also create a <ulink url="https://docs.spring.io/spring-social-twitter/docs/1.0.x/api/org/springframework/social/twitter/connect/TwitterConnectionFactory.html">
  	<citetitle>
  		<classname>TwitterConnectionFactory</classname>
  	</citetitle></ulink>.  Spring Social offers several different connection factories to popular services.  Additionally, you can create your own connection factory based on the Spring Social framework.</para>
@@ -476,7 +476,7 @@ String redirectUri = "https://www.facebook.com/connect/login_success.html";]]>
 String scope = "publish_stream,offline_access,read_stream,user_about_me";]]>
 		</programlisting>
 		
-		<para>In order to display a mobile formatted web page for Facebook authorization, you must <ulink url="http://developers.facebook.com/docs/guides/mobile/#web">
+		<para>In order to display a mobile formatted web page for Facebook authorization, you must <ulink url="https://developers.facebook.com/docs/guides/mobile/#web">
  	<citetitle>pass an additional parameter</citetitle></ulink> in the request. This parameter is not part of the OAuth specification, but the following illustrates how Spring Social supports additional parameters.</para>
 
 		<programlisting language="java"><![CDATA[

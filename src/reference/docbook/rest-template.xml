@@ -5,8 +5,8 @@
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
-        http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-        http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+        http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+        http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 
  <title>RestTemplate Module</title>
 
@@ -30,11 +30,11 @@
 		
 		<title>HTTP Client</title>
 		
-		<para><classname>RestTemplate</classname> provides an abstraction for making RESTful HTTP requests, and internally, <classname>RestTemplate</classname> utilizes a native Android HTTP client library for those requests. There are two native HTTP clients available on Android, the standard J2SE facilities, and the <ulink url="http://hc.apache.org/httpcomponents-client-ga/index.html"><citetitle>HttpComponents HttpClient</citetitle></ulink>. The standard JS2SE facilities are made available through <classname>SimpleClientHttpRequestFactory</classname>, while the HttpClient can be utilized via <classname>HttpComponentsAndroidClientHttpRequestFactory</classname>. Support for native HttpClient 4.0 is deprecated in favor of the Android port of HttpClient 4.3. The default <interfacename>ClientHttpRequestFactory</interfacename> used when you create a new <classname>RestTemplate</classname> instance differs based on the version of Android on which your application is running.</para>
+		<para><classname>RestTemplate</classname> provides an abstraction for making RESTful HTTP requests, and internally, <classname>RestTemplate</classname> utilizes a native Android HTTP client library for those requests. There are two native HTTP clients available on Android, the standard J2SE facilities, and the <ulink url="https://hc.apache.org/httpcomponents-client-ga/index.html"><citetitle>HttpComponents HttpClient</citetitle></ulink>. The standard JS2SE facilities are made available through <classname>SimpleClientHttpRequestFactory</classname>, while the HttpClient can be utilized via <classname>HttpComponentsAndroidClientHttpRequestFactory</classname>. Support for native HttpClient 4.0 is deprecated in favor of the Android port of HttpClient 4.3. The default <interfacename>ClientHttpRequestFactory</interfacename> used when you create a new <classname>RestTemplate</classname> instance differs based on the version of Android on which your application is running.</para>
 
-		<para>Google recommends to use the J2SE facilities on <ulink url="http://android-developers.blogspot.com/2011/09/androids-http-clients.html"><citetitle>Android 2.3 (Gingerbread)</citetitle></ulink> and newer, while previous versions should use the HttpComponents HttpClient. Based on this recommendation <classname>RestTemplate</classname> checks the version of Android on which your app is running and uses the appropriate <interfacename>ClientHttpRequestFactory</interfacename>. To utilize a specific <interfacename>ClientHttpRequestFactory</interfacename> you must either pass a new instance into the <classname>RestTemplate</classname> constructor, or call <methodname>setRequestFactory(ClientHttpRequestFactory requestFactory)</methodname> on an existing <classname>RestTemplate</classname> instance.</para>
+		<para>Google recommends to use the J2SE facilities on <ulink url="https://android-developers.blogspot.com/2011/09/androids-http-clients.html"><citetitle>Android 2.3 (Gingerbread)</citetitle></ulink> and newer, while previous versions should use the HttpComponents HttpClient. Based on this recommendation <classname>RestTemplate</classname> checks the version of Android on which your app is running and uses the appropriate <interfacename>ClientHttpRequestFactory</interfacename>. To utilize a specific <interfacename>ClientHttpRequestFactory</interfacename> you must either pass a new instance into the <classname>RestTemplate</classname> constructor, or call <methodname>setRequestFactory(ClientHttpRequestFactory requestFactory)</methodname> on an existing <classname>RestTemplate</classname> instance.</para>
 
-		<para>Spring for Android also includes support for third-party HTTP client libraries. <ulink url="http://hc.apache.org/httpcomponents-client-4.3.x/android-port.html">HttpClient 4.3 for Android</ulink> is compatible with all versions of Android, and may be utilized as an alternative to the native clients by simply including the dependency in your project. If Spring for Android detects HttpClient 4.3, then it will automatically configure it as the default <interfacename>ClientHttpRequestFactory</interfacename>. HttpClient 4.3 has a considerable number of bug fixes and improvements over the native HttpClient 4.0 included within Android.
+		<para>Spring for Android also includes support for third-party HTTP client libraries. <ulink url="https://hc.apache.org/httpcomponents-client-4.3.x/android-port.html">HttpClient 4.3 for Android</ulink> is compatible with all versions of Android, and may be utilized as an alternative to the native clients by simply including the dependency in your project. If Spring for Android detects HttpClient 4.3, then it will automatically configure it as the default <interfacename>ClientHttpRequestFactory</interfacename>. HttpClient 4.3 has a considerable number of bug fixes and improvements over the native HttpClient 4.0 included within Android.
 
 			<programlisting language="groovy"><![CDATA[
 dependencies {
@@ -68,7 +68,7 @@ dependencies {
 		
 		<title>Object to JSON Marshaling</title>
 		
-		<para>Object to JSON marshaling in Spring for Android RestTemplate requires the use of a third party JSON mapping library. There are two libraries supported in Spring for Android, <ulink url="https://github.com/FasterXML/jackson-databind"><citetitle>Jackson 2.x</citetitle></ulink> and <ulink url="http://code.google.com/p/google-gson/"><citetitle>Google Gson</citetitle></ulink>. While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
+		<para>Object to JSON marshaling in Spring for Android RestTemplate requires the use of a third party JSON mapping library. There are two libraries supported in Spring for Android, <ulink url="https://github.com/FasterXML/jackson-databind"><citetitle>Jackson 2.x</citetitle></ulink> and <ulink url="https://code.google.com/p/google-gson/"><citetitle>Google Gson</citetitle></ulink>. While Jackson is a well known JSON parsing library, the Gson library is smaller, which would result in an smaller Android app when packaged.</para>
 		
 	</section>
 	
@@ -189,7 +189,7 @@ RestTemplate template = new RestTemplate(ClientHttpRequestFactory requestFactory
 	
 	<para>The names of <classname>RestTemplate</classname> methods follow a naming convention, the first part indicates what HTTP method is being invoked and the second part indicates what is returned. For example, the method <methodname>getForObject()</methodname> will perform a GET, convert the HTTP response into an object type of your choice and return that object. The method <methodname>postForLocation()</methodname> will do a POST, converting the given object into a HTTP request and return the response HTTP Location header where the newly created object can be found. In case of an exception processing the HTTP request, an exception of the type <classname>RestClientException</classname> will be thrown.  This behavior can be changed by plugging in another <interfacename>ResponseErrorHandler</interfacename> implementation into the <classname>RestTemplate.</classname></para>
 	
-	<para>For more information on <classname>RestTemplate</classname> and it's associated methods, please refer to the <ulink url="http://docs.spring.io/spring-android/docs/2.0.x/api/org/springframework/web/client/RestTemplate.html">
+	<para>For more information on <classname>RestTemplate</classname> and it's associated methods, please refer to the <ulink url="https://docs.spring.io/spring-android/docs/2.0.x/api/org/springframework/web/client/RestTemplate.html">
  	<citetitle>API Javadoc</citetitle></ulink></para>
 	
 	<section>
@@ -474,7 +474,7 @@ dependencies {
 
 		<title>GsonHttpMessageConverter</title>
 
-		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <ulink url="http://code.google.com/p/google-gson/">
+		<para>An <interfacename>HttpMessageConverter</interfacename> implementation that can read and write JSON using <ulink url="https://code.google.com/p/google-gson/">
  	<citetitle>Google Gson</citetitle></ulink>'s <classname>Gson</classname> class. JSON mapping can be customized as needed through the use of Gson's provided annotations. When further control is needed, a custom <classname>Gson</classname> can be injected through the <classname>Gson</classname> property for cases where custom JSON serializers/deserializers need to be provided for specific types. By default this converter supports <literal>application/json</literal>.</para>
 
 		<para>Please note that this message converter and the <classname>MappingJackson2HttpMessageConverter</classname> both support <literal>application/json</literal> by default. Because of this, you should only add one JSON message converter to a <classname>RestTemplate</classname> instance. <classname>RestTemplate</classname> will use the first converter it finds that matches the specified mime type, so including both could produce unintended results.</para>
@@ -540,7 +540,7 @@ String result = restTemplate.getForObject(url, String.class, "Spring Framework")
 
 		<title>Using Gzip Compression</title>
 
-		<para>Gzip compression can significantly reduce the size of the response data being returned in a REST request. Gzip must be supported by the web server to which the request is being made. By setting the content coding type of the <literal>Accept-Encoding</literal> header to <literal>gzip</literal>, you are requesting that the server respond using gzip compression. If gzip is available, or enabled on the server, then it should return a compressed response. RestTemplate checks the <literal>Content-Encoding</literal> header in the response to determine if, in fact, the response is gzip compressed. At this time, RestTemplate only supports the gzip content coding type in the <literal>Content-Encoding</literal> header. If the response data is determined to be gzip compressed, then a <ulink url="http://developer.android.com/reference/java/util/zip/GZIPInputStream.html">
+		<para>Gzip compression can significantly reduce the size of the response data being returned in a REST request. Gzip must be supported by the web server to which the request is being made. By setting the content coding type of the <literal>Accept-Encoding</literal> header to <literal>gzip</literal>, you are requesting that the server respond using gzip compression. If gzip is available, or enabled on the server, then it should return a compressed response. RestTemplate checks the <literal>Content-Encoding</literal> header in the response to determine if, in fact, the response is gzip compressed. At this time, RestTemplate only supports the gzip content coding type in the <literal>Content-Encoding</literal> header. If the response data is determined to be gzip compressed, then a <ulink url="https://developer.android.com/reference/java/util/zip/GZIPInputStream.html">
  	<citetitle>
  		<classname>GZIPInputStream</classname>
  	</citetitle></ulink> is used to decompress it.</para>
@@ -807,8 +807,8 @@ String result = responseEntity.getBody();]]>
 		
 		<title>HTTP Basic Authentication</title>
 		
-		<para>This example illustrates how to populate the <ulink url="http://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-spec.html#BasicAA">
- 	<citetitle>HTTP Basic Authentication</citetitle></ulink> header with the username and password. If the username and password are accepted, then you will receive the response from the request. If they are not accepted, then the server is supposed to return an <ulink url="http://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-spec.html#Code401">
+		<para>This example illustrates how to populate the <ulink url="https://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-spec.html#BasicAA">
+ 	<citetitle>HTTP Basic Authentication</citetitle></ulink> header with the username and password. If the username and password are accepted, then you will receive the response from the request. If they are not accepted, then the server is supposed to return an <ulink url="https://www.w3.org/Protocols/HTTP/1.0/draft-ietf-http-spec.html#Code401">
  	<citetitle>HTTP 401 Unauthorized</citetitle></ulink> response. Internally, RestTemplate handles the response, then throws an <classname>HttpClientErrorException</classname>. By calling <methodname>getStatusCode()</methodname> on this exception, you can determine the exact cause and handle it appropriately.</para>
 		
 		<programlisting language="java"><![CDATA[

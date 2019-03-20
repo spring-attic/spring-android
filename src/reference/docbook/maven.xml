@@ -5,8 +5,8 @@
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
-        http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd
-        http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
+        http://docbook.org/ns/docbook https://www.docbook.org/xml/5.0/xsd/docbook.xsd
+        http://www.w3.org/1999/xlink https://www.docbook.org/xml/5.0/xsd/xlink.xsd">
 
   <title>Maven Dependency Management</title>
 
@@ -14,7 +14,7 @@
   
 	<title>Introduction</title>
 
-    <para>Android Studio and the new Android build system support the use of Maven dependencies through Gradle. Alternatively, the <ulink url="http://code.google.com/p/maven-android-plugin"><citetitle>Android Maven Plugin</citetitle></ulink> can also be used to build an Android application.</para>
+    <para>Android Studio and the new Android build system support the use of Maven dependencies through Gradle. Alternatively, the <ulink url="https://code.google.com/p/maven-android-plugin"><citetitle>Android Maven Plugin</citetitle></ulink> can also be used to build an Android application.</para>
 	
   </section>
 
@@ -25,8 +25,8 @@
 	<para>The following repositories are available for all Spring projects. Much more information is available at the <ulink url="https://github.com/spring-projects/spring-framework/wiki/SpringSource-repository-FAQ">
  	<citetitle>Spring Repository FAQ</citetitle></ulink>.</para>
 	
-	<para>Release versions are available through <ulink url="http://search.maven.org/">
- 	<citetitle>Maven Central</citetitle></ulink> or via the <ulink url="http://repo.spring.io/">
+	<para>Release versions are available through <ulink url="https://search.maven.org/">
+ 	<citetitle>Maven Central</citetitle></ulink> or via the <ulink url="https://repo.spring.io/">
  	<citetitle>Spring Repository</citetitle></ulink>:
 
 		<programlisting language="groovy"><![CDATA[
@@ -136,13 +136,13 @@ dependencies {
 
 	<title>Example POM</title>
 	
-	<para>The following <ulink url="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html">
-	<citetitle>Maven POM file</citetitle></ulink> illustrates how to configure the <ulink url="http://code.google.com/p/maven-android-plugin">
+	<para>The following <ulink url="https://maven.apache.org/guides/introduction/introduction-to-the-pom.html">
+	<citetitle>Maven POM file</citetitle></ulink> illustrates how to configure the <ulink url="https://code.google.com/p/maven-android-plugin">
 	<citetitle>Maven Android Plugin</citetitle></ulink> and associated dependencies for use with Spring for Android.</para>
 	
 	<programlisting language="xml"><![CDATA[
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.springframework.android</groupId>
@@ -150,11 +150,11 @@ dependencies {
     <version>0.1.0.SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>spring-android-client</name>
-    <url>http://projects.spring.io/spring-android</url>
+    <url>https://projects.spring.io/spring-android</url>
     <inceptionYear>2010</inceptionYear>
     <organization>
         <name>Spring</name>
-        <url>http://spring.io</url>
+        <url>https://spring.io</url>
     </organization>
 
     <properties>
@@ -196,7 +196,7 @@ dependencies {
         <repository>
             <id>spring-milestone</id>
             <name>Spring Milestones</name>
-            <url>http://repo.spring.io/libs-milestone</url>
+            <url>https://repo.spring.io/libs-milestone</url>
         </repository>
     </repositories>
 
@@ -241,7 +241,7 @@ dependencies {
 $ mvn clean install]]>
 	</programlisting>
 	
-	<para>The Android Maven Plugin provides several <ulink url="http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html">
+	<para>The Android Maven Plugin provides several <ulink url="https://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html">
  	<citetitle>goals</citetitle></ulink> for use in building and deploying your application. You can configure a specific emulator in the plugin configuration, or if you omit the emulator name, the plugin will attempt to execute the specified goal on all available emulators and devices.</para>
 	
 	<para>The following command starts the emulator specified in the Maven Android Plugin section of the POM file. If no emulator name is configured, then the plugin attempts to start an AVD with the name of <literal>Default</literal>.</para>
