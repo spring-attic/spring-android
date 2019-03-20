@@ -40,7 +40,7 @@ import org.springframework.util.Assert;
 
 /**
  * Implementation of {@link org.springframework.http.converter.HttpMessageConverter HttpMessageConverter}
- * that can read and write JSON using <a href="http://wiki.fasterxml.com/JacksonHome">Jackson 2.x's</a>  {@link ObjectMapper}.
+ * that can read and write JSON using <a href="https://wiki.fasterxml.com/JacksonHome">Jackson 2.x's</a>  {@link ObjectMapper}.
  *
  * <p>This converter can be used to bind to typed beans, or untyped {@link java.util.HashMap HashMap} instances.
  *

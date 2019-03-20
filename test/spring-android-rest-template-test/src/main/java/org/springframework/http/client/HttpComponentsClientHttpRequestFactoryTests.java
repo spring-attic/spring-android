@@ -30,7 +30,7 @@ public class HttpComponentsClientHttpRequestFactoryTests extends HttpComponentsA
 	}
 
 	public void createHttpUriRequest() throws Exception {
-		URI uri = new URI("http://example.com");
+		URI uri = new URI("https://example.com");
 		confirmRequestBodyAllowed(uri, HttpMethod.GET, false);
 		confirmRequestBodyAllowed(uri, HttpMethod.HEAD, false);
 		confirmRequestBodyAllowed(uri, HttpMethod.OPTIONS, false);

@@ -74,7 +74,7 @@ public class SourceHttpMessageConverterTests extends TestCase {
 		if (javaxXmlTransformPresent) {
 			this.converter = new SourceHttpMessageConverter<Source>();
 			Resource external = new ClassPathResource("external.txt", getClass());
-			bodyExternal = "<!DOCTYPE root SYSTEM \"http://192.168.28.42/1.jsp\" [" +
+			bodyExternal = "<!DOCTYPE root SYSTEM \"https://192.168.28.42/1.jsp\" [" +
 					"  <!ELEMENT root ANY >\n" +
 					"  <!ENTITY ext SYSTEM \"" + external.getURI() + "\" >]><root>&ext;</root>";
 		}

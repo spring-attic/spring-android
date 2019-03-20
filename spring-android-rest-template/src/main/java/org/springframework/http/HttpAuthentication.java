@@ -19,7 +19,7 @@ package org.springframework.http;
 /**
  * Represents an abstract HTTP Authentication. Possible subclasses include 
  * representations of HTTP Basic Authentication and HTTP Digest Authentication.
- * @see <a href="http://www.ietf.org/rfc/rfc2617.txt">RFC2617</a>
+ * @see <a href="https://www.ietf.org/rfc/rfc2617.txt">RFC2617</a>
  * @author Jonathan Sweemer
  * @author Roy Clarkson
  * @since 1.0

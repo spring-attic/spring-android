@@ -250,34 +250,34 @@ Follow [@SpringCentral] as well as [@SpringAndroid] on Twitter. In-depth article
 [Spring for Android] is released under version 2.0 of the [Apache License].
 
 
-[Spring for Android]: http://www.spring.io/projects/spring-android
-[Spring Framework]: http://www.spring.io/projects/spring-framework
+[Spring for Android]: https://www.spring.io/projects/spring-android
+[Spring Framework]: https://www.spring.io/projects/spring-framework
 [Android Build System]: http://tools.android.com/tech-docs/new-build-system/user-guide
-[Android]: http://developer.android.com
-[Gradle]: http://www.gradle.org
-[Android Maven Plugin]: http://code.google.com/p/maven-android-plugin
-[Maven]: http://maven.apache.org
+[Android]: https://developer.android.com
+[Gradle]: https://www.gradle.org
+[Android Maven Plugin]: https://code.google.com/p/maven-android-plugin
+[Maven]: https://maven.apache.org
 [downloading Spring artifacts]: https://github.com/spring-projects/spring-framework/wiki/Downloading-Spring-artifacts
 [building a distribution with dependencies]: https://github.com/spring-projects/spring-framework/wiki/Building-a-distribution-with-dependencies
-[Javadoc]: http://docs.spring.io/spring-android/docs/current/api/
-[reference docs]: http://docs.spring.io/spring-android/docs/current/reference/html/
+[Javadoc]: https://docs.spring.io/spring-android/docs/current/api/
+[reference docs]: https://docs.spring.io/spring-android/docs/current/reference/html/
 [samples repository]: https://github.com/spring-projects/spring-android-samples
-[spring.io]: http://spring.io
-[guides]: http://spring.io/guides
-[spring-android tag]: http://stackoverflow.com/questions/tagged/spring-android
-[Stack Overflow]: http://stackoverflow.com/faq
-[Commercial support]: http://spring.io/services
-[Spring Android JIRA]: http://jira.spring.io/browse/ANDROID
-[Git]: http://git-scm.com
-[GitHub for Windows]: http://windows.github.com
-[GitHub for Mac]: http://mac.github.com
+[spring.io]: https://spring.io
+[guides]: https://spring.io/guides
+[spring-android tag]: https://stackoverflow.com/questions/tagged/spring-android
+[Stack Overflow]: https://stackoverflow.com/faq
+[Commercial support]: https://spring.io/services
+[Spring Android JIRA]: https://jira.spring.io/browse/ANDROID
+[Git]: https://git-scm.com
+[GitHub for Windows]: https://windows.github.com
+[GitHub for Mac]: https://mac.github.com
 [GitHub issues]: https://github.com/spring-projects/spring-android/issues?direction=desc&sort=created&state=open
 [the lifecycle of an issue]: https://github.com/spring-projects/spring-framework/wiki/The-Lifecycle-of-an-Issue
-[sts]: http://www.spring.io/sts
-[Pull requests]: http://help.github.com/send-pull-requests
+[sts]: https://www.spring.io/sts
+[Pull requests]: https://help.github.com/send-pull-requests
 [contributor guidelines]: CONTRIBUTING.md
 [@SpringCentral]: https://twitter.com/springcentral
 [@SpringAndroid]: https://twitter.com/springandroid
-[The Spring Blog]: http://spring.io/blog/
-[news feed]: http://spring.io/blog/category/news
+[The Spring Blog]: https://spring.io/blog/
+[news feed]: https://spring.io/blog/category/news
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0

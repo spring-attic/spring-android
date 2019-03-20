@@ -369,12 +369,12 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		connectionFactoryRegistry.addConnectionFactory(new TestTwitterConnectionFactory());
 		insertTwitterConnection();
 		Connection<TestTwitterApi> twitter = connectionRepository.findPrimaryConnection(TestTwitterApi.class);
-		assertEquals("http://twitter.com/kdonald/picture", twitter.getImageUrl());
+		assertEquals("https://twitter.com/kdonald/picture", twitter.getImageUrl());
 		twitter.sync();
-		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter.getImageUrl());
+		assertEquals("https://twitter.com/kdonald/a_new_picture", twitter.getImageUrl());
 		connectionRepository.updateConnection(twitter);
 		Connection<TestTwitterApi> twitter2 = connectionRepository.findPrimaryConnection(TestTwitterApi.class);
-		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter2.getImageUrl());
+		assertEquals("https://twitter.com/kdonald/a_new_picture", twitter2.getImageUrl());
 	}
 
 	@MediumTest
@@ -400,8 +400,8 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		values.put("providerUserId", "1");
 		values.put("rank", 1);
 		values.put("displayName", "@kdonald");
-		values.put("profileUrl", "http://twitter.com/kdonald");
-		values.put("imageUrl", "http://twitter.com/kdonald/picture");
+		values.put("profileUrl", "https://twitter.com/kdonald");
+		values.put("imageUrl", "https://twitter.com/kdonald/picture");
 		values.put("accessToken", encrypt("123456789"));
 		values.put("secret", encrypt("987654321"));
 		values.putNull("refreshToken");
@@ -499,8 +499,8 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		assertEquals("facebook", connection.getKey().getProviderId());
 		assertEquals("9", connection.getKey().getProviderUserId());
 		assertEquals("Keith Donald", connection.getDisplayName());
-		assertEquals("http://facebook.com/keith.donald", connection.getProfileUrl());
-		assertEquals("http://facebook.com/keith.donald/picture", connection.getImageUrl());
+		assertEquals("https://facebook.com/keith.donald", connection.getProfileUrl());
+		assertEquals("https://facebook.com/keith.donald/picture", connection.getImageUrl());
 		assertTrue(connection.test());
 		TestFacebookApi api = connection.getApi();
 		assertNotNull(api);
@@ -512,13 +512,13 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 	private void assertTwitterConnection(Connection<TestTwitterApi> twitter) {
 		assertEquals(new ConnectionKey("twitter", "1"), twitter.getKey());
 		assertEquals("@kdonald", twitter.getDisplayName());
-		assertEquals("http://twitter.com/kdonald", twitter.getProfileUrl());
-		assertEquals("http://twitter.com/kdonald/picture", twitter.getImageUrl());
+		assertEquals("https://twitter.com/kdonald", twitter.getProfileUrl());
+		assertEquals("https://twitter.com/kdonald/picture", twitter.getImageUrl());
 		TestTwitterApi twitterApi = twitter.getApi();
 		assertEquals("123456789", twitterApi.getAccessToken());
 		assertEquals("987654321", twitterApi.getSecret());
 		twitter.sync();
-		assertEquals("http://twitter.com/kdonald/a_new_picture", twitter.getImageUrl());
+		assertEquals("https://twitter.com/kdonald/a_new_picture", twitter.getImageUrl());
 	}
 
 	private void assertFacebookConnection(Connection<TestFacebookApi> facebook) {
@@ -530,8 +530,8 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 		assertEquals("234567890", facebookApi.getAccessToken());
 		facebook.sync();
 		assertEquals("Keith Donald", facebook.getDisplayName());
-		assertEquals("http://facebook.com/keith.donald", facebook.getProfileUrl());
-		assertEquals("http://facebook.com/keith.donald/picture", facebook.getImageUrl());
+		assertEquals("https://facebook.com/keith.donald", facebook.getProfileUrl());
+		assertEquals("https://facebook.com/keith.donald/picture", facebook.getImageUrl());
 	}
 
 	// test facebook provider
@@ -603,9 +603,9 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 
 		private String name = "Keith Donald";
 
-		private String profileUrl = "http://facebook.com/keith.donald";
+		private String profileUrl = "https://facebook.com/keith.donald";
 
-		private String profilePictureUrl = "http://facebook.com/keith.donald/picture";
+		private String profilePictureUrl = "https://facebook.com/keith.donald/picture";
 
 		public boolean test(TestFacebookApi api) {
 			return true;
@@ -672,9 +672,9 @@ public class SQLiteUsersConnectionRepositoryTest extends AndroidTestCase {
 
 		private String name = "@kdonald";
 
-		private String profileUrl = "http://twitter.com/kdonald";
+		private String profileUrl = "https://twitter.com/kdonald";
 
-		private String profilePictureUrl = "http://twitter.com/kdonald/a_new_picture";
+		private String profilePictureUrl = "https://twitter.com/kdonald/a_new_picture";
 
 		public boolean test(TestTwitterApi api) {
 			return true;

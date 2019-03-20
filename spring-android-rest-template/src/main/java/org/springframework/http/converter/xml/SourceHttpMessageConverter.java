@@ -163,7 +163,7 @@ public class SourceHttpMessageConverter<T extends Source> extends AbstractHttpMe
 			XMLReader reader = newSAXParser.getXMLReader();
 			// older versions of the Android parser do not support this feature
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-				reader.setFeature("http://xml.org/sax/features/external-general-entities", isProcessExternalEntities());
+				reader.setFeature("http://www.xml.org/sax/features/external-general-entities", isProcessExternalEntities());
 			}
 			byte[] bytes = StreamUtils.copyToByteArray(body);
 			if (!isProcessExternalEntities()) {

@@ -22,7 +22,7 @@ import org.springframework.util.Base64Utils;
  * Represents HTTP Basic Authentication. Intended for use
  * with {@link org.springframework.http.client.ClientHttpRequest}
  * and {@link org.springframework.web.client.RestTemplate}.
- * @see <a href="http://www.ietf.org/rfc/rfc2617.txt">RFC2617</a>
+ * @see <a href="https://www.ietf.org/rfc/rfc2617.txt">RFC2617</a>
  * @author Jonathan Sweemer
  * @author Roy Clarkson
  * @since 1.0
