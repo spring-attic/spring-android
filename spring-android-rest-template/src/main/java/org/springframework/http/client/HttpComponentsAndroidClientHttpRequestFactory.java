@@ -49,7 +49,7 @@ import org.springframework.util.Assert;
 /**
  * {@link org.springframework.http.client.ClientHttpRequestFactory} implementation that
  * uses Android native
- * <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/">Apache
+ * <a href="https://hc.apache.org/httpcomponents-client-ga/httpclient/">Apache
  * HttpClient 4.0</a> to create requests.
  * 
  * <p>Allows to use a pre-configured {@link HttpClient} instance - potentially with authentication, HTTP connection

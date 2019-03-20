@@ -37,7 +37,7 @@ import java.lang.reflect.Type;
  * @author Arjen Poutsma
  * @author Rossen Stoyanchev
  * @since 2.0
- * @see <a href="http://gafter.blogspot.nl/2006/12/super-type-tokens.html">Neal Gafter on Super Type Tokens</a>
+ * @see <a href="https://gafter.blogspot.nl/2006/12/super-type-tokens.html">Neal Gafter on Super Type Tokens</a>
  */
 public abstract class ParameterizedTypeReference<T> {
 

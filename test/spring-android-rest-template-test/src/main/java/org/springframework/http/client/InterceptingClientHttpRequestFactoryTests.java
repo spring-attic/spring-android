@@ -71,7 +71,7 @@ public class InterceptingClientHttpRequestFactoryTests extends TestCase {
 		interceptors.add(new NoOpInterceptor());
 		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock, interceptors);
 
-		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
+		ClientHttpRequest request = requestFactory.createRequest(new URI("https://example.com"), HttpMethod.GET);
 		ClientHttpResponse response = request.execute();
 
 		assertTrue(((NoOpInterceptor) interceptors.get(0)).invoked);
@@ -93,7 +93,7 @@ public class InterceptingClientHttpRequestFactoryTests extends TestCase {
 		interceptors.add(new NoOpInterceptor());
 		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock, interceptors);
 
-		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
+		ClientHttpRequest request = requestFactory.createRequest(new URI("https://example.com"), HttpMethod.GET);
 		ClientHttpResponse response = request.execute();
 
 		assertFalse(((NoOpInterceptor) interceptors.get(1)).invoked);
@@ -129,13 +129,13 @@ public class InterceptingClientHttpRequestFactoryTests extends TestCase {
 
 		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock, Collections.singletonList(interceptor));
 
-		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
+		ClientHttpRequest request = requestFactory.createRequest(new URI("https://example.com"), HttpMethod.GET);
 		request.execute();
 	}
 
 	@MediumTest
 	public void testChangeURI() throws Exception {
-		final URI changedUri = new URI("http://example.com/2");
+		final URI changedUri = new URI("https://example.com/2");
 		ClientHttpRequestInterceptor interceptor = new ClientHttpRequestInterceptor() {
 			public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
 
@@ -159,7 +159,7 @@ public class InterceptingClientHttpRequestFactoryTests extends TestCase {
 
 		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock, Collections.singletonList(interceptor));
 
-		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
+		ClientHttpRequest request = requestFactory.createRequest(new URI("https://example.com"), HttpMethod.GET);
 		request.execute();
 	}
 
@@ -189,7 +189,7 @@ public class InterceptingClientHttpRequestFactoryTests extends TestCase {
 
 		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock, Collections.singletonList(interceptor));
 
-		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
+		ClientHttpRequest request = requestFactory.createRequest(new URI("https://example.com"), HttpMethod.GET);
 		request.execute();
 	}
 
@@ -205,7 +205,7 @@ public class InterceptingClientHttpRequestFactoryTests extends TestCase {
 
 		requestFactory = new InterceptingClientHttpRequestFactory(requestFactoryMock, Collections.singletonList(interceptor));
 
-		ClientHttpRequest request = requestFactory.createRequest(new URI("http://example.com"), HttpMethod.GET);
+		ClientHttpRequest request = requestFactory.createRequest(new URI("https://example.com"), HttpMethod.GET);
 		request.execute();
 		assertTrue(Arrays.equals(changedBody, requestMock.body.toByteArray()));
 	}

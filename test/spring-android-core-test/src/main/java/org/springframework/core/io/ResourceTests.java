@@ -146,7 +146,7 @@ public class ResourceTests extends AndroidTestCase {
 	}
 
 //	public void testNonFileResourceExists() throws Exception {
-//		Resource resource = new UrlResource("http://springone2gx.com");
+//		Resource resource = new UrlResource("https://springone2gx.com");
 //		assertTrue(resource.exists());
 //	}
 

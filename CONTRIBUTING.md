@@ -19,7 +19,7 @@ As **Project**, please select **Spring for Android**. The **Project Lead** is **
 
 1. go to [https://github.com/spring-projects/spring-android](https://github.com/spring-projects/spring-android)
 2. hit the "fork" button and choose your own github account as the target
-3. for more detail see [http://help.github.com/fork-a-repo/](http://help.github.com/fork-a-repo/)
+3. for more detail see [https://help.github.com/fork-a-repo/](https://help.github.com/fork-a-repo/)
 
 ## Setup your Local Development Environment
 
@@ -44,7 +44,7 @@ _you should see branches on origin as well as upstream, including 'master'_
 * When ready to resolve an issue or to collaborate with others, you can push your branch to origin (your fork), e.g.: `git push origin ANDROID-123`
 * If you want to collaborate with another contributor, have them fork your repository (add it as a remote) and `git fetch <your-username>` to grab your branch. Alternatively, they can use `git fetch --all` to sync their local state with all of their remotes.
 * If you grant that collaborator push access to your repository, they can even apply their changes to your branch.
-* When ready for your contribution to be reviewed for potential inclusion in the master branch of the canonical spring-android repository (what you know as 'upstream'), issue a pull request to the Spring repository (for more detail, see [http://help.github.com/send-pull-requests/](http://help.github.com/send-pull-requests/)).
+* When ready for your contribution to be reviewed for potential inclusion in the master branch of the canonical spring-android repository (what you know as 'upstream'), issue a pull request to the Spring repository (for more detail, see [https://help.github.com/send-pull-requests/](https://help.github.com/send-pull-requests/)).
 * The project lead may merge your changes into the upstream master branch as-is, he may keep the pull request open yet add a comment about something that should be modified, or he might reject the pull request by closing it.
 * A prerequisite for any pull request is that it will be cleanly merge-able with the upstream master's current state. **This is the responsibility of any contributor.** If your pull request cannot be applied cleanly, the project lead will most likely add a comment requesting that you make it merge-able.
 
