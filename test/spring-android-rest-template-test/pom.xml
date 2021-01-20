@@ -16,7 +16,7 @@
 		<org.apache.httpcomponents-version>4.3.5.1</org.apache.httpcomponents-version>
 		<com.squareup.okhttp3-version>3.2.0</com.squareup.okhttp3-version>
 		<com.squareup.okhttp-version>2.7.5</com.squareup.okhttp-version>
-		<com.fasterxml.jackson.core-version>2.7.2</com.fasterxml.jackson.core-version>
+		<com.fasterxml.jackson.core-version>2.9.10.7</com.fasterxml.jackson.core-version>
 		<com.google.code.gson-version>2.6.2</com.google.code.gson-version>
 		<org.simpleframework-version>2.7.1</org.simpleframework-version>
 		<org.mortbay.jetty-version>6.1.26</org.mortbay.jetty-version>
