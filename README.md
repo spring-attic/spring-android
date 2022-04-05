@@ -282,4 +282,4 @@ Follow [@SpringCentral] as well as [@SpringAndroid] on Twitter. In-depth article
 [@SpringAndroid]: https://twitter.com/springandroid
 [The Spring Blog]: https://spring.io/blog/
 [news feed]: https://spring.io/blog/category/news
-[Apache License]: http://www.apache.org/licenses/LICENSE-2.0
+[Apache License]: https://www.apache.org/licenses/LICENSE-2.0
